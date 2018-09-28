@@ -1,3 +1,5 @@
+import "isomorphic-fetch"
+
 import Web3 from "web3"
 import utils from "ethereumjs-util"
 import queryString from "query-string"
@@ -111,28 +113,62 @@ export default class Matic {
     })
   }
 
-  async withdraw(txId, options = {}) {
-    //trancation proof
+  getTx(txId) {
+    return this._apiCall({
+      url: `${this._syncerUrl}/tx/${txId}`
+    })
+  }
+
+  getReceipt(txId) {
+    return this._apiCall({
+      url: `${this._syncerUrl}/tx/${txId}/receipt`
+    })
+  }
+
+  async getTxProof(txId) {
     const { proof: txProof } = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/proof`
     })
 
-    //receipt proof
+    return txProof
+  }
+
+  async getReceiptProof(txId) {
     const { proof: receiptProof } = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/receipt/proof`
     })
 
-    const header = await this._apiCall({
-      url: `${this._watcherUrl}/header/included/${txProof.blockNumber}`
-    })
+    return receiptProof
+  }
 
+  getHeaderObject(blockNumber) {
+    return this._apiCall({
+      url: `${this._watcherUrl}/header/included/${blockNumber}`
+    })
+  }
+
+  async getHeaderProof(blockNumber, header) {
     const { proof: headerProof } = await this._apiCall({
-      url: `${syncerUrl}/block/${txProof.blockNumber}/proof`,
+      url: `${this._syncerUrl}/block/${blockNumber}/proof`,
       query: {
         start: +header.start,
         end: +header.end
       }
     })
+
+    return headerProof
+  }
+
+  async withdraw(txId, options = {}) {
+    // fetch trancation & receipt proof
+    const [txProof, receiptProof] = await Promise.all([
+      this.getTxProof(txId),
+      this.getReceiptProof(txId)
+    ])
+
+    // fetch header object & header proof
+    const header = await this.getHeaderObject(txProof.blockNumber)
+    const headerProof = await this.getHeaderProof(header, txProof.blockNumber)
 
     return this._rootChainContract.methods
       .withdraw(

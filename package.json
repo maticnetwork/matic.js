@@ -36,6 +36,7 @@
     "ethereumjs-tx": "^1.3.7",
     "ethereumjs-util": "^5.2.0",
     "ethers": "^4.0.0",
+    "isomorphic-fetch": "^2.2.1",
     "merkle-patricia-tree": "^2.3.2",
     "query-string": "^6.1.0",
     "web3": "1.0.0-beta.36"

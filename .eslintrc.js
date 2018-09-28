@@ -3,7 +3,8 @@ module.exports = {
   extends: "eslint:recommended",
   globals: {
     Promise: true,
-    Buffer: true
+    Buffer: true,
+    fetch: true
   },
   rules: {
     "space-before-function-paren": ["error", "never"],
