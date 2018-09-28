@@ -1,5 +1,6 @@
 import Web3 from "web3"
 import utils from "ethereumjs-util"
+import queryString from "query-string"
 
 import {
   getTxBytes,
@@ -23,6 +24,9 @@ export default class Matic {
 
     this._web3 = new Web3(options.maticProvider)
     this._parentWeb3 = new Web3(options.parentProvider)
+
+    this._syncerUrl = options.syncerUrl
+    this._watcherUrl = options.watcherUrl
 
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
@@ -107,6 +111,51 @@ export default class Matic {
     })
   }
 
+  async withdraw(txId, options = {}) {
+    //trancation proof
+    const { proof: txProof } = await this._apiCall({
+      url: `${this._syncerUrl}/tx/${txId}/proof`
+    })
+
+    //receipt proof
+    const { proof: receiptProof } = await this._apiCall({
+      url: `${this._syncerUrl}/tx/${txId}/receipt/proof`
+    })
+
+    const header = await this._apiCall({
+      url: `${this._watcherUrl}/header/included/${txProof.blockNumber}`
+    })
+
+    const { proof: headerProof } = await this._apiCall({
+      url: `${syncerUrl}/block/${txProof.blockNumber}/proof`,
+      query: {
+        start: +header.start,
+        end: +header.end
+      }
+    })
+
+    return this._rootChainContract.methods
+      .withdraw(
+        header.number.toString(), // header block
+        utils.bufferToHex(
+          Buffer.concat(headerProof.proof.map(p => utils.toBuffer(p)))
+        ), // header proof
+        txProof.blockNumber, // block number
+        txProof.blockTimestamp.toString(), // block timestamp
+        txProof.root, // tx root
+        receiptProof.root, // receipt root
+        utils.bufferToHex(rlp.encode(receiptProof.path)), // key for trie (both tx and receipt)
+        txProof.value, // tx bytes
+        txProof.parentNodes, // tx proof nodes
+        receiptProof.value, // receipt bytes
+        receiptProof.parentNodes // reciept proof nodes
+      )
+      .send({
+        from: this.wallet.address,
+        ...options
+      })
+  }
+
   async withdrawLocally(txId, options = {}) {
     const withdrawTx = await this._web3.eth.getTransaction(txId)
     const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId)
@@ -188,5 +237,22 @@ export default class Matic {
     }
 
     return _tokenContract
+  }
+
+  _apiCall(data = {}) {
+    const headers = data.headers || {}
+    const queryParams = data.query && queryString.stringify(data.query || {})
+    const url = `${data.url}?${queryParams || ""}`
+    return fetch(url, {
+      method: data.method || (data.body ? "POST" : "GET"),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...headers
+      },
+      body: data.body ? JSON.stringify(data.body) : null
+    }).then(res => {
+      return res.json()
+    })
   }
 }
