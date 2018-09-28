@@ -1,8 +1,20 @@
 import Web3 from "web3"
+import utils from "ethereumjs-util"
+
+import {
+  getTxBytes,
+  getReceiptBytes,
+  getTxProof,
+  getReceiptProof
+} from "./helpers/proofs"
+import { getHeaders, getBlockHeader } from "./helpers/blocks"
+import MerkleTree from "./helpers/merkle-tree"
 
 import RootChainArtifacts from "./artifacts/RootChain"
 import ChildERC20Artifacts from "./artifacts/ChildERC20"
 import StandardTokenArtifacts from "./artifacts/StandardToken"
+
+const rlp = utils.rlp
 
 export default class Matic {
   constructor(options = {}) {
@@ -93,6 +105,63 @@ export default class Matic {
       from: this.wallet.address,
       ...options
     })
+  }
+
+  async withdrawLocally(txId, options = {}) {
+    const withdrawTx = await this._web3.eth.getTransaction(txId)
+    const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId)
+    const withdrawBlock = await this._web3.eth.getBlock(
+      withdrawReceipt.blockNumber,
+      true
+    )
+
+    // draft withdraw obj
+    const withdrawObj = {
+      txId: txId,
+      block: withdrawBlock,
+      tx: withdrawTx,
+      receipt: withdrawReceipt
+    }
+    const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block)
+    const receiptProof = await getReceiptProof(
+      withdrawObj.receipt,
+      withdrawObj.block,
+      this._web3
+    )
+
+    const currentHeaderBlock = await this._rootChainContract.methods
+      .currentHeaderBlock()
+      .call()
+
+    const header = await this._rootChainContract.methods
+      .getHeaderBlock(parseInt(currentHeaderBlock, 10) - 1)
+      .call()
+
+    const headerNumber = +currentHeaderBlock - 1
+    const start = header.start
+    const end = header.end
+    const headers = await getHeaders(start, end, this._web3)
+    const tree = new MerkleTree(headers)
+    const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
+
+    return this._rootChainContract.methods
+      .withdraw(
+        headerNumber.toString(), // header block
+        utils.bufferToHex(Buffer.concat(headerProof)), // header proof
+        withdrawObj.block.number.toString(), // block number
+        withdrawObj.block.timestamp.toString(), // block timestamp
+        utils.bufferToHex(withdrawObj.block.transactionsRoot.toString()), // tx root
+        utils.bufferToHex(withdrawObj.block.receiptsRoot.toString()), // tx root
+        utils.bufferToHex(rlp.encode(receiptProof.path)), // key for trie (both tx and receipt)
+        utils.bufferToHex(getTxBytes(withdrawObj.tx)), // tx bytes
+        utils.bufferToHex(rlp.encode(txProof.parentNodes)), // tx proof nodes
+        utils.bufferToHex(getReceiptBytes(withdrawObj.receipt)), // receipt bytes
+        utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
+      )
+      .send({
+        from: this.wallet.address,
+        ...options
+      })
   }
 
   //
