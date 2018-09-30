@@ -21,8 +21,8 @@ const rlp = utils.rlp
 
 export default class Matic {
   constructor(options = {}) {
-    this._throwIfNull(!options.maticProvider, "maticProvider is required")
-    this._throwIfNull(!options.parentProvider, "parentProvider is required")
+    this._throwIfNull(options.maticProvider, "maticProvider is required")
+    this._throwIfNull(options.parentProvider, "parentProvider is required")
 
     this._web3 = new Web3(options.maticProvider)
     this._parentWeb3 = new Web3(options.parentProvider)

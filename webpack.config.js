@@ -1,18 +1,17 @@
 /* global __dirname, require, module */
-const path = require("path");
-const env = require("yargs").argv.env; // use --env with webpack 2
-const packageJSON = require("./package.json");
+const path = require("path")
+const env = require("yargs").argv.env // use --env with webpack 2
 
-const libraryName = packageJSON.name;
+const libraryName = "matic.lib"
 
-let mode = "development";
-let outputFile;
+let mode = "development"
+let outputFile
 
 if (env === "build") {
-  mode = "production";
-  outputFile = `${libraryName}.min.js`;
+  mode = "production"
+  outputFile = `${libraryName}.min.js`
 } else {
-  outputFile = `${libraryName}.js`;
+  outputFile = `${libraryName}.js`
 }
 
 const config = {
@@ -44,6 +43,6 @@ const config = {
     modules: [path.resolve("./node_modules"), path.resolve("./src")],
     extensions: [".json", ".js"]
   }
-};
+}
 
-module.exports = config;
+module.exports = config
