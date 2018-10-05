@@ -52,12 +52,11 @@ export default class Matic {
     return this._parentWeb3
   }
 
-  get newAccount() {
-    return this._parentWeb3.eth.accounts.wallet.create(1)
-  }
-
   get wallet() {
-    return this._parentWeb3.eth.accounts.wallet[0]
+    if (this._parentWeb3.eth.accounts.wallet.length >= 1) {
+      return this._parentWeb3.eth.accounts.wallet[0]
+    }
+    return null
   }
 
   set wallet(_wallet) {
@@ -68,6 +67,10 @@ export default class Matic {
   //
   // Actions
   //
+
+  newAccount() {
+    return this._parentWeb3.eth.accounts.wallet.create(1)
+  }
 
   async approveTokens(token, spender, amount, options = {}) {
     const _tokenContract = new this._parentWeb3.eth.Contract(
@@ -113,16 +116,38 @@ export default class Matic {
     })
   }
 
-  getTx(txId) {
-    return this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}`
-    })
+  async getTx(txId) {
+    if (this._syncerUrl) {
+      try {
+        const response = await this._apiCall({
+          url: `${this._syncerUrl}/tx/${txId}`
+        })
+
+        if (response) {
+          return response
+        }
+      } catch (e) {
+        // ignore error
+      }
+    }
+
+    return this._web3.eth.getTransaction(txId)
   }
 
-  getReceipt(txId) {
-    return this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}/receipt`
-    })
+  async getReceipt(txId) {
+    if (this._syncerUrl) {
+      try {
+        const response = await this._apiCall({
+          url: `${this._syncerUrl}/tx/${txId}/receipt`
+        })
+
+        return response
+      } catch (e) {
+        // ignore error
+      }
+    }
+
+    return this._web3.eth.getTransactionReceipt(txId)
   }
 
   async getTxProof(txId) {

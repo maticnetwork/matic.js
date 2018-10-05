@@ -2,3 +2,8 @@ node_modules
 lib
 .DS_Store
 *.log
+
+test-blockchain/geth
+test-blockchain/history
+test-blockchain/data/**
+!test-blockchain/data/.gitkeep
