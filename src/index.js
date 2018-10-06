@@ -8,7 +8,10 @@ import {
   getTxBytes,
   getReceiptBytes,
   getTxProof,
-  getReceiptProof
+  getReceiptProof,
+  verifyTxProof,
+  verifyReceiptProof,
+  verifyHeaderProof
 } from "./helpers/proofs"
 import { getHeaders, getBlockHeader } from "./helpers/blocks"
 import MerkleTree from "./helpers/merkle-tree"
@@ -179,13 +182,8 @@ export default class Matic {
     return txProof
   }
 
-  async verifyTxProof(txId, txProof) {
-    const isTxProofValid = await this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}/verify-proof`,
-      body: txProof
-    })
-
-    return isTxProofValid
+  verifyTxProof(txProof) {
+    return verifyTxProof(txProof)
   }
 
   async getReceiptProof(txId) {
@@ -196,13 +194,8 @@ export default class Matic {
     return receiptProof
   }
 
-  async verifyReceiptProof(txId, receiptProof) {
-    const isReceiptProof = await this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}/receipt/verify-proof`,
-      body: receiptProof
-    })
-
-    return isReceiptProof
+  verifyReceiptProof(receiptProof) {
+    return verifyReceiptProof(receiptProof)
   }
 
   getHeaderObject(blockNumber) {
@@ -223,13 +216,8 @@ export default class Matic {
     return headerProof
   }
 
-  async verifyHeaderProof(blockNumber, headerProof) {
-    const isHeaderProofValid = await this._apiCall({
-      url: `${this._syncerUrl}/block/${blockNumber}/verify-proof`,
-      body: headerProof
-    })
-
-    return isHeaderProofValid
+  verifyHeaderProof(headerProof) {
+    return verifyHeaderProof(headerProof)
   }
 
   async withdraw(txId, options = {}) {
@@ -242,6 +230,7 @@ export default class Matic {
     // fetch header object & header proof
     const header = await this.getHeaderObject(txProof.blockNumber)
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
+
     const withdrawTx = this._rootChainContract.methods.withdraw(
       header.number.toString(), // header block
       utils.bufferToHex(
@@ -379,7 +368,7 @@ export default class Matic {
     return {
       from,
       gasLimit,
-      gasPrice,
+      gasPrice: gasPrice,
       nonce,
       chainId,
       value: options.value || 0
