@@ -1,43 +1,43 @@
-import "isomorphic-fetch";
+import "isomorphic-fetch"
 
-import Web3 from "web3";
-import utils from "ethereumjs-util";
-import queryString from "query-string";
+import Web3 from "web3"
+import utils from "ethereumjs-util"
+import queryString from "query-string"
 
 import {
   getTxBytes,
   getReceiptBytes,
   getTxProof,
   getReceiptProof
-} from "./helpers/proofs";
-import { getHeaders, getBlockHeader } from "./helpers/blocks";
-import MerkleTree from "./helpers/merkle-tree";
+} from "./helpers/proofs"
+import { getHeaders, getBlockHeader } from "./helpers/blocks"
+import MerkleTree from "./helpers/merkle-tree"
 
-import RootChainArtifacts from "./artifacts/RootChain";
-import ChildERC20Artifacts from "./artifacts/ChildERC20";
-import StandardTokenArtifacts from "./artifacts/StandardToken";
+import RootChainArtifacts from "./artifacts/RootChain"
+import ChildERC20Artifacts from "./artifacts/ChildERC20"
+import StandardTokenArtifacts from "./artifacts/StandardToken"
 
-const rlp = utils.rlp;
+const rlp = utils.rlp
 
 export default class Matic {
   constructor(options = {}) {
-    this._throwIfNull(options.maticProvider, "maticProvider is required");
-    this._throwIfNull(options.parentProvider, "parentProvider is required");
+    this._throwIfNull(options.maticProvider, "maticProvider is required")
+    this._throwIfNull(options.parentProvider, "parentProvider is required")
 
-    this._web3 = new Web3(options.maticProvider);
-    this._parentWeb3 = new Web3(options.parentProvider);
+    this._web3 = new Web3(options.maticProvider)
+    this._parentWeb3 = new Web3(options.parentProvider)
 
-    this._syncerUrl = options.syncerUrl;
-    this._watcherUrl = options.watcherUrl;
+    this._syncerUrl = options.syncerUrl
+    this._watcherUrl = options.watcherUrl
 
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
       options.rootChainAddress
-    );
+    )
 
     // internal cache
-    this._tokenCache = {};
+    this._tokenCache = {}
   }
 
   //
@@ -45,30 +45,30 @@ export default class Matic {
   //
 
   get web3() {
-    return this._web3;
+    return this._web3
   }
 
   get parentWeb3() {
-    return this._parentWeb3;
+    return this._parentWeb3
   }
 
   get wallet() {
     if (this._parentWeb3.eth.accounts.wallet.length >= 1) {
-      return this._parentWeb3.eth.accounts.wallet[0];
+      return this._parentWeb3.eth.accounts.wallet[0]
     }
-    return null;
+    return null
   }
 
   get walletAddress() {
     if (this.wallet) {
-      return this.wallet.address;
+      return this.wallet.address
     }
-    return null;
+    return null
   }
 
   set wallet(_wallet) {
-    this._web3.eth.accounts.wallet.add(_wallet);
-    this._parentWeb3.eth.accounts.wallet.add(_wallet);
+    this._web3.eth.accounts.wallet.add(_wallet)
+    this._parentWeb3.eth.accounts.wallet.add(_wallet)
   }
 
   //
@@ -76,33 +76,33 @@ export default class Matic {
   //
 
   newAccount() {
-    return this._parentWeb3.eth.accounts.wallet.create(1);
+    return this._parentWeb3.eth.accounts.wallet.create(1)
   }
 
   async approveTokens(token, spender, amount, options = {}) {
     const _tokenContract = new this._parentWeb3.eth.Contract(
       StandardTokenArtifacts.abi,
       token
-    );
-    const approveTx = await _tokenContract.methods.approve(spender, amount);
+    )
+    const approveTx = await _tokenContract.methods.approve(spender, amount)
     const _options = await this._fillOptions(
       options,
       approveTx,
       this._parentWeb3
-    );
+    )
 
-    return this._wrapWeb3Promise(approveTx.send(_options), options);
+    return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
   async depositEthers(user, options = {}) {
-    const depositTx = this._rootChainContract.methods.depositEthers(user);
+    const depositTx = this._rootChainContract.methods.depositEthers(user)
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
-    );
+    )
 
-    return this._wrapWeb3Promise(depositTx.send(_options), options);
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async depositTokens(token, user, amount, options = {}) {
@@ -110,30 +110,30 @@ export default class Matic {
       token,
       user,
       amount
-    );
+    )
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
-    );
+    )
 
-    return this._wrapWeb3Promise(depositTx.send(_options), options);
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async transferTokens(token, user, amount, options = {}) {
-    const _tokenContract = this._getChildTokenContract(token);
-    const transferTx = _tokenContract.methods.transfer(user, amount);
-    const _options = await this._fillOptions(options, transferTx, this._web3);
+    const _tokenContract = this._getChildTokenContract(token)
+    const transferTx = _tokenContract.methods.transfer(user, amount)
+    const _options = await this._fillOptions(options, transferTx, this._web3)
 
-    return this._wrapWeb3Promise(transferTx.send(_options), options);
+    return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
   async startWithdraw(token, amount, options = {}) {
-    const _tokenContract = this._getChildTokenContract(token);
-    const withdrawTx = _tokenContract.methods.withdraw(amount);
-    const _options = await this._fillOptions(options, withdrawTx, this._web3);
+    const _tokenContract = this._getChildTokenContract(token)
+    const withdrawTx = _tokenContract.methods.withdraw(amount)
+    const _options = await this._fillOptions(options, withdrawTx, this._web3)
 
-    return this._wrapWeb3Promise(withdrawTx.send(_options), options);
+    return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
   async getTx(txId) {
@@ -141,17 +141,17 @@ export default class Matic {
       try {
         const response = await this._apiCall({
           url: `${this._syncerUrl}/tx/${txId}`
-        });
+        })
 
         if (response) {
-          return response;
+          return response
         }
       } catch (e) {
         // ignore error
       }
     }
 
-    return this._web3.eth.getTransaction(txId);
+    return this._web3.eth.getTransaction(txId)
   }
 
   async getReceipt(txId) {
@@ -159,55 +159,55 @@ export default class Matic {
       try {
         const response = await this._apiCall({
           url: `${this._syncerUrl}/tx/${txId}/receipt`
-        });
+        })
 
-        return response;
+        return response
       } catch (e) {
         // ignore error
       }
     }
 
-    return this._web3.eth.getTransactionReceipt(txId);
+    return this._web3.eth.getTransactionReceipt(txId)
   }
 
   async getTxProof(txId) {
     const { proof: txProof } = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/proof`
-    });
+    })
 
-    return txProof;
+    return txProof
   }
 
   async verifyTxProof(txId, txProof) {
     const isTxProofValid = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/verify-proof`,
       body: txProof
-    });
+    })
 
-    return isTxProofValid;
+    return isTxProofValid
   }
 
   async getReceiptProof(txId) {
     const { proof: receiptProof } = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/receipt/proof`
-    });
+    })
 
-    return receiptProof;
+    return receiptProof
   }
 
   async verifyReceiptProof(txId, receiptProof) {
     const isReceiptProof = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/receipt/verify-proof`,
       body: receiptProof
-    });
+    })
 
-    return isReceiptProof;
+    return isReceiptProof
   }
 
   getHeaderObject(blockNumber) {
     return this._apiCall({
       url: `${this._watcherUrl}/header/included/${blockNumber}`
-    });
+    })
   }
 
   async getHeaderProof(blockNumber, header) {
@@ -217,18 +217,18 @@ export default class Matic {
         start: +header.start,
         end: +header.end
       }
-    });
+    })
 
-    return headerProof;
+    return headerProof
   }
 
   async verifyHeaderProof(blockNumber, headerProof) {
     const isHeaderProofValid = await this._apiCall({
       url: `${this._syncerUrl}/block/${blockNumber}/verify-proof`,
       body: headerProof
-    });
+    })
 
-    return isHeaderProofValid;
+    return isHeaderProofValid
   }
 
   async withdraw(txId, options = {}) {
@@ -236,11 +236,11 @@ export default class Matic {
     const [txProof, receiptProof] = await Promise.all([
       this.getTxProof(txId),
       this.getReceiptProof(txId)
-    ]);
+    ])
 
     // fetch header object & header proof
-    const header = await this.getHeaderObject(txProof.blockNumber);
-    const headerProof = await this.getHeaderProof(txProof.blockNumber, header);
+    const header = await this.getHeaderObject(txProof.blockNumber)
+    const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
     const withdrawTx = this._rootChainContract.methods.withdraw(
       header.number.toString(), // header block
       utils.bufferToHex(
@@ -255,23 +255,23 @@ export default class Matic {
       txProof.parentNodes, // tx proof nodes
       receiptProof.value, // receipt bytes
       receiptProof.parentNodes // reciept proof nodes
-    );
+    )
 
     const _options = await this._fillOptions(
       options,
       withdrawTx,
       this._parentWeb3
-    );
-    return this._wrapWeb3Promise(withdrawTx.send(_options), options);
+    )
+    return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
   async withdrawLocally(txId, options = {}) {
-    const withdrawTx = await this._web3.eth.getTransaction(txId);
-    const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId);
+    const withdrawTx = await this._web3.eth.getTransaction(txId)
+    const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId)
     const withdrawBlock = await this._web3.eth.getBlock(
       withdrawReceipt.blockNumber,
       true
-    );
+    )
 
     // draft withdraw obj
     const withdrawObj = {
@@ -279,28 +279,28 @@ export default class Matic {
       block: withdrawBlock,
       tx: withdrawTx,
       receipt: withdrawReceipt
-    };
-    const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block);
+    }
+    const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block)
     const receiptProof = await getReceiptProof(
       withdrawObj.receipt,
       withdrawObj.block,
       this._web3
-    );
+    )
 
     const currentHeaderBlock = await this._rootChainContract.methods
       .currentHeaderBlock()
-      .call();
+      .call()
 
     const header = await this._rootChainContract.methods
       .getHeaderBlock(parseInt(currentHeaderBlock, 10) - 1)
-      .call();
+      .call()
 
-    const headerNumber = +currentHeaderBlock - 1;
-    const start = header.start;
-    const end = header.end;
-    const headers = await getHeaders(start, end, this._web3);
-    const tree = new MerkleTree(headers);
-    const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block));
+    const headerNumber = +currentHeaderBlock - 1
+    const start = header.start
+    const end = header.end
+    const headers = await getHeaders(start, end, this._web3)
+    const tree = new MerkleTree(headers)
+    const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
 
     const withdrawTxObject = this._rootChainContract.methods.withdraw(
       headerNumber.toString(), // header block
@@ -314,15 +314,15 @@ export default class Matic {
       utils.bufferToHex(rlp.encode(txProof.parentNodes)), // tx proof nodes
       utils.bufferToHex(getReceiptBytes(withdrawObj.receipt)), // receipt bytes
       utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
-    );
+    )
 
     const _options = await this._fillOptions(
       options,
       withdrawTxObject,
       this._parentWeb3
-    );
+    )
 
-    return this._wrapWeb3Promise(withdrawTxObject.send(_options), options);
+    return this._wrapWeb3Promise(withdrawTxObject.send(_options), options)
   }
 
   //
@@ -331,29 +331,29 @@ export default class Matic {
 
   _throwIfNull(value, message) {
     if (!value) {
-      throw new Error(message);
+      throw new Error(message)
     }
   }
 
   _getChildTokenContract(token) {
-    const _token = token.toLowerCase();
+    const _token = token.toLowerCase()
 
-    let _tokenContract = this._tokenCache[_token];
+    let _tokenContract = this._tokenCache[_token]
     if (!_tokenContract) {
       _tokenContract = new this._web3.eth.Contract(
         ChildERC20Artifacts.abi,
         _token
-      );
+      )
       // update token cache
-      this._tokenCache[_token] = _tokenContract;
+      this._tokenCache[_token] = _tokenContract
     }
 
-    return _tokenContract;
+    return _tokenContract
   }
 
   async _fillOptions(options, txObject, web3) {
     // delete chain id
-    delete txObject.chainId;
+    delete txObject.chainId
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas(options.from)
@@ -363,7 +363,7 @@ export default class Matic {
         ? await web3.eth.getTransactionCount(options.from)
         : options.nonce,
       !options.chainId ? await web3.eth.net.getId() : options.chainId
-    ]);
+    ])
 
     return {
       from: options.from || this.walletAddress,
@@ -371,21 +371,21 @@ export default class Matic {
       gasPrice,
       nonce,
       chainId
-    };
+    }
   }
 
   _wrapWeb3Promise(promise, options) {
     return promise
       .on("transactionHash", options.onTransactionHash)
       .on("receipt", options.onReceipt)
-      .on("error", options.onError);
+      .on("error", options.onError)
   }
 
   _apiCall(data = {}) {
-    const headers = data.headers || {};
+    const headers = data.headers || {}
 
-    const queryParams = data.query && queryString.stringify(data.query || {});
-    const url = `${data.url}?${queryParams || ""}`;
+    const queryParams = data.query && queryString.stringify(data.query || {})
+    const url = `${data.url}?${queryParams || ""}`
 
     return fetch(url, {
       method: data.method || (data.body ? "POST" : "GET"),
@@ -396,7 +396,7 @@ export default class Matic {
       },
       body: data.body ? JSON.stringify(data.body) : null
     }).then(res => {
-      return res.json();
-    });
+      return res.json()
+    })
   }
 }
