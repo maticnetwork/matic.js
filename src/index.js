@@ -367,7 +367,7 @@ export default class Matic {
 
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
-        ? await txObject.estimateGas({ from })
+        ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
       !options.gasPrice ? await web3.eth.getGasPrice() : options.gasPrice,
       !options.nonce
@@ -381,7 +381,8 @@ export default class Matic {
       gasLimit,
       gasPrice,
       nonce,
-      chainId
+      chainId,
+      value: options.value || 0
     }
   }
 
