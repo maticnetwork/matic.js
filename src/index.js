@@ -132,7 +132,6 @@ export default class Matic {
     const _tokenContract = this._getChildTokenContract(token)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
-
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
@@ -143,8 +142,8 @@ export default class Matic {
           url: `${this._syncerUrl}/tx/${txId}`
         })
 
-        if (response) {
-          return response
+        if (response && response.tx) {
+          return response.tx
         }
       } catch (e) {
         // ignore error
@@ -161,7 +160,9 @@ export default class Matic {
           url: `${this._syncerUrl}/tx/${txId}/receipt`
         })
 
-        return response
+        if (response && response.receipt) {
+          return response.receipt
+        }
       } catch (e) {
         // ignore error
       }
@@ -262,6 +263,7 @@ export default class Matic {
       withdrawTx,
       this._parentWeb3
     )
+
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
@@ -280,6 +282,7 @@ export default class Matic {
       tx: withdrawTx,
       receipt: withdrawReceipt
     }
+
     const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block)
     const receiptProof = await getReceiptProof(
       withdrawObj.receipt,
@@ -354,19 +357,27 @@ export default class Matic {
   async _fillOptions(options, txObject, web3) {
     // delete chain id
     delete txObject.chainId
+
+    const from = options.from || this.walletAddress
+    if (!from) {
+      throw new Error(
+        "`from` required in options or set wallet using maticObject.wallet = <private key>"
+      )
+    }
+
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
-        ? await txObject.estimateGas(options.from)
+        ? await txObject.estimateGas({ from })
         : options.gasLimit || options.gas,
       !options.gasPrice ? await web3.eth.getGasPrice() : options.gasPrice,
       !options.nonce
-        ? await web3.eth.getTransactionCount(options.from)
+        ? await web3.eth.getTransactionCount(from, "pending")
         : options.nonce,
       !options.chainId ? await web3.eth.net.getId() : options.chainId
     ])
 
     return {
-      from: options.from || this.walletAddress,
+      from,
       gasLimit,
       gasPrice,
       nonce,
@@ -385,6 +396,7 @@ export default class Matic {
     const headers = data.headers || {}
 
     const queryParams = data.query && queryString.stringify(data.query || {})
+
     const url = `${data.url}?${queryParams || ""}`
 
     return fetch(url, {
