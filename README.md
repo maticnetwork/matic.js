@@ -81,14 +81,13 @@ The flow for asset transfers on the Matic Network is as follows:
 
 **Matic Testnet** 
 
-RPC endpoint host: https://testnet.matic.network
-
-TEST childchain ERC20 token: 0x343461c74133E3fA476Dbbc614a87473270a226c
+* RPC endpoint host: https://testnet.matic.network
+* TEST childchain ERC20 token: 0x343461c74133E3fA476Dbbc614a87473270a226c
 
 **Kovan testnet addresses**
 
-TEST mainchain ERC20 token: 0x670568761764f53E6C10cd63b71024c31551c9EC
-Root Contract: 0x24e01716a6ac34D5f2C4C082F553D86a557543a7
+* TEST mainchain ERC20 token: 0x670568761764f53E6C10cd63b71024c31551c9EC
+* Root Contract: 0x24e01716a6ac34D5f2C4C082F553D86a557543a7
 
 ### Faucet
 
@@ -103,7 +102,6 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
-
 - <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
 - <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
 
@@ -189,6 +187,30 @@ const user = <your-address> or <any-account-address>
 
 matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
   from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="depositEthers"></a>
+
+#### matic.depositEthers(user, options)
+
+Deposit `options.value` ETH with user `user`.
+
+- `user` must be value account address
+- `options` see [more infomation here](#approveTokensForDeposit). Pass `value` for amount of ethers.
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.depositEthers('0x718Ca123...', {
+  from: '0xABc578455...',
+  value: '1000000000000000000'
 })
 ```
 
