@@ -80,7 +80,7 @@ The flow for asset transfers on the Matic Network is as follows:
 ## API
 
 - <a href="#initialize"><code>new Matic()</code></a>
-- <a href="#approveTokens"><code>matic.<b>approveTokens()</b></code></a>
+- <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
 - <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
@@ -95,7 +95,7 @@ The flow for asset transfers on the Matic Network is as follows:
 
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
 
-```
+```js
 const matic = new Matic(options)
 ```
 
@@ -114,16 +114,58 @@ const matic = new Matic(options)
 
 ---
 
-<a name="approveTokens"></a>
+<a name="approveTokensForDeposit"></a>
 
-### matic.approveTokens(token, amount, options)
+### matic.approveTokensForDeposit(token, amount, options)
 
 Approves given `amount` of `token` to `rootChainContract`.
 
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
-- `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce` and/or `value`
+- `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
+    * `from` must be valid account address 
+    * `gasPrice` same as Ethereum `sendTransaction`
+    * `gasLimit` same as Ethereum `sendTransaction`
+    * `nonce` same as Ethereum `sendTransaction`
+    * `nonce` same as Ethereum `sendTransaction`
+    * `value` contains ETH value. Same as Ethereum `sendTransaction`.
+    * `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
+    * `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
+    * `onError` must be `function`. This function will be called when sending transaction fails.
 
-This returns `Promise` object.
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.approveTokensForDeposit('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...'
+}).on('onTransactionHash', (txHash) => {
+  console.log('New transaction', txHash)
+})
+```
 
 ---
+
+<a name="depositTokens"></a>
+
+### matic.depositTokens(token, user, amount, options)
+
+Deposit given `amount` of `token` with user `user`.
+
+- `token` must be valid ERC20 token address
+- `user` must be value account address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveTokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...'
+})
+```
