@@ -77,7 +77,24 @@ The flow for asset transfers on the Matic Network is as follows:
 - The user can now transfer tokens to anyone they want instantly with negligible fees. Matic chain has faster blocks (approximately ~ 1 second). That way, the transfer will be done almost instantly.
 - Once a user is ready, they can withdraw remaining tokens from the mainchain by establishing proof of remaining tokens on Root contract (contract deployed on Ethereum chain)
 
-## API
+### Contracts and addresses
+
+**Matic Testnet** 
+
+RPC endpoint host: https://testnet.matic.network
+
+TEST childchain ERC20 token: 0x343461c74133E3fA476Dbbc614a87473270a226c
+
+**Kovan testnet addresses**
+
+TEST mainchain ERC20 token: 0x670568761764f53E6C10cd63b71024c31551c9EC
+Root Contract: 0x24e01716a6ac34D5f2C4C082F553D86a557543a7
+
+### Faucet
+
+Please write to info@matic.network to request TEST tokens for development purposes. We will soon have a faucet in place for automatic distribution of tokens for testing.
+
+### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
@@ -87,15 +104,20 @@ The flow for asset transfers on the Matic Network is as follows:
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
 
+- <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
+- <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
+
 ---
 
 <a name="initialize"></a>
 
-### new Matic(options)
+#### new Matic(options)
 
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
 
 ```js
+import Matic from '@maticnetwork/matic.js'
+
 const matic = new Matic(options)
 ```
 
@@ -116,7 +138,7 @@ const matic = new Matic(options)
 
 <a name="approveTokensForDeposit"></a>
 
-### matic.approveTokensForDeposit(token, amount, options)
+#### matic.approveTokensForDeposit(token, amount, options)
 
 Approves given `amount` of `token` to `rootChainContract`.
 
@@ -149,7 +171,7 @@ matic.approveTokensForDeposit('0x718Ca123...', '1000000000000000000', {
 
 <a name="depositTokens"></a>
 
-### matic.depositTokens(token, user, amount, options)
+#### matic.depositTokens(token, user, amount, options)
 
 Deposit given `amount` of `token` with user `user`.
 
@@ -169,3 +191,122 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
   from: '0xABc578455...'
 })
 ```
+
+---
+
+<a name="transferTokens"></a>
+
+#### matic.transferTokens(token, user, amount, options)
+
+Transfer given `amount` of `token` to `user`.
+
+- `token` must be valid ERC20 token address
+- `user` must be value account address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveTokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.transferTokens('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="startWithdraw"></a>
+
+#### matic.startWithdraw(token, amount, options)
+
+Start withdraw process with given `amount` for `token`.
+
+- `token` must be valid ERC20 token address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveTokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.startWithdraw('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...'
+}).on('onTransactionHash', txHash => {
+   console.log("Started withdraw process with txId", txHash)
+})
+```
+
+---
+
+<a name="withdraw"></a>
+
+#### matic.withdraw(txId, options)
+
+Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
+
+- `txId` must be valid tx hash
+- `options` see [more infomation here](#approveTokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.withdraw('0xabcd...789', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="getTx"></a>
+
+#### matic.getTx(txId)
+
+Get transaction object using `txId` from Matic chain.
+
+- `txId` must be valid tx id
+
+This returns `Promise` object.
+
+Example:
+
+```js
+matic.getTx("0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b").then((txObject) => {
+   console.log(txObject)
+})
+```
+
+---
+
+<a name="getReceipt"></a>
+
+#### matic.getReceipt(txId)
+
+Get receipt object using `txId` from Matic chain.
+
+- `txId` must be valid tx id
+
+This returns `Promise` object.
+
+Example:
+
+```js
+matic.getReceipt("0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b").then((obj) => {
+   console.log(obj)
+})
+```
+
+### Support
+
+Please write to info@matic.network for integration support. If you have any queries, feedback or feature requests, feel free to reach out to us on telegram: [t.me/maticnetwork](https://t.me/maticnetwork)
+
+### License
+
+MIT
+
