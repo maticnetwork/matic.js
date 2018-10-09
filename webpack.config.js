@@ -1,49 +1,60 @@
 /* global __dirname, require, module */
-const path = require("path");
-const env = require("yargs").argv.env; // use --env with webpack 2
-const packageJSON = require("./package.json");
+const path = require("path")
+const env = require("yargs").argv.env // use --env with webpack 2
 
-const libraryName = packageJSON.name;
+const libraryName = "matic"
 
-let mode = "development";
-let outputFile;
+let mode = "development"
 
 if (env === "build") {
-  mode = "production";
-  outputFile = `${libraryName}.min.js`;
-} else {
-  outputFile = `${libraryName}.js`;
+  mode = "production"
 }
 
-const config = {
+const clientConfig = {
   mode,
   entry: `${__dirname}/src/index.js`,
-  devtool: "source-map",
+  target: 'web',
   output: {
-    path: `${__dirname}/lib`,
-    filename: outputFile,
+    path: `${__dirname}/dist`,
+    filename: `${libraryName}.umd.js`,
     library: libraryName,
     libraryTarget: "umd",
-    umdNamedDefine: true
+    libraryExport: "default",
+    umdNamedDefine: true,
   },
   module: {
     rules: [
       {
-        test: /(\.js)$/,
+        test: /\.(js)$/,
         loader: "babel-loader",
-        exclude: /(node_modules|bower_components)/
+        exclude: /(node_modules|bower_components)/,
       },
       {
-        test: /(\.js)$/,
+        test: /\.(js)$/,
         loader: "eslint-loader",
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  externals : {
+    web3: 'web3',
+    'ethereumjs-util': 'ethereumjs-util',
+    'query-string': 'query-string',
   },
   resolve: {
     modules: [path.resolve("./node_modules"), path.resolve("./src")],
-    extensions: [".json", ".js"]
-  }
-};
+    extensions: [".json", ".js"],
+  },
+}
 
-module.exports = config;
+const serverConfig = {
+  ...clientConfig,
+  target: 'node',
+  output: {
+    path: `${__dirname}/dist`,
+    filename: `${libraryName}.node.js`,
+    libraryTarget: "commonjs2",
+  },
+}
+
+module.exports = [ clientConfig, serverConfig ]

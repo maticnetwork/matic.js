@@ -1,4 +1,4 @@
 {
-  "presets": ["@babel/preset-env"],
-  "plugins": ["add-module-exports"]
+  "presets": ["@babel/env"],
+  "plugins": ["@babel/plugin-transform-runtime"]
 }
