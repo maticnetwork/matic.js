@@ -200,12 +200,12 @@ export function verifyTxProof(proof) {
           }
           break
         default:
-          console.log("all nodes must be length 17 or 2")
+          // console.log("all nodes must be length 17 or 2")
           return false
       }
     }
   } catch (e) {
-    console.log(e)
+    // console.log(e)
     return false
   }
   return false
