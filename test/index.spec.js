@@ -26,7 +26,7 @@ describe("Matic SDK", () => {
 
       maticObject = new Matic({
         maticProvider: "https://kovan.infura.io",
-        parentProvider: "https://kovan.infura.io"
+        parentProvider: "https://kovan.infura.io",
       })
     })
 

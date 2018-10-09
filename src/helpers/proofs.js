@@ -47,7 +47,7 @@ export async function getTxProof(tx, block) {
           parentNodes: stack.map(s => s.raw),
           root: getRawHeader(block).transactionsTrie,
           path: rlp.encode(tx.transactionIndex),
-          value: rlp.decode(rawTxNode.value)
+          value: rlp.decode(rawTxNode.value),
         }
         resolve(prf)
       }
@@ -78,9 +78,9 @@ export function getReceiptBytes(receipt) {
       return [
         utils.toBuffer(l.address), // convert address to buffer
         l.topics.map(utils.toBuffer), // convert topics to buffer
-        utils.toBuffer(l.data) // convert data to buffer
+        utils.toBuffer(l.data), // convert data to buffer
       ]
-    })
+    }),
   ])
 }
 
@@ -125,7 +125,7 @@ export async function getReceiptProof(receipt, block, web3) {
           parentNodes: stack.map(s => s.raw),
           root: getRawHeader(block).receiptTrie,
           path: rlp.encode(receipt.transactionIndex),
-          value: rlp.decode(rawReceiptNode.value)
+          value: rlp.decode(rawReceiptNode.value),
         }
         resolve(prf)
       }
@@ -200,12 +200,10 @@ export function verifyTxProof(proof) {
           }
           break
         default:
-          // console.log("all nodes must be length 17 or 2")
           return false
       }
     }
   } catch (e) {
-    // console.log(e)
     return false
   }
   return false

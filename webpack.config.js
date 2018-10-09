@@ -1,7 +1,6 @@
 /* global __dirname, require, module */
 const path = require("path")
 const env = require("yargs").argv.env // use --env with webpack 2
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const libraryName = "matic"
 
@@ -15,32 +14,28 @@ const clientConfig = {
   mode,
   entry: `${__dirname}/src/index.js`,
   target: 'web',
-  devtool: "source-map",
   output: {
-    path: `${__dirname}/lib`,
+    path: `${__dirname}/dist`,
     filename: `${libraryName}.umd.js`,
     library: libraryName,
     libraryTarget: "umd",
     libraryExport: "default",
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
   module: {
     rules: [
       {
         test: /\.(js)$/,
         loader: "babel-loader",
-        exclude: /(node_modules|bower_components)/
+        exclude: /(node_modules|bower_components)/,
       },
       {
         test: /\.(js)$/,
         loader: "eslint-loader",
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
-  plugins: [
-    new CleanWebpackPlugin(['lib']),
-  ],
   externals : {
     web3: 'web3',
     'ethereumjs-util': 'ethereumjs-util',
@@ -48,7 +43,7 @@ const clientConfig = {
   },
   resolve: {
     modules: [path.resolve("./node_modules"), path.resolve("./src")],
-    extensions: [".json", ".js"]
+    extensions: [".json", ".js"],
   },
 }
 
@@ -56,8 +51,8 @@ const serverConfig = {
   ...clientConfig,
   target: 'node',
   output: {
-    path: `${__dirname}/lib`,
-    filename: `${libraryName}.esm.js`,
+    path: `${__dirname}/dist`,
+    filename: `${libraryName}.node.js`,
     libraryTarget: "commonjs2",
   },
 }

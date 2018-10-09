@@ -11,7 +11,7 @@ import {
   getReceiptProof,
   verifyTxProof,
   verifyReceiptProof,
-  verifyHeaderProof
+  verifyHeaderProof,
 } from "./helpers/proofs"
 import { getHeaders, getBlockHeader } from "./helpers/blocks"
 import MerkleTree from "./helpers/merkle-tree"
@@ -142,7 +142,7 @@ export default class Matic {
     if (this._syncerUrl) {
       try {
         const response = await this._apiCall({
-          url: `${this._syncerUrl}/tx/${txId}`
+          url: `${this._syncerUrl}/tx/${txId}`,
         })
 
         if (response && response.tx) {
@@ -160,7 +160,7 @@ export default class Matic {
     if (this._syncerUrl) {
       try {
         const response = await this._apiCall({
-          url: `${this._syncerUrl}/tx/${txId}/receipt`
+          url: `${this._syncerUrl}/tx/${txId}/receipt`,
         })
 
         if (response && response.receipt) {
@@ -176,7 +176,7 @@ export default class Matic {
 
   async getTxProof(txId) {
     const { proof: txProof } = await this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}/proof`
+      url: `${this._syncerUrl}/tx/${txId}/proof`,
     })
 
     return txProof
@@ -188,7 +188,7 @@ export default class Matic {
 
   async getReceiptProof(txId) {
     const { proof: receiptProof } = await this._apiCall({
-      url: `${this._syncerUrl}/tx/${txId}/receipt/proof`
+      url: `${this._syncerUrl}/tx/${txId}/receipt/proof`,
     })
 
     return receiptProof
@@ -200,7 +200,7 @@ export default class Matic {
 
   getHeaderObject(blockNumber) {
     return this._apiCall({
-      url: `${this._watcherUrl}/header/included/${blockNumber}`
+      url: `${this._watcherUrl}/header/included/${blockNumber}`,
     })
   }
 
@@ -209,8 +209,8 @@ export default class Matic {
       url: `${this._syncerUrl}/block/${blockNumber}/proof`,
       query: {
         start: +header.start,
-        end: +header.end
-      }
+        end: +header.end,
+      },
     })
 
     return headerProof
@@ -224,7 +224,7 @@ export default class Matic {
     // fetch trancation & receipt proof
     const [txProof, receiptProof] = await Promise.all([
       this.getTxProof(txId),
-      this.getReceiptProof(txId)
+      this.getReceiptProof(txId),
     ])
 
     // fetch header object & header proof
@@ -269,7 +269,7 @@ export default class Matic {
       txId: txId,
       block: withdrawBlock,
       tx: withdrawTx,
-      receipt: withdrawReceipt
+      receipt: withdrawReceipt,
     }
 
     const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block)
@@ -362,7 +362,7 @@ export default class Matic {
       !options.nonce
         ? await web3.eth.getTransactionCount(from, "pending")
         : options.nonce,
-      !options.chainId ? await web3.eth.net.getId() : options.chainId
+      !options.chainId ? await web3.eth.net.getId() : options.chainId,
     ])
 
     return {
@@ -371,7 +371,7 @@ export default class Matic {
       gasPrice: gasPrice,
       nonce,
       chainId,
-      value: options.value || 0
+      value: options.value || 0,
     }
   }
 
@@ -394,9 +394,9 @@ export default class Matic {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        ...headers
+        ...headers,
       },
-      body: data.body ? JSON.stringify(data.body) : null
+      body: data.body ? JSON.stringify(data.body) : null,
     }).then(res => {
       return res.json()
     })

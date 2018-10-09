@@ -7,10 +7,10 @@
     "lib": "./lib"
   },
   "scripts": {
-    "clean": "rm -rf lib",
+    "clean": "rimraf lib dist",
     "babel:build": "babel src/ --out-dir lib/",
-    "build": "npm run lint && npm run clean && npm run pack",
-    "lint": "eslint src/**/*.js ./test/**/*.spec.js",
+    "build": "npm run lint && npm run clean && npm run babel:build && npm run pack",
+    "lint": "eslint --ext .js src test",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
     "pack": "webpack --env build",
@@ -38,36 +38,54 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.0.0",
-    "@babel/runtime": "^7.1.2",
-    "ethereumjs-block": "^2.0.1",
-    "ethereumjs-tx": "^1.3.7",
-    "ethereumjs-util": "^5.2.0",
-    "ethers": "^4.0.0",
-    "isomorphic-fetch": "^2.2.1",
-    "merkle-patricia-tree": "^2.3.2",
-    "query-string": "^6.1.0",
+    "@babel/runtime": "7.1.2",
+    "ethereumjs-block": "2.0.1",
+    "ethereumjs-tx": "1.3.7",
+    "ethereumjs-util": "5.2.0",
+    "ethers": "4.0.0",
+    "isomorphic-fetch": "2.2.1",
+    "merkle-patricia-tree": "2.3.2",
+    "query-string": "6.1.0",
     "web3": "1.0.0-beta.36"
   },
   "devDependencies": {
     "@babel/cli": "7.1.0",
     "@babel/core": "7.1.0",
-    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/plugin-transform-runtime": "7.1.0",
     "@babel/preset-env": "7.1.0",
     "@babel/register": "7.0.0",
     "babel-eslint": "7.2.3",
     "babel-loader": "8.0.0-beta.0",
-    "chai": "^3.5.0",
-    "clean-webpack-plugin": "0.1.19",
+    "chai": "3.5.0",
     "eslint": "5.6.0",
     "eslint-config-standard": "12.0.0",
     "eslint-loader": "2.1.1",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-node": "7.0.1",
     "eslint-plugin-promise": "4.0.1",
-    "ganache-cli": "^6.1.8",
-    "mocha": "^3.3.0",
+    "ganache-cli": "6.1.8",
+    "husky": "1.1.1",
+    "lint-staged": "7.3.0",
+    "mocha": "3.3.0",
+    "rimraf": "2.6.2",
     "webpack": "4.1.0",
     "webpack-cli": "2.0.10",
     "yargs": "8.0.2"
+  },
+  "browserslist": [
+    "> 1%",
+    "node 8",
+    "not dead"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.js": ["eslint --fix src test", "git add"]
+    },
+    "ignore": ["dist", "lib"]
   }
 }
