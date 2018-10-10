@@ -32,11 +32,12 @@ export default class Matic {
 
     this._syncerUrl = options.syncerUrl
     this._watcherUrl = options.watcherUrl
+    this._rootChainAddress = options.rootChainAddress
 
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
-      options.rootChainAddress
+      this._rootChainAddress
     )
 
     // internal cache
@@ -81,13 +82,16 @@ export default class Matic {
   newAccount() {
     return this._parentWeb3.eth.accounts.wallet.create(1)
   }
-  
+
   async approveTokensForDeposit(token, amount, options = {}) {
     const _tokenContract = new this._parentWeb3.eth.Contract(
       StandardTokenArtifacts.abi,
       token
     )
-    const approveTx = await _tokenContract.methods.approve(this._rootChainContract, amount)
+    const approveTx = await _tokenContract.methods.approve(
+      this._rootChainAddress,
+      amount
+    )
     const _options = await this._fillOptions(
       options,
       approveTx,
