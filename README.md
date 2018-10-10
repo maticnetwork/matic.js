@@ -48,23 +48,40 @@ const matic = new Matic({
 // matic.wallet = <private-key> // Use metamask provider or use WalletConnect provider instead.
 
 // Approve token for deposit
-await matic.approveTokens(
+await matic.approveTokensForDeposit(
   token,  // Token address,
-  amount  // Token amount for approval (in wei)
+  amount,  // Token amount for approval (in wei)
+  options // transaction fields
 )
 
 // Deposit token into Matic chain. Remember to call `approveTokens` before
 await matic.depositTokens(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
-  amount  // Token amount for deposit (in wei)
+  amount,  // Token amount for deposit (in wei)
+  options // transaction fields
 )
 
 // Transfer token on Matic
 await matic.transferTokens(
   token,  // Token address
   user,   // Recipient address
-  amount  // Token amount for deposit (in wei)
+  amount,  // Token amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Initiate withdrawal of funds from Matic and retrieve the Transaction id
+await matic.startWithdraw(
+  token, // Token address
+  amount, // Token amount for withdraw (in wei)
+  options // transaction fields
+)
+
+// Withdraw funds from the Matic chain using the Transaction id generated from the 'startWithdraw' method
+// after header has been submitted to mainchain
+await matic.withdraw(
+  txId, // Transaction id generated from the 'startWithdraw' method
+  options // transaction fields
 )
 ```
 
