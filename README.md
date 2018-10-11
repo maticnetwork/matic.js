@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/maticnetwork/matic.js.svg?branch=master)](https://travis-ci.org/maticnetwork/matic.js)
 
-This repository contains the `matic.js` client lib. `matic.js` makes it easy for developers, who may not be deeply familiar with smart contract development, to interact with the various components of Matic Network.
+This repository contains the `maticjs` client lib. `maticjs` makes it easy for developers, who may not be deeply familiar with smart contract development, to interact with the various components of Matic Network.
 
 This library will help developers to move assets from Ethereum chain to Matic chain, and withdraw from Matic to Ethereum using fraud proofs.
 
@@ -11,36 +11,36 @@ We will be improving this library to make all features available like Plasma Fas
 ### Installation
 
 ```bash
-$ npm install --save @maticnetwork/matic.js # or yarn add @maticnetwork/matic.js
+$ npm install --save maticjs # or yarn add maticjs
 ```
 
 ### Getting started
 
 ```js
 // Import Matic sdk
-import Matic from '@maticnetwork/matic.js'
+import Matic from 'maticjs'
 
 // Create sdk instance
 const matic = new Matic({
-  
+
   // Set Matic provider - string or provider instance
   // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
   maticProvider: <web3-provider>,
-  
+
   // Set Mainchain provider - string or provider instance
   // Example: 'https://kovan.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
   parentProvider: <web3-provider>,
-  
+
   // Set rootchain contract. See below for more information
   rootChainAddress: <root-contract-address>,
-  
+
   // Syncer API URL
   // Fetches tx/receipt proof data instead of fetching whole block on client side
-  syncerUrl: <syncer-url>, // (optional)
-  
+  syncerUrl: 'https://eth-syncer.api.matic.network/api/v1', // (optional)
+
   // Watcher API URL
   // Fetches headerBlock info from mainchain & finds appropriate headerBlock for given blockNumber
-  watcherUrl: <watcher-url>, // (optional)
+  watcherUrl: 'https://eth-watcher.api.matic.network/api/v1', // (optional)
 })
 
 // Set wallet
@@ -96,7 +96,7 @@ The flow for asset transfers on the Matic Network is as follows:
 
 ### Contracts and addresses
 
-**Matic Testnet** 
+**Matic Testnet**
 
 * RPC endpoint host: https://testnet.matic.network
 * TEST childchain ERC20 token: 0x343461c74133E3fA476Dbbc614a87473270a226c
@@ -131,17 +131,17 @@ Please write to info@matic.network to request TEST tokens for development purpos
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
 
 ```js
-import Matic from '@maticnetwork/matic.js'
+import Matic from 'maticjs'
 
 const matic = new Matic(options)
 ```
 
 - `options` is simple Javascript `object` which can have following fields:
-    - `maticProvider` can be `string` or `Web3.providers` instance. This provider must connect to Matic chain. Value can be anyone of following: 
+    - `maticProvider` can be `string` or `Web3.providers` instance. This provider must connect to Matic chain. Value can be anyone of following:
          * `'https://testnet.matic.network'`
          * `new Web3.providers.HttpProvider('http://localhost:8545')`
          * [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
-    - `parentProvider` can be `string` or `Web3.providers` instance. This provider must connect to Ethereum chain (testnet or mainchain). Value can be anyone of following: 
+    - `parentProvider` can be `string` or `Web3.providers` instance. This provider must connect to Ethereum chain (testnet or mainchain). Value can be anyone of following:
          * `'https://kovan.infura.io'`
          * `new Web3.providers.HttpProvider('http://localhost:8545')`
          * [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
@@ -160,7 +160,7 @@ Approves given `amount` of `token` to `rootChainContract`.
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
-    * `from` must be valid account address 
+    * `from` must be valid account address
     * `gasPrice` same as Ethereum `sendTransaction`
     * `gasLimit` same as Ethereum `sendTransaction`
     * `nonce` same as Ethereum `sendTransaction`

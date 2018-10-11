@@ -1,6 +1,6 @@
 module.exports = {
-  parser: "babel-eslint",
-  extends: "eslint:recommended",
+  parser: 'babel-eslint',
+  extends: 'eslint:recommended',
   globals: {
     Promise: true,
     Buffer: true,
@@ -8,12 +8,13 @@ module.exports = {
     require: true,
   },
   rules: {
-    "space-before-function-paren": ["error", "never"],
-    semi: ["error", "never"],
-    "no-underscore-dangle": 0,
+    'space-before-function-paren': ['error', 'never'],
+    semi: ['error', 'never'],
+    'no-underscore-dangle': 0,
     // allow debugger during development
-    "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0,
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // trailing comma
-    "comma-dangle": ["error", "always-multiline"],
-  },
+    'comma-dangle': ['error', 'always-multiline'],
+    'quotes': ['error', 'single'],
+  }
 }
