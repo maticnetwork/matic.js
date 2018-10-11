@@ -1,6 +1,6 @@
 {
   "name": "maticjs",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.umd.js",
   "module": "lib/index.js",

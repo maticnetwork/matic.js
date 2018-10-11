@@ -1,17 +1,17 @@
-import utils from "ethereumjs-util"
-import { Buffer } from "safe-buffer"
+import utils from 'ethereumjs-util'
+import { Buffer } from 'safe-buffer'
 
 const sha3 = utils.sha3
 
 export default class MerkleTree {
   constructor(leaves = []) {
     if (leaves.length < 1) {
-      throw new Error("Atleast 1 leaf needed")
+      throw new Error('Atleast 1 leaf needed')
     }
 
     const depth = Math.ceil(Math.log(leaves.length) / Math.log(2))
     if (depth > 20) {
-      throw new Error("Depth must be 20 or less")
+      throw new Error('Depth must be 20 or less')
     }
 
     const l = leaves.concat(
