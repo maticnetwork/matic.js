@@ -1,9 +1,9 @@
-import Trie from "merkle-patricia-tree"
-import utils from "ethereumjs-util"
-import EthereumTx from "ethereumjs-tx"
-import EthereumBlock from "ethereumjs-block/from-rpc"
+import Trie from 'merkle-patricia-tree'
+import utils from 'ethereumjs-util'
+import EthereumTx from 'ethereumjs-tx'
+import EthereumBlock from 'ethereumjs-block/from-rpc'
 
-import MerkleTree from "./merkle-tree"
+import MerkleTree from './merkle-tree'
 
 const rlp = utils.rlp
 
@@ -39,7 +39,7 @@ export async function getTxProof(tx, block) {
         }
 
         if (reminder.length > 0) {
-          return reject(new Error("Node does not contain the key"))
+          return reject(new Error('Node does not contain the key'))
         }
 
         const prf = {
@@ -60,9 +60,9 @@ export function getReceiptBytes(receipt) {
   if (receipt.status !== undefined && receipt.status !== null) {
     status = receipt.status
     if (status === true) {
-      status = "0x01"
+      status = '0x01'
     } else if (status === false) {
-      status = "0x00"
+      status = '0x00'
     }
   }
 
@@ -117,7 +117,7 @@ export async function getReceiptProof(receipt, block, web3) {
         }
 
         if (reminder.length > 0) {
-          return reject(new Error("Node does not contain the key"))
+          return reject(new Error('Node does not contain the key'))
         }
 
         const prf = {
@@ -145,7 +145,7 @@ export function verifyHeaderProof({ value, valueIndex, headerRoot, proof }) {
 }
 
 export function verifyTxProof(proof) {
-  const path = utils.toBuffer(proof.path).toString("hex")
+  const path = utils.toBuffer(proof.path).toString('hex')
   const value = rlp.decode(utils.toBuffer(proof.value))
   const parentNodes = rlp.decode(utils.toBuffer(proof.parentNodes))
   const txRoot = utils.toBuffer(proof.root)
@@ -159,7 +159,7 @@ export function verifyTxProof(proof) {
       currentNode = parentNodes[i]
       const encodedNode = Buffer.from(
         utils.sha3(rlp.encode(currentNode)),
-        "hex"
+        'hex'
       )
       if (!nodeKey.equals(encodedNode)) {
         return false
@@ -183,7 +183,7 @@ export function verifyTxProof(proof) {
           break
         case 2:
           pathPtr += nibblesToTraverse(
-            currentNode[0].toString("hex"),
+            currentNode[0].toString('hex'),
             path,
             pathPtr
           )
@@ -219,8 +219,8 @@ export function verifyReceiptProof(proof) {
 
 // raw header
 function getRawHeader(_block) {
-  if (typeof _block.difficulty !== "string") {
-    _block.difficulty = "0x" + _block.difficulty.toString(16)
+  if (typeof _block.difficulty !== 'string') {
+    _block.difficulty = '0x' + _block.difficulty.toString(16)
   }
 
   const block = new EthereumBlock(_block)
@@ -229,9 +229,9 @@ function getRawHeader(_block) {
 
 // squanch transaction
 export function squanchTx(tx) {
-  tx.gasPrice = "0x" + parseInt(tx.gasPrice).toString(16)
-  tx.value = "0x" + parseInt(tx.value).toString(16) || "0"
-  tx.gas = "0x" + parseInt(tx.gas).toString(16)
+  tx.gasPrice = '0x' + parseInt(tx.gasPrice).toString(16)
+  tx.value = '0x' + parseInt(tx.value).toString(16) || '0'
+  tx.gas = '0x' + parseInt(tx.gas).toString(16)
   tx.data = tx.input
   return tx
 }
@@ -239,8 +239,8 @@ export function squanchTx(tx) {
 function nibblesToTraverse(encodedPartialPath, path, pathPtr) {
   let partialPath
   if (
-    String(encodedPartialPath[0]) === "0" ||
-    String(encodedPartialPath[0]) === "2"
+    String(encodedPartialPath[0]) === '0' ||
+    String(encodedPartialPath[0]) === '2'
   ) {
     partialPath = encodedPartialPath.slice(2)
   } else {
@@ -250,6 +250,6 @@ function nibblesToTraverse(encodedPartialPath, path, pathPtr) {
   if (partialPath === path.slice(pathPtr, pathPtr + partialPath.length)) {
     return partialPath.length
   } else {
-    throw new Error("path was wrong")
+    throw new Error('path was wrong')
   }
 }

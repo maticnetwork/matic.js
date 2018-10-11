@@ -1,8 +1,8 @@
-import "isomorphic-fetch"
+import 'isomorphic-fetch'
 
-import Web3 from "web3"
-import utils from "ethereumjs-util"
-import queryString from "query-string"
+import Web3 from 'web3'
+import utils from 'ethereumjs-util'
+import queryString from 'query-string'
 
 import {
   getTxBytes,
@@ -12,20 +12,20 @@ import {
   verifyTxProof,
   verifyReceiptProof,
   verifyHeaderProof,
-} from "./helpers/proofs"
-import { getHeaders, getBlockHeader } from "./helpers/blocks"
-import MerkleTree from "./helpers/merkle-tree"
+} from './helpers/proofs'
+import { getHeaders, getBlockHeader } from './helpers/blocks'
+import MerkleTree from './helpers/merkle-tree'
 
-import RootChainArtifacts from "../artifacts/RootChain"
-import ChildERC20Artifacts from "../artifacts/ChildERC20"
-import StandardTokenArtifacts from "../artifacts/StandardToken"
+import RootChainArtifacts from '../artifacts/RootChain'
+import ChildERC20Artifacts from '../artifacts/ChildERC20'
+import StandardTokenArtifacts from '../artifacts/StandardToken'
 
 const rlp = utils.rlp
 
 export default class Matic {
   constructor(options = {}) {
-    this._throwIfNull(options.maticProvider, "maticProvider is required")
-    this._throwIfNull(options.parentProvider, "parentProvider is required")
+    this._throwIfNull(options.maticProvider, 'maticProvider is required')
+    this._throwIfNull(options.parentProvider, 'parentProvider is required')
 
     this._web3 = new Web3(options.maticProvider)
     this._parentWeb3 = new Web3(options.parentProvider)
@@ -354,7 +354,7 @@ export default class Matic {
     const from = options.from || this.walletAddress
     if (!from) {
       throw new Error(
-        "`from` required in options or set wallet using maticObject.wallet = <private key>"
+        '`from` required in options or set wallet using maticObject.wallet = <private key>'
       )
     }
 
@@ -364,7 +364,7 @@ export default class Matic {
         : options.gasLimit || options.gas,
       !options.gasPrice ? await web3.eth.getGasPrice() : options.gasPrice,
       !options.nonce
-        ? await web3.eth.getTransactionCount(from, "pending")
+        ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
       !options.chainId ? await web3.eth.net.getId() : options.chainId,
     ])
@@ -381,9 +381,9 @@ export default class Matic {
 
   _wrapWeb3Promise(promise, options) {
     return promise
-      .on("transactionHash", options.onTransactionHash)
-      .on("receipt", options.onReceipt)
-      .on("error", options.onError)
+      .on('transactionHash', options.onTransactionHash)
+      .on('receipt', options.onReceipt)
+      .on('error', options.onError)
   }
 
   _apiCall(data = {}) {
@@ -391,13 +391,13 @@ export default class Matic {
 
     const queryParams = data.query && queryString.stringify(data.query || {})
 
-    const url = `${data.url}?${queryParams || ""}`
+    const url = `${data.url}?${queryParams || ''}`
 
     return fetch(url, {
-      method: data.method || (data.body ? "POST" : "GET"),
+      method: data.method || (data.body ? 'POST' : 'GET'),
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
         ...headers,
       },
       body: data.body ? JSON.stringify(data.body) : null,
