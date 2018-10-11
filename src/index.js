@@ -16,9 +16,9 @@ import {
 import { getHeaders, getBlockHeader } from "./helpers/blocks"
 import MerkleTree from "./helpers/merkle-tree"
 
-import RootChainArtifacts from "./artifacts/RootChain"
-import ChildERC20Artifacts from "./artifacts/ChildERC20"
-import StandardTokenArtifacts from "./artifacts/StandardToken"
+import RootChainArtifacts from "../artifacts/RootChain"
+import ChildERC20Artifacts from "../artifacts/ChildERC20"
+import StandardTokenArtifacts from "../artifacts/StandardToken"
 
 const rlp = utils.rlp
 

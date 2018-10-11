@@ -1,20 +1,22 @@
 {
-  "name": "@maticnetwork/matic.js",
-  "version": "0.0.1-beta.1",
+  "name": "maticjs",
+  "version": "1.0.0-beta.1",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.umd.js",
   "module": "lib/index.js",
-  "directories": {
-    "lib": "./lib"
-  },
+  "files": [
+    "lib",
+    "dist",
+    "artifacts"
+  ],
   "scripts": {
     "clean": "rimraf lib dist",
     "babel:build": "babel src/ --out-dir lib/",
-    "build": "npm run lint && npm run clean && npm run babel:build && npm run pack",
+    "webpack:build": "webpack --env build",
+    "build": "npm run lint && npm run clean && npm run babel:build && npm run webpack:build",
     "lint": "eslint --ext .js src test",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
-    "pack": "webpack --env build",
     "test:ci": "scripts/run-test.sh",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
@@ -78,6 +80,9 @@
     "node 8",
     "not dead"
   ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
