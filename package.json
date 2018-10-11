@@ -1,5 +1,5 @@
 {
-  "name": "@maticnetwork/matic.js",
+  "name": "maticjs",
   "version": "0.0.1-beta.1",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.umd.js",
