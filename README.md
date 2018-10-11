@@ -36,11 +36,11 @@ const matic = new Matic({
 
   // Syncer API URL
   // Fetches tx/receipt proof data instead of fetching whole block on client side
-  syncerUrl: <syncer-url>, // (optional)
+  syncerUrl: 'https://eth-syncer.api.matic.network/api/v1', // (optional)
 
   // Watcher API URL
   // Fetches headerBlock info from mainchain & finds appropriate headerBlock for given blockNumber
-  watcherUrl: <watcher-url>, // (optional)
+  watcherUrl: 'https://eth-watcher.api.matic.network/api/v1', // (optional)
 })
 
 // Set wallet
