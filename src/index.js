@@ -232,7 +232,20 @@ export default class Matic {
     ])
 
     // fetch header object & header proof
-    const header = await this.getHeaderObject(txProof.blockNumber)
+    let header = null
+    try {
+      header = await this.getHeaderObject(txProof.blockNumber)
+    } catch (e) {
+      // ignore error
+    }
+
+    // check if header block found
+    if (!header) {
+      throw new Error(
+        `No corresponding checkpoint/header block found for ${txId}.`
+      )
+    }
+
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
 
     const withdrawTx = this._rootChainContract.methods.withdraw(
@@ -402,6 +415,11 @@ export default class Matic {
       },
       body: data.body ? JSON.stringify(data.body) : null,
     }).then(res => {
+      if (!res.ok) {
+        const err = new Error(res.statusText || 'Unknown error occurred')
+        err.response = res
+        throw err
+      }
       return res.json()
     })
   }
