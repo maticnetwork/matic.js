@@ -1,13 +1,13 @@
 /* global __dirname, require, module */
-const path = require("path")
-const env = require("yargs").argv.env // use --env with webpack 2
+const path = require('path')
+const env = require('yargs').argv.env // use --env with webpack 2
 
-const libraryName = "matic"
+const libraryName = 'matic'
 
-let mode = "development"
+let mode = 'development'
 
-if (env === "build") {
-  mode = "production"
+if (env === 'build') {
+  mode = 'production'
 }
 
 const clientConfig = {
@@ -18,32 +18,32 @@ const clientConfig = {
     path: `${__dirname}/dist`,
     filename: `${libraryName}.umd.js`,
     library: libraryName,
-    libraryTarget: "umd",
-    libraryExport: "default",
+    libraryTarget: 'umd',
+    libraryExport: 'default',
     umdNamedDefine: true,
   },
   module: {
     rules: [
       {
         test: /\.(js)$/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
         exclude: /(node_modules|bower_components)/,
       },
       {
         test: /\.(js)$/,
-        loader: "eslint-loader",
+        loader: 'eslint-loader',
         exclude: /node_modules/,
       },
     ],
   },
-  externals : {
+  externals: {
     web3: 'web3',
     'ethereumjs-util': 'ethereumjs-util',
     'query-string': 'query-string',
   },
   resolve: {
-    modules: [path.resolve("./node_modules"), path.resolve("./src")],
-    extensions: [".json", ".js"],
+    modules: [path.resolve('./node_modules'), path.resolve('./src')],
+    extensions: ['.json', '.js'],
   },
 }
 
@@ -53,8 +53,9 @@ const serverConfig = {
   output: {
     path: `${__dirname}/dist`,
     filename: `${libraryName}.node.js`,
-    libraryTarget: "commonjs2",
+    // globalObject: 'this',
+    libraryTarget: 'commonjs2',
   },
 }
 
-module.exports = [ clientConfig, serverConfig ]
+module.exports = [clientConfig, serverConfig]
