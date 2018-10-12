@@ -20,8 +20,7 @@ const matic = new Matic({
   watcherUrl,
 })
 
-matic.wallet =
-  '0xecdccb2bded99cfd3fbcc47fe9add154cf861940e10ba77a492bfa1ca89bee8d'
+matic.wallet = '<private-key>'
 
 // Send Tokens
 matic.transferTokens(token, user, amount, {
