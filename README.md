@@ -118,6 +118,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
+- <a href="#getHeaderObject"><code>matic.<b>getHeaderObject()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
 - <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
 - <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
@@ -277,6 +278,29 @@ matic.startWithdraw('0x718Ca123...', '1000000000000000000', {
   from: '0xABc578455...'
 }).on('onTransactionHash', txHash => {
    console.log("Started withdraw process with txId", txHash)
+})
+```
+
+---
+
+<a name="getHeaderObject"></a>
+
+#### matic.getHeaderObject(blockNumber)
+
+Fetch header/checkpoint corresponding to `blockNumber`
+
+- `blockNumber` must be valid Matic's sidechain block number
+
+This returns `Promise` object, which will be fulfilled when header/checkpoint is found corresponding to `blockNumber`.
+
+Example:
+
+```js
+matic.getHeaderObject(673874).then(header => {
+   // header.start
+   // header.end
+   // header.proposer
+   // header.number
 })
 ```
 
