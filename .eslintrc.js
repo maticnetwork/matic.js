@@ -6,6 +6,7 @@ module.exports = {
     Buffer: true,
     fetch: true,
     require: true,
+    process: true,
   },
   rules: {
     'space-before-function-paren': ['error', 'never'],
@@ -15,6 +16,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // trailing comma
     'comma-dangle': ['error', 'always-multiline'],
-    'quotes': ['error', 'single'],
-  }
+    quotes: ['error', 'single'],
+  },
 }
