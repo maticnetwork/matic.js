@@ -1,4 +1,4 @@
-const Matic = require('../../lib').default
+const Matic = require('maticjs')
 
 const maticProvider = 'https://testnet.matic.network'
 const parentProvider = 'https://kovan.infura.io/matic'

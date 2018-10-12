@@ -1,6 +1,4 @@
-const readline = require('readline')
-
-const Matic = require('../../../lib/index').default
+const Matic = require('maticjs')
 
 const maticProvider = 'https://testnet.matic.network'
 const parentProvider = 'https://kovan.infura.io/matic'
@@ -24,8 +22,6 @@ const matic = new Matic({
 matic.wallet = '<private-key>'
 
 var transactionHash = null
-readline.emitKeypressEvents(process.stdin)
-process.stdin.setRawMode(true)
 
 matic
   .startWithdraw(mtoken, amount, {
@@ -36,15 +32,11 @@ matic
   })
   .then(() => {
     //wait till checkpoint is submitted, then only procced
-    process.stdin.on('keypress', () => {
-      matic.withdraw(transactionHash, {
-        from,
-        onTransactionHash: () => {
-          // action on Transaction success
-          process.exit()
-        },
-      })
+    matic.withdraw(transactionHash, {
+      from,
+      onTransactionHash: () => {
+        // action on Transaction success
+        process.exit()
+      },
     })
-    // Please submit checkpoint and press any key for continue...
-    // console.log('Please submit checkpoint and press any key for continue...')
   })
