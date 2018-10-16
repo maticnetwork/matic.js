@@ -4,6 +4,7 @@
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.node.js",
   "browser": "dist/matic.umd.js",
+  "react-native": "dist/matic.node.js",
   "files": [
     "lib",
     "dist",
