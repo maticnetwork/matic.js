@@ -7,6 +7,7 @@ module.exports = {
     fetch: true,
     require: true,
     process: true,
+    module: true,
   },
   rules: {
     'space-before-function-paren': ['error', 'never'],
