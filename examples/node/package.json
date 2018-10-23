@@ -1,0 +1,19 @@
+{
+  "name": "maticjs-node",
+  "version": "1.0.0",
+  "description": "Example code to interact with Matic Network in node environment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "matic",
+    "js",
+    "node"
+  ],
+  "author": "Sayli Patil <sayli@matic.network>",
+  "license": "ISC",
+  "dependencies": {
+    "maticjs": "1.0.0-beta.5"
+  }
+}

@@ -15,7 +15,7 @@
     "babel:build": "babel src/ --out-dir lib/",
     "webpack:build": "webpack --env build",
     "build": "npm run lint && npm run clean && npm run babel:build && npm run webpack:build",
-    "lint": "eslint --ext .js src test",
+    "lint": "eslint --ext .js src test examples",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
     "test:ci": "scripts/run-test.sh",
