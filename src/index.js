@@ -28,6 +28,7 @@ export default class Matic {
     this._throwIfNull(options.parentProvider, 'parentProvider is required')
 
     this._web3 = new Web3(options.maticProvider)
+    this._web3.matic = true
     this._parentWeb3 = new Web3(options.parentProvider)
 
     this._syncerUrl = options.syncerUrl
@@ -132,7 +133,6 @@ export default class Matic {
     if (options.parent) {
       web3Object = this._parentWeb3
     }
-
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
     const _options = await this._fillOptions(options, transferTx, web3Object)
@@ -386,19 +386,18 @@ export default class Matic {
   async _fillOptions(options, txObject, web3) {
     // delete chain id
     delete txObject.chainId
-
+    const gas = !web3.matic ? await web3.eth.getGasPrice() : 0
     const from = options.from || this.walletAddress
     if (!from) {
       throw new Error(
         '`from` required in options or set wallet using maticObject.wallet = <private key>'
       )
     }
-
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
-      !options.gasPrice ? await web3.eth.getGasPrice() : options.gasPrice,
+      !options.gasPrice ? gas : options.gasPrice,
       !options.nonce
         ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
