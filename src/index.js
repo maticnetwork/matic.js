@@ -393,6 +393,7 @@ export default class Matic {
         '`from` required in options or set wallet using maticObject.wallet = <private key>'
       )
     }
+
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas({ from, value: options.value })
