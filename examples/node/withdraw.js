@@ -14,40 +14,24 @@ const matic = new Matic({
   watcherUrl: config.WATCHER_URL,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = '<private-key>'
 
 var transactionHash = null
-
-function sleepFor(timeInMilliSeconds = 1000) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeInMilliSeconds)
-  })
-}
 
 matic
   .startWithdraw(mtoken, amount, {
     from,
     onTransactionHash: txHash => {
       transactionHash = txHash
-      // console.log(transactionHash)
     },
   })
-  .then(async() => {
-    await sleepFor(5000)
-    // submit checkpoint (this is for tetsing purpose only)
-    matic
-      ._apiCall({
-        url: `${config.SYNCER_URL}/block/submit-checkpoint`,
-      })
-      .then(async() => {
-        // wait till checkpoint is submitted, then only procced
-        await sleepFor(15000)
-        matic.withdraw(transactionHash, {
-          from,
-          onTransactionHash: () => {
-            // action on Transaction success
-            // console.log('tx', tx)
-          },
-        })
-      })
+  .then(() => {
+    //wait till checkpoint is submitted, then only procced
+    matic.withdraw(transactionHash, {
+      from,
+      onTransactionHash: () => {
+        // action on Transaction success
+        process.exit()
+      },
+    })
   })
