@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Example code to interact with Matic Network in browser environment",
   "scripts": {
+    "start": "http-server .",
     "build": "webpack main.js -o dist/bundle.js",
     "watch": "webpack main.js --watch -o dist/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +20,7 @@
     "maticjs": "1.0.0-beta.5"
   },
   "devDependencies": {
+    "http-server": "0.11.1",
     "webpack": "4.21.0"
   }
 }
