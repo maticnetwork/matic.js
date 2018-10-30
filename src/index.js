@@ -28,12 +28,13 @@ export default class Matic {
     this._throwIfNull(options.parentProvider, 'parentProvider is required')
 
     this._web3 = new Web3(options.maticProvider)
+    this._web3.matic = true
     this._parentWeb3 = new Web3(options.parentProvider)
 
     this._syncerUrl = options.syncerUrl
     this._watcherUrl = options.watcherUrl
     this._rootChainAddress = options.rootChainAddress
-
+    this._maticWethAddress = options.maticWethAddress
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
@@ -128,15 +129,40 @@ export default class Matic {
   }
 
   async transferTokens(token, user, amount, options = {}) {
-    const _tokenContract = this._getChildTokenContract(token)
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
-    const _options = await this._fillOptions(options, transferTx, this._web3)
-
+    const _options = await this._fillOptions(options, transferTx, web3Object)
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
+  async transferEthers(to, amount, options = {}) {
+    const from = options.from
+
+    // if matic chain, transfer normal WETH tokens
+    if (!options.parent) {
+      return this.transferTokens(this._maticWethAddress, to, amount, options)
+    }
+
+    const gasLimit = await this._parentWeb3.eth.estimateGas({
+      from,
+      value: amount,
+    })
+    options.gasLimit = gasLimit
+    options.value = amount
+    const _options = await this._fillOptions(options, {}, this._parentWeb3)
+
+    return this._wrapWeb3Promise(
+      this._parentWeb3.eth.sendTransaction(_options),
+      options
+    )
+  }
+
   async startWithdraw(token, amount, options = {}) {
-    const _tokenContract = this._getChildTokenContract(token)
+    const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
@@ -344,15 +370,12 @@ export default class Matic {
     }
   }
 
-  _getChildTokenContract(token) {
+  _getERC20TokenContract(token, web3) {
     const _token = token.toLowerCase()
 
     let _tokenContract = this._tokenCache[_token]
     if (!_tokenContract) {
-      _tokenContract = new this._web3.eth.Contract(
-        ChildERC20Artifacts.abi,
-        _token
-      )
+      _tokenContract = new web3.eth.Contract(ChildERC20Artifacts.abi, _token)
       // update token cache
       this._tokenCache[_token] = _tokenContract
     }
@@ -363,7 +386,7 @@ export default class Matic {
   async _fillOptions(options, txObject, web3) {
     // delete chain id
     delete txObject.chainId
-
+    const gas = !web3.matic ? await web3.eth.getGasPrice() : 0
     const from = options.from || this.walletAddress
     if (!from) {
       throw new Error(
@@ -375,7 +398,7 @@ export default class Matic {
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
-      !options.gasPrice ? await web3.eth.getGasPrice() : options.gasPrice,
+      !options.gasPrice ? gas : options.gasPrice,
       !options.nonce
         ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,

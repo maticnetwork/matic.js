@@ -1,9 +1,9 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const token = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2' // test token address
-const amount = '10000000000000000'
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // test user address
+const token = '0x670568761764f53E6C10cd63b71024c31551c9EC' // test token address
+const amount = '10000000000000000' // amount in wei
+const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
 
 // Create object of Matic
 const matic = new Matic({
@@ -14,7 +14,7 @@ const matic = new Matic({
   watcherUrl: config.WATCHER_URL,
 })
 
-matic.wallet = '<private-key>'
+matic.wallet = '<private-key>' // prefix with `0x`
 
 // Approve token
 matic

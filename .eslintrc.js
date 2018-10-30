@@ -8,6 +8,7 @@ module.exports = {
     require: true,
     process: true,
     module: true,
+    setTimeout: true,
   },
   rules: {
     'space-before-function-paren': ['error', 'never'],
