@@ -43,6 +43,7 @@ export default class Matic {
 
     // internal cache
     this._tokenCache = {}
+    this._tokenMappedCache = {}
   }
 
   //
@@ -82,6 +83,16 @@ export default class Matic {
 
   newAccount() {
     return this._parentWeb3.eth.accounts.wallet.create(1)
+  }
+
+  async getMappedTokenAddress(address) {
+    const _a = address.toLowerCase()
+    if (!this._tokenMappedCache[_a]) {
+      this._tokenMappedCache[_a] = await this._rootChainContract.methods
+        .tokens(_a)
+        .call()
+    }
+    return this._tokenMappedCache[_a]
   }
 
   async approveTokensForDeposit(token, amount, options = {}) {
