@@ -50,6 +50,11 @@ const matic = new Matic({
 // Warning: Not-safe
 // matic.wallet = <private-key> // Use metamask provider or use WalletConnect provider instead.
 
+// get token address mapped with mainchain token address
+await matic.getMappedTokenAddress(
+  tokenAddress // token address on mainchain
+)
+
 // Approve token for deposit
 await matic.approveTokensForDeposit(
   token,  // Token address,
@@ -116,6 +121,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 ### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
+- <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
 - <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
@@ -153,6 +159,28 @@ const matic = new Matic(options)
   - `rootChainAddress` must be valid Ethereum contract address.
   - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
   - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
+
+---
+
+<a name="getMappedTokenAddress"></a>
+
+#### matic.getMappedTokenAddress(tokenAddress)
+
+get matic token `address` mapped with mainchain `tokenAddress`.
+
+- `tokenAddress` must be valid token address
+
+This returns matic `address`.
+
+Example:
+
+```js
+matic
+  .getMappedTokenAddress("0x670568761764f53E6C10cd63b71024c31551c9EC")
+  .then(address => {
+    console.log("matic address", address)
+  })
+```
 
 ---
 
