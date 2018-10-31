@@ -13,7 +13,6 @@ git clone git@github.com:maticnetwork/matic.js.git
 ```bash
 cd examples/web
 npm install
-npm run build
 npm start
 ```
 open http://localhost:8080 in the browser

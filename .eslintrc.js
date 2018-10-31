@@ -9,6 +9,7 @@ module.exports = {
     process: true,
     module: true,
     setTimeout: true,
+    __dirname: true,
   },
   rules: {
     'space-before-function-paren': ['error', 'never'],
