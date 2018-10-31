@@ -1,0 +1,19 @@
+{
+  "name": "web-vue",
+  "version": "0.1.0",
+  "description": "Interact with Matic Network in browser environment using Vuejs framework",
+  "private": true,
+  "scripts": {
+    "start": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "maticjs": "1.0.0-beta.5",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.5",
+    "@vue/cli-service": "^3.0.5",
+    "vue-template-compiler": "^2.5.17"
+  }
+}

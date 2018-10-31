@@ -23,6 +23,6 @@ matic.transferTokens(token, user, amount, {
   onTransactionHash: (resp) => {
     // action on Transaction success
     // eslint-disable-next-line
-    console.log('transferTokens:', resp)
+    console.log('Transaction hash:', resp)
   },
 })
