@@ -37,9 +37,6 @@
     "url": "https://github.com/maticnetwork/matic.js/issues"
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
-  "config": {
-    "mnemonics": "clock radar mass judge dismiss just intact mind resemble fringe diary casino"
-  },
   "dependencies": {
     "@babel/polyfill": "7.0.0",
     "@babel/runtime": "7.1.2",
