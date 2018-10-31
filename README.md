@@ -51,7 +51,7 @@ const matic = new Matic({
 // matic.wallet = <private-key> // Use metamask provider or use WalletConnect provider instead.
 
 // get token address mapped with mainchain token address
-await matic.getMappedTokenAddress(
+const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
