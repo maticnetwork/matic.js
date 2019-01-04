@@ -34,6 +34,12 @@ const matic = new Matic({
   // Set rootchain contract. See below for more information
   rootChainAddress: <root-contract-address>,
 
+  // Set withdraw-manager Address. See below for more information
+  withdrawManagerAddress: <withdraw-manager-address>,
+
+  // Set deposit-manager Address. See below for more information
+  depositManagerAddress: <deposit-manager-address>,
+
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 
@@ -193,7 +199,7 @@ Approves given `amount` of `token` to `rootChainContract`.
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
-  - `from` must be valid account address
+  - `from` must be valid account address(required)
   - `gasPrice` same as Ethereum `sendTransaction`
   - `gasLimit` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
@@ -246,12 +252,13 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 <a name="depositEthers"></a>
 
-#### matic.depositEthers(user, options)
+#### matic.depositEthers(options)
 
 Deposit `options.value` ETH with user `user`.
 
-- `user` must be value account address
-- `options` see [more infomation here](#approveTokensForDeposit). Pass `value` for amount of ethers.
+- `options` see [more infomation here](#approveTokensForDeposit). 
+  - `value` amount of ethers.
+  - `from` must be valid account address(required)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 

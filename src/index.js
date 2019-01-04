@@ -19,6 +19,8 @@ import MerkleTree from './helpers/merkle-tree'
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
+import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
+import DepositManagerArtifacts from '../artifacts/DepositManager'
 
 const rlp = utils.rlp
 
@@ -35,10 +37,25 @@ export default class Matic {
     this._watcherUrl = options.watcherUrl
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
+    this._withdrawManagerAddress = options.withdrawManagerAddress
+    this._depositManagerAddress = options.depositManagerAddress
+
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
       this._rootChainAddress
+    )
+    
+    // create withdraw manager contract
+    this._withdrawManagerContract = new this._parentWeb3.eth.Contract(
+      WithdrawManagerArtifacts.abi,
+      this._withdrawManagerAddress
+    )
+
+    // create deposit manager contract
+    this._depositManagerContract = new this._parentWeb3.eth.Contract(
+      DepositManagerArtifacts.abi,
+      this._depositManagerAddress
     )
 
     // internal cache
@@ -88,7 +105,7 @@ export default class Matic {
   async getMappedTokenAddress(address) {
     const _a = address.toLowerCase()
     if (!this._tokenMappedCache[_a]) {
-      this._tokenMappedCache[_a] = await this._rootChainContract.methods
+      this._tokenMappedCache[_a] = await this._depositManagerContract.methods
         .tokens(_a)
         .call()
     }
@@ -113,8 +130,8 @@ export default class Matic {
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
-  async depositEthers(user, options = {}) {
-    const depositTx = this._rootChainContract.methods.depositEthers(user)
+  async depositEthers(options = {}) {
+    const depositTx = this._rootChainContract.methods.depositEthers()
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -139,7 +156,7 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async transferTokens(token, user, amount, options = {}) {
+  async transferERC20Tokens(token, user, amount, options = {}) {
     let web3Object = this._web3
     if (options.parent) {
       web3Object = this._parentWeb3
@@ -155,7 +172,7 @@ export default class Matic {
 
     // if matic chain, transfer normal WETH tokens
     if (!options.parent) {
-      return this.transferTokens(this._maticWethAddress, to, amount, options)
+      return this.transferERC20Tokens(this._maticWethAddress, to, amount, options)
     }
 
     const gasLimit = await this._parentWeb3.eth.estimateGas({
@@ -285,7 +302,7 @@ export default class Matic {
 
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
 
-    const withdrawTx = this._rootChainContract.methods.withdraw(
+    const withdrawTx = this._withdrawManagerContract.methods.withdraw(
       header.number.toString(), // header block
       utils.bufferToHex(
         Buffer.concat(headerProof.proof.map(p => utils.toBuffer(p)))
@@ -338,7 +355,7 @@ export default class Matic {
       .call()
 
     const header = await this._rootChainContract.methods
-      .getHeaderBlock(parseInt(currentHeaderBlock, 10) - 1)
+      .headerBlock(parseInt(currentHeaderBlock, 10) - 1)
       .call()
 
     const headerNumber = +currentHeaderBlock - 1
@@ -348,7 +365,7 @@ export default class Matic {
     const tree = new MerkleTree(headers)
     const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
 
-    const withdrawTxObject = this._rootChainContract.methods.withdraw(
+    const withdrawTxObject = this._withdrawManagerContract.methods.withdraw(
       headerNumber.toString(), // header block
       utils.bufferToHex(Buffer.concat(headerProof)), // header proof
       withdrawObj.block.number.toString(), // block number
@@ -419,6 +436,7 @@ export default class Matic {
     return {
       from,
       gasLimit,
+      gas: gasLimit,
       gasPrice: gasPrice,
       nonce,
       chainId,
