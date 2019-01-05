@@ -142,11 +142,26 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async depositTokens(token, user, amount, options = {}) {
+  async depositERC20Tokens(token, user, amount, options = {}) {
     const depositTx = this._rootChainContract.methods.deposit(
       token,
       user,
       amount
+    )
+    const _options = await this._fillOptions(
+      options,
+      depositTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
+  }
+
+  async depositERC721Tokens(token, user, tokenId, options = {}) {
+    const depositTx = this._rootChainContract.methods.depositERC721(
+      token,
+      user,
+      tokenId
     )
     const _options = await this._fillOptions(
       options,
