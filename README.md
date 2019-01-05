@@ -131,7 +131,8 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
 - <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
-- <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
+- <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
+- <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#transferEthers"><code>matic.<b>transferEthers()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#getHeaderObject"><code>matic.<b>getHeaderObject()</b></code></a>
@@ -275,9 +276,9 @@ matic.depositEthers('0x718Ca123...', {
 
 ---
 
-<a name="transferTokens"></a>
+<a name="transferERC20Tokens"></a>
 
-#### matic.transferTokens(token, user, amount, options)
+#### matic.transferERC20Tokens(token, user, amount, options)
 
 Transfer given `amount` of `token` to `user`.
 
@@ -294,7 +295,36 @@ Example:
 ```js
 const user = <your-address> or <any-account-address>
 
-matic.transferTokens('0x718Ca123...', user, '1000000000000000000', {
+matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...',
+
+  // For token transfer on Main network
+  // parent: true
+})
+```
+
+---
+
+<a name="transferERC721Tokens"></a>
+
+#### matic.transferERC721Tokens(token, user, tokenId, options)
+
+Transfer ownership `tokenId` of `token` to `user`.
+
+- `token` must be valid ERC20 token address
+- `user` must be value account address
+- `tokenId` tokenId
+- `options` see [more infomation here](#approveTokensForDeposit)
+  - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.transferERC721Tokens('0x718Ca123...', user, tokenId, {
   from: '0xABc578455...',
 
   // For token transfer on Main network

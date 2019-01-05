@@ -18,6 +18,7 @@ import MerkleTree from './helpers/merkle-tree'
 
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
+import ChildERC721Artifacts from '../artifacts/ChildERC721'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
 import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
 import DepositManagerArtifacts from '../artifacts/DepositManager'
@@ -163,6 +164,17 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
+    const _options = await this._fillOptions(options, transferTx, web3Object)
+    return this._wrapWeb3Promise(transferTx.send(_options), options)
+  }
+
+  async transferERC721Tokens(token, user, tokenId, options = {}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const _tokenContract = this._getERC721TokenContract(token, web3Object)
+    const transferTx = _tokenContract.methods.transferFrom(options.from, user, tokenId)
     const _options = await this._fillOptions(options, transferTx, web3Object)
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
@@ -404,6 +416,19 @@ export default class Matic {
     let _tokenContract = this._tokenCache[_token]
     if (!_tokenContract) {
       _tokenContract = new web3.eth.Contract(ChildERC20Artifacts.abi, _token)
+      // update token cache
+      this._tokenCache[_token] = _tokenContract
+    }
+
+    return _tokenContract
+  }
+
+  _getERC721TokenContract(token, web3) {
+    const _token = token.toLowerCase()
+
+    let _tokenContract = this._tokenCache[_token]
+    if (!_tokenContract) {
+      _tokenContract = new web3.eth.Contract(ChildERC721Artifacts.abi, _token)
       // update token cache
       this._tokenCache[_token] = _tokenContract
     }
