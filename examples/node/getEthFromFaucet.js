@@ -10,7 +10,7 @@ const matic = new Matic({
   syncerUrl: config.SYNCER_URL,
   watcherUrl: config.WATCHER_URL,
   maticWethAddress: config.MATICWETH_ADDRESS,
-  ethFaucetAddress: config.ETHFaucetAddress,
+  ethFaucetAddress: config.ETHFAUCET_ADDRESS,
 })
 
 
