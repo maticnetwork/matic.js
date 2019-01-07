@@ -37,6 +37,9 @@ const matic = new Matic({
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 
+// Set matic network's Faucet contract address. See below for more information
+  ethFaucetAddress: <matic-faucet-address>,
+
   // Syncer API URL
   // Fetches tx/receipt proof data instead of fetching whole block on client side
   syncerUrl: 'https://eth-syncer.api.matic.network/api/v1', // (optional)
@@ -49,6 +52,12 @@ const matic = new Matic({
 // Set wallet
 // Warning: Not-safe
 // matic.wallet = <private-key> // Use metamask provider or use WalletConnect provider instead.
+
+// get ETH from Faucet
+await matic.getEthFromFaucet(
+  user,   // Recipient address
+  options // transaction fields
+)
 
 // get token address mapped with mainchain token address
 const tokenAddressOnMatic = await matic.getMappedTokenAddress(
@@ -121,6 +130,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 ### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
+- <a href="#getEthFromFaucet"><code>matic.<b>getEthFromFaucet()</b></code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
 - <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
@@ -157,8 +167,44 @@ const matic = new Matic(options)
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
   - `rootChainAddress` must be valid Ethereum contract address.
+  - `maticWethAddress` must be valid Ethereum contract address.
+  - `ethFaucetAddress` must be valid Ethereum contract address.
   - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
   - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
+
+
+---
+
+<a name="getEthFromFaucet"></a>
+
+#### matic.getEthFromFaucet(user, options)
+
+Transfers 3 Ethers to `user`.
+
+- `user` must be value account address
+- `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
+  - `from` must be valid account address
+  - `gasPrice` same as Ethereum `sendTransaction`
+  - `gasLimit` same as Ethereum `sendTransaction`
+  - `nonce` same as Ethereum `sendTransaction`
+  - `value` contains ETH value. Same as Ethereum `sendTransaction`.
+  - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
+  - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
+  - `onError` must be `function`. This function will be called when sending transaction fails.
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic
+  .getEthFromFaucet("0x718Ca123...", {
+    from: "0xABc578455..."
+  })
+  .on("onTransactionHash", txHash => {
+    console.log("New transaction", txHash)
+  })
+```
 
 ---
 

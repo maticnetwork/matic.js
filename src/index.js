@@ -19,6 +19,7 @@ import MerkleTree from './helpers/merkle-tree'
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
+import ETHFaucetArtifacts from '../artifacts/ETHFaucet'
 
 const rlp = utils.rlp
 
@@ -35,10 +36,17 @@ export default class Matic {
     this._watcherUrl = options.watcherUrl
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
+    this._ethFaucetAddress = options.ethFaucetAddress
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
       this._rootChainAddress
+    )
+
+    // create ETH Faucet contract
+    this._ethFaucetContract = new this._web3.eth.Contract(
+      ETHFaucetArtifacts.abi,
+      this._ethFaucetAddress
     )
 
     // internal cache
@@ -83,6 +91,18 @@ export default class Matic {
 
   newAccount() {
     return this._parentWeb3.eth.accounts.wallet.create(1)
+  }
+
+  async getEthFromFaucet(address, options) {
+    const faucet = this._ethFaucetContract.methods
+    .faucet(address)
+    const _options = await this._fillOptions(
+      options,
+      faucet,
+      this._web3
+    )
+
+    return this._wrapWeb3Promise(faucet.send(_options), options)
   }
 
   async getMappedTokenAddress(address) {

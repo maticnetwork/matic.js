@@ -5,4 +5,5 @@ module.exports = {
   SYNCER_URL: 'https://eth-syncer.api.matic.network/api/v1',
   WATCHER_URL: 'https://eth-watcher.api.matic.network/api/v1',
   MATICWETH_ADDRESS: '0xeD3CAFb4dCf835E7a1D2E3169F8D296f931b4aA7',
+  ETHFaucetAddress: '0x51a1d7cc4ffd2e22118b1dc3cbf86adcaf992afd',
 }
