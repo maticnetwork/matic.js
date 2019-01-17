@@ -96,7 +96,7 @@ export default class Matic {
   }
 
   async approveTokensForDeposit(token, amount, options = {}) {
-    if (!options.from || !amount || !token) {
+    if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
     }
     const _tokenContract = new this._parentWeb3.eth.Contract(
@@ -117,7 +117,7 @@ export default class Matic {
   }
 
   async depositEthers(user, options = {}) {
-    if (!options.from || !user || !options.value) {
+    if (options && (!options.from || !user || !options.value)) {
       throw new Error('Missing Parameters')
     }
     const depositTx = this._rootChainContract.methods.depositEthers(user)
@@ -131,7 +131,7 @@ export default class Matic {
   }
 
   async depositTokens(token, user, amount, options = {}) {
-    if (!options.from || !user || !amount || token) {
+    if (options && (!options.from || !user || !amount || token)) {
       throw new Error('Missing Parameters')
     }
     const depositTx = this._rootChainContract.methods.deposit(
@@ -149,7 +149,7 @@ export default class Matic {
   }
 
   async transferMaticEthers(to, amount, options) {
-    if (!options.from || !amount || !to) {
+    if (options && (!options.from || !amount || !to)) {
       throw new Error('Missing Parameters')
     }
     const from = options.from
@@ -170,7 +170,7 @@ export default class Matic {
   }
 
   async transferTokens(token, user, amount, options = {}) {
-    if (!options.from || !amount || !user || !token) {
+    if (options && (!options.from || !amount || !user || !token)) {
       throw new Error('Missing Parameters')
     }
     let web3Object = this._web3
@@ -184,7 +184,7 @@ export default class Matic {
   }
 
   async transferEthers(to, amount, options = {}) {
-    if (!options.from || !amount || !to) {
+    if (options && (!options.from || !amount || !to)) {
       throw new Error('Missing Parameters')
     }
     const from = options.from
@@ -210,7 +210,7 @@ export default class Matic {
   }
 
   async startWithdraw(token, amount, options = {}) {
-    if (!options.from || !amount || !token) {
+    if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
