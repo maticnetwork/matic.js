@@ -78,6 +78,13 @@ await matic.transferMaticEthers(
 )
 
 // Transfer token on Matic
+await matic.transferMaticEthers(
+  user,   // Recipient address
+  amount,  // Token amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Transfer token on Matic
 await matic.transferTokens(
   token,  // Token address
   user,   // Recipient address
