@@ -71,6 +71,13 @@ await matic.depositTokens(
 )
 
 // Transfer token on Matic
+await matic.transferMaticEthers(
+  user,   // Recipient address
+  amount,  // Token amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Transfer token on Matic
 await matic.transferTokens(
   token,  // Token address
   user,   // Recipient address
@@ -125,6 +132,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
 - <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
+- <a href="#transferMaticEthers"><code>matic.<b>transferMaticEthers()</b></code></a>
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
 - <a href="#transferEthers"><code>matic.<b>transferEthers()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
@@ -263,6 +271,33 @@ const user = <your-address> or <any-account-address>
 matic.depositEthers('0x718Ca123...', {
   from: '0xABc578455...',
   value: '1000000000000000000'
+})
+```
+
+---
+
+<a name="transferMaticEthers"></a>
+
+#### matic.transferMaticEthers(user, amount, options)
+
+Transfer given `amount` of Ethers to `user`.
+
+- `user` must be value account address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveTokensForDeposit)
+  - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.transferMaticEthers(user, '1000000000000000000', {
+  from: '0xABc578455...',
+
+  // For token transfer on Main network
 })
 ```
 
