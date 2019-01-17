@@ -139,6 +139,24 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
+  async transferMaticEthers(to, amount, options) {
+    const from = options.from
+
+    const gasLimit = await this._web3.eth.estimateGas({
+      from,
+      value: amount,
+    })
+    options.gasLimit = gasLimit
+    options.value = amount
+    options.to = to
+    const _options = await this._fillOptions(options, {}, this._web3)
+
+    return this._wrapWeb3Promise(
+      this._web3.eth.sendTransaction(_options),
+      options
+    )
+  }
+
   async transferTokens(token, user, amount, options = {}) {
     let web3Object = this._web3
     if (options.parent) {
@@ -164,6 +182,7 @@ export default class Matic {
     })
     options.gasLimit = gasLimit
     options.value = amount
+    options.to = to
     const _options = await this._fillOptions(options, {}, this._parentWeb3)
 
     return this._wrapWeb3Promise(
@@ -423,6 +442,7 @@ export default class Matic {
       nonce,
       chainId,
       value: options.value || 0,
+      to: options.to || null,
     }
   }
 
