@@ -96,6 +96,9 @@ export default class Matic {
   }
 
   async approveTokensForDeposit(token, amount, options = {}) {
+    if (options && (!options.from || !amount || !token)) {
+      throw new Error('Missing Parameters')
+    }
     const _tokenContract = new this._parentWeb3.eth.Contract(
       StandardTokenArtifacts.abi,
       token
@@ -114,6 +117,9 @@ export default class Matic {
   }
 
   async depositEthers(user, options = {}) {
+    if (options && (!options.from || !user || !options.value)) {
+      throw new Error('Missing Parameters')
+    }
     const depositTx = this._rootChainContract.methods.depositEthers(user)
     const _options = await this._fillOptions(
       options,
@@ -125,6 +131,9 @@ export default class Matic {
   }
 
   async depositTokens(token, user, amount, options = {}) {
+    if (options && (!options.from || !user || !amount || token)) {
+      throw new Error('Missing Parameters')
+    }
     const depositTx = this._rootChainContract.methods.deposit(
       token,
       user,
@@ -139,7 +148,31 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
+  async transferMaticEthers(to, amount, options) {
+    if (options && (!options.from || !amount || !to)) {
+      throw new Error('Missing Parameters')
+    }
+    const from = options.from
+
+    const gasLimit = await this._web3.eth.estimateGas({
+      from,
+      value: amount,
+    })
+    options.gasLimit = gasLimit
+    options.value = amount
+    options.to = to
+    const _options = await this._fillOptions(options, {}, this._web3)
+
+    return this._wrapWeb3Promise(
+      this._web3.eth.sendTransaction(_options),
+      options
+    )
+  }
+
   async transferTokens(token, user, amount, options = {}) {
+    if (options && (!options.from || !amount || !user || !token)) {
+      throw new Error('Missing Parameters')
+    }
     let web3Object = this._web3
     if (options.parent) {
       web3Object = this._parentWeb3
@@ -151,6 +184,9 @@ export default class Matic {
   }
 
   async transferEthers(to, amount, options = {}) {
+    if (options && (!options.from || !amount || !to)) {
+      throw new Error('Missing Parameters')
+    }
     const from = options.from
 
     // if matic chain, transfer normal WETH tokens
@@ -164,6 +200,7 @@ export default class Matic {
     })
     options.gasLimit = gasLimit
     options.value = amount
+    options.to = to
     const _options = await this._fillOptions(options, {}, this._parentWeb3)
 
     return this._wrapWeb3Promise(
@@ -173,6 +210,9 @@ export default class Matic {
   }
 
   async startWithdraw(token, amount, options = {}) {
+    if (options && (!options.from || !amount || !token)) {
+      throw new Error('Missing Parameters')
+    }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
@@ -423,6 +463,7 @@ export default class Matic {
       nonce,
       chainId,
       value: options.value || 0,
+      to: options.to || null,
     }
   }
 
