@@ -131,7 +131,7 @@ export default class Matic {
   }
 
   async depositTokens(token, user, amount, options = {}) {
-    if (options && (!options.from || !user || !amount || token)) {
+    if (options && (!options.from || !token || !user || !amount)) {
       throw new Error('Missing Parameters')
     }
     const depositTx = this._rootChainContract.methods.deposit(
