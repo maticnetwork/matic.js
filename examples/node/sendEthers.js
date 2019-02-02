@@ -15,13 +15,14 @@ const matic = new Matic({
   maticWethAddress: config.MATICWETH_ADDRESS,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 // Send Tokens
 matic.transferEthers(to, amount, {
   from,
-  parent: true, // For token transfer on Main network (false for Matic Network)
-  onTransactionHash: () => {
+  // parent: true, // For token transfer on Main network (false for Matic Network)
+  onTransactionHash: tx => {
     // action on Transaction success
+    console.log(tx)
   },
 })

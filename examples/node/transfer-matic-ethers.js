@@ -1,4 +1,4 @@
-const Matic = require('matic.js').default
+const Matic = require('maticjs').default
 const config = require('./config')
 
 const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
@@ -16,12 +16,13 @@ const matic = new Matic({
   maticWethAddress: config.MATICWETH_ADDRESS,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 // Send Matic Ethers
 matic.transferMaticEthers(to, amount, {
   from,
-  onTransactionHash: () => {
+  onTransactionHash: tx => {
     // action on Transaction success
+    console.log(tx)
   },
 })
