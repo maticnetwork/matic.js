@@ -1,7 +1,7 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const mtoken = '0x343461c74133E3fA476Dbbc614a87473270a226c' // test token address
+const mtoken = '0xca3C863EE5a4aFD2FCcADC5427dDBd7C28B254b0' // test token address
 const amount = '10000000000000000' // amount in wei
 const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
 
