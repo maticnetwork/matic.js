@@ -14,7 +14,7 @@ const matic = new Matic({
   watcherUrl: config.WATCHER_URL,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 var transactionHash = null
 

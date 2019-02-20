@@ -1,11 +1,11 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
+const from = '0x6E0c217dE3235F1D8a95605d10bCC1B36ff7996f' // from address
 const to = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // to address
 
-const token = '0x670568761764f53E6C10cd63b71024c31551c9EC' // test token address
-const amount = '10000000000000000' // amount in wei
+const token = config.TEST_TOKEN // test token address
+const amount = '1' // amount in wei
 
 // Create object of Matic
 const matic = new Matic({
@@ -17,13 +17,14 @@ const matic = new Matic({
   maticWethAddress: config.MATICWETH_ADDRESS,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 // Send Tokens
 matic.transferTokens(token, to, amount, {
   from,
-  parent: true, // For token transfer on Main network (false for Matic Network)
-  onTransactionHash: () => {
+  // parent: true, // For token transfer on Main network (false for Matic Network)
+  onTransactionHash: tx => {
     // action on Transaction success
+    console.log(tx)
   },
 })
