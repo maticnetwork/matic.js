@@ -113,6 +113,20 @@ export default class Matic {
     return this._tokenMappedCache[_a]
   }
 
+  async depositEthers(user, options = {}) {
+    if (options && (!options.from || !user || !options.value)) {
+      throw new Error('Missing Parameters')
+    }
+    const depositTx = this._rootChainContract.methods.depositEthers(user)
+    const _options = await this._fillOptions(
+      options,
+      depositTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
+  }
+
   async approveTokensForDeposit(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
@@ -132,20 +146,6 @@ export default class Matic {
     )
 
     return this._wrapWeb3Promise(approveTx.send(_options), options)
-  }
-
-  async depositEthers(user, options = {}) {
-    if (options && (!options.from || !user || !options.value)) {
-      throw new Error('Missing Parameters')
-    }
-    const depositTx = this._rootChainContract.methods.depositEthers(user)
-    const _options = await this._fillOptions(
-      options,
-      depositTx,
-      this._parentWeb3
-    )
-
-    return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async depositTokens(token, user, amount, options = {}) {
