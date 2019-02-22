@@ -16,7 +16,7 @@ function initMatic() {
       watcherUrl: process.env.WATCHER_URL,
     })
 
-    matic.wallet = '0x19D8234908CD1089C096361FFAB11EF93869EDE52795B5C310590D8A7C3A4A01' // your private key
+    matic.wallet = '<private-key>' // your private key
   }
 }
 
