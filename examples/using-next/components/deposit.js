@@ -15,17 +15,15 @@ function Deposit() {
         from: store.from,
         onTransactionHash: approvedTxHash => {
           setApprovedTxHash(approvedTxHash)
-        }
+        },
       })
-      .then(response => {
-        console.log(response)
-
+      .then(() => {
         // Deposit tokens
         store.matic.depositTokens(store.token, store.from, amount, {
           from: store.from,
           onTransactionHash: depositTxHash => {
             setDepositTxHash(depositTxHash)
-          }
+          },
         })
       })
   }

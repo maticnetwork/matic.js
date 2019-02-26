@@ -16,7 +16,7 @@ function Transfer() {
         // action on Transaction success
         // eslint-disable-next-line
         setHash(hash)
-      }
+      },
     })
   }
 

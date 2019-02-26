@@ -14,7 +14,7 @@ function initMatic() {
       rootChainAddress: process.env.ROOTCHAIN_ADDRESS,
       maticWethAddress: process.env.MATIC_WETH_ADDRESS,
       syncerUrl: process.env.SYNCER_URL,
-      watcherUrl: process.env.WATCHER_URL
+      watcherUrl: process.env.WATCHER_URL,
     })
 
     matic.wallet = '<private-key>' // your private key

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Transfer from '../components/transfer'
 import Deposit from '../components/deposit'
 
