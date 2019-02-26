@@ -1,77 +1,50 @@
-// Import Matic sdk
-import { useState } from 'react'
-import Matic from 'maticjs'
-
-let matic = null
-
-// Create sdk instance
-function initMatic() {
-  if (!matic) {
-    matic = new Matic({
-      maticProvider: process.env.MATIC_PROVIDER,
-      parentProvider: process.env.PARENT_PROVIDER,
-      rootChainAddress: process.env.ROOTCHAIN_ADDRESS,
-      maticWethAddress: process.env.MATIC_WETH_ADDRESS,
-      syncerUrl: process.env.SYNCER_URL,
-      watcherUrl: process.env.WATCHER_URL,
-    })
-
-    matic.wallet = '<private-key>' // your private key
-  }
-}
-
-const from = '0x5784d63560319839e5696a283096e169d1F4E659' // from address
-const token = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2' // test token address
-const recepient = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // test recepient address
-const amount = '10000000000000000'
+import Transfer from '../components/transfer'
+import Deposit from '../components/deposit'
 
 function Home() {
-  const [hash, setHash] = useState(null)
-
-  const transferTokens = () => {
-    // Send Tokens
-    matic.transferTokens(token, recepient, amount, {
-      from,
-      onTransactionHash: (resp) => {
-        // action on Transaction success
-        // eslint-disable-next-line
-        console.log('Transaction hash:', resp)
-        setHash(resp)
-      },
-    })
-  }
-
-  initMatic()
-
   return (
-    <div className="parent">
+    <div className="app">
       <div>Welcome to Matic.js!</div>
-      <button onClick={transferTokens} type="button">
-        Transfer
-      </button>
-      {hash ?
-        (
-          <div>
-            Your latest transaction:{' '}
-            <a
-              href={`https://testnet1-explorer.matic.network/#/transaction/${hash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {hash}
-            </a>
-          </div>
-        ) : null
-      }
+      <div className="parent">
+        <Transfer />
+        <Deposit />
+      </div>
       <style jsx>{`
-      .parent {
-        font: 15px Helvetica, Arial, sans-serif;
-        background: papayawhip;
-        padding: 100px;
-        text-align: center;
-        transition: 100ms ease-in background;
-      }
-    `}</style>
+        .app {
+          font-family: Helvetica, Arial, sans-serif;
+          font-size: 15px;
+          margin: 0;
+          text-align: center;
+        }
+        .parent {
+          transition: 100ms ease-in background;
+          display: flex;
+          flex: 1;
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+        }
+      `}</style>
+      <style global jsx>{`
+        button {
+          padding: 15px 24px;
+          font-size: 16px;
+          line-height: 19px;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          border-radius: 5px;
+          background-color: #2b6def;
+          color: #fff;
+        }
+        button:hover {
+          background-color: #2460da;
+        }
+        .col {
+          flex: 1;
+          padding: 16px;
+        }
+      `}</style>
     </div>
   )
 }
