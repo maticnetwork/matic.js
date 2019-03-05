@@ -1,4 +1,4 @@
-const Matic = require('maticjs').default
+const Matic = require('../../lib/index').default
 const config = require('./config')
 
 const token = config.KOVAN_TEST // test token address
@@ -21,18 +21,18 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 matic
   .approveTokensForDeposit(token, amount, {
     from,
-    onTransactionHash: tx => {
+    onTransactionHash: () => {
       // action on Transaction success
-      console.log(tx)
+      // console.log(tx)
     },
   })
   .then(() => {
     // Deposit tokens
     matic.depositTokens(token, from, amount, {
       from,
-      onTransactionHash: tx => {
+      onTransactionHash: () => {
         // action on Transaction success
-        console.log(tx)
+        // console.log(tx)
       },
     })
   })

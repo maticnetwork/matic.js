@@ -363,7 +363,7 @@ export default class Matic {
 
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
 
-    const withdrawTx = this._withdrawManagerContract.methods.withdraw(
+    const withdrawTx = this._withdrawManagerContract.methods.withdrawTokens(
       header.number.toString(), // header block
       utils.bufferToHex(
         Buffer.concat(headerProof.proof.map(p => utils.toBuffer(p)))

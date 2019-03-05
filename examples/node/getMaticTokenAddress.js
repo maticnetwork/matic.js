@@ -16,7 +16,7 @@ const tokenAddress = config.KOVAN_TEST // token address on mainchain
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 // get token address mapped with mainchain token address
-matic.getMappedTokenAddress(tokenAddress).then(address => {
+matic.getMappedTokenAddress(tokenAddress).then(() => {
   // action on Transaction success
-  console.log(address)
+  // console.log(address)
 })

@@ -21,8 +21,8 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 matic.transferEthers(to, amount, {
   from,
   // parent: true, // For token transfer on Main network (false for Matic Network)
-  onTransactionHash: tx => {
+  onTransactionHash: () => {
     // action on Transaction success
-    console.log(tx)
+    // console.log(tx)
   },
 })

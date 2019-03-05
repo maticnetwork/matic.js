@@ -23,8 +23,8 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 matic.depositEthers(from, {
   from,
   value: amount,
-  onTransactionHash: tx => {
+  onTransactionHash: () => {
     // action on Transaction success
-    console.log(tx)
+    // console.log(tx)
   },
 })
