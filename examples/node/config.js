@@ -4,8 +4,8 @@ module.exports = {
   ROOTCHAIN_ADDRESS: '0xc76a925ca7fc8bc9fccf3e8fc4481b95c7b519d5',
   WITHDRAWMANAGER_ADDRESS: '0xaac5836efaf18c2b0a8cdd35034876daf657535b',
   DEPOSITMANAGER_ADDRESS: '0xe5d6b6591f9be0adb7b2547c03bc080e6a7e1289',
-  SYNCER_URL: 'https://eth-syncer.api.matic.network/api/v1',
-  WATCHER_URL: 'https://eth-watcher.api.matic.network/api/v1',
+  SYNCER_URL: 'https://matic-syncer.api.matic.network/api/v1',
+  WATCHER_URL: 'https://ropsten-watcher.api.matic.network/api/v1',
   MATICWETH_ADDRESS: '0xd27Ba7002CAa42C220F1Aa8aC8b9AD648E8301b0',
   PRIVATE_KEY:
     '0x03599966360596FFC19F0E3E98371BD115910107016D90D5E8427B661ECA47A0',
