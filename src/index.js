@@ -363,13 +363,13 @@ export default class Matic {
 
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
 
-    const withdrawTx = this._withdrawManagerContract.methods.withdrawTokens(
-      header.number.toString(), // header block
+    const withdrawTx = this._withdrawManagerContract.methods.withdrawBurntTokens(
+      header.number, // header block
       utils.bufferToHex(
         Buffer.concat(headerProof.proof.map(p => utils.toBuffer(p)))
       ), // header proof
       txProof.blockNumber, // block number
-      txProof.blockTimestamp.toString(), // block timestamp
+      txProof.blockTimestamp, // block timestamp
       txProof.root, // tx root
       receiptProof.root, // receipt root
       utils.bufferToHex(rlp.encode(receiptProof.path)), // key for trie (both tx and receipt)
