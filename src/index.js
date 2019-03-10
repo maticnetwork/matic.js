@@ -166,6 +166,24 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
+  async depositERC721Tokens(token, user, tokenId, options = {}) {
+    if (options && (!options.from || !token || !user || !tokenId)) {
+      throw new Error('Missing Parameters')
+    }
+    const depositTx = this._rootChainContract.methods.depositERC721(
+      token,
+      user,
+      tokenId
+    )
+    const _options = await this._fillOptions(
+      options,
+      depositTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
+  }
+
   async transferMaticEthers(to, amount, options) {
     if (options && (!options.from || !amount || !to)) {
       throw new Error('Missing Parameters')
@@ -426,7 +444,7 @@ export default class Matic {
     const tree = new MerkleTree(headers)
     const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
 
-    const withdrawTxObject = this._withdrawManagerContract.methods.withdraw(
+    const withdrawTxObject = this._withdrawManagerContract.methods.withdrawBurntTokens(
       headerNumber.toString(), // header block
       utils.bufferToHex(Buffer.concat(headerProof)), // header proof
       withdrawObj.block.number.toString(), // block number
