@@ -18,7 +18,7 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 // Approve token
 matic
-  .approveTokensForDeposit(token, amount, {
+  .approveERC20TokensForDeposit(token, amount, {
     from,
     onTransactionHash: () => {
       // action on Transaction success
@@ -27,7 +27,7 @@ matic
   })
   .then(() => {
     // Deposit tokens
-    matic.depositTokens(token, from, amount, {
+    matic.depositERC20Tokens(token, from, amount, {
       from,
       onTransactionHash: () => {
         // action on Transaction success

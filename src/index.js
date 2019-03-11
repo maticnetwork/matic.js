@@ -110,7 +110,7 @@ export default class Matic {
     if (options.parent) {
       web3Object = this._parentWeb3
     }
-    const balance = this._getERC721TokenContract(token,web3Object).methods.balanceOf(address).call()
+    const balance = await this._getERC721TokenContract(token,web3Object).methods.balanceOf(address).call()
     return balance
   }
 
@@ -128,7 +128,7 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async approveTokensForDeposit(token, amount, options = {}) {
+  async approveERC20TokensForDeposit(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
     }
@@ -149,7 +149,7 @@ export default class Matic {
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
-  async depositTokens(token, user, amount, options = {}) {
+  async depositERC20Tokens(token, user, amount, options = {}) {
     if (options && (!options.from || !token || !user || !amount)) {
       throw new Error('Missing Parameters')
     }
