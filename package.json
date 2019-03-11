@@ -47,7 +47,7 @@
     "isomorphic-fetch": "2.2.1",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.1.0",
-    "web3": "1.0.0-beta.36"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "@babel/cli": "7.1.2",
