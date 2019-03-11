@@ -2,7 +2,7 @@ const Matic = require('../../lib/index').default
 const config = require('./config')
 
 const token = config.ERC721_MATIC // test token address
-const tokenId = '31' // tokenId
+const tokenId = '34' // tokenId
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
@@ -12,15 +12,16 @@ const matic = new Matic({
   rootChainAddress: config.ROOTCHAIN_ADDRESS,
   syncerUrl: config.SYNCER_URL,
   watcherUrl: config.WATCHER_URL,
+  withdrawManagerAddress: config.WITHDRAWMANAGER_ADDRESS,	
 })
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 var transactionHash =
-  '0x517356669a8766de1efe9a065a2c8e05364f239b7a36bf2a7753c0a6f8e968f8'
+  '0xe7a17a9bf636d837c1b9ab493f3fe5808390062c2ff9bc310aae8d05aaa113cb'
 
 matic
-  .startWithdraw(token, tokenId, {
+  .startERC721Withdraw(token, tokenId, {
     from,
     onTransactionHash: txHash => {
       transactionHash = txHash
