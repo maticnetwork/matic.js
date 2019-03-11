@@ -34,9 +34,6 @@ const matic = new Matic({
   // Set rootchain contract. See below for more information
   rootChainAddress: <root-contract-address>,
 
-  // Set withdraw-manager Address. See below for more information
-  withdrawManagerAddress: <withdraw-manager-address>,
-
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 
