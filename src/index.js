@@ -21,7 +21,6 @@ import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
 import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
-import DepositManagerArtifacts from '../artifacts/DepositManager'
 
 const rlp = utils.rlp
 
@@ -39,7 +38,6 @@ export default class Matic {
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
     this._withdrawManagerAddress = options.withdrawManagerAddress
-    this._depositManagerAddress = options.depositManagerAddress
 
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
@@ -51,12 +49,6 @@ export default class Matic {
     this._withdrawManagerContract = new this._parentWeb3.eth.Contract(
       WithdrawManagerArtifacts.abi,
       this._withdrawManagerAddress
-    )
-
-    // create deposit manager contract
-    this._depositManagerContract = new this._parentWeb3.eth.Contract(
-      DepositManagerArtifacts.abi,
-      this._depositManagerAddress
     )
 
     // internal cache
@@ -113,6 +105,24 @@ export default class Matic {
     return this._tokenMappedCache[_a]
   }
 
+  async balanceOfERC721(address, token, options={}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const balance = this._getERC721TokenContract(token,web3Object).methods.balanceOf(address).call()
+    return balance
+  }
+
+  async tokenOfOwnerByIndex(index, owner, token,options={}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const tokenId = this._getERC721TokenContract(token,web3Object).methods.tokenOfOwnerByIndex(owner, index).call()
+    return tokenId
+  }
+
   async depositEthers(user, options = {}) {
     if (options && (!options.from || !user || !options.value)) {
       throw new Error('Missing Parameters')
@@ -164,6 +174,26 @@ export default class Matic {
     )
 
     return this._wrapWeb3Promise(depositTx.send(_options), options)
+  }
+
+  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error('Missing Parameters')
+    }
+    
+    const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
+
+    const approveTx = await _tokenContract.methods.approve(
+      this._rootChainAddress,
+      tokenId
+    )
+    const _options = await this._fillOptions(
+      options,
+      approveTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
   async depositERC721Tokens(token, user, tokenId, options = {}) {
