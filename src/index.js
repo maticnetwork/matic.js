@@ -106,15 +106,6 @@ export default class Matic {
     return balance
   }
 
-  async tokenOfOwnerByIndex(index, owner, token,options={}) {
-    let web3Object = this._web3
-    if (options.parent) {
-      web3Object = this._parentWeb3
-    }
-    const tokenId = this._getERC721TokenContract(token,web3Object).methods.tokenOfOwnerByIndex(owner, index).call()
-    return tokenId
-  }
-
   async depositEthers(user, options = {}) {
     if (options && (!options.from || !user || !options.value)) {
       throw new Error('Missing Parameters')
