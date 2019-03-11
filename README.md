@@ -37,9 +37,6 @@ const matic = new Matic({
   // Set withdraw-manager Address. See below for more information
   withdrawManagerAddress: <withdraw-manager-address>,
 
-  // Set deposit-manager Address. See below for more information
-  depositManagerAddress: <deposit-manager-address>,
-
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 

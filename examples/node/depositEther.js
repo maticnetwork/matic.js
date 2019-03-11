@@ -12,7 +12,6 @@ const matic = new Matic({
   syncerUrl: config.SYNCER_URL,
   watcherUrl: config.WATCHER_URL,
   withdrawManagerAddress: config.WITHDRAWMANAGER_ADDRESS,
-  depositManagerAddress: config.DEPOSITMANAGER_ADDRESS,
 })
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
