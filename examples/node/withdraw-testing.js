@@ -1,9 +1,10 @@
-const Matic = require('maticjs').default
+// const Matic = require('maticjs').default
+const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const mtoken = '0x343461c74133E3fA476Dbbc614a87473270a226c' // test token address
+const mtoken = config.MATIC_TOKEN // test token address
 const amount = '10000000000000000' // amount in wei
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
+const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
 const matic = new Matic({
@@ -29,18 +30,21 @@ matic
     from,
     onTransactionHash: txHash => {
       transactionHash = txHash
-      // console.log(transactionHash)
+      // console.log(txHash)
     },
   })
   .then(async() => {
+    // console.log('Sleeping for 5 seconds')
     await sleepFor(5000)
     // submit checkpoint (this is for tetsing purpose only)
+    // console.log('Submitting checkpoint')
     matic
       ._apiCall({
         url: `${config.SYNCER_URL}/block/submit-checkpoint`,
       })
       .then(async() => {
         // wait till checkpoint is submitted, then only procced
+        // console.log('Sleeping for 5 seconds')
         await sleepFor(15000)
         matic.withdraw(transactionHash, {
           from,
