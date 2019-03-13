@@ -17,13 +17,14 @@ const matic = new Matic({
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
+// NOTE: Initiate the withdraw on the Matic chain, and wait for ~5 minutes for 
+// the checkpoint (refer https://whitepaper.matic.network/#checklayer for technical details) 
+// before confirming the withdraw by executing `confirm-withdraw.js`.
+// The txHash from the output needs to be copied to the `confirm-withdraw.js` file before executing
 matic
-  .startWithdraw(token, amount, {
-    from,
-    onTransactionHash: () => {
-      // action on Transaction success
-    },
-  })
-
-// NOTE: Wait for next checkpoint, which will take approximately 5-10 mins. 
-// Then you can call complete-withdraw.js to submit proof.
+ .startWithdraw(token, amount, {
+   from,
+   onTransactionHash: () => {
+    //  console.log("Withdraw Initiated")
+   },
+})
