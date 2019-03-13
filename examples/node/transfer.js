@@ -1,11 +1,12 @@
-const Matic = require('maticjs').default
+// const Matic = require('maticjs').default
+const Matic = require('../../lib/index').default
 const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
-const to = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // to address
+const to = '0x732Ef34f3c8D9dE1855aEd5630C3C4071031eb5b' // to address
 
-const token = config.TEST_TOKEN // test token address
-const amount = '1000000000000000000' // amount in wei
+const token = config.MATIC_TOKEN // test token address
+const amount = '10000000000000000' // amount in wei
 
 // Create object of Matic
 const matic = new Matic({
