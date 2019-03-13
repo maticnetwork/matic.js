@@ -1,7 +1,7 @@
-const Matic = require('maticjs').default
+const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const amount = '1000000000000000000' // amount in wei
+const amount = '9000000000000000' // amount in wei
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
@@ -18,11 +18,10 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 // Approve token
 
 // Deposit tokens
-matic.depositEthers(from, {
+matic.depositEthers({
   from,
   value: amount,
   onTransactionHash: () => {
     // action on Transaction success
-    // console.log(tx)
   },
 })

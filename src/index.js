@@ -114,11 +114,11 @@ export default class Matic {
     return balance
   }
 
-  async depositEthers(user, options = {}) {
-    if (options && (!options.from || !user || !options.value)) {
+  async depositEthers(options = {}) {
+    if (options && (!options.from || !options.value)) {
       throw new Error('Missing Parameters')
     }
-    const depositTx = this._rootChainContract.methods.depositEthers(user)
+    const depositTx = this._rootChainContract.methods.depositEthers()
     const _options = await this._fillOptions(
       options,
       depositTx,
