@@ -1,9 +1,8 @@
-const Matic = require('maticjs').default
+const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
+const from = config.FROM_ADDRESS // from address
 const to = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // to address
-
 const amount = '100000000000000' // amount in wei
 
 // Create object of Matic
@@ -23,6 +22,5 @@ matic.transferMaticEthers(to, amount, {
   from,
   onTransactionHash: () => {
     // action on Transaction success
-    // console.log(tx)
   },
 })

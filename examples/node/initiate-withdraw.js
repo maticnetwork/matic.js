@@ -1,8 +1,8 @@
 const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const token = config.MATIC_ERC721_TOKEN // test token address
-const tokenId = '34' // tokenId
+const token = config.MATIC_TEST_TOKEN // test token address
+const amount = '1000000000000000000' // amount in wei
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
@@ -18,7 +18,7 @@ const matic = new Matic({
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
 matic
-  .startERC721Withdraw(token, tokenId, {
+  .startWithdraw(token, amount, {
     from,
     onTransactionHash: () => {
       // action on Transaction success

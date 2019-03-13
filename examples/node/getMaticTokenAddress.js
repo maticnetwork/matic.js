@@ -18,5 +18,4 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 // get token address mapped with mainchain token address
 matic.getMappedTokenAddress(tokenAddress).then(() => {
   // action on Transaction success
-  // console.log(address)
 })

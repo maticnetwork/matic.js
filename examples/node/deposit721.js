@@ -1,8 +1,8 @@
 const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const token = config.ERC721_TOKEN // test token address
-const tokenId = '34' // amount in wei
+const token = config.ROPSTEN_ERC721_TOKEN // test token address
+const tokenId = '34' // token Id
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic

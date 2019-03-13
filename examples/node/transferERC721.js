@@ -4,7 +4,7 @@ const config = require('./config')
 const from = config.FROM_ADDRESS // from address
 const to = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // to address
 
-const token = config.ERC721_MATIC // test token address
+const token = config.MATIC_ERC721_TOKEN // test token address
 const tokenId = '32' // tokenId 
 
 // Create object of Matic

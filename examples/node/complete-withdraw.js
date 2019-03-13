@@ -1,8 +1,6 @@
 const Matic = require('../../lib/index').default
 const config = require('./config')
 
-const token = config.TEST_TOKEN // test token address
-const amount = '1000000000000000000' // amount in wei
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
@@ -17,23 +15,13 @@ const matic = new Matic({
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-var transactionHash =
-  '0x517356669a8766de1efe9a065a2c8e05364f239b7a36bf2a7753c0a6f8e968f8'
 
-matic
-  .startWithdraw(token, amount, {
-    from,
-    onTransactionHash: txHash => {
-      transactionHash = txHash
-    },
-  })
-  .then(() => {
+var transactionHash = 'Paste txHash here ...' // Insert txHash generated from initiate-withdraw.js 
+
     //wait till checkpoint is submitted, then only procced
     matic.withdraw(transactionHash, {
       from,
       onTransactionHash: () => {
-        // console.log(tx)
         // action on Transaction success
       },
     })
-  })
