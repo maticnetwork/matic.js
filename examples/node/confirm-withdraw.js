@@ -11,17 +11,18 @@ const matic = new Matic({
  rootChainAddress: config.ROOTCHAIN_ADDRESS,
  syncerUrl: config.SYNCER_URL,
  watcherUrl: config.WATCHER_URL,
+ withdrawManagerAddress: config.WITHDRAWMANAGER_ADDRESS,
 })
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-var transactionHash = '0x38952f3fe7828d13ebe0268163e522930a606e6ec46133326fc5d64d0c818f10'
+var transactionHash = 'Paste txHash here ...' // Insert txHash generated from initiate-withdraw.js 
 
 //Wait for 5 mins till the checkpoint is submitted, then run the confirm withdraw
 matic.withdraw(transactionHash, {
    from,
    onTransactionHash: () => {
    // action on Transaction success
-//    console.log('Withdraw complete',txHash)
+   // console.log('Withdraw complete')
    },
 })
