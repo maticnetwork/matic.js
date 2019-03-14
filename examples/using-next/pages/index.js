@@ -21,8 +21,8 @@ function initMatic() {
 }
 
 const from = '0x5784d63560319839e5696a283096e169d1F4E659' // from address
+const recipient = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // test recipient address
 const token = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2' // test token address
-const recepient = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // test recepient address
 const amount = '10000000000000000'
 
 function Home() {
@@ -30,7 +30,7 @@ function Home() {
 
   const transferTokens = () => {
     // Send Tokens
-    matic.transferTokens(token, recepient, amount, {
+    matic.transferTokens(token, recipient, amount, {
       from,
       onTransactionHash: (resp) => {
         // action on Transaction success
