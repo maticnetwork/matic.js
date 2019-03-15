@@ -452,8 +452,6 @@ matic.transferMaticEthers(user, '1000000000000000000', {
 
 <a name="transferTokens"></a>
 
-> > > > > > > master
-
 #### matic.transferTokens(token, user, amount, options)
 
 Transfer given `amount` of `token` to `user`.
