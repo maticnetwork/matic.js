@@ -437,6 +437,17 @@ export default class Matic {
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
+  async processExits(rootTokenAddress, options = {}) {
+    const processExits = this._withdrawManagerContract.methods.processExits(rootTokenAddress)
+    const _options = await this._fillOptions(
+      options,
+      processExits,
+      this._parentWeb3
+    )
+    return this._wrapWeb3Promise(processExits.send(_options), options)
+
+  }
+
   async withdrawLocally(txId, options = {}) {
     const withdrawTx = await this._web3.eth.getTransaction(txId)
     const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId)
