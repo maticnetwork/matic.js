@@ -1,5 +1,5 @@
-// const Matic = require('maticjs').default
-const Matic = require('../../lib/index').default
+
+const Matic = require('maticjs').default
 const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address

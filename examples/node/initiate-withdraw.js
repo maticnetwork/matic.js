@@ -1,4 +1,4 @@
-const Matic = require('../../lib/index').default
+const Matic = require('maticjs').default
 const config = require('./config')
 
 const token = config.MATIC_TEST_TOKEN // test token address

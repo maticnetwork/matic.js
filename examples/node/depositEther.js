@@ -1,4 +1,4 @@
-const Matic = require('../../lib/index').default
+const Matic = require('maticjs').default
 const config = require('./config')
 
 const amount = '9000000000000000' // amount in wei
