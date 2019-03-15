@@ -13,6 +13,7 @@ const matic = new Matic({
   rootChainAddress: config.ROOTCHAIN_ADDRESS,
   syncerUrl: config.SYNCER_URL,
   watcherUrl: config.WATCHER_URL,
+  maticWethAddress: config.MATICWETH_ADDRESS,  
 })
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
