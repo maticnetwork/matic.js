@@ -37,6 +37,9 @@ const matic = new Matic({
 
   // Set withdraw-manager Address. See below for more information	
   withdrawManagerAddress: <withdraw-manager-address>,
+
+  // Set deposit-manager Address. See below for more information	
+  depositManagerAddress: <deposit-manager-address>,
   
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
@@ -100,13 +103,6 @@ await matic.depositERC721Tokens(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
   tokenId,  // Token Id
-  options // transaction fields
-)
-
-// Transfer Ethers on Matic
-await matic.transferMaticEthers(
-  user,   // Recipient address
-  amount,  // Token amount for deposit (in wei)
   options // transaction fields
 )
 
@@ -197,7 +193,6 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
 - <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
-- <a href="#transferMaticEthers"><code>matic.<b>transferMaticEthers()</b></code></a>
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
 - <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#transferEthers"><code>matic.<b>transferEthers()</b></code></a>
@@ -236,6 +231,7 @@ const matic = new Matic(options)
   - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
   - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
   - `withdrawManagerAddress` must be valid Ethereum contract address.
+  - `depositManagerAddress` must be valid Ethereum contract address.
 ---
 
 <a name="getMappedTokenAddress"></a>
@@ -422,30 +418,6 @@ const user = <your-address> or <any-account-address>
 matic.depositEthers('0x718Ca123...', {
   from: '0xABc578455...',
   value: '1000000000000000000'
-})
-```
-
----
-
-<a name="transferMaticEthers"></a>
-
-#### matic.transferMaticEthers(user, amount, options)
-
-Transfer given `amount` of Ethers to `user`.
-
-- `user` must be value account address
-- `amount` must be token amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveERC20TokensForDeposit)
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-const user = <your-address> or <any-account-address>
-
-matic.transferMaticEthers(user, '1000000000000000000', {
-  from: '0xABc578455...',
 })
 ```
 
