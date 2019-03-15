@@ -537,7 +537,6 @@ export default class Matic {
   async _fillOptions(options, txObject, web3) {
     // delete chain id
     delete txObject.chainId
-    const gas = !web3.matic ? await web3.eth.getGasPrice() : 0
     const from = options.from || this.walletAddress
     if (!from) {
       throw new Error(
@@ -549,7 +548,8 @@ export default class Matic {
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
-      !options.gasPrice ? gas : options.gasPrice,
+      // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
+      !options.gasPrice ? !web3.matic ? await web3.eth.getGasPrice() : '0' : options.gasPrice,
       !options.nonce
         ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
