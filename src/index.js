@@ -21,6 +21,7 @@ import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
 import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'	
+import DepositManagerArtifacts from '../artifacts/DepositManager'
 
 const rlp = utils.rlp
 
@@ -38,6 +39,7 @@ export default class Matic {
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
     this._withdrawManagerAddress = options.withdrawManagerAddress	
+    this._depositManagerAddress = options.depositManagerAddress
 
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
@@ -50,6 +52,12 @@ export default class Matic {
       WithdrawManagerArtifacts.abi,	
       this._withdrawManagerAddress	
     )
+
+      // create deposit manager contract
+      this._depositManagerContract = new this._parentWeb3.eth.Contract(
+        DepositManagerArtifacts.abi,
+        this._depositManagerAddress
+      )
 
     // internal cache
     this._tokenCache = {}
