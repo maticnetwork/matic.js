@@ -263,7 +263,7 @@ export default class Matic {
 
     // if matic chain, transfer normal WETH tokens
     if (!options.parent) {
-      return this.transferERC20Tokens(
+      return this.transferTokens(
         this._maticWethAddress,
         to,
         amount,
