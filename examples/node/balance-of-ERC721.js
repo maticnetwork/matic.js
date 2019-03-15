@@ -10,12 +10,14 @@ const matic = new Matic({
   watcherUrl: config.WATCHER_URL,
   maticWethAddress: config.MATICWETH_ADDRESS,
 })
-
-const tokenAddress = config.KOVAN_TEST // token address on mainchain
-
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-// get token address mapped with mainchain token address
-matic.getMappedTokenAddress(tokenAddress).then(() => {
+const tokenAddress = config.MATIC_ERC721_TOKEN // token address on mainchain
+const from = config.FROM_ADDRESS // from address
+
+matic.balanceOfERC721(from, tokenAddress, {
+  // parent: true, // For token balance on Main network (false for Matic Network)
+}).then((hash) => { 
   // action on Transaction success
+  console.log(hash) // eslint-disable-line
 })

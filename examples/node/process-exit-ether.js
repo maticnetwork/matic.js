@@ -2,6 +2,7 @@ const Matic = require('maticjs').default
 const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
+const rootTokenAddress = config.ROOTWETH_ADDRESS
 
 // Create object of Matic
 const matic = new Matic({
@@ -15,14 +16,12 @@ const matic = new Matic({
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-var transactionHash = 'Paste txHash here ...' // Insert txHash generated from initiate-withdraw.js 
 
-//Wait for 5 mins till the checkpoint is submitted, then run the confirm withdraw
-matic.withdraw(transactionHash, {
+// NOTE: Wait for NFT Challenge period tobe complete
+matic.processExits(rootTokenAddress, {
    from,
-   onTransactionHash: (hash) => {
-      // action on Transaction success
-      console.log(hash) // eslint-disable-line
-      // Withdraw process is completed, funds will be transfer to your account after challege period is over.
+   onTransactionHash: () => {
+   // action on Transaction success
+   // DEVNOTE: on sucessfull processExits withdrawManager.Withdraw event will receive
    },
 })

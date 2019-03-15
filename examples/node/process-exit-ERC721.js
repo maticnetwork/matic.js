@@ -1,9 +1,8 @@
-
 const Matic = require('maticjs').default
 const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
-const rootTokenAddress = config.ROPSTEN_TEST_TOKEN
+const rootTokenAddress = config.ROPSTEN_ERC721_TOKEN
 
 // Create object of Matic
 const matic = new Matic({
@@ -23,6 +22,6 @@ matic.processExits(rootTokenAddress, {
    from,
    onTransactionHash: () => {
    // action on Transaction success
-   // on sucessfull processExits withdrawManager.Withdraw event will receive
+   // DEVNOTE: on sucessfull processExits withdrawManager.Withdraw event will receive
    },
 })

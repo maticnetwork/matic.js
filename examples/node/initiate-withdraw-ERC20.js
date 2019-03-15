@@ -24,7 +24,8 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 matic
  .startWithdraw(token, amount, {
    from,
-   onTransactionHash: () => {
+   onTransactionHash: (hash) => {
     //  console.log("Withdraw Initiated")
+    console.log(hash) // eslint-disable-line
    },
 })

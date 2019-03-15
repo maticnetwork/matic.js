@@ -1,10 +1,8 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const from = config.FROM_ADDRESS // from address
-const to = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // to address
-
 const amount = '1000000000000000000' // amount in wei
+const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
 const matic = new Matic({
@@ -17,12 +15,12 @@ const matic = new Matic({
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-// Send Tokens
-matic.transferEthers(to, amount, {
+// Deposit tokens
+matic.depositEthers({
   from,
-  // parent: true, // For token transfer on Main network (false for Matic Network)
-  onTransactionHash: () => {
+  value: amount,
+  onTransactionHash: (hash) => {
     // action on Transaction success
-    // console.log(tx)
+    console.log(hash) // eslint-disable-line
   },
 })
