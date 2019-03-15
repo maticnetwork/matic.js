@@ -152,6 +152,12 @@ await matic.withdraw(
   txId, // Transaction id generated from the 'startWithdraw' method
   options // transaction fields
 )
+
+// Process exits after completion of challenge period
+await matic.processExits(
+  rootTokenAddress, // RootToken address
+  options // transaction fields
+)
 ```
 
 ### How it works?
@@ -198,6 +204,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#startERC721Withdraw"><code>matic.<b>startERC721Withdraw()</b></code></a>
 - <a href="#getHeaderObject"><code>matic.<b>getHeaderObject()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
+- <a href="#processExits"><code>matic.<b>processExits()</b></code></a>
 - <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
 - <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
 
@@ -227,7 +234,7 @@ const matic = new Matic(options)
   - `rootChainAddress` must be valid Ethereum contract address.
   - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
   - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
-
+  - `withdrawManagerAddress` must be valid Ethereum contract address.
 ---
 
 <a name="getMappedTokenAddress"></a>
@@ -623,6 +630,27 @@ Example:
 
 ```js
 matic.withdraw("0xabcd...789", {
+  from: "0xABc578455..."
+})
+```
+
+---
+
+<a name="processExits"></a>
+
+#### matic.processExits(rootTokenAddress, options)
+
+Call process Exits after completion of challenge period, after that withdrawn funds get transfered on mainchain
+
+- `rootTokenAddress` RootToken address
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.processExits("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```
