@@ -17,9 +17,10 @@
   "author": "Bhavir Shah <bhavir@matic.network>",
   "license": "ISC",
   "dependencies": {
-    "maticjs": "1.0.0-beta.8",
+    "maticjs": "1.0.0-beta.9",
     "next": "8.0.1",
     "react": "16.8.2",
-    "react-dom": "16.8.2"
+    "react-dom": "16.8.2",
+    "web3": "1.0.0-beta.34"
   }
 }
