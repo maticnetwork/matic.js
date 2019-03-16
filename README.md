@@ -35,6 +35,12 @@ const matic = new Matic({
   // Set rootchain contract. See below for more information
   rootChainAddress: <root-contract-address>,
 
+  // Set withdraw-manager Address. See below for more information	
+  withdrawManagerAddress: <withdraw-manager-address>,
+
+  // Set deposit-manager Address. See below for more information	
+  depositManagerAddress: <deposit-manager-address>,
+  
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 
@@ -56,25 +62,47 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
-// Approve token for deposit
-await matic.approveTokensForDeposit(
+//get ERC721 token balance
+await matic.balanceOfERC721(
+  user, // User address 
+  tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// Deposit Ether into Matic chain
+await matic.depositEthers(
+  user,   // User address (in most cases, this will be sender's address),
+  options // transaction fields
+)
+
+// Approve ERC20 token for deposit
+await matic.approveERC20TokensForDeposit(
   token,  // Token address,
   amount,  // Token amount for approval (in wei)
   options // transaction fields
 )
 
-// Deposit token into Matic chain. Remember to call `approveTokens` before
-await matic.depositTokens(
+// Deposit token into Matic chain. Remember to call `approveERC20TokensForDeposit` before
+await matic.depositERC20Tokens(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
   amount,  // Token amount for deposit (in wei)
   options // transaction fields
 )
 
-// Transfer Ethers on Matic
-await matic.transferMaticEthers(
-  user,   // Recipient address
-  amount,  // Token amount for deposit (in wei)
+// Approve ERC721 token for deposit
+await matic.approveERC721TokenForDeposit(
+  token,  // Token address,
+  tokenId,  // Token Id
+  options // transaction fields
+)
+
+
+// Deposit token into Matic chain. Remember to call `approveERC721TokenForDeposit` before
+await matic.depositERC721Tokens(
+  token,  // Token address
+  user,   // User address (in most cases, this will be sender's address),
+  tokenId,  // Token Id
   options // transaction fields
 )
 
@@ -82,14 +110,36 @@ await matic.transferMaticEthers(
 await matic.transferTokens(
   token,  // Token address
   user,   // Recipient address
-  amount,  // Token amount for deposit (in wei)
+  amount,  // Token amount
   options // transaction fields
 )
 
-// Initiate withdrawal of funds from Matic and retrieve the Transaction id
+// Transfer ERC721 token on Matic
+await matic.transferERC721Tokens(
+  token,  // Token address
+  user,   // Recipient address
+  tokenId,  // Token Id
+  options // transaction fields
+)
+
+// Transfer Ether
+await matic.transferEthers(
+  user,   // Recipient address
+  amount,  // Token amount
+  options // transaction fields
+)
+
+// Initiate withdrawal of ERC20 from Matic and retrieve the Transaction id
 await matic.startWithdraw(
   token, // Token address
   amount, // Token amount for withdraw (in wei)
+  options // transaction fields
+)
+
+// Initiate withdrawal of ERC721 from Matic and retrieve the Transaction id
+await matic.startERC721Withdraw(
+  token, // Token address
+  tokenId, // tokenId
   options // transaction fields
 )
 
@@ -97,6 +147,12 @@ await matic.startWithdraw(
 // after header has been submitted to mainchain
 await matic.withdraw(
   txId, // Transaction id generated from the 'startWithdraw' method
+  options // transaction fields
+)
+
+// Process exits after completion of challenge period
+await matic.processExits(
+  rootTokenAddress, // RootToken address
   options // transaction fields
 )
 ```
@@ -130,15 +186,21 @@ Please write to info@matic.network to request TEST tokens for development purpos
 
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
-- <a href="#approveTokensForDeposit"><code>matic.<b>approveTokensForDeposit()</b></code></a>
-- <a href="#depositTokens"><code>matic.<b>depositTokens()</b></code></a>
+- <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
+- <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
+- <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
+- <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
+- <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
+- <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
-- <a href="#transferMaticEthers"><code>matic.<b>transferMaticEthers()</b></code></a>
 - <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
+- <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#transferEthers"><code>matic.<b>transferEthers()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
+- <a href="#startERC721Withdraw"><code>matic.<b>startERC721Withdraw()</b></code></a>
 - <a href="#getHeaderObject"><code>matic.<b>getHeaderObject()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
+- <a href="#processExits"><code>matic.<b>processExits()</b></code></a>
 - <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
 - <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
 
@@ -168,7 +230,8 @@ const matic = new Matic(options)
   - `rootChainAddress` must be valid Ethereum contract address.
   - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
   - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
-
+  - `withdrawManagerAddress` must be valid Ethereum contract address.
+  - `depositManagerAddress` must be valid Ethereum contract address.
 ---
 
 <a name="getMappedTokenAddress"></a>
@@ -192,17 +255,39 @@ matic
 ```
 
 ---
+<a name="balanceOfERC721"></a>
 
-<a name="approveTokensForDeposit"></a>
 
-#### matic.approveTokensForDeposit(token, amount, options)
+#### matic.balanceOfERC721(address, token, options)
+
+get balance of ERC721 `token` for `address`.
+
+- `token` must be valid token address
+- `address` must be valid user address
+
+This returns matic `balance`.
+
+Example:
+
+```js
+matic
+  .balanceOfERC721("0xfeb14bc6aaf5d39fa43ff51ed94e6c260539e296")
+  .then(address => {
+    console.log("matic address", address)
+  })
+```
+
+---
+<a name="approveERC20TokensForDeposit"></a>
+
+#### matic.approveERC20TokensForDeposit(token, amount, options)
 
 Approves given `amount` of `token` to `rootChainContract`.
 
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
-  - `from` must be valid account address
+  - `from` must be valid account address(required)
   - `gasPrice` same as Ethereum `sendTransaction`
   - `gasLimit` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
@@ -218,7 +303,7 @@ Example:
 
 ```js
 matic
-  .approveTokensForDeposit("0x718Ca123...", "1000000000000000000", {
+  .approveERC20TokensForDeposit("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
   .on("onTransactionHash", txHash => {
@@ -228,16 +313,16 @@ matic
 
 ---
 
-<a name="depositTokens"></a>
+<a name="depositERC20Tokens"></a>
 
-#### matic.depositTokens(token, user, amount, options)
+#### matic.depositERC20Tokens(token, user, amount, options)
 
 Deposit given `amount` of `token` with user `user`.
 
 - `token` must be valid ERC20 token address
 - `user` must be value account address
 - `amount` must be token amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveTokensForDeposit)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -253,14 +338,75 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 ---
 
+<a name="depositERC721Tokens"></a>
+
+#### matic.approveERC721TokenForDeposit(token, tokenId, options)
+
+Approves given `amount` of `token` to `rootChainContract`.
+
+- `token` must be valid ERC20 token address
+- `tokenId` must be tokenId (string, not in Number)
+- `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
+  - `from` must be valid account address(required)
+  - `gasPrice` same as Ethereum `sendTransaction`
+  - `gasLimit` same as Ethereum `sendTransaction`
+  - `nonce` same as Ethereum `sendTransaction`
+  - `nonce` same as Ethereum `sendTransaction`
+  - `value` contains ETH value. Same as Ethereum `sendTransaction`.
+  - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
+  - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
+  - `onError` must be `function`. This function will be called when sending transaction fails.
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic
+  .approveERC721TokenForDeposit("0x718Ca123...", "21", {
+    from: "0xABc578455..."
+  })
+  .on("onTransactionHash", txHash => {
+    console.log("New transaction", txHash)
+  })
+```
+
+---
+
+<a name="depositERC20Tokens"></a>
+
+#### matic.depositERC721Tokens(token, user, tokenId, options)
+
+Deposit given `tokenId` of `token` with user `user`.
+
+- `token` must be valid ERC20 token address
+- `user` must be value account address
+- `tokenId` must be valid tokenId
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.depositERC721Tokens('0x718Ca123...', user, tokenId, {
+  from: '0xABc578455...'
+})
+```
+
+---
+
 <a name="depositEthers"></a>
 
-#### matic.depositEthers(user, options)
+#### matic.depositEthers(options)
 
 Deposit `options.value` ETH with user `user`.
 
-- `user` must be value account address
-- `options` see [more infomation here](#approveTokensForDeposit). Pass `value` for amount of ethers.
+- `options` see [more infomation here](#approveERC20TokensForDeposit).
+  - `value` amount of ethers.
+  - `from` must be valid account address(required)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -277,30 +423,6 @@ matic.depositEthers('0x718Ca123...', {
 
 ---
 
-<a name="transferMaticEthers"></a>
-
-#### matic.transferMaticEthers(user, amount, options)
-
-Transfer given `amount` of Ethers to `user`.
-
-- `user` must be value account address
-- `amount` must be token amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveTokensForDeposit)
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-const user = <your-address> or <any-account-address>
-
-matic.transferMaticEthers(user, '1000000000000000000', {
-  from: '0xABc578455...',
-})
-```
-
----
-
 <a name="transferTokens"></a>
 
 #### matic.transferTokens(token, user, amount, options)
@@ -310,7 +432,7 @@ Transfer given `amount` of `token` to `user`.
 - `token` must be valid ERC20 token address
 - `user` must be value account address
 - `amount` must be token amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveTokensForDeposit)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
@@ -320,7 +442,36 @@ Example:
 ```js
 const user = <your-address> or <any-account-address>
 
-matic.transferTokens('0x718Ca123...', user, '1000000000000000000', {
+matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...',
+
+  // For token transfer on Main network
+  // parent: true
+})
+```
+
+---
+
+<a name="transferERC721Tokens"></a>
+
+#### matic.transferERC721Tokens(token, user, tokenId, options)
+
+Transfer ownership `tokenId` of `token` to `user`.
+
+- `token` must be valid ERC20 token address
+- `user` must be value account address
+- `tokenId` tokenId
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.transferERC721Tokens('0x718Ca123...', user, tokenId, {
   from: '0xABc578455...',
 
   // For token transfer on Main network
@@ -338,7 +489,7 @@ Transfer given `amount` of ethers to `user`.
 
 - `user` must be value account address
 - `amount` must be ethers amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveTokensForDeposit)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For ether transfer on Main chain, use `parent: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
@@ -366,7 +517,7 @@ Start withdraw process with given `amount` for `token`.
 
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveTokensForDeposit)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -375,6 +526,34 @@ Example:
 ```js
 matic
   .startWithdraw("0x718Ca123...", "1000000000000000000", {
+    from: "0xABc578455..."
+  })
+  .on("onTransactionHash", txHash => {
+    console.log("Started withdraw process with txId", txHash)
+  })
+```
+
+---
+
+<a name="getHeaderObject"></a>
+
+
+
+#### matic.startERC721Withdraw(token, tokenId, options)
+
+Start withdraw process with given `tokenId` for `token`.
+
+- `token` must be valid ERC20 token address
+- `tokenId` must be token tokenId in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic
+  .startERC721Withdraw("0x718Ca123...", "21", {
     from: "0xABc578455..."
   })
   .on("onTransactionHash", txHash => {
@@ -414,7 +593,7 @@ matic.getHeaderObject(673874).then(header => {
 Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
 
 - `txId` must be valid tx hash
-- `options` see [more infomation here](#approveTokensForDeposit)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -422,6 +601,27 @@ Example:
 
 ```js
 matic.withdraw("0xabcd...789", {
+  from: "0xABc578455..."
+})
+```
+
+---
+
+<a name="processExits"></a>
+
+#### matic.processExits(rootTokenAddress, options)
+
+Call process Exits after completion of challenge period, after that withdrawn funds get transfered on mainchain
+
+- `rootTokenAddress` RootToken address
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.processExits("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```

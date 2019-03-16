@@ -18,7 +18,10 @@ import MerkleTree from './helpers/merkle-tree'
 
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
+import ChildERC721Artifacts from '../artifacts/ChildERC721'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
+import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'	
+import DepositManagerArtifacts from '../artifacts/DepositManager'
 
 const rlp = utils.rlp
 
@@ -35,11 +38,26 @@ export default class Matic {
     this._watcherUrl = options.watcherUrl
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
+    this._withdrawManagerAddress = options.withdrawManagerAddress	
+    this._depositManagerAddress = options.depositManagerAddress
+
     // create rootchain contract
     this._rootChainContract = new this._parentWeb3.eth.Contract(
       RootChainArtifacts.abi,
       this._rootChainAddress
     )
+
+    // create withdraw manager contract	
+    this._withdrawManagerContract = new this._parentWeb3.eth.Contract(	
+      WithdrawManagerArtifacts.abi,	
+      this._withdrawManagerAddress	
+    )
+
+      // create deposit manager contract
+      this._depositManagerContract = new this._parentWeb3.eth.Contract(
+        DepositManagerArtifacts.abi,
+        this._depositManagerAddress
+      )
 
     // internal cache
     this._tokenCache = {}
@@ -88,14 +106,37 @@ export default class Matic {
   async getMappedTokenAddress(address) {
     const _a = address.toLowerCase()
     if (!this._tokenMappedCache[_a]) {
-      this._tokenMappedCache[_a] = await this._rootChainContract.methods
-        .tokens(_a)
-        .call()
+      this._tokenMappedCache[
+        _a
+      ] = await this._depositManagerContract.methods.tokens(_a).call()
     }
     return this._tokenMappedCache[_a]
   }
 
-  async approveTokensForDeposit(token, amount, options = {}) {
+  async balanceOfERC721(address, token, options={}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const balance = await this._getERC721TokenContract(token,web3Object).methods.balanceOf(address).call()
+    return balance
+  }
+
+  async depositEthers(options = {}) {
+    if (options && (!options.from || !options.value)) {
+      throw new Error('Missing Parameters')
+    }
+    const depositTx = this._rootChainContract.methods.depositEthers()
+    const _options = await this._fillOptions(
+      options,
+      depositTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
+  }
+
+  async approveERC20TokensForDeposit(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
     }
@@ -116,21 +157,7 @@ export default class Matic {
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
-  async depositEthers(user, options = {}) {
-    if (options && (!options.from || !user || !options.value)) {
-      throw new Error('Missing Parameters')
-    }
-    const depositTx = this._rootChainContract.methods.depositEthers(user)
-    const _options = await this._fillOptions(
-      options,
-      depositTx,
-      this._parentWeb3
-    )
-
-    return this._wrapWeb3Promise(depositTx.send(_options), options)
-  }
-
-  async depositTokens(token, user, amount, options = {}) {
+  async depositERC20Tokens(token, user, amount, options = {}) {
     if (options && (!options.from || !token || !user || !amount)) {
       throw new Error('Missing Parameters')
     }
@@ -148,25 +175,42 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async transferMaticEthers(to, amount, options) {
-    if (options && (!options.from || !amount || !to)) {
+  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+    if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
     }
-    const from = options.from
+    
+    const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
 
-    const gasLimit = await this._web3.eth.estimateGas({
-      from,
-      value: amount,
-    })
-    options.gasLimit = gasLimit
-    options.value = amount
-    options.to = to
-    const _options = await this._fillOptions(options, {}, this._web3)
-
-    return this._wrapWeb3Promise(
-      this._web3.eth.sendTransaction(_options),
-      options
+    const approveTx = await _tokenContract.methods.approve(
+      this._rootChainAddress,
+      tokenId
     )
+    const _options = await this._fillOptions(
+      options,
+      approveTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(approveTx.send(_options), options)
+  }
+
+  async depositERC721Tokens(token, user, tokenId, options = {}) {
+    if (options && (!options.from || !token || !user || !tokenId)) {
+      throw new Error('Missing Parameters')
+    }
+    const depositTx = this._rootChainContract.methods.depositERC721(
+      token,
+      user,
+      tokenId
+    )
+    const _options = await this._fillOptions(
+      options,
+      depositTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async transferTokens(token, user, amount, options = {}) {
@@ -183,6 +227,21 @@ export default class Matic {
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
+  async transferERC721Tokens(token, user, tokenId, options = {}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const _tokenContract = this._getERC721TokenContract(token, web3Object)
+    const transferTx = _tokenContract.methods.transferFrom(
+      options.from,
+      user,
+      tokenId
+    )
+    const _options = await this._fillOptions(options, transferTx, web3Object)
+    return this._wrapWeb3Promise(transferTx.send(_options), options)
+  }
+
   async transferEthers(to, amount, options = {}) {
     if (options && (!options.from || !amount || !to)) {
       throw new Error('Missing Parameters')
@@ -191,7 +250,12 @@ export default class Matic {
 
     // if matic chain, transfer normal WETH tokens
     if (!options.parent) {
-      return this.transferTokens(this._maticWethAddress, to, amount, options)
+      return this.transferTokens(
+        this._maticWethAddress,
+        to,
+        amount,
+        options
+      )
     }
 
     const gasLimit = await this._parentWeb3.eth.estimateGas({
@@ -215,6 +279,16 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
+    const _options = await this._fillOptions(options, withdrawTx, this._web3)
+    return this._wrapWeb3Promise(withdrawTx.send(_options), options)
+  }
+
+  async startERC721Withdraw(token, tokenId, options = {}) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error('Missing Parameters')
+    }
+    const _tokenContract = this._getERC721TokenContract(token, this._web3)
+    const withdrawTx = _tokenContract.methods.withdraw(tokenId)
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
@@ -325,13 +399,13 @@ export default class Matic {
 
     const headerProof = await this.getHeaderProof(txProof.blockNumber, header)
 
-    const withdrawTx = this._rootChainContract.methods.withdraw(
-      header.number.toString(), // header block
+    const withdrawTx = this._withdrawManagerContract.methods.withdrawBurntTokens(
+      header.number, // header block
       utils.bufferToHex(
         Buffer.concat(headerProof.proof.map(p => utils.toBuffer(p)))
       ), // header proof
       txProof.blockNumber, // block number
-      txProof.blockTimestamp.toString(), // block timestamp
+      txProof.blockTimestamp, // block timestamp
       txProof.root, // tx root
       receiptProof.root, // receipt root
       utils.bufferToHex(rlp.encode(receiptProof.path)), // key for trie (both tx and receipt)
@@ -348,6 +422,17 @@ export default class Matic {
     )
 
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
+  }
+
+  async processExits(rootTokenAddress, options = {}) {
+    const processExits = this._withdrawManagerContract.methods.processExits(rootTokenAddress)
+    const _options = await this._fillOptions(
+      options,
+      processExits,
+      this._parentWeb3
+    )
+    return this._wrapWeb3Promise(processExits.send(_options), options)
+
   }
 
   async withdrawLocally(txId, options = {}) {
@@ -378,7 +463,7 @@ export default class Matic {
       .call()
 
     const header = await this._rootChainContract.methods
-      .getHeaderBlock(parseInt(currentHeaderBlock, 10) - 1)
+      .headerBlock(parseInt(currentHeaderBlock, 10) - 1)
       .call()
 
     const headerNumber = +currentHeaderBlock - 1
@@ -388,7 +473,7 @@ export default class Matic {
     const tree = new MerkleTree(headers)
     const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
 
-    const withdrawTxObject = this._rootChainContract.methods.withdraw(
+    const withdrawTxObject = this._withdrawManagerContract.methods.withdrawBurntTokens(
       headerNumber.toString(), // header block
       utils.bufferToHex(Buffer.concat(headerProof)), // header proof
       withdrawObj.block.number.toString(), // block number
@@ -434,10 +519,22 @@ export default class Matic {
     return _tokenContract
   }
 
+  _getERC721TokenContract(token, web3) {
+    const _token = token.toLowerCase()
+
+    let _tokenContract = this._tokenCache[_token]
+    if (!_tokenContract) {
+      _tokenContract = new web3.eth.Contract(ChildERC721Artifacts.abi, _token)
+      // update token cache
+      this._tokenCache[_token] = _tokenContract
+    }
+
+    return _tokenContract
+  }
+
   async _fillOptions(options, txObject, web3) {
     // delete chain id
     delete txObject.chainId
-    const gas = !web3.matic ? await web3.eth.getGasPrice() : 0
     const from = options.from || this.walletAddress
     if (!from) {
       throw new Error(
@@ -449,7 +546,8 @@ export default class Matic {
       !(options.gasLimit || options.gas)
         ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
-      !options.gasPrice ? gas : options.gasPrice,
+      // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
+      !options.gasPrice ? !web3.matic ? await web3.eth.getGasPrice() : '0' : options.gasPrice,
       !options.nonce
         ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
@@ -459,6 +557,7 @@ export default class Matic {
     return {
       from,
       gasLimit,
+      gas: gasLimit,
       gasPrice: gasPrice,
       nonce,
       chainId,

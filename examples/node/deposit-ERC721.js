@@ -1,9 +1,9 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const token = '0x670568761764f53E6C10cd63b71024c31551c9EC' // test token address
-const amount = '10000000000000000' // amount in wei
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
+const token = config.ROPSTEN_ERC721_TOKEN // test token address
+const tokenId = '1' // ERC721 token Id
+const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
 const matic = new Matic({
@@ -14,22 +14,22 @@ const matic = new Matic({
   watcherUrl: config.WATCHER_URL,
 })
 
-matic.wallet = '<private-key>' // prefix with `0x`
+matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-// Approve token
 matic
-  .approveTokensForDeposit(token, amount, {
+  .approveERC721TokenForDeposit(token, tokenId, {
     from,
-    onTransactionHash: () => {
+    onTransactionHash: (hash) => {
       // action on Transaction success
+      console.log(hash) // eslint-disable-line      
     },
   })
   .then(() => {
-    // Deposit tokens
-    matic.depositTokens(token, from, amount, {
+    matic.depositERC721Tokens(token, from, tokenId, {
       from,
-      onTransactionHash: () => {
+      onTransactionHash: (hash) => {
         // action on Transaction success
+        console.log(hash) // eslint-disable-line
       },
     })
   })

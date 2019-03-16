@@ -3,48 +3,11 @@
     {
       "constant": true,
       "inputs": [],
-      "name": "name",
+      "name": "roundType",
       "outputs": [
         {
           "name": "",
-          "type": "string"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "totalSupply",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
+          "type": "bytes32"
         }
       ],
       "payable": false,
@@ -54,11 +17,11 @@
     {
       "constant": true,
       "inputs": [],
-      "name": "decimals",
+      "name": "depositCount",
       "outputs": [
         {
           "name": "",
-          "type": "uint8"
+          "type": "uint256"
         }
       ],
       "payable": false,
@@ -66,41 +29,32 @@
       "type": "function"
     },
     {
-      "constant": false,
+      "constant": true,
       "inputs": [
         {
-          "name": "spender",
+          "name": "",
           "type": "address"
-        },
-        {
-          "name": "addedValue",
-          "type": "uint256"
         }
       ],
-      "name": "increaseAllowance",
+      "name": "reverseTokens",
       "outputs": [
         {
           "name": "",
-          "type": "bool"
+          "type": "address"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "constant": true,
-      "inputs": [
-        {
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
+      "inputs": [],
+      "name": "wethToken",
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "address"
         }
       ],
       "payable": false,
@@ -114,6 +68,20 @@
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "voteType",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes1"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -147,11 +115,126 @@
     {
       "constant": true,
       "inputs": [],
-      "name": "symbol",
+      "name": "networkId",
       "outputs": [
         {
           "name": "",
-          "type": "string"
+          "type": "bytes"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "rootChain",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "CHILD_BLOCK_INTERVAL",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposits",
+      "outputs": [
+        {
+          "name": "header",
+          "type": "uint256"
+        },
+        {
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "name": "amountOrTokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "createdAt",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "chain",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isERC721",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "tokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
         }
       ],
       "payable": false,
@@ -162,46 +245,14 @@
       "constant": false,
       "inputs": [
         {
-          "name": "spender",
+          "name": "newRootChain",
           "type": "address"
-        },
-        {
-          "name": "subtractedValue",
-          "type": "uint256"
         }
       ],
-      "name": "decreaseAllowance",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "name": "changeRootChain",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "name": "spender",
-          "type": "address"
-        }
-      ],
-      "name": "allowance",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -219,38 +270,7 @@
       "type": "function"
     },
     {
-      "constant": true,
       "inputs": [],
-      "name": "token",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "name": "_token",
-          "type": "address"
-        },
-        {
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "name": "_symbol",
-          "type": "string"
-        },
-        {
-          "name": "_decimals",
-          "type": "uint8"
-        }
-      ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -260,118 +280,22 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "token",
+          "name": "_user",
           "type": "address"
         },
         {
           "indexed": true,
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "name": "to",
+          "name": "_token",
           "type": "address"
         },
         {
           "indexed": false,
-          "name": "amountOrTokenId",
+          "name": "_amountOrTokenId",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "name": "input1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "input2",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output2",
-          "type": "uint256"
-        }
-      ],
-      "name": "LogTransfer",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Transfer",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "name": "token",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "amountOrTokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "input1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output1",
+          "name": "_depositCount",
           "type": "uint256"
         }
       ],
@@ -383,31 +307,16 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "token",
+          "name": "previousRootChain",
           "type": "address"
         },
         {
           "indexed": true,
-          "name": "from",
+          "name": "newRootChain",
           "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "amountOrTokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "input1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output1",
-          "type": "uint256"
         }
       ],
-      "name": "Withdraw",
+      "name": "RootChainChanged",
       "type": "event"
     },
     {
@@ -428,18 +337,31 @@
       "type": "event"
     },
     {
-      "constant": false,
+      "anonymous": false,
       "inputs": [
         {
-          "name": "user",
+          "indexed": true,
+          "name": "_rootToken",
           "type": "address"
         },
         {
-          "name": "amount",
-          "type": "uint256"
+          "indexed": true,
+          "name": "_childToken",
+          "type": "address"
         }
       ],
-      "name": "deposit",
+      "name": "TokenMapped",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_nftContract",
+          "type": "address"
+        }
+      ],
+      "name": "setExitNFTContract",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -449,11 +371,11 @@
       "constant": false,
       "inputs": [
         {
-          "name": "amount",
-          "type": "uint256"
+          "name": "_token",
+          "type": "address"
         }
       ],
-      "name": "withdraw",
+      "name": "setWETHToken",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -463,21 +385,20 @@
       "constant": false,
       "inputs": [
         {
-          "name": "to",
+          "name": "_rootToken",
           "type": "address"
         },
         {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
+          "name": "_childToken",
+          "type": "address"
+        },
         {
-          "name": "",
+          "name": "_isERC721",
           "type": "bool"
         }
       ],
+      "name": "mapToken",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -486,25 +407,92 @@
       "constant": false,
       "inputs": [
         {
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "name": "value",
+          "name": "_currentHeaderBlock",
           "type": "uint256"
         }
       ],
-      "name": "transferFrom",
+      "name": "finalizeCommit",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "currentHeaderBlock",
+          "type": "uint256"
+        }
+      ],
+      "name": "nextDepositBlock",
       "outputs": [
         {
           "name": "",
-          "type": "bool"
+          "type": "uint256"
         }
       ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_depositCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositBlock",
+      "outputs": [
+        {
+          "name": "_header",
+          "type": "uint256"
+        },
+        {
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_amountOrTokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_createdAt",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_currentHeaderBlock",
+          "type": "uint256"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "name": "_amountOrTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "createDepositBlock",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"

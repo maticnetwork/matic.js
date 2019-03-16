@@ -11,7 +11,7 @@ function Deposit() {
   const depositTokens = () => {
     // Approve token
     store.matic
-      .approveTokensForDeposit(store.token, amount, {
+      .approveERC20TokensForDeposit(store.token, amount, {
         from: store.from,
         onTransactionHash: approvedTxHash => {
           setApprovedTxHash(approvedTxHash)
@@ -19,7 +19,7 @@ function Deposit() {
       })
       .then(() => {
         // Deposit tokens
-        store.matic.depositTokens(store.token, store.from, amount, {
+        store.matic.depositERC20Tokens(store.token, store.from, amount, {
           from: store.from,
           onTransactionHash: depositTxHash => {
             setDepositTxHash(depositTxHash)
@@ -37,7 +37,7 @@ function Deposit() {
         <div>
           Approved transaction:{' '}
           <a
-            href={`https://kovan.etherscan.io/tx/${approvedTxHash}`}
+            href={`https://ropsten.etherscan.io/tx/${approvedTxHash}`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -48,7 +48,7 @@ function Deposit() {
       {depositTxHash ? (<div>
         Deposit success transaction:{' '}
         <a
-          href={`https://kovan.etherscan.io/tx/${depositTxHash}`}
+          href={`https://ropsten.etherscan.io/tx/${depositTxHash}`}
           target="_blank"
           rel="noopener noreferrer"
         >

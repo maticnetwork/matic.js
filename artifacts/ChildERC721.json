@@ -2,6 +2,25 @@
   "abi": [
     {
       "constant": true,
+      "inputs": [
+        {
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
       "inputs": [],
       "name": "name",
       "outputs": [
@@ -15,24 +34,38 @@
       "type": "function"
     },
     {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "constant": false,
       "inputs": [
         {
-          "name": "spender",
+          "name": "to",
           "type": "address"
         },
         {
-          "name": "value",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
       "name": "approve",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -53,12 +86,21 @@
     },
     {
       "constant": true,
-      "inputs": [],
-      "name": "decimals",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenOfOwnerByIndex",
       "outputs": [
         {
           "name": "",
-          "type": "uint8"
+          "type": "uint256"
         }
       ],
       "payable": false,
@@ -69,23 +111,60 @@
       "constant": false,
       "inputs": [
         {
-          "name": "spender",
+          "name": "from",
           "type": "address"
         },
         {
-          "name": "addedValue",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
-      "name": "increaseAllowance",
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenByIndex",
       "outputs": [
         {
           "name": "",
-          "type": "bool"
+          "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -162,23 +241,63 @@
       "constant": false,
       "inputs": [
         {
-          "name": "spender",
+          "name": "to",
           "type": "address"
         },
         {
-          "name": "subtractedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "decreaseAllowance",
-      "outputs": [
-        {
-          "name": "",
+          "name": "approved",
           "type": "bool"
         }
       ],
+      "name": "setApprovalForAll",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -189,15 +308,15 @@
           "type": "address"
         },
         {
-          "name": "spender",
+          "name": "operator",
           "type": "address"
         }
       ],
-      "name": "allowance",
+      "name": "isApprovedForAll",
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ],
       "payable": false,
@@ -239,16 +358,12 @@
           "type": "address"
         },
         {
-          "name": "_name",
+          "name": "name",
           "type": "string"
         },
         {
-          "name": "_symbol",
+          "name": "symbol",
           "type": "string"
-        },
-        {
-          "name": "_decimals",
-          "type": "uint8"
         }
       ],
       "payable": false,
@@ -277,26 +392,6 @@
           "indexed": false,
           "name": "amountOrTokenId",
           "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "input1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "input2",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output1",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "output2",
-          "type": "uint256"
         }
       ],
       "name": "LogTransfer",
@@ -316,8 +411,8 @@
           "type": "address"
         },
         {
-          "indexed": false,
-          "name": "value",
+          "indexed": true,
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
@@ -334,16 +429,38 @@
         },
         {
           "indexed": true,
-          "name": "spender",
+          "name": "approved",
           "type": "address"
         },
         {
-          "indexed": false,
-          "name": "value",
+          "indexed": true,
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
       "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
       "type": "event"
     },
     {
@@ -435,7 +552,7 @@
           "type": "address"
         },
         {
-          "name": "amount",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
@@ -449,35 +566,12 @@
       "constant": false,
       "inputs": [
         {
-          "name": "amount",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
       "name": "withdraw",
       "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -494,17 +588,12 @@
           "type": "address"
         },
         {
-          "name": "value",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
       "name": "transferFrom",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
