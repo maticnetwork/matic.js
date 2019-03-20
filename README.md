@@ -71,7 +71,6 @@ await matic.balanceOfERC721(
 
 // Deposit Ether into Matic chain
 await matic.depositEthers(
-  user,   // User address (in most cases, this will be sender's address),
   options // transaction fields
 )
 
@@ -402,7 +401,7 @@ matic.depositERC721Tokens('0x718Ca123...', user, tokenId, {
 
 #### matic.depositEthers(options)
 
-Deposit `options.value` ETH with user `user`.
+Deposit `options.value`
 
 - `options` see [more infomation here](#approveERC20TokensForDeposit).
   - `value` amount of ethers.
@@ -413,9 +412,7 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-const user = <your-address> or <any-account-address>
-
-matic.depositEthers('0x718Ca123...', {
+matic.depositEthers({
   from: '0xABc578455...',
   value: '1000000000000000000'
 })
