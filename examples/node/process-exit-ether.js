@@ -20,8 +20,9 @@ matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 // NOTE: Wait for NFT Challenge period tobe complete
 matic.processExits(rootTokenAddress, {
    from,
-   onTransactionHash: () => {
+   onTransactionHash: (hash) => {
    // action on Transaction success
    // DEVNOTE: on sucessfull processExits withdrawManager.Withdraw event will receive
+   console.log(hash) // eslint-disable-line
    },
 })
