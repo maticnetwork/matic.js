@@ -22,7 +22,7 @@ matic.processExits(rootTokenAddress, {
    from,
    onTransactionHash: (hash) => {
       // action on Transaction success
-      // DEVNOTE: on sucessfull processExits withdrawManager.Withdraw event will receive
+      // DEVNOTE: on sucessfull processExits funds will be transfered to your mainchain account
       console.log(hash) // eslint-disable-line
    },
 })
