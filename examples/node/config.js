@@ -1,6 +1,7 @@
 module.exports = {
   MATIC_PROVIDER: 'https://testnet2.matic.network',
-  PARENT_PROVIDER: 'https://ropsten.infura.io/v3/70645f042c3a409599c60f96f6dd9fbc',
+  PARENT_PROVIDER:
+    'https://ropsten.infura.io/v3/70645f042c3a409599c60f96f6dd9fbc',
   ROOTCHAIN_ADDRESS: '0x60e2b19b9a87a3f37827f2c8c8306be718a5f9b4',
   WITHDRAWMANAGER_ADDRESS: '0x4ef2b60cdd4611fa0bc815792acc14de4c158d22',
   DEPOSITMANAGER_ADDRESS: '0x4072fab2a132bf98207cbfcd2c341adb904a67e9',
@@ -11,7 +12,7 @@ module.exports = {
   PRIVATE_KEY: 'Paste your private key here ...', // prefix with `0x`
   FROM_ADDRESS: 'Paste address belongs to Private key here ...',
   ROPSTEN_TEST_TOKEN: '0x6b0b0e265321e788af11b6f1235012ae7b5a6808',
-  MATIC_TEST_TOKEN: '0x11cae3746685d2a8d8d02df5595b49eb3e7eaa25',
-  ROPSTEN_ERC721_TOKEN:'0x07d799252cf13c01f602779b4dce24f4e5b08bbd',
-  MATIC_ERC721_TOKEN:'0xc23235377f1baa50F337081A5661349Cb4767163',
+  MATIC_TEST_TOKEN: '0xcc5de81d1af53dcb5d707b6b33a50f4ee46d983e',
+  ROPSTEN_ERC721_TOKEN: '0x07d799252cf13c01f602779b4dce24f4e5b08bbd',
+  MATIC_ERC721_TOKEN: '0x9f289a264b6db56d69ad53f363d06326b984e637',
 }
