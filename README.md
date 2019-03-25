@@ -46,11 +46,11 @@ const matic = new Matic({
 
   // Syncer API URL
   // Fetches tx/receipt proof data instead of fetching whole block on client side
-  syncerUrl: 'https://eth-syncer.api.matic.network/api/v1', // (optional)
+  syncerUrl: 'https://matic-syncer2.api.matic.network/api/v1', // (optional)
 
   // Watcher API URL
   // Fetches headerBlock info from mainchain & finds appropriate headerBlock for given blockNumber
-  watcherUrl: 'https://eth-watcher.api.matic.network/api/v1', // (optional)
+  watcherUrl: 'https://ropsten-watcher2.api.matic.network/api/v1', // (optional)
 })
 
 // Set wallet
@@ -62,10 +62,18 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
-//get ERC721 token balance
+// get ERC721 token balance
 await matic.balanceOfERC721(
   user, // User address 
   tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// get ERC721 token ID
+await matic.tokenOfOwnerByIndexERC721(
+  from, // User address 
+  tokenAddress,  // Token address
+  index, // index of tokenId
   options // transaction fields
 )
 
@@ -86,6 +94,14 @@ await matic.depositERC20Tokens(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
   amount,  // Token amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Deposit ERC721 token into Matic chain.(older ERC721 or some newer contracts will not support this.
+// in that case, first call `approveERC721TokenForDeposit` and `depositERC721Tokens`)
+await matic.safeTransferFrom(
+  token,  // Token addres
+  tokenId,  // Token Id for deposit
   options // transaction fields
 )
 
@@ -169,13 +185,15 @@ The flow for asset transfers on the Matic Network is as follows:
 
 **Matic Testnet**
 
-- RPC endpoint host: https://testnet.matic.network
-- TEST childchain ERC20 token: 0x343461c74133E3fA476Dbbc614a87473270a226c
+- RPC endpoint host: https://testnet2.matic.network
+- TEST childchain ERC20 token: 0xcc5de81d1af53dcb5d707b6b33a50f4ee46d983e
 
-**Kovan testnet addresses**
+**Ropsten testnet addresses**
 
-- TEST mainchain ERC20 token: 0x670568761764f53E6C10cd63b71024c31551c9EC
-- Root Contract: 0x24e01716a6ac34D5f2C4C082F553D86a557543a7
+- TEST mainchain ERC20 token: 0x6b0b0e265321e788af11b6f1235012ae7b5a6808
+- Root Contract: 0x60e2b19b9a87a3f37827f2c8c8306be718a5f9b4
+- DepositManager Contract: 0x4072fab2a132bf98207cbfcd2c341adb904a67e9
+- WithdrawManager Contract: 0x4ef2b60cdd4611fa0bc815792acc14de4c158d22
 
 ### Faucet
 
@@ -186,9 +204,11 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
+- <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
+- <a href="#safeTransferFrom"><code>matic.<b>safeTransferFrom()</b></code></a>
 - <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
 - <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
@@ -219,11 +239,11 @@ const matic = new Matic(options)
 
 - `options` is simple Javascript `object` which can have following fields:
   - `maticProvider` can be `string` or `Web3.providers` instance. This provider must connect to Matic chain. Value can be anyone of following:
-    - `'https://testnet.matic.network'`
+    - `'https://testnet2.matic.network'`
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
   - `parentProvider` can be `string` or `Web3.providers` instance. This provider must connect to Ethereum chain (testnet or mainchain). Value can be anyone of following:
-    - `'https://kovan.infura.io'`
+    - `'https://ropsten.infura.io'`
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
   - `rootChainAddress` must be valid Ethereum contract address.
@@ -273,6 +293,33 @@ matic
   .balanceOfERC721("0xfeb14bc6aaf5d39fa43ff51ed94e6c260539e296")
   .then(address => {
     console.log("matic address", address)
+  })
+```
+
+---
+<a name="tokenOfOwnerByIndexERC721"></a>
+
+
+#### matic.tokenOfOwnerByIndexERC721(address, token, index, options)
+
+get ERC721 tokenId at `index` for `token` and for `address`.
+
+- `token` must be valid token address
+- `address` must be valid user address
+- `index` index of tokenId 
+
+
+This returns matic `tokenId`.
+
+Example:
+
+```js
+matic
+  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
+    from: "0xABc578455..."
+  })
+  .then(tokenID => {
+    console.log("Token ID", tokenID)
   })
 ```
 
@@ -337,13 +384,36 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 ---
 
+<a name="safeTransferFrom"></a>
+
+#### matic.safeTransferFrom(token, tokenId, options)
+
+Deposit given `tokenId` of `token`.
+
+- `token` must be valid ERC721 token address
+- `tokenId` must be tokenId
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+
+matic.safeTransferFrom('0x718Ca123...', '21', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
 <a name="depositERC721Tokens"></a>
 
 #### matic.approveERC721TokenForDeposit(token, tokenId, options)
 
 Approves given `amount` of `token` to `rootChainContract`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `tokenId` must be tokenId (string, not in Number)
 - `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
   - `from` must be valid account address(required)
@@ -378,7 +448,7 @@ matic
 
 Deposit given `tokenId` of `token` with user `user`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `user` must be value account address
 - `tokenId` must be valid tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
@@ -455,7 +525,7 @@ matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
 
 Transfer ownership `tokenId` of `token` to `user`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `user` must be value account address
 - `tokenId` tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
@@ -540,7 +610,7 @@ matic
 
 Start withdraw process with given `tokenId` for `token`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `tokenId` must be token tokenId in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
 
@@ -608,7 +678,7 @@ matic.withdraw("0xabcd...789", {
 
 #### matic.processExits(rootTokenAddress, options)
 
-Call process Exits after completion of challenge period, after that withdrawn funds get transfered on mainchain
+Call processExits after completion of challenge period, after that withdrawn funds get transfered to your account on mainchain
 
 - `rootTokenAddress` RootToken address
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
