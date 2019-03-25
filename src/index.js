@@ -188,7 +188,6 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-
   async safeTransferFrom(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
@@ -219,7 +218,6 @@ export default class Matic {
       token,
       this._parentWeb3
     )
-
     const approveTx = await _tokenContract.methods.approve(
       this._rootChainAddress,
       tokenId
