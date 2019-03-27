@@ -20,7 +20,7 @@ import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
 import StandardTokenArtifacts from '../artifacts/StandardToken'
-import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'	
+import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
 import DepositManagerArtifacts from '../artifacts/DepositManager'
 
 const rlp = utils.rlp
@@ -38,7 +38,7 @@ export default class Matic {
     this._watcherUrl = options.watcherUrl
     this._rootChainAddress = options.rootChainAddress
     this._maticWethAddress = options.maticWethAddress
-    this._withdrawManagerAddress = options.withdrawManagerAddress	
+    this._withdrawManagerAddress = options.withdrawManagerAddress
     this._depositManagerAddress = options.depositManagerAddress
 
     // create rootchain contract
@@ -47,17 +47,17 @@ export default class Matic {
       this._rootChainAddress
     )
 
-    // create withdraw manager contract	
-    this._withdrawManagerContract = new this._parentWeb3.eth.Contract(	
-      WithdrawManagerArtifacts.abi,	
-      this._withdrawManagerAddress	
+    // create withdraw manager contract
+    this._withdrawManagerContract = new this._parentWeb3.eth.Contract(
+      WithdrawManagerArtifacts.abi,
+      this._withdrawManagerAddress
     )
 
-      // create deposit manager contract
-      this._depositManagerContract = new this._parentWeb3.eth.Contract(
-        DepositManagerArtifacts.abi,
-        this._depositManagerAddress
-      )
+    // create deposit manager contract
+    this._depositManagerContract = new this._parentWeb3.eth.Contract(
+      DepositManagerArtifacts.abi,
+      this._depositManagerAddress
+    )
 
     // internal cache
     this._tokenCache = {}
@@ -113,13 +113,26 @@ export default class Matic {
     return this._tokenMappedCache[_a]
   }
 
-  async balanceOfERC721(address, token, options={}) {
+  async balanceOfERC721(address, token, options = {}) {
     let web3Object = this._web3
     if (options.parent) {
       web3Object = this._parentWeb3
     }
-    const balance = await this._getERC721TokenContract(token,web3Object).methods.balanceOf(address).call()
+    const balance = await this._getERC721TokenContract(token, web3Object)
+      .methods.balanceOf(address)
+      .call()
     return balance
+  }
+
+  async tokenOfOwnerByIndexERC721(address, token, index, options = {}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const tokenID = await this._getERC721TokenContract(token, web3Object)
+      .methods.tokenOfOwnerByIndex(address, index)
+      .call()
+    return tokenID
   }
 
   async depositEthers(options = {}) {
@@ -175,13 +188,36 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+  async safeTransferFrom(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
     }
     
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
 
+    const safeTransferFromTx = await _tokenContract.methods.safeTransferFrom(
+      options.from,
+      this._rootChainAddress,
+      tokenId
+    )
+    const _options = await this._fillOptions(
+      options,
+      safeTransferFromTx,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(safeTransferFromTx.send(_options), options)
+  }
+
+  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error('Missing Parameters')
+    }
+
+    const _tokenContract = this._getERC721TokenContract(
+      token,
+      this._parentWeb3
+    )
     const approveTx = await _tokenContract.methods.approve(
       this._rootChainAddress,
       tokenId
@@ -250,12 +286,7 @@ export default class Matic {
 
     // if matic chain, transfer normal WETH tokens
     if (!options.parent) {
-      return this.transferTokens(
-        this._maticWethAddress,
-        to,
-        amount,
-        options
-      )
+      return this.transferTokens(this._maticWethAddress, to, amount, options)
     }
 
     const gasLimit = await this._parentWeb3.eth.estimateGas({
@@ -425,14 +456,15 @@ export default class Matic {
   }
 
   async processExits(rootTokenAddress, options = {}) {
-    const processExits = this._withdrawManagerContract.methods.processExits(rootTokenAddress)
+    const processExits = this._withdrawManagerContract.methods.processExits(
+      rootTokenAddress
+    )
     const _options = await this._fillOptions(
       options,
       processExits,
       this._parentWeb3
     )
     return this._wrapWeb3Promise(processExits.send(_options), options)
-
   }
 
   async withdrawLocally(txId, options = {}) {
@@ -547,7 +579,11 @@ export default class Matic {
         ? await txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
       // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
-      !options.gasPrice ? !web3.matic ? await web3.eth.getGasPrice() : '0' : options.gasPrice,
+      !options.gasPrice
+        ? !web3.matic
+          ? await web3.eth.getGasPrice()
+          : '0'
+        : options.gasPrice,
       !options.nonce
         ? await web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,

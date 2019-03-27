@@ -80,10 +80,18 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
-//get ERC721 token balance
+// get ERC721 token balance
 await matic.balanceOfERC721(
   user, // User address
   tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// get ERC721 token ID
+await matic.tokenOfOwnerByIndexERC721(
+  from, // User address 
+  tokenAddress,  // Token address
+  index, // index of tokenId
   options // transaction fields
 )
 
@@ -104,6 +112,14 @@ await matic.depositERC20Tokens(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
   amount,  // Token amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Deposit ERC721 token into Matic chain.(older ERC721 or some newer contracts will not support this.
+// in that case, first call `approveERC721TokenForDeposit` and `depositERC721Tokens`)
+await matic.safeTransferFrom(
+  token,  // Token addres
+  tokenId,  // Token Id for deposit
   options // transaction fields
 )
 
@@ -204,9 +220,11 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
+- <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
+- <a href="#safeTransferFrom"><code>matic.<b>safeTransferFrom()</b></code></a>
 - <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
 - <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
@@ -295,6 +313,33 @@ matic
 ```
 
 ---
+<a name="tokenOfOwnerByIndexERC721"></a>
+
+
+#### matic.tokenOfOwnerByIndexERC721(address, token, index, options)
+
+get balance of ERC721 `token` for `address`.
+
+- `token` must be valid token address
+- `address` must be valid user address
+- `index` index of tokenId 
+
+
+This returns matic `balance`.
+
+Example:
+
+```js
+matic
+  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
+    from: "0xABc578455..."
+  })
+  .then(tokenID => {
+    console.log("Token ID", tokenID)
+  })
+```
+
+---
 <a name="approveERC20TokensForDeposit"></a>
 
 #### matic.approveERC20TokensForDeposit(token, amount, options)
@@ -355,13 +400,36 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 ---
 
+<a name="safeTransferFrom"></a>
+
+#### matic.safeTransferFrom(token, tokenId, options)
+
+Deposit given `tokenId` of `token`.
+
+- `token` must be valid ERC721 token address
+- `tokenId` must be tokenId
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+
+matic.safeTransferFrom('0x718Ca123...', '21', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
 <a name="depositERC721Tokens"></a>
 
 #### matic.approveERC721TokenForDeposit(token, tokenId, options)
 
 Approves given `amount` of `token` to `rootChainContract`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `tokenId` must be tokenId (string, not in Number)
 - `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
   - `from` must be valid account address(required)
@@ -396,7 +464,7 @@ matic
 
 Deposit given `tokenId` of `token` with user `user`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `user` must be value account address
 - `tokenId` must be valid tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
@@ -473,7 +541,7 @@ matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
 
 Transfer ownership `tokenId` of `token` to `user`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `user` must be value account address
 - `tokenId` tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
@@ -558,7 +626,7 @@ matic
 
 Start withdraw process with given `tokenId` for `token`.
 
-- `token` must be valid ERC20 token address
+- `token` must be valid ERC721 token address
 - `tokenId` must be token tokenId in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
 
