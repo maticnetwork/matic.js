@@ -27,10 +27,10 @@ Simply download `dist/matic.js` and include with a script tag. `Matic` will be r
 ##### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/maticjs@1.0.0-beta.11/dist/matic.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maticjs/dist/matic.js"></script>
 ```
 
-Matic is also available on [unpkg](https://unpkg.com/maticjs@1.0.0-beta.11/dist/matic.js)
+Matic is also available on [unpkg](https://unpkg.com/maticjs/dist/matic.js)
 
 
 ### Getting started
@@ -89,7 +89,7 @@ await matic.balanceOfERC721(
 
 // get ERC721 token ID
 await matic.tokenOfOwnerByIndexERC721(
-  from, // User address 
+  from, // User address
   tokenAddress,  // Token address
   index, // index of tokenId
   options // transaction fields
@@ -322,7 +322,7 @@ get balance of ERC721 `token` for `address`.
 
 - `token` must be valid token address
 - `address` must be valid user address
-- `index` index of tokenId 
+- `index` index of tokenId
 
 
 This returns matic `balance`.
