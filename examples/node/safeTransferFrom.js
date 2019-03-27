@@ -2,7 +2,7 @@ const Matic = require('maticjs').default
 const config = require('./config')
 
 const token = config.ROPSTEN_ERC721_TOKEN // test token address
-const tokenId = '74' // ERC721 token Id
+const tokenId = '72' // ERC721 token Id
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
