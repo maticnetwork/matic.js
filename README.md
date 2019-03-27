@@ -62,10 +62,18 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
-//get ERC721 token balance
+// get ERC721 token balance
 await matic.balanceOfERC721(
   user, // User address 
   tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// get ERC721 token ID
+await matic.tokenOfOwnerByIndexERC721(
+  from, // User address 
+  tokenAddress,  // Token address
+  index, // index of tokenId
   options // transaction fields
 )
 
@@ -89,7 +97,8 @@ await matic.depositERC20Tokens(
   options // transaction fields
 )
 
-// Deposit token into Matic chain.
+// Deposit ERC721 token into Matic chain.(older ERC721 or some newer contracts will not support this.
+// in that case, first call `approveERC721TokenForDeposit` and `depositERC721Tokens`)
 await matic.safeTransferFrom(
   token,  // Token addres
   tokenId,  // Token Id for deposit
@@ -193,6 +202,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
+- <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
@@ -281,6 +291,33 @@ matic
   .balanceOfERC721("0xfeb14bc6aaf5d39fa43ff51ed94e6c260539e296")
   .then(address => {
     console.log("matic address", address)
+  })
+```
+
+---
+<a name="tokenOfOwnerByIndexERC721"></a>
+
+
+#### matic.tokenOfOwnerByIndexERC721(address, token, index, options)
+
+get balance of ERC721 `token` for `address`.
+
+- `token` must be valid token address
+- `address` must be valid user address
+- `index` index of tokenId 
+
+
+This returns matic `balance`.
+
+Example:
+
+```js
+matic
+  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
+    from: "0xABc578455..."
+  })
+  .then(tokenID => {
+    console.log("Token ID", tokenID)
   })
 ```
 
