@@ -10,10 +10,28 @@ We will be improving this library to make all features available like Plasma Fas
 
 ### Installation
 
+#### NPM
+---
+
 ```bash
 $ npm install --save web3 maticjs # or yarn add web3 maticjs
 ```
 _Note: This library is dependent on [web3.js](https://github.com/ethereum/web3.js) library. Tested with web3@1.0.0-beta.34_
+
+
+#### Direct `<script>` Include
+---
+
+Simply download `dist/matic.js` and include with a script tag. `Matic` will be registered as a global variable.
+
+##### CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/maticjs/dist/matic.js"></script>
+```
+
+Matic is also available on [unpkg](https://unpkg.com/maticjs/dist/matic.js)
+
 
 ### Getting started
 
@@ -35,12 +53,12 @@ const matic = new Matic({
   // Set rootchain contract. See below for more information
   rootChainAddress: <root-contract-address>,
 
-  // Set withdraw-manager Address. See below for more information	
+  // Set withdraw-manager Address. See below for more information
   withdrawManagerAddress: <withdraw-manager-address>,
 
-  // Set deposit-manager Address. See below for more information	
+  // Set deposit-manager Address. See below for more information
   depositManagerAddress: <deposit-manager-address>,
-  
+
   // Set matic network's WETH address. See below for more information
   maticWethAddress: <matic-weth-address>,
 
@@ -64,8 +82,16 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
 
 // get ERC721 token balance
 await matic.balanceOfERC721(
-  user, // User address 
+  user, // User address
   tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// get ERC721 token ID
+await matic.tokenOfOwnerByIndexERC721(
+  from, // User address
+  tokenAddress,  // Token address
+  index, // index of tokenId
   options // transaction fields
 )
 
