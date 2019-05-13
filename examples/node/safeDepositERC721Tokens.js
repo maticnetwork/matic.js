@@ -16,7 +16,7 @@ const matic = new Matic({
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
-matic.safeTransferFrom(token, tokenId, {
+matic.safeDepositERC721Tokens(token, tokenId, {
   from,
   onTransactionHash: (hash) => {
     // action on Transaction success

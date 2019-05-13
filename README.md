@@ -125,7 +125,7 @@ await matic.depositERC20Tokens(
 
 // Deposit ERC721 token into Matic chain.(older ERC721 or some newer contracts will not support this.
 // in that case, first call `approveERC721TokenForDeposit` and `depositERC721Tokens`)
-await matic.safeTransferFrom(
+await matic.safeDepositERC721Tokens(
   token,  // Token addres
   tokenId,  // Token Id for deposit
   options // transaction fields
@@ -234,7 +234,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
-- <a href="#safeTransferFrom"><code>matic.<b>safeTransferFrom()</b></code></a>
+- <a href="#safeDepositERC721Tokens"><code>matic.<b>safeDepositERC721Tokens()</b></code></a>
 - <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
 - <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
@@ -410,9 +410,9 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 ---
 
-<a name="safeTransferFrom"></a>
+<a name="safeDepositERC721Tokens"></a>
 
-#### matic.safeTransferFrom(token, tokenId, options)
+#### matic.safeDepositERC721Tokens(token, tokenId, options)
 
 Deposit given `tokenId` of `token`.
 
@@ -426,7 +426,7 @@ Example:
 
 ```js
 
-matic.safeTransferFrom('0x718Ca123...', '21', {
+matic.safeDepositERC721Tokens('0x718Ca123...', '21', {
   from: '0xABc578455...'
 })
 ```

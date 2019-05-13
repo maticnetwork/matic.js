@@ -188,25 +188,25 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async safeTransferFrom(token, tokenId, options = {}) {
+  async safeDepositERC721Tokens(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
     }
     
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
 
-    const safeTransferFromTx = await _tokenContract.methods.safeTransferFrom(
+    const safeDepositERC721Tokens = await _tokenContract.methods.safeTransferFrom(
       options.from,
       this._rootChainAddress,
       tokenId
     )
     const _options = await this._fillOptions(
       options,
-      safeTransferFromTx,
+      safeDepositERC721Tokens,
       this._parentWeb3
     )
 
-    return this._wrapWeb3Promise(safeTransferFromTx.send(_options), options)
+    return this._wrapWeb3Promise(safeDepositERC721Tokens.send(_options), options)
   }
 
   async approveERC721TokenForDeposit(token, tokenId, options = {}) {
