@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import store from '../utils/store'
 
-const amount = '10000000000000000'
+const amount = '1000000000000000000'
 
 function Deposit() {
   const [approvedTxHash, setApprovedTxHash] = useState(null)
