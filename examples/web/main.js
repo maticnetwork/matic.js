@@ -1,10 +1,10 @@
 const Matic = require('maticjs')
 const config = require('./config')
 
-const token = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2' // test token address
+const token = '0xcc5de81d1af53dcb5d707b6b33a50f4ee46d983e' // test token address
 const recipient = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // test recipient address
 const amount = '10000000000000000'
-const from = '0x6e0c217de3235f1d8a95605d10bcc1b36ff7996f' // from address
+const from = '0x87b917F40f7a031e13577200801b5f2f0D3E1b91' // from address
 
 // Create object of Matic
 const matic = new Matic({
