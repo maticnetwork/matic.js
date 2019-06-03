@@ -1,7 +1,7 @@
 import Matic from 'maticjs'
 
-const from = '0x5784d63560319839e5696a283096e169d1F4E659' // from address
-const token = '0xC4375B7De8af5a38a93548eb8453a498222C4fF2' // test token address
+const from = '0x87b917F40f7a031e13577200801b5f2f0D3E1b91' // from address
+const token = '0x6b0b0e265321e788af11b6f1235012ae7b5a6808' // test token address
 
 let matic = null
 

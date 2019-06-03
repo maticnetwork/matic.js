@@ -3,11 +3,11 @@ import { useState } from 'react'
 import store from '../utils/store'
 
 const recepient = '0x7ed7f36694153ba6eff6ca6726b60f6e2bb17fcf' // test recepient address
-const amount = '10000000000000000'
+const amount = '1000000000000000000'
 
 function Transfer() {
   const [hash, setHash] = useState(null)
-
+  
   const transferTokens = () => {
     // Send Tokens
     store.matic.transferTokens(store.token, recepient, amount, {

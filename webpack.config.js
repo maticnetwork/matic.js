@@ -58,4 +58,14 @@ const serverConfig = {
   },
 }
 
-module.exports = [clientConfig, serverConfig]
+const standaloneConfig = {
+  ...clientConfig,
+  output: {
+    ...clientConfig.output,
+    library: 'Matic',
+    filename: `${libraryName}.js`,
+  },
+  externals: {},
+}
+
+module.exports = [clientConfig, serverConfig, standaloneConfig]

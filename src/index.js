@@ -124,6 +124,17 @@ export default class Matic {
     return balance
   }
 
+  async tokenOfOwnerByIndexERC721(address, token, index, options = {}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const tokenID = await this._getERC721TokenContract(token, web3Object)
+      .methods.tokenOfOwnerByIndex(address, index)
+      .call()
+    return tokenID
+  }
+
   async depositEthers(options = {}) {
     if (options && (!options.from || !options.value)) {
       throw new Error('Missing Parameters')
@@ -177,13 +188,36 @@ export default class Matic {
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
-  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+  async safeDepositERC721Tokens(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
     }
 
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
 
+    const safeDepositERC721Tokens = await _tokenContract.methods.safeTransferFrom(
+      options.from,
+      this._rootChainAddress,
+      tokenId
+    )
+    const _options = await this._fillOptions(
+      options,
+      safeDepositERC721Tokens,
+      this._parentWeb3
+    )
+
+    return this._wrapWeb3Promise(safeDepositERC721Tokens.send(_options), options)
+  }
+
+  async approveERC721TokenForDeposit(token, tokenId, options = {}) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error('Missing Parameters')
+    }
+
+    const _tokenContract = this._getERC721TokenContract(
+      token,
+      this._parentWeb3
+    )
     const approveTx = await _tokenContract.methods.approve(
       this._rootChainAddress,
       tokenId
