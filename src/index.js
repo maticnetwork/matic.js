@@ -192,7 +192,7 @@ export default class Matic {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('Missing Parameters')
     }
-    
+
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
 
     const safeDepositERC721Tokens = await _tokenContract.methods.safeTransferFrom(
@@ -576,18 +576,18 @@ export default class Matic {
 
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(options.gasLimit || options.gas)
-        ? await txObject.estimateGas({ from, value: options.value })
+        ? txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
       // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
       !options.gasPrice
         ? !web3.matic
-          ? await web3.eth.getGasPrice()
+          ? web3.eth.getGasPrice()
           : '0'
         : options.gasPrice,
       !options.nonce
-        ? await web3.eth.getTransactionCount(from, 'pending')
+        ? web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
-      !options.chainId ? await web3.eth.net.getId() : options.chainId,
+      !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
 
     return {
@@ -603,10 +603,11 @@ export default class Matic {
   }
 
   _wrapWeb3Promise(promise, options) {
+    const _emptyFunc = () => {}
     return promise
-      .on('transactionHash', options.onTransactionHash)
-      .on('receipt', options.onReceipt)
-      .on('error', options.onError)
+      .on('transactionHash', options.onTransactionHash || _emptyFunc)
+      .on('receipt', options.onReceipt || _emptyFunc)
+      .on('error', options.onError || _emptyFunc)
   }
 
   _apiCall(data = {}) {
