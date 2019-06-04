@@ -29,7 +29,7 @@ function Transfer() {
         <div>
           Your latest transaction:{' '}
           <a
-            href={`http://explorer.testnet2.matic.network/tx/${hash}`}
+            href={`https://explorer.testnet2.matic.network/tx/${hash}`}
             target="_blank"
             rel="noopener noreferrer"
           >
