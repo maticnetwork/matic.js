@@ -7,7 +7,7 @@ const amount = '1000000000000000000'
 
 function Transfer() {
   const [hash, setHash] = useState(null)
-  
+
   const transferTokens = () => {
     // Send Tokens
     store.matic.transferTokens(store.token, recepient, amount, {
@@ -29,7 +29,7 @@ function Transfer() {
         <div>
           Your latest transaction:{' '}
           <a
-            href={`https://testnet1-explorer.matic.network/#/transaction/${hash}`}
+            href={`http://explorer.testnet2.matic.network/tx/${hash}`}
             target="_blank"
             rel="noopener noreferrer"
           >

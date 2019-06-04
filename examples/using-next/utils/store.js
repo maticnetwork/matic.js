@@ -15,7 +15,7 @@ function initMatic() {
       maticWethAddress: process.env.MATIC_WETH_ADDRESS,
       syncerUrl: process.env.SYNCER_URL,
       watcherUrl: process.env.WATCHER_URL,
-      withdrawManagerAddress: process.env.WITHDRAWMANAGER_ADDRESS,	
+      withdrawManagerAddress: process.env.WITHDRAWMANAGER_ADDRESS,
     })
 
     matic.wallet = '<private-key>' // your private key
