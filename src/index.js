@@ -580,9 +580,7 @@ export default class Matic {
         : options.gasLimit || options.gas,
       // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
       !options.gasPrice
-        ? !web3.matic
-          ? web3.eth.getGasPrice()
-          : '0'
+        ? web3.eth.getGasPrice()
         : options.gasPrice,
       !options.nonce
         ? web3.eth.getTransactionCount(from, 'pending')
