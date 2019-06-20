@@ -124,6 +124,17 @@ export default class Matic {
     return balance
   }
 
+  async balanceOfERC20(address, token, options = {}) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+    const balance = await this._getERC20TokenContract(token, web3Object)
+      .methods.balanceOf(address)
+      .call()
+    return balance
+  }
+
   async tokenOfOwnerByIndexERC721(address, token, index, options = {}) {
     let web3Object = this._web3
     if (options.parent) {
@@ -279,6 +290,8 @@ export default class Matic {
   }
 
   async transferEthers(to, amount, options = {}) {
+    let web3Object = this._parentWeb3
+
     if (options && (!options.from || !amount || !to)) {
       throw new Error('Missing Parameters')
     }
@@ -288,18 +301,21 @@ export default class Matic {
     if (!options.parent) {
       return this.transferTokens(this._maticWethAddress, to, amount, options)
     }
+    if (!options.parent && options.isCustomEth) {
+      web3Object = this._web3
+    }
 
-    const gasLimit = await this._parentWeb3.eth.estimateGas({
+    const gasLimit = await web3Object.eth.estimateGas({
       from,
       value: amount,
     })
     options.gasLimit = gasLimit
     options.value = amount
     options.to = to
-    const _options = await this._fillOptions(options, {}, this._parentWeb3)
+    const _options = await this._fillOptions(options, {}, web3Object)
 
     return this._wrapWeb3Promise(
-      this._parentWeb3.eth.sendTransaction(_options),
+      web3Object.eth.sendTransaction(_options),
       options
     )
   }
