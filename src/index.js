@@ -298,13 +298,14 @@ export default class Matic {
     const from = options.from
 
     // if matic chain, transfer normal WETH tokens
-    if (!options.parent) {
+    if (!options.parent && !options.isCustomEth) {
       return this.transferTokens(this._maticWethAddress, to, amount, options)
     }
+
     if (!options.parent && options.isCustomEth) {
       web3Object = this._web3
     }
-
+    
     const gasLimit = await web3Object.eth.estimateGas({
       from,
       value: amount,
