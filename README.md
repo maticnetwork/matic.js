@@ -80,6 +80,13 @@ const tokenAddressOnMatic = await matic.getMappedTokenAddress(
   tokenAddress // token address on mainchain
 )
 
+// get ERC20 token balance
+await matic.balanceOfERC20(
+  user, //User address
+  tokenAddress, // Token address
+  options // transaction fields
+)
+
 // get ERC721 token balance
 await matic.balanceOfERC721(
   user, // User address
@@ -229,6 +236,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
+- <a href="#balanceOfERC20"><code>matic.<b>balanceOfERC20()</b></code></a>
 - <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
 - <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
 - <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
@@ -294,6 +302,29 @@ Example:
 ```js
 matic
   .getMappedTokenAddress("0x670568761764f53E6C10cd63b71024c31551c9EC")
+  .then(address => {
+    console.log("matic address", address)
+  })
+```
+
+---
+<a name="balanceOfERC20"></a>
+
+
+#### matic.balanceOfERC20(address, token, options)
+
+get balance of ERC20 `token` for `address`.
+
+- `token` must be valid token address
+- `address` must be valid user address
+
+This returns matic `balance`.
+
+Example:
+
+```js
+matic
+  .balanceOfERC20("0xfeb14bc6aaf5d39fa43ff51ed94e6c260539e296")
   .then(address => {
     console.log("matic address", address)
   })
@@ -584,6 +615,7 @@ Transfer given `amount` of ethers to `user`.
 - `amount` must be ethers amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For ether transfer on Main chain, use `parent: true`
+  - `isCustomEth` must be boolean value. For custom ether transfer on Matic Chain, use `isCustomEth: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
