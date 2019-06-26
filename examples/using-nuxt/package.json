@@ -11,7 +11,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "maticjs": "1.0.0-beta.13",
+    "maticjs": "1.0.0-beta.14",
     "nuxt": "2.8.1",
     "web3": "1.0.0-beta.34"
   },
