@@ -5,6 +5,9 @@
       <div>
         <button @click="onTransfer" class="button--green">Transfer</button>
       </div>
+      <div>
+        <button @click="onDeposit" class="button--green">Deposit</button>
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +33,26 @@ export default {
           console.log(err);
         }
       });
+    },
+    onDeposit() {
+      matic
+      .approveERC20TokensForDeposit(this.token, amount, {
+        from: this.from,
+        onTransactionHash: (hash) => {
+          // action on Transaction success
+          console.log(hash) // eslint-disable-line
+        },
+      })
+      .then(() => {
+        // Deposit tokens
+        matic.depositERC20Tokens(this.token, this.from, amount, {
+          from: this.from,
+          onTransactionHash: (hash) => {
+            // action on Transaction success
+            console.log(hash) // eslint-disable-line
+          },
+        })
+      })
     }
   }
 };
