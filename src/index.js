@@ -95,6 +95,11 @@ export default class Matic {
     this._parentWeb3.eth.accounts.wallet.add(_wallet)
   }
 
+  setWallet(_wallet) {
+    this._web3.eth.accounts.wallet.add(_wallet)
+    this._parentWeb3.eth.accounts.wallet.add(_wallet)
+  }
+
   //
   // Actions
   //
