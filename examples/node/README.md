@@ -13,5 +13,5 @@ git clone git@github.com:maticnetwork/matic.js.git
 ```bash
 cd examples/node
 npm install
-node index.js
+node balance-of-ERC20.js
 ```
