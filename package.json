@@ -5,6 +5,7 @@
   "main": "dist/matic.node.js",
   "browser": "dist/matic.umd.js",
   "react-native": "dist/matic.node.js",
+  "types": "src/index.d.ts",
   "files": [
     "lib",
     "dist",
