@@ -5,17 +5,18 @@
   "main": "dist/matic.node.js",
   "browser": "dist/matic.umd.js",
   "react-native": "dist/matic.node.js",
-  "types": "src/index.d.ts",
+  "types": "types/index.d.ts",
   "files": [
     "lib",
     "dist",
-    "artifacts"
+    "artifacts",
+    "types"
   ],
   "scripts": {
     "clean": "rimraf lib dist",
-    "babel:build": "babel src/ --out-dir lib/",
-    "webpack:build": "webpack --env build",
-    "build": "npm run lint && npm run clean && npm run babel:build && npm run webpack:build",
+    "build:babel": "babel src/ --out-dir lib/",
+    "build:webpack": "webpack --env build",
+    "build": "npm run lint && npm run clean && npm run build:babel && npm run build:webpack",
     "lint": "eslint --ext .js src test examples",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",

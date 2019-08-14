@@ -53,7 +53,7 @@ export interface MaticConstructor {
     maticProvider: string | Provider;
 
     /**
-     * Can be a string or a Web3.providers instance. This provider must connect
+     * Can be a string or a Web3.providers instance. This provider must connect 
      * to Ethereum chain (testnet or mainchain). Value can be anyone of following:
      * * `'https://testnet2.matic.network'`
      * * `new Web3.providers.HttpProvider('http://localhost:8545')`
@@ -62,13 +62,13 @@ export interface MaticConstructor {
     parentProvider: string | Provider;
 
     /**
-     * Must be valid API host. MaticSDK uses this value to fetch receipt/tx
+     * Must be valid API host. MaticSDK uses this value to fetch receipt/tx 
      * proofs instead of getting whole block to client side.
      */
     syncerUrl: string;
 
     /**
-     * Must be valid API host. MaticSDK uses this value to fetch headerBlock info
+     * Must be valid API host. MaticSDK uses this value to fetch headerBlock info 
      * from mainchain and to find appropriate headerBlock for given blockNumber.
      */
     watcherUrl: string;
@@ -89,12 +89,12 @@ export interface MaticConstructor {
 export default class Matic {
     /**
      * Create Matic SDK instance with the given options
-     * @param options
+     * @param options 
      */
     constructor(options: MaticConstructor);
     web3: Web3;
     parentWeb3: Web3;
-    wallet: Account;
+    wallet: Account; 
     walletAddress: UserMaticAddress;
 
     /**
@@ -157,7 +157,7 @@ export default class Matic {
      * @returns A promise which will be fulfilled when transaction is confirmed (when receipt is generated)
      */
     approveERC20TokensForDeposit(token: ERC20TokenAddress, amount: WeiAmount, options?: TxOptions): PromiEvent<any>; // ! need to figure out return type of PromiEvent
-
+    
     /**
      * Deposits given `amount` of `token` to `rootChainContract`.
      * @param token Must be a valid token address
@@ -169,7 +169,7 @@ export default class Matic {
     depositERC20Tokens(token: ERC20TokenAddress, user: UserEthAddress, amount: WeiAmount, options?: TxOptions): PromiEvent<any>;
 
     /**
-     * Deposit given `tokenId` of `token`
+     * Deposit given `tokenId` of `token` 
      * @param token Must be a valid token address
      * @param tokenId tokenId to deposit
      * @param options See `TxOptions`
@@ -194,10 +194,10 @@ export default class Matic {
      * @param options See `TxOptions`
      * @returns A promise which will be fulfilled when transaction is confirmed (when receipt is generated)
      */
-    depositERC721Tokens(token: ERC721TokenAddress, user: UserEthAddress, tokenId: TokenId, options?: TxOptions): PromiEvent<any>;
+    depositERC721Tokens(token: ERC721TokenAddress, user: UserEthAddress, tokenId: TokenId, options?: TxOptions): PromiEvent<any>; 
 
     /**
-     * Deposit given `tokenId` of `token`
+     * Deposit given `tokenId` of `token` 
      * @param token Must be a valid token address
      * @param tokenId tokenId to deposit
      * @param options See `TxOptions`
@@ -229,7 +229,7 @@ export default class Matic {
      * Transfer the given `amount` of ethers to `user`
      * @param user Must be a valid user address
      * @param amount Ether amount in wei
-     * @param options See `TxOptions`.
+     * @param options See `TxOptions`. 
      * * For transfer on Main chain, use `parent: true`.
      * * For custom ether transfer on Matic Chain, `use isCustomEth: true`
      * @returns A promise which will be fulfilled when transaction is confirmed (when receipt is generated)
@@ -266,7 +266,7 @@ export default class Matic {
      * @param txId Transaction Id
      * @returns A promise which will be fulfilled when the transaction receipt is found
      */
-    getReceipt(txId: MaticChainTransactionId): Promise<TransactionReceipt>;
+    getReceipt(txId: MaticChainTransactionId): Promise<TransactionReceipt>; 
 
     /**
      * Fetch header/checkpoint corresponding to `blockNumber`
