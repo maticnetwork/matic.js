@@ -12,6 +12,10 @@ export default class DepositManager {
     this._defaultOptions = _defaultOptions || {}
   }
 
+  setDepositManagerAddress(_depositManagerContractAddress: address) {
+    this._depositManagerContract.options.address = _depositManagerContractAddress
+  }
+
   depositERC20(token: address, amount: string, options?: SendOptions) {
     return this._send(
       this._depositManagerContract.methods.depositERC20(token, amount),
@@ -19,8 +23,39 @@ export default class DepositManager {
     )
   }
 
-  setDepositManagerAddress(_depositManagerContractAddress: address) {
-    this._depositManagerContract.options.address = _depositManagerContractAddress
+  depositERC721(token: address, tokenId: string, options?: SendOptions) {
+    return this._send(
+      this._depositManagerContract.methods.depositERC721(token, tokenId),
+      options
+    )
+  }
+
+  depositBulk(tokens: address[], amountOrTokenIds: string[], user: address, options?: SendOptions) {
+    return this._send(
+      this._depositManagerContract.methods.depositBulk(tokens, amountOrTokenIds, user),
+      options
+    )
+  }
+
+  depositERC20ForUser(token: address, amount: string, user: address, options?: SendOptions) {
+    return this._send(
+      this._depositManagerContract.methods.depositERC20ForUser(token, user, amount),
+      options
+    )
+  }
+
+  depositERC721ForUser(token: address, tokenId: string, user: address, options?: SendOptions) {
+    return this._send(
+      this._depositManagerContract.methods.depositERC721ForUser(token, user, tokenId),
+      options
+    )
+  }
+
+  depositEther(amount: string, options: SendOptions = {}) {
+    return this._send(
+      this._depositManagerContract.methods.depositEther(),
+      Object.assign(options, { value: amount })
+    )
   }
 
   private async _send(method, options) {
