@@ -1,20 +1,21 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "allowJs": true,
     "lib": ["es2015", "dom"],
     "target": "es5",
     "rootDir": "src",
-    "outDir": "build",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "declaration": true
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "dist",
+    "src/index1.js"
   ]
 }
