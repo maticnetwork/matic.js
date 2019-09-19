@@ -7,8 +7,8 @@ export default class DepositManager {
   private _depositManagerContract: Contract
   private _defaultOptions: SendOptions
 
-  constructor(_depositManagerContractAddress: address, _web3: Web3, _defaultOptions?: SendOptions) {
-    this._depositManagerContract = new _web3.eth.Contract(DepositManagerArtifact.abi, _depositManagerContractAddress)
+  constructor(_depositManagerContractAddress: address, _parentWeb3: Web3, _defaultOptions?: SendOptions) {
+    this._depositManagerContract = new _parentWeb3.eth.Contract(DepositManagerArtifact.abi, _depositManagerContractAddress)
     this._defaultOptions = _defaultOptions || {}
   }
 
