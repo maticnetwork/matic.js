@@ -1,61 +1,76 @@
 import Web3 from 'web3'
-import { Contract } from 'web3/types'
-import { address, BigNumber, SendOptions } from '../types/Common'
+import Contract from 'web3/eth/contract'
+import { address, SendOptions } from '../types/Common'
 import DepositManagerArtifact from '../artifacts/DepositManager.json'
+import BN from 'bn.js'
+import assert from 'assert';
 
 export default class DepositManager {
-  private _depositManagerContract: Contract
+  public depositManagerContract: Contract
   private _defaultOptions: SendOptions
 
-  constructor(_depositManagerContractAddress: address, _parentWeb3: Web3, _defaultOptions?: SendOptions) {
-    this._depositManagerContract = new _parentWeb3.eth.Contract(DepositManagerArtifact.abi, _depositManagerContractAddress)
+  constructor(depositManagerContractAddress: address, _parentWeb3: Web3, _defaultOptions?: SendOptions) {
+    this.depositManagerContract = new _parentWeb3.eth.Contract(DepositManagerArtifact.abi, depositManagerContractAddress)
     this._defaultOptions = _defaultOptions || {}
   }
 
-  setDepositManagerAddress(_depositManagerContractAddress: address) {
-    this._depositManagerContract.options.address = _depositManagerContractAddress
-  }
-
-  depositERC20(token: address, amount: string, options?: SendOptions) {
+  depositERC20(token: address, amount: BN | string, options?: SendOptions) {
     return this._send(
-      this._depositManagerContract.methods.depositERC20(token, amount),
+      this.depositManagerContract.methods.depositERC20(token, this.encode(amount)),
       options
     )
   }
 
   depositERC721(token: address, tokenId: string, options?: SendOptions) {
     return this._send(
-      this._depositManagerContract.methods.depositERC721(token, tokenId),
+      this.depositManagerContract.methods.depositERC721(token, tokenId),
       options
     )
   }
 
   depositBulk(tokens: address[], amountOrTokenIds: string[], user: address, options?: SendOptions) {
     return this._send(
-      this._depositManagerContract.methods.depositBulk(tokens, amountOrTokenIds, user),
+      this.depositManagerContract.methods.depositBulk(tokens, amountOrTokenIds, user),
       options
     )
   }
 
   depositERC20ForUser(token: address, amount: string, user: address, options?: SendOptions) {
     return this._send(
-      this._depositManagerContract.methods.depositERC20ForUser(token, user, amount),
+      this.depositManagerContract.methods.depositERC20ForUser(token, user, amount),
       options
     )
   }
 
   depositERC721ForUser(token: address, tokenId: string, user: address, options?: SendOptions) {
     return this._send(
-      this._depositManagerContract.methods.depositERC721ForUser(token, user, tokenId),
+      this.depositManagerContract.methods.depositERC721ForUser(token, user, tokenId),
       options
     )
   }
 
   depositEther(amount: string, options: SendOptions = {}) {
     return this._send(
-      this._depositManagerContract.methods.depositEther(),
+      this.depositManagerContract.methods.depositEther(),
       Object.assign(options, { value: amount })
     )
+  }
+
+  getAddress() {
+    return this.depositManagerContract.options.address
+  }
+
+  setDefaultOptions(_defaultOptions: SendOptions) {
+    this._defaultOptions = _defaultOptions
+  }
+
+  private encode(number: BN | string) {
+    if (BN.isBN(number)) {
+      return '0x' + number.toString(16)
+    } else if (typeof number === 'string') {
+      assert.equal(number.slice(0, 2), '0x', 'expected a 0x prefixed string')
+      return number
+    }
   }
 
   private async _send(method, options) {

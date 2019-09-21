@@ -16,6 +16,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/index1.js"
+    "src/index.js"
   ]
 }
