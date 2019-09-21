@@ -14,10 +14,6 @@ export default class DepositManager {
     this._defaultOptions = _defaultOptions || {}
   }
 
-  // setDepositManagerAddress(depositManagerContractAddress: address) {
-  //   this.depositManagerContract.options.address = depositManagerContractAddress
-  // }
-
   depositERC20(token: address, amount: BN | string, options?: SendOptions) {
     return this._send(
       this.depositManagerContract.methods.depositERC20(token, this.encode(amount)),
