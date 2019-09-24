@@ -53,6 +53,7 @@
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "5.2.0",
     "isomorphic-fetch": "2.2.1",
+    "matic-protocol": "github:atvanguard/contracts#04e3c5c3e529f42a1862902e8b9668f7adf77217",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
     "web3": "1.2.1"

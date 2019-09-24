@@ -54,7 +54,6 @@ export default class WithdrawManager extends ContractsBase {
     )
     console.log('headerBlockNumber', headerBlockNumber.toString(), 'headerBlock', headerBlock)
     // build block proof
-    // const blockProof = '0x03567ec884f64162fb800d96e0a3bcddb507e63fe85fc0af2a804ecea05add499de833ba9f5661d8bcf20557572be8377fad0075c6b8f80893bf7d51604285e2023b1410778af7f76e117e62f2b221e23ee47f06fca092d841798f727f455e548e6b53def3660e5fb84c3a53ac72676597b246f67dc5605f87bafbb931e06fec95cc86cfca0a3459bd01b231d76e06c65176a13c9e3b9280d4a625057edd593852e2ff5a317004fc9df02d09f9348242a7546017d7d8cd971bed26ce4913230d38b0e5a5eb73fa2cabab1d77bfaec04629443cd1932b78f80c63def86624699cdf1e9df99ebfb565ac7dfa76c35624ca1f917206d5ccc0be9a754c398e1af4cc'
     const blockProof = await Proofs.buildBlockProof(
       this.web3Client.getMaticWeb3(),
       // '218278',
@@ -64,7 +63,6 @@ export default class WithdrawManager extends ContractsBase {
       burnTx.blockNumber
     )
     console.log('blockProof', blockProof)
-    // const txProof = (await Proofs.getTxProof(burnTx, block)).txParentNodes
     const receiptProof = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const payload = this.buildPayload(
       headerBlockNumber,

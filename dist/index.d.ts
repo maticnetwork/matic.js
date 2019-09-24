@@ -1,8 +1,14 @@
 import DepositManager from './root/DepositManager';
-import { SendOptions } from './types/Common';
+import RootChain from './root/RootChain';
+import Registry from './root/Registry';
+import WithdrawManager from './root/WithdrawManager';
+import Web3Client from './common/Web3Client';
 export default class Matic {
-    _web3: any;
-    parentWeb3: any;
+    web3Client: Web3Client;
     depositManager: DepositManager;
-    constructor(options?: any, _defaultOptions?: SendOptions);
+    rootChain: RootChain;
+    withdrawManager: WithdrawManager;
+    registry: Registry;
+    constructor(options?: any);
+    initialize(): Promise<void[]>;
 }

@@ -1,11 +1,11 @@
-import Web3 from 'web3';
-import Contract from 'web3/eth/contract';
-import { address, SendOptions } from '../types/Common';
 import BN from 'bn.js';
-export default class DepositManager {
+import Contract from 'web3/eth/contract';
+import ContractsBase from '../common/ContractsBase';
+import { address, SendOptions } from '../types/Common';
+import Web3Client from '../common/Web3Client';
+export default class DepositManager extends ContractsBase {
     depositManagerContract: Contract;
-    private _defaultOptions;
-    constructor(depositManagerContractAddress: address, _parentWeb3: Web3, _defaultOptions?: SendOptions);
+    constructor(depositManager: address, web3Client: Web3Client);
     depositERC20(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     depositERC721(token: address, tokenId: string, options?: SendOptions): Promise<any>;
     depositBulk(tokens: address[], amountOrTokenIds: string[], user: address, options?: SendOptions): Promise<any>;
@@ -13,7 +13,4 @@ export default class DepositManager {
     depositERC721ForUser(token: address, tokenId: string, user: address, options?: SendOptions): Promise<any>;
     depositEther(amount: string, options?: SendOptions): Promise<any>;
     getAddress(): string;
-    setDefaultOptions(_defaultOptions: SendOptions): void;
-    private encode;
-    private _send;
 }
