@@ -14,18 +14,46 @@ export default class Web3Client {
     this.maticDefaultOptions = maticDefaultOptions
   }
 
-  async send(method, options) {
+  async call(method, options?: SendOptions) {
+    return method.call(options || this.parentDefaultOptions)
+  }
+
+  async send(method, options?) {
     const _options = options || this.parentDefaultOptions
     // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
-    _options.gas = (await method.estimateGas()) + 200000
+    if (!_options.from) return new Error('from is not specified')
+    console.log(_options)
+    // _options.gas = (await method.estimateGas()) + 200000
     return method.send(_options)
   }
 
-  async sendOnMatic(method, options) {
+  async callOnMatic(method, options?) {
+    return method.call(options || this.maticDefaultOptions)
+  }
+
+  async sendOnMatic(method, options?) {
     const _options = options || this.maticDefaultOptions
-    _options.gas = await method.estimateGas()
+    if (!_options.from) return new Error('from is not specified')
+    console.log(_options)
+    // _options.gas = await method.estimateGas()
     return method.send(_options)
+  }
+
+  getParentWeb3() {
+    return this.parentWeb3
+  }
+
+  getMaticWeb3() {
+    return this.web3
+  }
+
+  setParentDefaultOptions(options: any) {
+    this.parentDefaultOptions = options
+  }
+
+  setMaticDefaultOptions(options: any) {
+    this.maticDefaultOptions = options
   }
 }

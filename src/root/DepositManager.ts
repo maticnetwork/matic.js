@@ -1,4 +1,3 @@
-import assert from 'assert';
 import BN from 'bn.js'
 import Contract from 'web3/eth/contract'
 import DepositManagerArtifact from 'matic-protocol/contracts-core/artifacts/DepositManager.json'
@@ -59,14 +58,5 @@ export default class DepositManager extends ContractsBase {
 
   getAddress() {
     return this.depositManagerContract.options.address
-  }
-
-  private encode(number: BN | string) {
-    if (BN.isBN(number)) {
-      return '0x' + number.toString(16)
-    } else if (typeof number === 'string') {
-      assert.equal(number.slice(0, 2), '0x', 'expected a 0x prefixed string')
-      return number
-    }
   }
 }
