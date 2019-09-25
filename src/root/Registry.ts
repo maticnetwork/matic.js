@@ -11,7 +11,6 @@ export default class DepositManager extends ContractsBase {
 
   constructor(registry: address, web3Client: Web3Client) {
     super(web3Client)
-    console.log('registry', registry)
     this.registry = new this.web3Client.parentWeb3.eth.Contract(RegistryArtifact.abi, registry)
   }
 }

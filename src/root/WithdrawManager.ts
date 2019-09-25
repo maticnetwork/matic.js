@@ -28,7 +28,6 @@ export default class WithdrawManager extends ContractsBase {
 
   async initialize() {
     const erc20PredicateAddress = await this.registry.registry.methods.erc20Predicate().call()
-    console.log('erc20PredicateAddress', erc20PredicateAddress)
     this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(ERC20PredicateArtifact.abi, erc20PredicateAddress)
   }
 
@@ -64,7 +63,7 @@ export default class WithdrawManager extends ContractsBase {
     )
     console.log('blockProof', blockProof)
     const receiptProof = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-    const payload = this.buildPayload(
+    const payload = this._buildPayloadForExit(
       headerBlockNumber,
       blockProof,
       burnTx.blockNumber,
@@ -76,14 +75,26 @@ export default class WithdrawManager extends ContractsBase {
       receiptProof.path,
       1 // logIndex
     )
-    console.log('payload', payload)
+    console.log('startExitWithBurntTokens payload', payload)
     return this.web3Client.send(
       this.erc20Predicate.methods.startExitWithBurntTokens(payload),
       options
     )
   }
 
-  buildPayload(
+  processExits(token: address, options?: SendOptions) {
+    options = options || {}
+    if (!options || !options.gas || options.gas < 2000000) {
+      console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough')
+      options.gas = 2000000
+    }
+    return this.web3Client.send(
+      this.withdrawManager.methods.processExits(token),
+      options
+    )
+  }
+
+  private _buildPayloadForExit(
     headerNumber, buildBlockProof, blockNumber, timestamp, transactionsRoot, receiptsRoot, receipt, receiptParentNodes, path, logIndex) {
     return ethUtils.bufferToHex(ethUtils.rlp.encode([
       headerNumber,

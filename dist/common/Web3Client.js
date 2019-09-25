@@ -59,13 +59,15 @@ var Web3Client = /** @class */ (function () {
             var _options;
             return __generator(this, function (_a) {
                 _options = options || this.parentDefaultOptions;
+                if (!_options.from)
+                    return [2 /*return*/, new Error('from is not specified')];
+                _options.gas = _options.gas || 0;
                 // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
                 // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
                 // providing higher buffer for now
-                if (!_options.from)
-                    return [2 /*return*/, new Error('from is not specified')];
-                console.log(_options);
-                // _options.gas = (await method.estimateGas()) + 200000
+                // @todo handle hex values of gas
+                _options.gas = _options.gas + 1000000;
+                console.log('sending tx on mainchain with', _options);
                 return [2 /*return*/, method.send(_options)];
             });
         });
@@ -84,8 +86,7 @@ var Web3Client = /** @class */ (function () {
                 _options = options || this.maticDefaultOptions;
                 if (!_options.from)
                     return [2 /*return*/, new Error('from is not specified')];
-                console.log(_options);
-                // _options.gas = await method.estimateGas()
+                console.log('sending tx on matic with', _options);
                 return [2 /*return*/, method.send(_options)];
             });
         });
@@ -101,6 +102,9 @@ var Web3Client = /** @class */ (function () {
     };
     Web3Client.prototype.setMaticDefaultOptions = function (options) {
         this.maticDefaultOptions = options;
+    };
+    Web3Client.prototype.setParentProvider = function (provider) {
+        this.parentWeb3 = new web3_1.default(provider);
     };
     return Web3Client;
 }());

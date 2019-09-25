@@ -20,12 +20,14 @@ export default class Web3Client {
 
   async send(method, options?) {
     const _options = options || this.parentDefaultOptions
+    if (!_options.from) return new Error('from is not specified')
+    _options.gas = _options.gas || 0
     // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
-    if (!_options.from) return new Error('from is not specified')
-    console.log(_options)
-    // _options.gas = (await method.estimateGas()) + 200000
+    // @todo handle hex values of gas
+    _options.gas = _options.gas + 1000000
+    console.log('sending tx on mainchain with', _options)
     return method.send(_options)
   }
 
@@ -36,8 +38,7 @@ export default class Web3Client {
   async sendOnMatic(method, options?) {
     const _options = options || this.maticDefaultOptions
     if (!_options.from) return new Error('from is not specified')
-    console.log(_options)
-    // _options.gas = await method.estimateGas()
+    console.log('sending tx on matic with', _options)
     return method.send(_options)
   }
 
@@ -55,5 +56,9 @@ export default class Web3Client {
 
   setMaticDefaultOptions(options: any) {
     this.maticDefaultOptions = options
+  }
+
+  setParentProvider(provider) {
+    this.parentWeb3 = new Web3(provider)
   }
 }

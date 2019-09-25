@@ -14,6 +14,7 @@ export default class WithdrawManager extends ContractsBase {
     initialize(): Promise<void>;
     burnERC20Tokens(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     startExitWithBurntERC20Tokens(burnERC20TxHash: any, options?: any): Promise<any>;
-    buildPayload(headerNumber: any, buildBlockProof: any, blockNumber: any, timestamp: any, transactionsRoot: any, receiptsRoot: any, receipt: any, receiptParentNodes: any, path: any, logIndex: any): any;
+    processExits(token: address, options?: SendOptions): Promise<any>;
+    private _buildPayloadForExit;
     private _getERC20TokenContract;
 }

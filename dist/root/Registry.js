@@ -22,7 +22,6 @@ var DepositManager = /** @class */ (function (_super) {
     __extends(DepositManager, _super);
     function DepositManager(registry, web3Client) {
         var _this = _super.call(this, web3Client) || this;
-        console.log('registry', registry);
         _this.registry = new _this.web3Client.parentWeb3.eth.Contract(Registry_json_1.default.abi, registry);
         return _this;
     }

@@ -77,7 +77,6 @@ var WithdrawManager = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.registry.registry.methods.erc20Predicate().call()];
                     case 1:
                         erc20PredicateAddress = _a.sent();
-                        console.log('erc20PredicateAddress', erc20PredicateAddress);
                         this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(ERC20Predicate_json_1.default.abi, erc20PredicateAddress);
                         return [2 /*return*/];
                 }
@@ -123,16 +122,24 @@ var WithdrawManager = /** @class */ (function (_super) {
                         return [4 /*yield*/, proofs_js_1.default.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())];
                     case 8:
                         receiptProof = _a.sent();
-                        payload = this.buildPayload(headerBlockNumber, blockProof, burnTx.blockNumber, block.timestamp, Buffer.from(block.transactionsRoot.slice(2), 'hex'), Buffer.from(block.receiptsRoot.slice(2), 'hex'), proofs_js_1.default.getReceiptBytes(receipt), // rlp encoded
+                        payload = this._buildPayloadForExit(headerBlockNumber, blockProof, burnTx.blockNumber, block.timestamp, Buffer.from(block.transactionsRoot.slice(2), 'hex'), Buffer.from(block.receiptsRoot.slice(2), 'hex'), proofs_js_1.default.getReceiptBytes(receipt), // rlp encoded
                         receiptProof.parentNodes, receiptProof.path, 1 // logIndex
                         );
-                        console.log('payload', payload);
+                        console.log('startExitWithBurntTokens payload', payload);
                         return [2 /*return*/, this.web3Client.send(this.erc20Predicate.methods.startExitWithBurntTokens(payload), options)];
                 }
             });
         });
     };
-    WithdrawManager.prototype.buildPayload = function (headerNumber, buildBlockProof, blockNumber, timestamp, transactionsRoot, receiptsRoot, receipt, receiptParentNodes, path, logIndex) {
+    WithdrawManager.prototype.processExits = function (token, options) {
+        options = options || {};
+        if (!options || !options.gas || options.gas < 2000000) {
+            console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough');
+            options.gas = 2000000;
+        }
+        return this.web3Client.send(this.withdrawManager.methods.processExits(token), options);
+    };
+    WithdrawManager.prototype._buildPayloadForExit = function (headerNumber, buildBlockProof, blockNumber, timestamp, transactionsRoot, receiptsRoot, receipt, receiptParentNodes, path, logIndex) {
         return ethereumjs_util_1.default.bufferToHex(ethereumjs_util_1.default.rlp.encode([
             headerNumber,
             buildBlockProof,

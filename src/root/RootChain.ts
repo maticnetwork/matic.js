@@ -4,7 +4,6 @@ import RootChainArtifact from 'matic-protocol/contracts-core/artifacts/RootChain
 import ContractsBase from '../common/ContractsBase'
 import { address } from '../types/Common'
 import Web3Client from '../common/Web3Client'
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
 import BN from 'bn.js'
 
 export default class RootChain extends ContractsBase {
@@ -21,29 +20,35 @@ export default class RootChain extends ContractsBase {
 
   async findHeaderBlockNumber(childBlockNumber: BN | string | number): Promise<BN> {
     childBlockNumber = new BN(childBlockNumber)
+    // first checkpoint id = start * 10000
     let start = new BN(1)
+
+    // last checkpoint id = end * 10000
     let end = new BN(await this.web3Client.call(this.rootChain.methods.currentHeaderBlock())).div(new BN(10000))
-    console.log(start.toString(), end.toString())
+
+    // binary search on all the checkpoints to find the checkpoint that contains the childBlockNumber
     let ans
-    while(start <= end) {
-      if (start == end) { ans = start; break; }
+    while(start.lte(end)) {
+      if (start.eq(end)) { ans = start; break; }
       let mid = start.add(end).div(new BN(2))
-      // if (!mid.mod(new BN('10000')).eq(new BN(0))) mid.sub(new BN('5000'))
-      console.log('mid', mid.toString())
+      console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() })
       const headerBlock = await this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new BN(10000)).toString()))
+      // console.log('headerBlock', headerBlock)
       const headerStart = new BN(headerBlock.start)
       const headerEnd = new BN(headerBlock.end)
       if (headerStart.lte(childBlockNumber) && childBlockNumber.lte(headerEnd)) {
+        // if childBlockNumber is between the upper and lower bounds of the headerBlock, we found our answer
         ans = mid
         break
       } else if (headerStart.gt(childBlockNumber)) {
-        end = mid
+        // childBlockNumber was checkpointed before this header
+        end = mid.sub(new BN(1))
       } else if (headerEnd.lt(childBlockNumber)) {
-        start = mid
+        // childBlockNumber was checkpointed after this header
+        start = mid.add(new BN(1))
       }
     }
     return ans.mul(new BN(10000))
-    // return new BN(851).mul(new BN(10000))
   }
 
   getRawContract() {

@@ -77,36 +77,37 @@ var RootChain = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.web3Client.call(this.rootChain.methods.currentHeaderBlock())];
                     case 1:
                         end = new (_a.apply(bn_js_1.default, [void 0, _b.sent()]))().div(new bn_js_1.default(10000));
-                        console.log(start.toString(), end.toString());
                         _b.label = 2;
                     case 2:
-                        if (!(start <= end)) return [3 /*break*/, 4];
-                        if (start == end) {
+                        if (!start.lte(end)) return [3 /*break*/, 4];
+                        if (start.eq(end)) {
                             ans = start;
                             return [3 /*break*/, 4];
                         }
                         mid = start.add(end).div(new bn_js_1.default(2));
-                        // if (!mid.mod(new BN('10000')).eq(new BN(0))) mid.sub(new BN('5000'))
-                        console.log('mid', mid.toString());
-                        return [4 /*yield*/, this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new bn_js_1.default(10000)).toString()))];
+                        console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() });
+                        return [4 /*yield*/, this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new bn_js_1.default(10000)).toString()))
+                            // console.log('headerBlock', headerBlock)
+                        ];
                     case 3:
                         headerBlock = _b.sent();
                         headerStart = new bn_js_1.default(headerBlock.start);
                         headerEnd = new bn_js_1.default(headerBlock.end);
                         if (headerStart.lte(childBlockNumber) && childBlockNumber.lte(headerEnd)) {
+                            // if childBlockNumber is between the upper and lower bounds of the headerBlock, we found our answer
                             ans = mid;
                             return [3 /*break*/, 4];
                         }
                         else if (headerStart.gt(childBlockNumber)) {
-                            end = mid;
+                            // childBlockNumber was checkpointed before this header
+                            end = mid.sub(new bn_js_1.default(1));
                         }
                         else if (headerEnd.lt(childBlockNumber)) {
-                            start = mid;
+                            // childBlockNumber was checkpointed after this header
+                            start = mid.add(new bn_js_1.default(1));
                         }
                         return [3 /*break*/, 2];
-                    case 4: return [2 /*return*/, ans.mul(new bn_js_1.default(10000))
-                        // return new BN(851).mul(new BN(10000))
-                    ];
+                    case 4: return [2 /*return*/, ans.mul(new bn_js_1.default(10000))];
                 }
             });
         });

@@ -25,8 +25,3 @@ export default class Matic {
     ])
   }
 }
-
-// export default async function initialize(options) {
-//   const matic = new Matic(options)
-//   return matic.initialize()
-// }

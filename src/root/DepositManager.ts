@@ -35,9 +35,9 @@ export default class DepositManager extends ContractsBase {
     )
   }
 
-  depositERC20ForUser(token: address, amount: string, user: address, options?: SendOptions) {
+  depositERC20ForUser(token: address, amount: BN | string, user: address, options?: SendOptions) {
     return this.web3Client.send(
-      this.depositManagerContract.methods.depositERC20ForUser(token, user, amount),
+      this.depositManagerContract.methods.depositERC20ForUser(token, user, this.encode(amount)),
       options
     )
   }

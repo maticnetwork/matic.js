@@ -35,7 +35,7 @@ var DepositManager = /** @class */ (function (_super) {
         return this.web3Client.send(this.depositManagerContract.methods.depositBulk(tokens, amountOrTokenIds, user), options);
     };
     DepositManager.prototype.depositERC20ForUser = function (token, amount, user, options) {
-        return this.web3Client.send(this.depositManagerContract.methods.depositERC20ForUser(token, user, amount), options);
+        return this.web3Client.send(this.depositManagerContract.methods.depositERC20ForUser(token, user, this.encode(amount)), options);
     };
     DepositManager.prototype.depositERC721ForUser = function (token, tokenId, user, options) {
         return this.web3Client.send(this.depositManagerContract.methods.depositERC721ForUser(token, user, tokenId), options);

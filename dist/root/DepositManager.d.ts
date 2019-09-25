@@ -9,7 +9,7 @@ export default class DepositManager extends ContractsBase {
     depositERC20(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     depositERC721(token: address, tokenId: string, options?: SendOptions): Promise<any>;
     depositBulk(tokens: address[], amountOrTokenIds: string[], user: address, options?: SendOptions): Promise<any>;
-    depositERC20ForUser(token: address, amount: string, user: address, options?: SendOptions): Promise<any>;
+    depositERC20ForUser(token: address, amount: BN | string, user: address, options?: SendOptions): Promise<any>;
     depositERC721ForUser(token: address, tokenId: string, user: address, options?: SendOptions): Promise<any>;
     depositEther(amount: string, options?: SendOptions): Promise<any>;
     getAddress(): string;

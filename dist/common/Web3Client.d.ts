@@ -14,4 +14,5 @@ export default class Web3Client {
     getMaticWeb3(): Web3;
     setParentDefaultOptions(options: any): void;
     setMaticDefaultOptions(options: any): void;
+    setParentProvider(provider: any): void;
 }
