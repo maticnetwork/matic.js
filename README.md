@@ -102,14 +102,6 @@ await matic.tokenOfOwnerByIndexERC721(
   options // transaction fields
 )
 
-// get ERC721 token ID
-await matic.tokenOfOwnerByIndexERC721(
-  from, // User address 
-  tokenAddress,  // Token address
-  index, // index of tokenId
-  options // transaction fields
-)
-
 // Deposit Ether into Matic chain
 await matic.depositEthers(
   options // transaction fields
