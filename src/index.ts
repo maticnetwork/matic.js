@@ -1,19 +1,27 @@
-import Web3 from 'web3'
 import DepositManager from './root/DepositManager'
-import { SendOptions } from './types/Common'
+import RootChain from './root/RootChain'
+import Registry from './root/Registry'
+import WithdrawManager from './root/WithdrawManager'
+import Web3Client from './common/Web3Client'
 
 export default class Matic {
-  _web3: any
-  public parentWeb3: any
+  public web3Client: Web3Client
   public depositManager: DepositManager
+  public rootChain: RootChain
+  public withdrawManager: WithdrawManager
+  public registry: Registry
 
-  constructor(options: any = {}, _defaultOptions?: SendOptions) {
-    this._web3 = new Web3(options.maticProvider)
-    this._web3.matic = true
-    this.parentWeb3 = new Web3(options.parentProvider)
+  constructor(options: any = {}) {
+    this.web3Client = new Web3Client(options.parentProvider, options.maticProvider, options.parentDefaultOptions || {}, options.maticDefaultOptions || {})
+    this.registry = new Registry(options.registry, this.web3Client)
+    this.rootChain = new RootChain(options.rootChain, this.web3Client)
+    this.depositManager = new DepositManager(options.depositManager, this.web3Client)
+    this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
+  }
 
-    if (options.depositManagerAddress) {
-      this.depositManager = new DepositManager(options.depositManagerAddress, this.parentWeb3, _defaultOptions)
-    }
+  initialize() {
+    return Promise.all([
+      this.withdrawManager.initialize()
+    ])
   }
 }
