@@ -19,7 +19,6 @@ import MerkleTree from './helpers/merkle-tree'
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
-import StandardTokenArtifacts from '../artifacts/StandardToken'
 import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
 import DepositManagerArtifacts from '../artifacts/DepositManager'
 
