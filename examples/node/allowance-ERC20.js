@@ -1,7 +1,7 @@
 const Matic = require('maticjs').default
 const config = require('./config')
 
-const token = config.ROPSTEN_TEST_TOKEN // test token address
+const token = config.PARENT_TEST_TOKEN // test token address
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic

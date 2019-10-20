@@ -3,7 +3,7 @@ const Matic = require('maticjs').default
 const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
-const rootTokenAddress = config.ROPSTEN_TEST_TOKEN // Root token address
+const rootTokenAddress = config.PARENT_TEST_TOKEN // Root token address
 
 // Create object of Matic
 const matic = new Matic({
