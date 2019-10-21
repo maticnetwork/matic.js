@@ -19,7 +19,6 @@ import MerkleTree from './helpers/merkle-tree'
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
-import StandardTokenArtifacts from '../artifacts/StandardToken'
 import WithdrawManagerArtifacts from '../artifacts/WithdrawManager'
 import DepositManagerArtifacts from '../artifacts/DepositManager'
 
@@ -169,10 +168,8 @@ export default class Matic {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('Missing Parameters')
     }
-    const _tokenContract = new this._parentWeb3.eth.Contract(
-      StandardTokenArtifacts.abi,
-      token
-    )
+
+    const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
     const approveTx = await _tokenContract.methods.approve(
       this._rootChainAddress,
       amount
@@ -184,6 +181,17 @@ export default class Matic {
     )
 
     return this._wrapWeb3Promise(approveTx.send(_options), options)
+  }
+
+  async allowanceERC20TokensForDeposit(address, token) {
+    if (!address || !token) {
+      throw new Error('Missing Parameters')
+    }
+
+    const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
+    return _tokenContract.methods
+      .allowance(address, this._rootChainAddress)
+      .call()
   }
 
   async depositERC20Tokens(token, user, amount, options = {}) {
@@ -222,7 +230,10 @@ export default class Matic {
       this._parentWeb3
     )
 
-    return this._wrapWeb3Promise(safeDepositERC721Tokens.send(_options), options)
+    return this._wrapWeb3Promise(
+      safeDepositERC721Tokens.send(_options),
+      options
+    )
   }
 
   async approveERC721TokenForDeposit(token, tokenId, options = {}) {
@@ -230,10 +241,7 @@ export default class Matic {
       throw new Error('Missing Parameters')
     }
 
-    const _tokenContract = this._getERC721TokenContract(
-      token,
-      this._parentWeb3
-    )
+    const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
     const approveTx = await _tokenContract.methods.approve(
       this._rootChainAddress,
       tokenId
@@ -310,7 +318,7 @@ export default class Matic {
     if (!options.parent && options.isCustomEth) {
       web3Object = this._web3
     }
-    
+
     const gasLimit = await web3Object.eth.estimateGas({
       from,
       value: amount,
@@ -601,9 +609,7 @@ export default class Matic {
         ? txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
       // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
-      !options.gasPrice
-        ? web3.eth.getGasPrice()
-        : options.gasPrice,
+      !options.gasPrice ? web3.eth.getGasPrice() : options.gasPrice,
       !options.nonce
         ? web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,

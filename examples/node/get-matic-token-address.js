@@ -12,7 +12,7 @@ const matic = new Matic({
   depositManagerAddress: config.DEPOSITMANAGER_ADDRESS,
 })
 
-const tokenAddress = config.ROPSTEN_TEST_TOKEN // token address on mainchain
+const tokenAddress = config.PARENT_TEST_TOKEN // token address on mainchain
 
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`
 
