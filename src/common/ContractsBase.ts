@@ -1,6 +1,9 @@
 import Web3Client from './Web3Client'
 import BN from 'bn.js'
 import assert from 'assert';
+import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
+
+import { address, SendOptions } from '../types/Common'
 
 export default class ContractsBase {
   web3Client: Web3Client
@@ -16,5 +19,9 @@ export default class ContractsBase {
       assert.equal(number.slice(0, 2), '0x', 'expected a 0x prefixed string')
       return number
     }
+  }
+
+  public getERC20TokenContract(token: address) {
+    return new this.web3Client.web3.eth.Contract(ChildERC20Artifact.abi, token).methods
   }
 }

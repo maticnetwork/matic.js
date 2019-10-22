@@ -1,16 +1,16 @@
-import Web3 from 'web3'
+import assert from 'assert'
+import ethUtils from 'ethereumjs-util'
 import Contract from 'web3/eth/contract'
-import { address, SendOptions } from '../types/Common'
-import WithdrawManagerArtifact from 'matic-protocol/contracts-core/artifacts/WithdrawManager.json'
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
-import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
-import ERC20PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC20Predicate.json'
+
 import BN from 'bn.js'
+import WithdrawManagerArtifact from 'matic-protocol/contracts-core/artifacts/WithdrawManager.json'
+import ERC20PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC20Predicate.json'
+import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
+
+import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import ContractsBase from '../common/ContractsBase'
 import RootChain from './RootChain'
-import assert from 'assert'
-import ethUtils from 'ethereumjs-util'
 import Registry from './Registry'
 
 export default class WithdrawManager extends ContractsBase {
@@ -33,7 +33,7 @@ export default class WithdrawManager extends ContractsBase {
 
   burnERC20Tokens(token: address, amount: BN | string, options?: SendOptions) {
     return this.web3Client.sendOnMatic(
-      this._getERC20TokenContract(token).methods.withdraw(this.encode(amount)),
+      this.getERC20TokenContract(token).withdraw(this.encode(amount)),
       options
     )
   }
@@ -108,9 +108,5 @@ export default class WithdrawManager extends ContractsBase {
       ethUtils.bufferToHex(ethUtils.rlp.encode(path)),
       logIndex
     ]))
-  }
-
-  private _getERC20TokenContract(token: address) {
-    return new this.web3Client.web3.eth.Contract(ChildERC20Artifact.abi, token)
   }
 }
