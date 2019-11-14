@@ -102,7 +102,7 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   private async _startExitForMintWithTokenURITokens(burnTxHash, options?) {
-    const payload = this._buildPayloadForExit(burnTxHash)
+    const payload = await this._buildPayloadForExit(burnTxHash)
     const burnReceipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
     const withdrawEvent = burnReceipt.logs.find(l => l.topics[0].toLowerCase() === WithdrawManager.WITHDRAW_EVENT_SIG)
     const tokenId = withdrawEvent.data
