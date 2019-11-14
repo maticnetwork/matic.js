@@ -155,6 +155,9 @@ export default class Matic {
       throw new Error('Missing Parameters')
     }
     const depositTx = this._rootChainContract.methods.depositEthers()
+    if(!options.send) {
+      return depositTx.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -174,6 +177,9 @@ export default class Matic {
       this._rootChainAddress,
       amount
     )
+    if(!options.send) {
+      return approveTx.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       approveTx,
@@ -203,6 +209,9 @@ export default class Matic {
       user,
       amount
     )
+    if(!options.send) {
+      return depositTx.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -224,6 +233,9 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
+    if(!options.send) {
+      return safeDepositERC721Tokens.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       safeDepositERC721Tokens,
@@ -246,6 +258,9 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
+    if(!options.send) {
+      return approveTx.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       approveTx,
@@ -264,6 +279,9 @@ export default class Matic {
       user,
       tokenId
     )
+    if(!options.send) {
+      return depositTx.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -283,6 +301,9 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
+    if(!options.send) {
+      return transferTx.encodeABI()
+    }
     const _options = await this._fillOptions(options, transferTx, web3Object)
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
@@ -298,6 +319,9 @@ export default class Matic {
       user,
       tokenId
     )
+    if(!options.send) {
+      return transferTx.encodeABI()
+    }
     const _options = await this._fillOptions(options, transferTx, web3Object)
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
@@ -328,6 +352,10 @@ export default class Matic {
     options.to = to
     const _options = await this._fillOptions(options, {}, web3Object)
 
+    if(!options.send) {
+      // TODO: create raw transaction
+      return 
+    }
     return this._wrapWeb3Promise(
       web3Object.eth.sendTransaction(_options),
       options
@@ -340,6 +368,9 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
+    if(!options.send) {
+      return withdrawTx.encodeABI()
+    }
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
@@ -350,6 +381,9 @@ export default class Matic {
     }
     const _tokenContract = this._getERC721TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(tokenId)
+    if(!options.send) {
+      return withdrawTx.encodeABI()
+    }
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
@@ -476,6 +510,10 @@ export default class Matic {
       receiptProof.parentNodes // reciept proof nodes
     )
 
+    if(!options.send) {
+      return withdrawTx.encodeABI()
+    }
+
     const _options = await this._fillOptions(
       options,
       withdrawTx,
@@ -489,6 +527,9 @@ export default class Matic {
     const processExits = this._withdrawManagerContract.methods.processExits(
       rootTokenAddress
     )
+    if(!options.send) {
+      return processExits.encodeABI()
+    }
     const _options = await this._fillOptions(
       options,
       processExits,
@@ -548,6 +589,10 @@ export default class Matic {
       utils.bufferToHex(getReceiptBytes(withdrawObj.receipt)), // receipt bytes
       utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
     )
+
+    if(!options.send) {
+      return withdrawTxObject.encodeABI()
+    }
 
     const _options = await this._fillOptions(
       options,

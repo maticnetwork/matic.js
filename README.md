@@ -396,6 +396,7 @@ Approves given `amount` of `token` to `rootChainContract`.
   - `nonce` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
   - `value` contains ETH value. Same as Ethereum `sendTransaction`.
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
   - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
   - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
   - `onError` must be `function`. This function will be called when sending transaction fails.
@@ -426,6 +427,7 @@ Deposit given `amount` of `token` with user `user`.
 - `user` must be value account address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -450,6 +452,7 @@ Deposit given `tokenId` of `token`.
 - `token` must be valid ERC721 token address
 - `tokenId` must be tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -479,6 +482,7 @@ Approves given `amount` of `token` to `rootChainContract`.
   - `nonce` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
   - `value` contains ETH value. Same as Ethereum `sendTransaction`.
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
   - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
   - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
   - `onError` must be `function`. This function will be called when sending transaction fails.
@@ -509,6 +513,7 @@ Deposit given `tokenId` of `token` with user `user`.
 - `user` must be value account address
 - `tokenId` must be valid tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -533,6 +538,7 @@ Deposit `options.value`
 - `options` see [more infomation here](#approveERC20TokensForDeposit).
   - `value` amount of ethers.
   - `from` must be valid account address(required)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -558,6 +564,7 @@ Transfer given `amount` of `token` to `user`.
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -587,6 +594,7 @@ Transfer ownership `tokenId` of `token` to `user`.
 - `tokenId` tokenId
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -616,6 +624,7 @@ Transfer given `amount` of ethers to `user`.
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For ether transfer on Main chain, use `parent: true`
   - `isCustomEth` must be boolean value. For custom ether transfer on Matic Chain, use `isCustomEth: true`
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -643,6 +652,7 @@ Start withdraw process with given `amount` for `token`.
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -671,6 +681,7 @@ Start withdraw process with given `tokenId` for `token`.
 - `token` must be valid ERC721 token address
 - `tokenId` must be token tokenId in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -719,6 +730,7 @@ Withdraw tokens on mainchain using `txId` from `startWithdraw` method after head
 
 - `txId` must be valid tx hash
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -740,6 +752,7 @@ Call processExits after completion of challenge period, after that withdrawn fun
 
 - `rootTokenAddress` RootToken address
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `send` must be boolean value. For Byte code of transaction, use `send: false`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
