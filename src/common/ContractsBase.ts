@@ -2,6 +2,7 @@ import Web3Client from './Web3Client'
 import BN from 'bn.js'
 import assert from 'assert';
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
+import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
 
 import { address, SendOptions } from '../types/Common'
 
@@ -22,6 +23,18 @@ export default class ContractsBase {
   }
 
   public getERC20TokenContract(token: address) {
-    return new this.web3Client.web3.eth.Contract(ChildERC20Artifact.abi, token).methods
+    return new this.web3Client.web3.eth.Contract(ChildERC20Artifact.abi, token)
+  }
+
+  public getERC721TokenContract(token: address) {
+    return new this.web3Client.web3.eth.Contract(ChildERC721Artifact.abi, token)
+  }
+
+  wrapWeb3Promise(promise, options) {
+    const _emptyFunc = () => {}
+    return promise
+      .on('transactionHash', options.onTransactionHash || _emptyFunc)
+      .on('receipt', options.onReceipt || _emptyFunc)
+      .on('error', options.onError || _emptyFunc)
   }
 }
