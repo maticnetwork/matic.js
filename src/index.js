@@ -152,7 +152,7 @@ export default class Matic {
 
   async depositEthers(options = {}) {
     if (options && (!options.from || !options.value)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from} or ${options.value} is missing`)
     }
     const depositTx = this._rootChainContract.methods.depositEthers()
     options.data = depositTx.encodeABI()
@@ -172,7 +172,7 @@ export default class Matic {
 
   async approveERC20TokensForDeposit(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${token} or ${amount} is missing`)
     }
 
     const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
@@ -197,7 +197,7 @@ export default class Matic {
 
   async allowanceERC20TokensForDeposit(address, token) {
     if (!address || !token) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${address} or ${token} is missing`)
     }
 
     const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
@@ -208,7 +208,7 @@ export default class Matic {
 
   async depositERC20Tokens(token, user, amount, options = {}) {
     if (options && (!options.from || !token || !user || !amount)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${token}, ${amount} or ${user} is missing`)
     }
     const depositTx = this._rootChainContract.methods.deposit(
       token,
@@ -232,7 +232,7 @@ export default class Matic {
 
   async safeDepositERC721Tokens(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${tokenId} or ${token} is missing`)
     }
 
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
@@ -262,7 +262,7 @@ export default class Matic {
 
   async approveERC721TokenForDeposit(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${tokenId} or ${token} is missing`)
     }
 
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
@@ -287,7 +287,8 @@ export default class Matic {
 
   async depositERC721Tokens(token, user, tokenId, options = {}) {
     if (options && (!options.from || !token || !user || !tokenId)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${tokenId}, ${user} or ${token} is missing`)
+
     }
     const depositTx = this._rootChainContract.methods.depositERC721(
       token,
@@ -311,7 +312,7 @@ export default class Matic {
 
   async transferTokens(token, user, amount, options = {}) {
     if (options && (!options.from || !amount || !user || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${amount}, ${user} or ${token} is missing`)
     }
     let web3Object = this._web3
     if (options.parent) {
@@ -331,6 +332,9 @@ export default class Matic {
   }
 
   async transferERC721Tokens(token, user, tokenId, options = {}) {
+    if (options && (!options.from || !token || !user || !tokenId)) {
+      throw new Error(`${options.from}, ${token}, ${user} or ${tokenId} is missing`)
+    }
     let web3Object = this._web3
     if (options.parent) {
       web3Object = this._parentWeb3
@@ -355,7 +359,7 @@ export default class Matic {
     let web3Object = this._parentWeb3
 
     if (options && (!options.from || !amount || !to)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${amount} or ${to} is missing`)
     }
     const from = options.from
 
@@ -388,7 +392,7 @@ export default class Matic {
 
   async startWithdraw(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${amount} or ${token} is missing`)
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
@@ -404,7 +408,7 @@ export default class Matic {
 
   async startERC721Withdraw(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`${options.from}, ${tokenId} or ${token} is missing`)
     }
     const _tokenContract = this._getERC721TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(tokenId)
@@ -704,7 +708,7 @@ export default class Matic {
       !options.nonce
         ? web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
-      !options.chainId ? web3.eth.net.getId() : options.chainId,
+        !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
     return {
       from,
