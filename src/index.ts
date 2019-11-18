@@ -32,8 +32,10 @@ export default class Matic extends ContractsBase {
   }
 
   transferTokens(token: address, to: address, amount: BN | string, options?: SendOptions) {
-    return this.web3Client.sendOnMatic(
-      this.getERC20TokenContract(token).transfer(to, this.encode(amount)),
+    return this.wrapWeb3Promise(
+      this.getERC20TokenContract(token).methods
+        .transfer(to, this.encode(amount))
+        .send(options),
       options
     )
   }

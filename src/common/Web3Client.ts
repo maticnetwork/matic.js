@@ -21,14 +21,26 @@ export default class Web3Client {
   async send(method, options?) {
     const _options = options || this.parentDefaultOptions
     if (!_options.from) return new Error('from is not specified')
-    _options.gas = _options.gas || 0
+    const gas = await method.estimateGas(JSON.parse(JSON.stringify(_options)))
+    _options.gas = _options.gas || gas
     // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
     // @todo handle hex values of gas
     _options.gas = _options.gas + 1000000
-    console.log('sending tx on mainchain with', _options)
-    return method.send(_options)
+    console.log('sending tx with', _options)
+    return this.wrapWeb3Promise(
+      method.send(_options),
+      _options
+    )
+  }
+
+  wrapWeb3Promise(promise, options) {
+    const _emptyFunc = () => {}
+    return promise
+      .on('transactionHash', options.onTransactionHash || _emptyFunc)
+      .on('receipt', options.onReceipt || _emptyFunc)
+      .on('error', options.onError || _emptyFunc)
   }
 
   async callOnMatic(method, options?) {
@@ -39,7 +51,9 @@ export default class Web3Client {
     const _options = options || this.maticDefaultOptions
     if (!_options.from) return new Error('from is not specified')
     console.log('sending tx on matic with', _options)
-    return method.send(_options)
+    const receipt = await method.send(_options)
+    console.log('yoyo')
+    return receipt
   }
 
   getParentWeb3() {
