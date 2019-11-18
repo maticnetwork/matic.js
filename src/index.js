@@ -319,7 +319,9 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
+    
     options.data = transferTx.encodeABI()
+    
     const _options = await this._fillOptions(options, transferTx, web3Object)
     if(options.encodeAbi) {
       return _options
@@ -376,8 +378,7 @@ export default class Matic {
     const _options = await this._fillOptions(options, {}, web3Object)
 
     if(options.encodeAbi) {
-      // TODO: create raw transaction
-      return 
+      return _options
     }
     return this._wrapWeb3Promise(
       web3Object.eth.sendTransaction(_options),
@@ -622,7 +623,6 @@ export default class Matic {
     )
 
     options.data = withdrawTxObject.encodeABI()
-
 
     const _options = await this._fillOptions(
       options,
