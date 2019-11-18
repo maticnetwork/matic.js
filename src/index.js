@@ -155,14 +155,17 @@ export default class Matic {
       throw new Error('Missing Parameters')
     }
     const depositTx = this._rootChainContract.methods.depositEthers()
-    if(!options.send) {
-      return depositTx.encodeABI()
-    }
+    options.data = depositTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
@@ -177,14 +180,17 @@ export default class Matic {
       this._rootChainAddress,
       amount
     )
-    if(!options.send) {
-      return approveTx.encodeABI()
-    }
+    options.data = approveTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       approveTx,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
@@ -209,14 +215,17 @@ export default class Matic {
       user,
       amount
     )
-    if(!options.send) {
-      return depositTx.encodeABI()
-    }
+    options.data = depositTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
@@ -233,14 +242,17 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
-    if(!options.send) {
-      return safeDepositERC721Tokens.encodeABI()
-    }
+    options.data = safeDepositERC721Tokens.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       safeDepositERC721Tokens,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(
       safeDepositERC721Tokens.send(_options),
@@ -258,14 +270,17 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
-    if(!options.send) {
-      return approveTx.encodeABI()
-    }
+
+    options.data = approveTx.encodeABI()
     const _options = await this._fillOptions(
       options,
       approveTx,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
@@ -279,14 +294,17 @@ export default class Matic {
       user,
       tokenId
     )
-    if(!options.send) {
-      return depositTx.encodeABI()
-    }
+    
+    options.data = depositTx.encodeABI()
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
+
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
@@ -301,10 +319,12 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
-    if(!options.send) {
-      return transferTx.encodeABI()
-    }
+    options.data = transferTx.encodeABI()
     const _options = await this._fillOptions(options, transferTx, web3Object)
+    if(options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
@@ -319,10 +339,13 @@ export default class Matic {
       user,
       tokenId
     )
-    if(!options.send) {
-      return transferTx.encodeABI()
-    }
+    options.data = transferTx.encodeABI()
+
     const _options = await this._fillOptions(options, transferTx, web3Object)
+
+    if(options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
@@ -352,7 +375,7 @@ export default class Matic {
     options.to = to
     const _options = await this._fillOptions(options, {}, web3Object)
 
-    if(!options.send) {
+    if(options.encodeAbi) {
       // TODO: create raw transaction
       return 
     }
@@ -368,10 +391,13 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
-    if(!options.send) {
-      return withdrawTx.encodeABI()
-    }
+    options.data = withdrawTx.encodeABI()
+
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
+
+    if(options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
@@ -381,10 +407,12 @@ export default class Matic {
     }
     const _tokenContract = this._getERC721TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(tokenId)
-    if(!options.send) {
-      return withdrawTx.encodeABI()
-    }
+    options.data = withdrawTx.encodeABI()
+
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
+    if(options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
@@ -509,16 +537,16 @@ export default class Matic {
       receiptProof.value, // receipt bytes
       receiptProof.parentNodes // reciept proof nodes
     )
-
-    if(!options.send) {
-      return withdrawTx.encodeABI()
-    }
+    options.data = withdrawTx.encodeABI()
 
     const _options = await this._fillOptions(
       options,
       withdrawTx,
       this._parentWeb3
     )
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
@@ -527,14 +555,17 @@ export default class Matic {
     const processExits = this._withdrawManagerContract.methods.processExits(
       rootTokenAddress
     )
-    if(!options.send) {
-      return processExits.encodeABI()
-    }
+    options.data = processExits.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       processExits,
       this._parentWeb3
     )
+    if(options.encodeAbi) {
+      return _options
+    }
+    
     return this._wrapWeb3Promise(processExits.send(_options), options)
   }
 
@@ -590,17 +621,32 @@ export default class Matic {
       utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
     )
 
-    if(!options.send) {
-      return withdrawTxObject.encodeABI()
-    }
+    options.data = withdrawTxObject.encodeABI()
+
 
     const _options = await this._fillOptions(
       options,
       withdrawTxObject,
       this._parentWeb3
     )
+    
+    if(options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(withdrawTxObject.send(_options), options)
+  }
+
+  sendSignedTransaction(signedTransactionData, options) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+
+    return this._wrapWeb3Promise(
+      web3Object.eth.sendSignedTransaction(signedTransactionData),
+      options
+    )
   }
 
   //
@@ -660,16 +706,16 @@ export default class Matic {
         : options.nonce,
       !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
-
     return {
       from,
-      gasLimit,
       gas: gasLimit,
-      gasPrice: gasPrice,
+      gasLimit,
+      gasPrice,
       nonce,
       chainId,
       value: options.value || 0,
       to: options.to || null,
+      data: options.data,
     }
   }
 
