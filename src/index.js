@@ -163,7 +163,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -188,7 +188,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -223,7 +223,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -250,7 +250,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -278,7 +278,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -295,7 +295,7 @@ export default class Matic {
       user,
       tokenId
     )
-    
+
     options.data = depositTx.encodeABI()
     const _options = await this._fillOptions(
       options,
@@ -303,7 +303,7 @@ export default class Matic {
       this._parentWeb3
     )
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -320,11 +320,11 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
-    
+
     options.data = transferTx.encodeABI()
-    
+
     const _options = await this._fillOptions(options, transferTx, web3Object)
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -349,7 +349,7 @@ export default class Matic {
 
     const _options = await this._fillOptions(options, transferTx, web3Object)
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
     return this._wrapWeb3Promise(transferTx.send(_options), options)
@@ -381,7 +381,7 @@ export default class Matic {
     options.to = to
     const _options = await this._fillOptions(options, {}, web3Object)
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
     return this._wrapWeb3Promise(
@@ -400,7 +400,7 @@ export default class Matic {
 
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
 
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
@@ -415,7 +415,7 @@ export default class Matic {
     options.data = withdrawTx.encodeABI()
 
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
@@ -549,7 +549,7 @@ export default class Matic {
       withdrawTx,
       this._parentWeb3
     )
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -567,10 +567,10 @@ export default class Matic {
       processExits,
       this._parentWeb3
     )
-    if(options.encodeAbi) {
+    if (options.encodeAbi) {
       return _options
     }
-    
+
     return this._wrapWeb3Promise(processExits.send(_options), options)
   }
 
@@ -633,8 +633,8 @@ export default class Matic {
       withdrawTxObject,
       this._parentWeb3
     )
-    
-    if(options.encodeAbi) {
+
+    if (options.encodeAbi) {
       return _options
     }
 
@@ -708,7 +708,7 @@ export default class Matic {
       !options.nonce
         ? web3.eth.getTransactionCount(from, 'pending')
         : options.nonce,
-        !options.chainId ? web3.eth.net.getId() : options.chainId,
+      !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
     return {
       from,
@@ -724,7 +724,7 @@ export default class Matic {
   }
 
   _wrapWeb3Promise(promise, options) {
-    const _emptyFunc = () => {}
+    const _emptyFunc = () => { }
     return promise
       .on('transactionHash', options.onTransactionHash || _emptyFunc)
       .on('receipt', options.onReceipt || _emptyFunc)
