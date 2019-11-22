@@ -152,21 +152,27 @@ export default class Matic {
 
   async depositEthers(options = {}) {
     if (options && (!options.from || !options.value)) {
-      throw new Error('Missing Parameters')
+      throw new Error('options.from or options.value is missing')
     }
     const depositTx = this._rootChainContract.methods.depositEthers()
+    options.data = depositTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async approveERC20TokensForDeposit(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error('options.from, token or amount is missing')
     }
 
     const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
@@ -174,18 +180,24 @@ export default class Matic {
       this._rootChainAddress,
       amount
     )
+    options.data = approveTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       approveTx,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
   async allowanceERC20TokensForDeposit(address, token) {
     if (!address || !token) {
-      throw new Error('Missing Parameters')
+      throw new Error('address or token is missing')
     }
 
     const _tokenContract = this._getERC20TokenContract(token, this._parentWeb3)
@@ -196,25 +208,31 @@ export default class Matic {
 
   async depositERC20Tokens(token, user, amount, options = {}) {
     if (options && (!options.from || !token || !user || !amount)) {
-      throw new Error('Missing Parameters')
+      throw new Error('options.from, token, amount or user is missing')
     }
     const depositTx = this._rootChainContract.methods.deposit(
       token,
       user,
       amount
     )
+    options.data = depositTx.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async safeDepositERC721Tokens(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, tokenId or token is missing`)
     }
 
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
@@ -224,11 +242,17 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
+    options.data = safeDepositERC721Tokens.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       safeDepositERC721Tokens,
       this._parentWeb3
     )
+
+    if (options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(
       safeDepositERC721Tokens.send(_options),
@@ -238,7 +262,7 @@ export default class Matic {
 
   async approveERC721TokenForDeposit(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, tokenId or token is missing`)
     }
 
     const _tokenContract = this._getERC721TokenContract(token, this._parentWeb3)
@@ -246,36 +270,49 @@ export default class Matic {
       this._rootChainAddress,
       tokenId
     )
+
+    options.data = approveTx.encodeABI()
     const _options = await this._fillOptions(
       options,
       approveTx,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(approveTx.send(_options), options)
   }
 
   async depositERC721Tokens(token, user, tokenId, options = {}) {
     if (options && (!options.from || !token || !user || !tokenId)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, tokenId, user or token is missing`)
+
     }
     const depositTx = this._rootChainContract.methods.depositERC721(
       token,
       user,
       tokenId
     )
+
+    options.data = depositTx.encodeABI()
     const _options = await this._fillOptions(
       options,
       depositTx,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(depositTx.send(_options), options)
   }
 
   async transferTokens(token, user, amount, options = {}) {
     if (options && (!options.from || !amount || !user || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, amount, user or token is missing`)
     }
     let web3Object = this._web3
     if (options.parent) {
@@ -283,11 +320,21 @@ export default class Matic {
     }
     const _tokenContract = this._getERC20TokenContract(token, web3Object)
     const transferTx = _tokenContract.methods.transfer(user, amount)
+
+    options.data = transferTx.encodeABI()
+
     const _options = await this._fillOptions(options, transferTx, web3Object)
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
   async transferERC721Tokens(token, user, tokenId, options = {}) {
+    if (options && (!options.from || !token || !user || !tokenId)) {
+      throw new Error(`options.from, token, user or tokenId is missing`)
+    }
     let web3Object = this._web3
     if (options.parent) {
       web3Object = this._parentWeb3
@@ -298,7 +345,13 @@ export default class Matic {
       user,
       tokenId
     )
+    options.data = transferTx.encodeABI()
+
     const _options = await this._fillOptions(options, transferTx, web3Object)
+
+    if (options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(transferTx.send(_options), options)
   }
 
@@ -306,7 +359,7 @@ export default class Matic {
     let web3Object = this._parentWeb3
 
     if (options && (!options.from || !amount || !to)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, amount or to is missing`)
     }
     const from = options.from
 
@@ -328,6 +381,9 @@ export default class Matic {
     options.to = to
     const _options = await this._fillOptions(options, {}, web3Object)
 
+    if (options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(
       web3Object.eth.sendTransaction(_options),
       options
@@ -336,21 +392,32 @@ export default class Matic {
 
   async startWithdraw(token, amount, options = {}) {
     if (options && (!options.from || !amount || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, amount or token is missing`)
     }
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
+    options.data = withdrawTx.encodeABI()
+
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
+
+    if (options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
   async startERC721Withdraw(token, tokenId, options = {}) {
     if (options && (!options.from || !tokenId || !token)) {
-      throw new Error('Missing Parameters')
+      throw new Error(`options.from, tokenId or token is missing`)
     }
     const _tokenContract = this._getERC721TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(tokenId)
+    options.data = withdrawTx.encodeABI()
+
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
+    if (options.encodeAbi) {
+      return _options
+    }
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
 
@@ -475,12 +542,16 @@ export default class Matic {
       receiptProof.value, // receipt bytes
       receiptProof.parentNodes // reciept proof nodes
     )
+    options.data = withdrawTx.encodeABI()
 
     const _options = await this._fillOptions(
       options,
       withdrawTx,
       this._parentWeb3
     )
+    if (options.encodeAbi) {
+      return _options
+    }
 
     return this._wrapWeb3Promise(withdrawTx.send(_options), options)
   }
@@ -489,11 +560,17 @@ export default class Matic {
     const processExits = this._withdrawManagerContract.methods.processExits(
       rootTokenAddress
     )
+    options.data = processExits.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       processExits,
       this._parentWeb3
     )
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(processExits.send(_options), options)
   }
 
@@ -549,13 +626,31 @@ export default class Matic {
       utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
     )
 
+    options.data = withdrawTxObject.encodeABI()
+
     const _options = await this._fillOptions(
       options,
       withdrawTxObject,
       this._parentWeb3
     )
 
+    if (options.encodeAbi) {
+      return _options
+    }
+
     return this._wrapWeb3Promise(withdrawTxObject.send(_options), options)
+  }
+
+  sendSignedTransaction(signedTransactionData, options) {
+    let web3Object = this._web3
+    if (options.parent) {
+      web3Object = this._parentWeb3
+    }
+
+    return this._wrapWeb3Promise(
+      web3Object.eth.sendSignedTransaction(signedTransactionData),
+      options
+    )
   }
 
   //
@@ -615,21 +710,21 @@ export default class Matic {
         : options.nonce,
       !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
-
     return {
       from,
-      gasLimit,
       gas: gasLimit,
-      gasPrice: gasPrice,
+      gasLimit,
+      gasPrice,
       nonce,
       chainId,
       value: options.value || 0,
       to: options.to || null,
+      data: options.data,
     }
   }
 
   _wrapWeb3Promise(promise, options) {
-    const _emptyFunc = () => {}
+    const _emptyFunc = () => { }
     return promise
       .on('transactionHash', options.onTransactionHash || _emptyFunc)
       .on('receipt', options.onReceipt || _emptyFunc)
