@@ -156,7 +156,7 @@ export default class Matic {
     }
     const depositTx = this._rootChainContract.methods.depositEthers()
     options.data = depositTx.encodeABI()
-
+    options.to = this._rootChainAddress
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -181,6 +181,7 @@ export default class Matic {
       amount
     )
     options.data = approveTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(
       options,
@@ -216,6 +217,7 @@ export default class Matic {
       amount
     )
     options.data = depositTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(
       options,
@@ -243,6 +245,7 @@ export default class Matic {
       tokenId
     )
     options.data = safeDepositERC721Tokens.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(
       options,
@@ -272,6 +275,8 @@ export default class Matic {
     )
 
     options.data = approveTx.encodeABI()
+    options.to = token
+
     const _options = await this._fillOptions(
       options,
       approveTx,
@@ -297,6 +302,8 @@ export default class Matic {
     )
 
     options.data = depositTx.encodeABI()
+    options.to = token
+
     const _options = await this._fillOptions(
       options,
       depositTx,
@@ -322,6 +329,7 @@ export default class Matic {
     const transferTx = _tokenContract.methods.transfer(user, amount)
 
     options.data = transferTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(options, transferTx, web3Object)
     if (options.encodeAbi) {
@@ -346,6 +354,7 @@ export default class Matic {
       tokenId
     )
     options.data = transferTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(options, transferTx, web3Object)
 
@@ -397,6 +406,7 @@ export default class Matic {
     const _tokenContract = this._getERC20TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(amount)
     options.data = withdrawTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
 
@@ -413,6 +423,7 @@ export default class Matic {
     const _tokenContract = this._getERC721TokenContract(token, this._web3)
     const withdrawTx = _tokenContract.methods.withdraw(tokenId)
     options.data = withdrawTx.encodeABI()
+    options.to = token
 
     const _options = await this._fillOptions(options, withdrawTx, this._web3)
     if (options.encodeAbi) {
@@ -543,6 +554,7 @@ export default class Matic {
       receiptProof.parentNodes // reciept proof nodes
     )
     options.data = withdrawTx.encodeABI()
+    options.to = this._withdrawManagerAddress
 
     const _options = await this._fillOptions(
       options,
@@ -561,6 +573,7 @@ export default class Matic {
       rootTokenAddress
     )
     options.data = processExits.encodeABI()
+    options.to = this._withdrawManagerAddress
 
     const _options = await this._fillOptions(
       options,
