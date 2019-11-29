@@ -217,7 +217,7 @@ export default class Matic {
       amount
     )
     options.data = depositTx.encodeABI()
-    options.to = token
+    options.to = this._rootChainAddress
 
     const _options = await this._fillOptions(
       options,
@@ -302,7 +302,7 @@ export default class Matic {
     )
 
     options.data = depositTx.encodeABI()
-    options.to = token
+    options.to = this._rootChainAddress
 
     const _options = await this._fillOptions(
       options,
