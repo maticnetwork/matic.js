@@ -14,6 +14,11 @@ export default class Web3Client {
     this.maticDefaultOptions = maticDefaultOptions
   }
 
+  set wallet(_wallet) {
+    this.parentWeb3.eth.accounts.wallet.add(_wallet)
+    this.web3.eth.accounts.wallet.add(_wallet)
+  }
+
   async call(method, options?: SendOptions) {
     return method.call(options || this.parentDefaultOptions)
   }

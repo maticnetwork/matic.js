@@ -24,4 +24,14 @@ export default class Matic {
       this.withdrawManager.initialize()
     ])
   }
+
+  wallet(_wallet) {
+    this.web3Client.wallet = _wallet
+  }
+
+  async approveERC20TokensForDeposit(token, amount, options: any = {}) {
+    if (options && (!options.from || !amount || !token)) {
+      throw new Error('options.from, token or amount is missing')
+    }
+  }
 }

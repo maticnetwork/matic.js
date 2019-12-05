@@ -1,6 +1,6 @@
 {
-  "name": "maticjs",
-  "version": "1.0.0-beta.16",
+  "name": "@maticnetwork/maticjs",
+  "version": "2.0.0-beta.0",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -40,9 +40,6 @@
     "url": "https://github.com/maticnetwork/matic.js/issues"
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
-  "peerDependencies": {
-    "web3": "1.0.0-beta.34"
-  },
   "dependencies": {
     "@babel/polyfill": "7.4.4",
     "@babel/runtime": "7.4.5",
@@ -56,7 +53,8 @@
     "matic-protocol": "github:atvanguard/contracts#04e3c5c3e529f42a1862902e8b9668f7adf77217",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
-    "web3": "1.2.1"
+    "web3": "1.2.1",
+    "web3-providers-ws": "1.2.4"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
