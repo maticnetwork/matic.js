@@ -69,7 +69,7 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {
-    const payload = this._buildPayloadForExit(burnTxHash)
+    const payload = await this._buildPayloadForExit(burnTxHash)
     return this.web3Client.send(
       this.erc20Predicate.methods.startExitWithBurntTokens(payload),
       options
