@@ -46,7 +46,7 @@ export default class Matic extends ContractsBase {
     this.web3Client.wallet = _wallet
   }
 
-  transferERC20Tokens(
+  async transferERC20Tokens(
     token: address,
     to: address,
     amount: BN | string,
@@ -55,12 +55,27 @@ export default class Matic extends ContractsBase {
     if (options && (!options.from || !amount || !token || !to)) {
       throw new Error('options.from, to, token or amount is missing')
     }
-    return this.wrapWeb3Promise(
-      this.getERC20TokenContract(token)
-        .methods.transfer(to, this.encode(amount))
-        .send(options),
+
+    const txObject = this.getERC20TokenContract(
+      token,
+      options.parent,
+    ).methods.transfer(to, this.encode(amount))
+    
+    const _options = await this._fillOptions(
       options,
+      txObject,
+      options.parent
+        ? this.web3Client.getParentWeb3()
+        : this.web3Client.getMaticWeb3(),
     )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = token
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
   }
 
   async approveERC20TokensForDeposit(

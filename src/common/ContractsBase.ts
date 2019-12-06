@@ -45,7 +45,6 @@ export default class ContractsBase {
       !(options.gasLimit || options.gas)
         ? txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
-      // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
       !options.gasPrice ? web3.eth.getGasPrice() : options.gasPrice,
       !options.nonce
         ? web3.eth.getTransactionCount(from, 'pending')

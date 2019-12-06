@@ -96,7 +96,6 @@ export default class DepositManager extends ContractsBase {
     user: address,
     options?: SendOptions,
   ) {
-    console.log('-->', token, user, this.encode(amount))
     const txObject = this.depositManagerContract.methods.depositERC20ForUser(
       token,
       user,

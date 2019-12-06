@@ -1,4 +1,4 @@
-export type address = string;
+export type address = string
 
 export declare interface SendOptions {
   from?: string
@@ -6,4 +6,5 @@ export declare interface SendOptions {
   gas?: string | number
   gasPrice?: string | number
   encodeAbi?: boolean
+  parent?: boolean
 }

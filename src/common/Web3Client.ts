@@ -78,14 +78,15 @@ export default class Web3Client {
   }
 
   async send(txObject, options?) {
-    const _options = options || this.parentDefaultOptions
-    _options.gas = _options.gas + 1000000
+    const _options = options || {}
+
     // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
     // @todo handle hex values of gas
-    console.log('sending tx on matic with', _options)
-
+    _options.gas = options.parent ? _options.gas + 1000000 : _options.gas
+    _options.gasPrice = options.parent ? _options.gasPrice : 0
+    
     return this.wrapWeb3Promise(txObject.send(_options), _options)
   }
 
