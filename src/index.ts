@@ -60,7 +60,7 @@ export default class Matic extends ContractsBase {
       token,
       options.parent,
     ).methods.transfer(to, this.encode(amount))
-    
+
     const _options = await this._fillOptions(
       options,
       txObject,
@@ -78,7 +78,7 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async approveERC20TokensForDeposit(
+  approveERC20TokensForDeposit(
     token: address,
     amount: BN | string,
     options?: SendOptions,
@@ -100,5 +100,16 @@ export default class Matic extends ContractsBase {
       throw new Error('options.from, token or amount is missing')
     }
     return this.depositManager.depositERC20ForUser(token, amount, user, options)
+  }
+
+  startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !token)) {
+      throw new Error(`options.from, amount or token is missing`)
+    }
+    return this.withdrawManager.burnERC20Tokens(token, amount, options)
+  }
+
+  withdraw(txHash: string, options?: SendOptions) {
+    return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
   }
 }

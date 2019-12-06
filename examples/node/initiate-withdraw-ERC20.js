@@ -1,31 +1,31 @@
-const Matic = require('maticjs').default
+const bn = require('bn.js')
+
+const Matic = require('../../dist/index').default
+
 const config = require('./config')
 
 const token = config.MATIC_TEST_TOKEN // test token address
-const amount = '1000000000000000000' // amount in wei
+const amount = new bn(100000000) // amount in wei
+
 const from = config.FROM_ADDRESS // from address
 
 // Create object of Matic
 const matic = new Matic({
   maticProvider: config.MATIC_PROVIDER,
   parentProvider: config.PARENT_PROVIDER,
-  rootChainAddress: config.ROOTCHAIN_ADDRESS,
-  syncerUrl: config.SYNCER_URL,
-  watcherUrl: config.WATCHER_URL,
-  withdrawManagerAddress: config.WITHDRAWMANAGER_ADDRESS,	
+  rootChain: config.ROOTCHAIN_ADDRESS,
+  registry: config.REGISTRY_ADDRESS,
+  depositManager: config.DEPOSITMANAGER_ADDRESS,
+  withdrawManager: config.WITHDRAWMANAGER_ADDRESS,
 })
 
-matic.wallet = config.PRIVATE_KEY // prefix with `0x`
+matic.initialize().then(() => {
+  matic.wallet(config.PRIVATE_KEY)
+  matic
+    .startWithdraw(token, amount, {
+      from,
+    }).then((res) => {
+      console.log(res) // eslint-disable-line
+    })
 
-// NOTE: Initiate the withdraw on the Matic chain, and wait for ~5 minutes for 
-// the checkpoint (refer https://whitepaper.matic.network/#checklayer for technical details) 
-// before confirming the withdraw by executing `confirm-withdraw.js`.
-// The txHash from the output needs to be copied to the `confirm-withdraw.js` file before executing
-matic
- .startWithdraw(token, amount, {
-   from,
-   onTransactionHash: (hash) => {
-    //  console.log("Withdraw Initiated")
-    console.log(hash) // eslint-disable-line
-   },
 })

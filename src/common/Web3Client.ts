@@ -86,7 +86,7 @@ export default class Web3Client {
     // @todo handle hex values of gas
     _options.gas = options.parent ? _options.gas + 1000000 : _options.gas
     _options.gasPrice = options.parent ? _options.gasPrice : 0
-    
+
     return this.wrapWeb3Promise(txObject.send(_options), _options)
   }
 
