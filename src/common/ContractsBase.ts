@@ -1,6 +1,6 @@
 import Web3Client from './Web3Client'
 import BN from 'bn.js'
-import assert from 'assert';
+import assert from 'assert'
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
 import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
 
@@ -22,12 +22,47 @@ export default class ContractsBase {
     }
   }
 
-  public getERC20TokenContract(token: address) {
-    return new this.web3Client.web3.eth.Contract(ChildERC20Artifact.abi, token)
+  public getERC20TokenContract(token: address, parent: boolean = false) {
+    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
+    return new web3.eth.Contract(ChildERC20Artifact.abi, token)
   }
 
-  public getERC721TokenContract(token: address) {
-    return new this.web3Client.web3.eth.Contract(ChildERC721Artifact.abi, token)
+  public getERC721TokenContract(token: address, parent: boolean = false) {
+    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
+    return new web3.eth.Contract(ChildERC721Artifact.abi, token)
+  }
+
+  async _fillOptions(options, txObject, web3) {
+    delete txObject.chainId
+    const from = options.from
+    if (!from) {
+      throw new Error(
+        '`from` required in options or set wallet using maticObject.wallet = <private key>',
+      )
+    }
+
+    const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
+      !(options.gasLimit || options.gas)
+        ? txObject.estimateGas({ from, value: options.value })
+        : options.gasLimit || options.gas,
+      // NOTE: Gas Price is set to '0', take care of type of gasPrice on  web3^1.0.0-beta.36
+      !options.gasPrice ? web3.eth.getGasPrice() : options.gasPrice,
+      !options.nonce
+        ? web3.eth.getTransactionCount(from, 'pending')
+        : options.nonce,
+      !options.chainId ? web3.eth.net.getId() : options.chainId,
+    ])
+    return {
+      from,
+      gas: gasLimit,
+      gasLimit,
+      gasPrice,
+      nonce,
+      chainId,
+      value: options.value || 0,
+      to: options.to || null,
+      data: options.data,
+    }
   }
 
   wrapWeb3Promise(promise, options) {

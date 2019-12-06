@@ -5,4 +5,5 @@ export declare interface SendOptions {
   value?: string | number
   gas?: string | number
   gasPrice?: string | number
+  encodeAbi?: boolean
 }
