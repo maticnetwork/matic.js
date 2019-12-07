@@ -14,23 +14,8 @@ We will be improving this library to make all features available like Plasma Fas
 ---
 
 ```bash
-$ npm install --save @maticnetwork/maticjs # or yarn add web3 maticjs
+$ npm install --save @maticnetwork/maticjs
 ```
-
-
-#### Direct `<script>` Include
----
-
-Simply download `dist/matic.js` and include with a script tag. `Matic` will be registered as a global variable.
-
-##### CDN
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/maticjs/dist/matic.js"></script>
-```
-
-Matic is also available on [unpkg](https://unpkg.com/maticjs/dist/matic.js)
-
 
 ### Getting started
 
@@ -68,7 +53,7 @@ matic.initialize()
 
 // Set wallet
 // Warning: Not-safe
-//matic.wallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
+// matic.wallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
 
 
 // Approve ERC20 token for deposit
@@ -157,6 +142,8 @@ Creates Matic SDK instance with give options. It returns a MaticSDK object.
 import Matic from "maticjs"
 
 const matic = new Matic(options)
+matic.initialize()
+
 ```
 
 - `options` is simple Javascript `object` which can have following fields:
@@ -168,11 +155,10 @@ const matic = new Matic(options)
     - `'https://ropsten.infura.io'`
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
-  - `rootChainAddress` must be valid Ethereum contract address.
-  - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
-  - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
-  - `withdrawManagerAddress` must be valid Ethereum contract address.
-  - `depositManagerAddress` must be valid Ethereum contract address.
+  - `rootChain` must be valid Ethereum contract address.
+  - `registry` must be valid Ethereum contract address.
+  - `withdrawManager` must be valid Ethereum contract address.
+  - `depositManager` must be valid Ethereum contract address.
 ---
 
 ---
@@ -189,12 +175,7 @@ Approves given `amount` of `token` to `rootChainContract`.
   - `gasPrice` same as Ethereum `sendTransaction`
   - `gasLimit` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
-  - `nonce` same as Ethereum `sendTransaction`
   - `value` contains ETH value. Same as Ethereum `sendTransaction`.
-  - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
-  - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
-  - `onError` must be `function`. This function will be called when sending transaction fails.
-
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
 Example:
@@ -203,9 +184,6 @@ Example:
 matic
   .approveERC20TokensForDeposit("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
-  })
-  .on("onTransactionHash", txHash => {
-    console.log("New transaction", txHash)
   })
 ```
 
@@ -283,9 +261,6 @@ Example:
 matic
   .startWithdraw("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
-  })
-  .on("onTransactionHash", txHash => {
-    console.log("Started withdraw process with txId", txHash)
   })
 ```
 
