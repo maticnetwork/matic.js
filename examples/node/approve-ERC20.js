@@ -20,12 +20,14 @@ const matic = new Matic({
 
 matic.initialize().then(() => {
   matic.wallet(config.PRIVATE_KEY)
-  matic.depositERC20ForUser(token, from, amount, {
-    from,
-  }).then((receipt) => {
-    // Deposit tokens
-    console.log('receipt', receipt) // eslint-disable-line
-  })
+  // Approve token
+  matic
+    .approveERC20TokensForDeposit(token, amount, {
+      from,
+    })
+    .then((receipt) => {
+      // Deposit tokens
+      console.log("receipt", receipt) // eslint-disable-line
+    })
 
 })
-
