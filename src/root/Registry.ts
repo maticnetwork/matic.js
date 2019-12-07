@@ -6,7 +6,7 @@ import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 
-export default class DepositManager extends ContractsBase {
+export default class Registry extends ContractsBase {
   public registry: Contract
 
   constructor(registry: address, web3Client: Web3Client) {
