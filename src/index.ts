@@ -103,13 +103,34 @@ export default class Matic extends ContractsBase {
   }
 
   startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !token)) {
-      throw new Error(`options.from, amount or token is missing`)
-    }
+    this._validateInputs(token, amount, options)
     return this.withdrawManager.burnERC20Tokens(token, amount, options)
   }
 
   withdraw(txHash: string, options?: SendOptions) {
     return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
+  }
+
+  startWithdrawForNFT(token: address, tokenId: BN | string, options?: SendOptions) {
+    this._validateInputs(token, tokenId, options)
+    return this.withdrawManager.burnERC721Tokens(token, tokenId, options)
+  }
+
+  withdrawNFT(txHash: string, options?: SendOptions) {
+    return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
+  }
+
+  private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(
+      this.web3Client.web3.utils.toChecksumAddress(token))) {
+        throw new Error(`${token} is not a valid token address`)
+    }
+    if (!amountOrTokenId) {
+      // ${amountOrTokenId} will stringify it while printing which might be a problem
+      throw new Error(`${amountOrTokenId} is not a amountOrTokenId`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
   }
 }
