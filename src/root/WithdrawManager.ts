@@ -7,6 +7,7 @@ import BN from 'bn.js'
 import WithdrawManagerArtifact from 'matic-protocol/contracts-core/artifacts/WithdrawManager.json'
 import ERC20PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC20Predicate.json'
 import ERC721PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC721Predicate.json'
+import MintableERC721PredicateArtifact from 'matic-protocol/contracts-core/artifacts/MintableERC721Predicate.json'
 import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
 
 import { address, SendOptions } from '../types/Common'
@@ -14,6 +15,11 @@ import Web3Client from '../common/Web3Client'
 import ContractsBase from '../common/ContractsBase'
 import RootChain from './RootChain'
 import Registry from './Registry'
+
+const logger = {
+  info: require('debug')('maticjs:WithdrawManager'),
+  debug: require('debug')('maticjs:debug:WithdrawManager')
+}
 
 export default class WithdrawManager extends ContractsBase {
   static WITHDRAW_EVENT_SIG = '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb'.toLowerCase()
@@ -59,11 +65,9 @@ export default class WithdrawManager extends ContractsBase {
   async burnERC20Tokens(
     token: address,
     amount: BN | string,
-    options?: SendOptions,
+    options?: SendOptions
   ) {
-    const txObject = this.getERC20TokenContract(token).methods.withdraw(
-      this.encode(amount),
-    )
+    const txObject = this.getERC20TokenContract(token).methods.withdraw(this.encode(amount))
 
     const _options = await this._fillOptions(
       options,
@@ -82,12 +86,10 @@ export default class WithdrawManager extends ContractsBase {
 
   async burnERC721Token(
     token: address,
-    tokenId: string,
-    options?: SendOptions,
+    tokenId: BN | string,
+    options?: SendOptions
   ) {
-    const txObject = this.getERC721TokenContract(token).methods.withdraw(
-      tokenId,
-    )
+    const txObject = this.getERC721TokenContract(token).methods.withdraw(this.encode(tokenId))
 
     const _options = await this._fillOptions(
       options,
@@ -169,10 +171,16 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async startExitForMetadataMintableBurntToken(burnTxHash, predicate: address, options?) {
+    const { payload, mint } = await this._startExitForMintWithTokenURITokens(burnTxHash)
+    const _predicate = new this.web3Client.parentWeb3.eth.Contract(MintableERC721PredicateArtifact.abi, predicate)
+    const txObject = _predicate.methods.startExitForMetadataMintableBurntToken(payload, mint)
+    const _options = await this._fillOptions(options, txObject, this.web3Client.parentWeb3)
+    return this.web3Client.send(txObject, _options)
+  }
+
   async startExitForMintWithTokenURITokens(burnTxHash, options?) {
-    const { payload, mint } = await this._startExitForMintWithTokenURITokens(
-      burnTxHash,
-    )
+    const { payload, mint } = await this._startExitForMintWithTokenURITokens(burnTxHash)
     return this.web3Client.send(
       this.erc721Predicate.methods.startExitForMintWithTokenURITokens(
         payload,
@@ -220,7 +228,8 @@ export default class WithdrawManager extends ContractsBase {
     })
     const mintTxHash = mintEvents.find(event => event.raw.topics[3] === tokenId)
       .transactionHash
-    console.log('mintTxHash', mintTxHash)
+    logger.info( { mintTxHash })
+
     let mint: any = await this.web3Client
       .getMaticWeb3()
       .eth.getTransaction(mintTxHash)
@@ -241,30 +250,19 @@ export default class WithdrawManager extends ContractsBase {
       .getMaticWeb3()
       .eth.getBlock(burnTx.blockNumber, true /* returnTransactionObjects */)
 
-    console.log(
-      'burnTx.blockNumber',
-      burnTx.blockNumber,
-      'lastChildBlock',
-      lastChildBlock,
-    )
+    logger.info( { 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock } )
     assert.ok(
       new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
       'Burn transaction has not been checkpointed as yet',
     )
-    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(
-      burnTx.blockNumber,
-    )
+    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
     const headerBlock = await this.web3Client.call(
       this.rootChain
         .getRawContract()
         .methods.headerBlocks(this.encode(headerBlockNumber)),
     )
-    console.log(
-      'headerBlockNumber',
-      headerBlockNumber.toString(),
-      'headerBlock',
-      headerBlock,
-    )
+    logger.info( { 'headerBlockNumber': headerBlockNumber.toString(), headerBlock } )
+
     // build block proof
     const blockProof = await Proofs.buildBlockProof(
       this.web3Client.getMaticWeb3(),

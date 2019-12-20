@@ -46,6 +46,7 @@
     "@types/web3": "1.0.19",
     "bluebird": "^3.7.1",
     "bn.js": "5.0.0",
+    "debug": "^4.1.1",
     "ethereumjs-block": "2.2.0",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "5.2.0",
