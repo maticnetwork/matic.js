@@ -106,15 +106,6 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  burnERC721Token(token: address, tokenId: BN | string, options?: SendOptions) {
-    return this.wrapWeb3Promise(
-      this.getERC721TokenContract(token)
-        .methods.withdraw(this.encode(tokenId))
-        .send(options),
-      options,
-    )
-  }
-
   processExits(token: address, options?: SendOptions) {
     options = options || {}
     if (!options || !options.gas || options.gas < 2000000) {
@@ -152,48 +143,21 @@ export default class WithdrawManager extends ContractsBase {
     // @todo
   }
 
+  /**
+   * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
+   * Wrapper over contract call: [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L66)
+   * @param burnTxHash Hash of the burn transaction on Matic
+   * @param predicate address of MintableERC721Predicate
+   */
   async startExitForMetadataMintableBurntToken(burnTxHash, predicate: address, options?) {
-    const { payload, mint } = await this._startExitForMintWithTokenURITokens(burnTxHash)
+    const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
     const _predicate = new this.web3Client.parentWeb3.eth.Contract(MintableERC721PredicateArtifact.abi, predicate)
     const txObject = _predicate.methods.startExitForMetadataMintableBurntToken(payload, mint)
     const _options = await this._fillOptions(options, txObject, this.web3Client.parentWeb3)
     return this.web3Client.send(txObject, _options)
   }
 
-  async startExitForMintWithTokenURITokens(burnERC20TxHash, options?) {
-    const { payload, mint } = await this._startExitForMintWithTokenURITokens(
-      burnERC20TxHash,
-    )
-    return this.web3Client.send(
-      this.erc721Predicate.methods.startExitForMintWithTokenURITokens(
-        payload,
-        mint,
-      ),
-      options,
-    )
-  }
-
-  async startBulkExitForMintWithTokenURITokens(burnTxs, options?) {
-    const payloads = []
-    const mints = []
-    // note that these calls will be simultaneous
-    await bluebird.map(burnTxs, async tx => {
-      const { payload, mint } = await this._startExitForMintWithTokenURITokens(
-        tx,
-      )
-      payloads.push(payload)
-      mints.push(mint)
-    })
-    return this.web3Client.send(
-      this.erc721Predicate.methods.startBulkExitForMintWithTokenURITokens(
-        ethUtils.rlp.encode(payloads),
-        ethUtils.rlp.encode(mints),
-      ),
-      options,
-    )
-  }
-
-  private async _startExitForMintWithTokenURITokens(burnTxHash, options?) {
+  private async _buildPayloadAndFindMintTransaction(burnTxHash, options?) {
     const payload = await this._buildPayloadForExit(burnTxHash)
     const burnReceipt = await this.web3Client
       .getMaticWeb3()
