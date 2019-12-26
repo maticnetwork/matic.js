@@ -80,13 +80,24 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  burnERC721Token(token: address, tokenId: BN | string, options?: SendOptions) {
-    return this.wrapWeb3Promise(
-      this.getERC721TokenContract(token)
-        .methods.withdraw(this.encode(tokenId))
-        .send(options),
-      options,
+  async burnERC721Token(token: address, tokenId: string, options?: SendOptions) {
+    const txObject = this.getERC721TokenContract(token).methods.withdraw(
+      tokenId
     )
+
+    const _options = await this._fillOptions(
+      options,
+      txObject,
+      this.web3Client.getMaticWeb3(),
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = token
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
   }
 
   processExits(token: address, options?: SendOptions) {

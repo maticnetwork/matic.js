@@ -165,6 +165,13 @@ export default class Matic extends ContractsBase {
     return this.withdrawManager.burnERC20Tokens(token, amount, options)
   }
 
+  startWithdrawERC721(token: address, tokenId: string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error(`options.from, tokenId or token is missing`)
+    }
+    return this.withdrawManager.burnERC721Token(token, tokenId, options)
+  }
+
   withdraw(txHash: string, options?: SendOptions) {
     return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
   }

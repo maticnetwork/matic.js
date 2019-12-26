@@ -1,6 +1,6 @@
 const bn = require('bn.js')
 
-const Matic = require('@maticnetwork/maticjs').default
+const Matic = require('../../dist/index').default
 
 const config = require('./config')
 

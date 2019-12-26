@@ -101,6 +101,13 @@ await matic.startWithdraw(
   options // transaction fields
 )
 
+// Initiate withdrawal of ERC721 from Matic and retrieve the Transaction id
+await matic.startWithdrawERC721(
+  token, // Token address
+  tokenId, // TokenId for withdraw
+  options // transaction fields
+)
+
 // Withdraw funds from the Matic chain using the Transaction id generated from the 'startWithdraw' method
 // after header has been submitted to mainchain
 await matic.withdraw(
@@ -146,6 +153,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
 - <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
+- <a href="#startWithdrawERC721"><code>matic.<b>startWithdrawERC721()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
 ---
 
@@ -329,6 +337,29 @@ Example:
 ```js
 matic
   .startWithdraw("0x718Ca123...", "1000000000000000000", {
+    from: "0xABc578455..."
+  })
+```
+
+---
+
+<a name="startWithdrawERC721"></a>
+
+#### matic.startWithdrawERC721(token, tokenId, options)
+
+Start withdraw process with given `tokenId` for `token`.
+
+- `token` must be valid ERC721 token address
+- `tokenId` must be token tokenId (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic
+  .startWithdrawERC721("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
 ```
