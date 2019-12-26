@@ -4,8 +4,8 @@ const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
 
-
-var transactionHash = '0x03042186456e1ca3843c0eed088acba8fc56c3687d26ad028f0f1d1ad450647d' // Insert txHash generated from initiate-withdraw.js 
+// 0xbbaf7712bc426b665650992215f9c15ac9bda72bbb4e7d453ba9ed3875e0ebf5 ERC721 withdraw
+var transactionHash = '0xbbaf7712bc426b665650992215f9c15ac9bda72bbb4e7d453ba9ed3875e0ebf5' // Insert txHash generated from initiate-withdraw.js 
 
 // Create object of Matic
 const matic = new Matic({
