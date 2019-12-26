@@ -8,6 +8,7 @@ import WithdrawManagerArtifact from 'matic-protocol/contracts-core/artifacts/Wit
 import ERC20PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC20Predicate.json'
 import ERC721PredicateArtifact from 'matic-protocol/contracts-core/artifacts/ERC721Predicate.json'
 import MintableERC721PredicateArtifact from 'matic-protocol/contracts-core/artifacts/MintableERC721Predicate.json'
+import ChildERC721MintableArtifact from 'matic-protocol/contracts-core/artifacts/ChildERC721Mintable.json'
 import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
 
 import { address, SendOptions } from '../types/Common'
@@ -185,60 +186,27 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async startExitForMintWithTokenURITokens(burnTxHash, options?) {
-    const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
-    return this.web3Client.send(
-      this.erc721Predicate.methods.startExitForMintWithTokenURITokens(
-        payload,
-        mint,
-      ),
-      options,
-    )
-  }
-
-  async startBulkExitForMintWithTokenURITokens(burnTxs, options?) {
-    const payloads = []
-    const mints = []
-    // note that these calls will be simultaneous
-    await bluebird.map(burnTxs, async tx => {
-      const { payload, mint } = await this._buildPayloadAndFindMintTransaction(
-        tx,
-      )
-      payloads.push(payload)
-      mints.push(mint)
-    })
-    return this.web3Client.send(
-      this.erc721Predicate.methods.startBulkExitForMintWithTokenURITokens(
-        ethUtils.rlp.encode(payloads),
-        ethUtils.rlp.encode(mints),
-      ),
-      options,
-    )
-  }
-
-  private async _buildPayloadAndFindMintTransaction(burnTxHash, options?) {
+  private async _buildPayloadAndFindMintTransaction(burnTxHash) {
     const payload = await this._buildPayloadForExit(burnTxHash)
-    const burnReceipt = await this.web3Client
-      .getMaticWeb3()
-      .eth.getTransactionReceipt(burnTxHash)
+    const burnReceipt = await this.web3Client.web3.eth.getTransactionReceipt(burnTxHash)
     const withdrawEvent = burnReceipt.logs.find(
       l => l.topics[0].toLowerCase() === WithdrawManager.WITHDRAW_EVENT_SIG,
     )
     const tokenId = withdrawEvent.data
-    const mintEvents = await this.getERC721TokenContract(
-      burnReceipt.to,
-    ).getPastEvents('Transfer', {
+    logger.debug({ burnTxHash, burnReceipt, withdrawEvent, tokenId })
+    const contract = new this.web3Client.web3.eth.Contract(ChildERC721MintableArtifact.abi, burnReceipt.to)
+    const mintEvents = await contract.getPastEvents('Transfer', {
       filter: { tokenId },
-      fromBlock: 0,
-      toBlock: 'latest',
+      fromBlock: burnReceipt.blockNumber,
+      toBlock: burnReceipt.blockNumber
     })
+    logger.debug({ mintEvents })
+    if (!mintEvents || !mintEvents.length) {
+      throw new Error('Could not retrieve the mint event')
+    }
     const mintTxHash = mintEvents.find(event => event.raw.topics[3] === tokenId)
       .transactionHash
-    logger.info( { mintTxHash })
-
-    let mint: any = await this.web3Client
-      .getMaticWeb3()
-      .eth.getTransaction(mintTxHash)
+    let mint: any = await this.web3Client.web3.eth.getTransaction(mintTxHash)
     mint = ethUtils.bufferToHex(await Proofs.getTxBytes(mint))
     return { payload, mint }
   }
