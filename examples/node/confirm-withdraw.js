@@ -18,7 +18,7 @@ const matic = new Matic({
 })
 
 matic.initialize().then(() => {
-   matic.wallet(config.PRIVATE_KEY)
+   matic.setWallet(config.PRIVATE_KEY)
    matic.withdraw(transactionHash, {
       from,
    }).then((res) => {

@@ -53,7 +53,7 @@ matic.initialize()
 
 // Set wallet
 // Warning: Not-safe
-// matic.wallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
+// matic.setWallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
 
 
 // Approve ERC20 token for deposit

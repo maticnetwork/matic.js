@@ -19,7 +19,7 @@ const matic = new Matic({
 })
 
 matic.initialize().then(() => {
-  matic.wallet(config.PRIVATE_KEY)
+  matic.setWallet(config.PRIVATE_KEY)
   // Approve token
   matic
     .approveERC20TokensForDeposit(token, amount, {

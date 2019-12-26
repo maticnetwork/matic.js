@@ -22,8 +22,7 @@ const matic = new Matic({
 })
 
 matic.initialize().then(() => {
-  matic.wallet(config.PRIVATE_KEY)
-  // Send Tokens
+  matic.setWallet(config.PRIVATE_KEY)
   matic.transferERC20Tokens(token, recipient, amount, {
     from,
     // parent: true, // For token transfer on Main network (false for Matic Network)
