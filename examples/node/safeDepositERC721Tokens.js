@@ -5,7 +5,6 @@ const token = config.ROPSTEN_ERC721_TOKEN // test token address
 const from = config.FROM_ADDRESS // from address
 const tokenId = 1963
 
-
 // Create object of Matic
 const matic = new Matic({
   maticProvider: config.MATIC_PROVIDER,

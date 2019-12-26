@@ -78,6 +78,38 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async transferERC721Tokens(
+    token: address,
+    to: address,
+    tokenId: string,
+    options?: SendOptions,
+  ) {
+    if (options && (!options.from || !tokenId || !token || !to)) {
+      throw new Error('options.from, to, token or tokenId is missing')
+    }
+
+    const txObject = this.getERC721TokenContract(
+      token,
+      options.parent,
+    ).methods.transferFrom(options.from, to, tokenId)
+
+    const _options = await this._fillOptions(
+      options,
+      txObject,
+      options.parent
+        ? this.web3Client.getParentWeb3()
+        : this.web3Client.getMaticWeb3(),
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = token
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
+  }
+
   approveERC20TokensForDeposit(
     token: address,
     amount: BN | string,

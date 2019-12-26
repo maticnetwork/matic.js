@@ -86,6 +86,14 @@ await matic.transferERC20Tokens(
   options // transaction fields
 )
 
+// Transfer ERC721 token on Matic
+await matic.transferERC721Tokens(
+  token,  // Token address
+  user,   // Recipient address
+  tokenId,  // TokenId
+  options // transaction fields
+)
+
 // Initiate withdrawal of ERC20 from Matic and retrieve the Transaction id
 await matic.startWithdraw(
   token, // Token address
@@ -136,6 +144,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#depositERC20ForUser"><code>matic.<b>depositERC20ForUser()</b></code></a>
 - <a href="#safeDepositERC721Tokens"><code>matic.<b>safeDepositERC721Tokens()</b></code></a>
 - <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
+- <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
 ---
@@ -265,6 +274,35 @@ Example:
 const user = <your-address> or <any-account-address>
 
 matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...',
+
+  // For token transfer on Main network
+  // parent: true
+})
+```
+
+---
+
+<a name="transferERC721Tokens"></a>
+
+#### matic.transferERC721Tokens(token, user, tokenId, options)
+
+Transfer given `tokenId` of `token` to `user`.
+
+- `token` must be valid ERC721 token address
+- `user` must be value account address
+- `tokenId` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.transferERC721Tokens('0x718Ca123...', user, '100006500000000000000', {
   from: '0xABc578455...',
 
   // For token transfer on Main network
