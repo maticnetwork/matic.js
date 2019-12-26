@@ -102,6 +102,30 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositERC20ForUser(token, amount, user, options)
   }
 
+  async safeDepositERC721Tokens(token: address, tokenId: string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !token)) {
+      throw new Error('options.from, token or tokenId is missing')
+    }
+    const txObject = this.getERC721TokenContract(
+      token,
+      options.parent,
+    ).methods.safeTransferFrom(options.from, this.depositManager.getAddress(), tokenId)
+
+    const _options = await this._fillOptions(
+      options,
+      txObject,
+      this.web3Client.getParentWeb3()
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = token
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
+  }
+
   startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error(`options.from, amount or token is missing`)
