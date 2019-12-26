@@ -42,7 +42,7 @@ export default class Matic extends ContractsBase {
     return Promise.all([this.withdrawManager.initialize()])
   }
 
-  wallet(_wallet) {
+  setWallet(_wallet) {
     this.web3Client.wallet = _wallet
   }
 
@@ -102,13 +102,13 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositERC20ForUser(token, amount, user, options)
   }
 
-  async safeDepositERC721Tokens(token: address, tokenId: string, options?: SendOptions) {
+  async safeDepositERC721Tokens(token: address, tokenId: BN, options?: SendOptions) {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('options.from, token or tokenId is missing')
     }
     const txObject = this.getERC721TokenContract(
       token,
-      options.parent,
+      true,
     ).methods.safeTransferFrom(options.from, this.depositManager.getAddress(), tokenId)
 
     const _options = await this._fillOptions(

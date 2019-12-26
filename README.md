@@ -71,6 +71,13 @@ await matic.depositERC20ForUser(
   options // transaction fields
 )
 
+// Deposit ERC721 token into Matic chain.
+await matic.safeDepositERC721Tokens(
+  token,  // Token address
+  tokenId,  // TokenId for deposit
+  options // transaction fields
+)
+
 // Transfer token on Matic
 await matic.transferERC20Tokens(
   token,  // Token address
@@ -127,6 +134,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#initialize"><code>new Matic()</code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20ForUser"><code>matic.<b>depositERC20ForUser()</b></code></a>
+- <a href="#safeDepositERC721Tokens"><code>matic.<b>safeDepositERC721Tokens()</b></code></a>
 - <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
@@ -208,6 +216,29 @@ Example:
 const user = <your-address> or <any-account-address>
 
 matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="safeDepositERC721Tokens"></a>
+
+#### matic.safeDepositERC721Tokens(token, tokenId, options)
+
+Deposit given `TokenID` of `token` with user `user`.
+
+- `token` must be valid ERC20 token address
+- `tokenId` must be valid token ID
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+
+matic.safeDepositERC721Tokens('0x718Ca123...', '70000000000', {
   from: '0xABc578455...'
 })
 ```

@@ -2,8 +2,9 @@ const Matic = require('../../dist/index').default
 const config = require('./config')
 
 const token = config.ROPSTEN_ERC721_TOKEN // test token address
-const tokenId = '1734' // ERC721 token Id
 const from = config.FROM_ADDRESS // from address
+const tokenId = 1963
+
 
 // Create object of Matic
 const matic = new Matic({
@@ -18,6 +19,7 @@ const matic = new Matic({
 matic.wallet = config.PRIVATE_KEY // prefix with `0x`sla
 
 matic.initialize().then(() => {
+  matic.setWallet(config.PRIVATE_KEY)
   matic.safeDepositERC721Tokens(token, tokenId, {
     from,
   }).then((receipt) => {
