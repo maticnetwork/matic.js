@@ -120,6 +120,11 @@ await matic.confirmWithdrawERC721(
   options // transaction fields
 )
 
+await matic.processExits(
+  tokenAddress, // root `token` addres
+  options // transaction fields
+)
+
 ```
 
 ### How it works?
@@ -160,7 +165,8 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#startWithdrawERC721"><code>matic.<b>startWithdrawERC721()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
-- <a href="#confirmWithdrawERC721"><code>matic.<b>confirmWithdrawERC721()</b></code></a>
+- <a href="#confirmWithdrawERC721"><code>matic.<b>confirmWithdrawERC721()</b></code><a>
+- <a href="#processExits"><code>matic.<b>processExits()</b></code><a>
 ---
 
 <a name="initialize"></a>
@@ -408,6 +414,28 @@ Example:
 
 ```js
 matic.confirmWithdrawERC721("0xabcd...789", {
+  from: "0xABc578455..."
+})
+```
+
+---
+
+<a name="processExits"></a>
+
+#### matic.processExits(rootTokenAddress, options)
+
+Call processExits after completion of challenge period, after that withdrawn funds get transfered to your account on mainchain
+
+- `rootTokenAddress` RootToken address
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.processExits("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```

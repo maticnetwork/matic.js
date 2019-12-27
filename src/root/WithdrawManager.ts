@@ -100,7 +100,7 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  processExits(token: address, options?: SendOptions) {
+  async processExits(rootTokenAddress: address, options?: SendOptions) {
     options = options || {}
     if (!options || !options.gas || options.gas < 2000000) {
       console.log(
@@ -108,6 +108,20 @@ export default class WithdrawManager extends ContractsBase {
       )
       options.gas = 2000000
     }
+    const txObject = this.withdrawManager.methods.processExits(token)
+
+    const _options = await this._fillOptions(
+      options,
+      txObject,
+      this.web3Client.getParentWeb3(),
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = token
+      return _options
+    }
+
     return this.web3Client.send(
       this.withdrawManager.methods.processExits(token),
       options,
