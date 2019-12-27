@@ -1,4 +1,4 @@
-const Matic = require('../../dist/index').default
+const Matic = require('@maticnetwork/maticjs').default
 
 const config = require('./config')
 
