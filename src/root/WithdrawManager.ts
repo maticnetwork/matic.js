@@ -80,9 +80,13 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async burnERC721Token(token: address, tokenId: string, options?: SendOptions) {
+  async burnERC721Token(
+    token: address,
+    tokenId: string,
+    options?: SendOptions,
+  ) {
     const txObject = this.getERC721TokenContract(token).methods.withdraw(
-      tokenId
+      tokenId,
     )
 
     const _options = await this._fillOptions(
@@ -108,7 +112,7 @@ export default class WithdrawManager extends ContractsBase {
       )
       options.gas = 2000000
     }
-    const txObject = this.withdrawManager.methods.processExits(token)
+    const txObject = this.withdrawManager.methods.processExits(rootTokenAddress)
 
     const _options = await this._fillOptions(
       options,
@@ -118,14 +122,11 @@ export default class WithdrawManager extends ContractsBase {
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
-      _options.to = token
+      _options.to = rootTokenAddress
       return _options
     }
 
-    return this.web3Client.send(
-      this.withdrawManager.methods.processExits(token),
-      options,
-    )
+    return this.web3Client.send(txObject, options)
   }
 
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {
