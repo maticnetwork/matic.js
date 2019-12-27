@@ -115,6 +115,11 @@ await matic.withdraw(
   options // transaction fields
 )
 
+await matic.confirmWithdrawERC721(
+  txId, // Transaction id generated from the 'startWithdraw' method
+  options // transaction fields
+)
+
 ```
 
 ### How it works?
@@ -155,6 +160,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#startWithdrawERC721"><code>matic.<b>startWithdrawERC721()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
+- <a href="#confirmWithdrawERC721"><code>matic.<b>confirmWithdrawERC721()</b></code></a>
 ---
 
 <a name="initialize"></a>
@@ -381,6 +387,27 @@ Example:
 
 ```js
 matic.withdraw("0xabcd...789", {
+  from: "0xABc578455..."
+})
+```
+
+---
+
+<a name="confirmWithdrawERC721"></a>
+
+#### matic.confirmWithdrawERC721(txId, options)
+
+Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
+
+- `txId` must be valid tx hash
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.confirmWithdrawERC721("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```

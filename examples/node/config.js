@@ -15,5 +15,5 @@ module.exports = {
   ROPSTEN_TEST_TOKEN: '0x28C8713DDe7F063Fdc4cA01aB2A8856e0F243Fec', // Contract for ERC20 in Ropsten
   MATIC_TEST_TOKEN: '0x9a93c912F4eFf0254d178a18ACD980C1B05b57b0', // Contract for ERC20 in Matic testnet
   ROPSTEN_ERC721_TOKEN: '0x07d799252cf13c01f602779b4dce24f4e5b08bbd', // Contract for ERC721 in Ropsten testnet
-  MATIC_ERC721_TOKEN: '0x9f289a264b6db56d69ad53f363d06326b984e637', // Contract for ERC721 in matic testnet
+  MATIC_ERC721_TOKEN: '0x8D5231e0B79edD9331e0CF0d4B9f3F30d05C47A5', // Contract for ERC721 in matic testnet
 }

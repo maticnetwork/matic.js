@@ -133,9 +133,28 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async startExitForMintWithTokenURITokens(burnERC20TxHash, options?) {
+  async startExitWithBurntERC721Tokens(burnTxHash, options?) {
+    const payload = await this._buildPayloadForExit(burnTxHash)
+    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(
+      payload,
+    )
+
+    const _options = await this._fillOptions(
+      options,
+      txObject,
+      this.web3Client.getParentWeb3(),
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      return _options
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async startExitForMintWithTokenURITokens(burnTxHash, options?) {
     const { payload, mint } = await this._startExitForMintWithTokenURITokens(
-      burnERC20TxHash,
+      burnTxHash,
     )
     return this.web3Client.send(
       this.erc721Predicate.methods.startExitForMintWithTokenURITokens(
@@ -192,15 +211,15 @@ export default class WithdrawManager extends ContractsBase {
     return { payload, mint }
   }
 
-  private async _buildPayloadForExit(burnERC20TxHash) {
+  private async _buildPayloadForExit(burnTxHash) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
     const burnTx = await this.web3Client
       .getMaticWeb3()
-      .eth.getTransaction(burnERC20TxHash)
+      .eth.getTransaction(burnTxHash)
     const receipt = await this.web3Client
       .getMaticWeb3()
-      .eth.getTransactionReceipt(burnERC20TxHash)
+      .eth.getTransactionReceipt(burnTxHash)
     const block: any = await this.web3Client
       .getMaticWeb3()
       .eth.getBlock(burnTx.blockNumber, true /* returnTransactionObjects */)

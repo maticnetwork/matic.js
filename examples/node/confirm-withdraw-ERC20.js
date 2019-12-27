@@ -4,7 +4,6 @@ const config = require('./config')
 
 const from = config.FROM_ADDRESS // from address
 
-// 0xbbaf7712bc426b665650992215f9c15ac9bda72bbb4e7d453ba9ed3875e0ebf5 ERC721 withdraw
 var transactionHash = '0xbbaf7712bc426b665650992215f9c15ac9bda72bbb4e7d453ba9ed3875e0ebf5' // Insert txHash generated from initiate-withdraw.js 
 
 // Create object of Matic
@@ -23,7 +22,6 @@ matic.initialize().then(() => {
       from,
    }).then((res) => {
       console.log(res) // eslint-disable-line
-
    })
 })
 //Wait for 5 mins till the checkpoint is submitted, then run the confirm withdraw
