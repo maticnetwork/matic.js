@@ -195,11 +195,7 @@ export default class WithdrawManager extends ContractsBase {
     const tokenId = withdrawEvent.data
     logger.debug({ burnTxHash, burnReceipt, withdrawEvent, tokenId })
     const contract = new this.web3Client.web3.eth.Contract(ChildERC721MintableArtifact.abi, burnReceipt.to)
-    const mintEvents = await contract.getPastEvents('Transfer', {
-      filter: { tokenId },
-      fromBlock: burnReceipt.blockNumber,
-      toBlock: burnReceipt.blockNumber
-    })
+    const mintEvents = await contract.getPastEvents('Transfer', { filter: { tokenId }, fromBlock: 0, toBlock: 'latest' })
     logger.debug({ mintEvents })
     if (!mintEvents || !mintEvents.length) {
       throw new Error('Could not retrieve the mint event')
