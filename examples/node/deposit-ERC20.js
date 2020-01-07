@@ -1,15 +1,14 @@
 const bn = require('bn.js')
 
-const Matic = require('@maticnetwork/maticjs').default
+const Matic = require('../../dist/index').default
 const config = require('./config')
-const token = config.PARENT_TEST_TOKEN // test token address
-// const amount = '1000000000000000000' // amount in wei
-const amount = new bn(100000000) // amount in wei
+const utils = require('./utils')
 
-const from = config.FROM_ADDRESS // from address
+const token = config.ROPSTEN_TEST_TOKEN
+const amount = new bn(1).mul(utils.SCALING_FACTOR)
+const from = config.FROM_ADDRESS
 
-// Create object of Matic
-
+// Create Matic object
 const matic = new Matic({
   maticProvider: config.MATIC_PROVIDER,
   parentProvider: config.PARENT_PROVIDER,
@@ -19,14 +18,22 @@ const matic = new Matic({
   withdrawManager: config.WITHDRAWMANAGER_ADDRESS,
 })
 
-matic.initialize().then(() => {
+async function execute() {
+  await matic.initialize()
   matic.setWallet(config.PRIVATE_KEY)
-  matic.depositERC20ForUser(token, from, amount, {
-    from,
-  }).then((receipt) => {
-    // Deposit tokens
-    console.log('receipt', receipt) // eslint-disable-line
-  })
+  await matic.approveERC20TokensForDeposit(token, amount, { from, gasPrice: '10000000000' })
+  return matic.depositERC20ForUser(token, from, amount, { from, gasPrice: '10000000000' })
+}
 
-})
+async function executeRaw() { // eslint-disable-line
+  await matic.initialize()
+  let txParams = await matic.approveERC20TokensForDeposit(token, amount, { from, encodeAbi: true })
+  let serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)
+  await matic.web3Client.parentWeb3.eth.sendSignedTransaction(serializedTx)
 
+  txParams = await matic.depositERC20ForUser(token, from, amount, { from, encodeAbi: true })
+  serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)
+  return matic.web3Client.parentWeb3.eth.sendSignedTransaction(serializedTx)
+}
+
+execute().then(console.log) // eslint-disable-line
