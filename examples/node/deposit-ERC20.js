@@ -4,7 +4,7 @@ const Matic = require('../../dist/index').default
 const config = require('./config')
 const utils = require('./utils')
 
-const token = config.ROPSTEN_TEST_TOKEN
+const token = config.PARENT_TEST_TOKEN
 const amount = new bn(1).mul(utils.SCALING_FACTOR)
 const from = config.FROM_ADDRESS
 
