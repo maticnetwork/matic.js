@@ -122,7 +122,7 @@ export default class WithdrawManager extends ContractsBase {
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
-      _options.to = rootTokenAddress
+      _options.to = this.withdrawManager.options.address
       return _options
     }
 
@@ -143,6 +143,7 @@ export default class WithdrawManager extends ContractsBase {
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
+      _options.to = this.erc20Predicate.options.address
       return _options
     }
     return this.web3Client.send(txObject, _options)
@@ -162,6 +163,7 @@ export default class WithdrawManager extends ContractsBase {
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
+      _options.to = this.erc721Predicate.options.address
       return _options
     }
     return this.web3Client.send(txObject, _options)
