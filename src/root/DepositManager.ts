@@ -60,7 +60,7 @@ export default class DepositManager extends ContractsBase {
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
-      _options.to = token
+      _options.to = this.depositManagerContract.options.address
       return _options
     }
 
