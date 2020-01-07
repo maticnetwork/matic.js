@@ -53,9 +53,8 @@ export default class ContractsBase {
     ])
     return {
       from,
-      gas: gasLimit,
-      gasLimit,
-      gasPrice,
+      gas: this.encode(gasLimit),
+      gasPrice: this.encode(gasPrice),
       nonce,
       chainId,
       value: options.value || 0,
