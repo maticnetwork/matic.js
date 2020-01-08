@@ -174,6 +174,20 @@ export default class WithdrawManager extends ContractsBase {
 
   /**
    * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
+   * Wrapper over contract call: [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)
+   * @param burnTxHash Hash of the burn transaction on Matic
+   * @param predicate address of MintableERC721Predicate
+   */
+  async startExitForMintableBurntToken(burnTxHash, predicate: address, options?) {
+    const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
+    const _predicate = new this.web3Client.parentWeb3.eth.Contract(MintableERC721PredicateArtifact.abi, predicate)
+    const txObject = _predicate.methods.startExitForMintableBurntToken(payload, mint)
+    const _options = await this._fillOptions(options, txObject, this.web3Client.parentWeb3)
+    return this.web3Client.send(txObject, _options)
+  }
+
+  /**
+   * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
    * Wrapper over contract call: [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L66)
    * @param burnTxHash Hash of the burn transaction on Matic
    * @param predicate address of MintableERC721Predicate
