@@ -28,6 +28,7 @@ const matic = new Matic({
 
   // Set Matic provider - string or provider instance
   // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3.providers.WebsocketProvider('ws://localhost:8546')
   maticProvider: <web3-provider>,
 
   // Set Mainchain provider - string or provider instance
@@ -102,7 +103,7 @@ await matic.startWithdraw(
 )
 
 // Initiate withdrawal of ERC721 from Matic and retrieve the Transaction id
-await matic.startWithdrawERC721(
+await matic.startWithdrawForNFT(
   token, // Token address
   tokenId, // TokenId for withdraw
   options // transaction fields
@@ -115,7 +116,7 @@ await matic.withdraw(
   options // transaction fields
 )
 
-await matic.confirmWithdrawERC721(
+await matic.withdrawNFT(
   txId, // Transaction id generated from the 'startWithdraw' method
   options // transaction fields
 )
@@ -163,10 +164,15 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
 - <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
-- <a href="#startWithdrawERC721"><code>matic.<b>startWithdrawERC721()</b></code></a>
+- <a href="#startWithdrawForNFT"><code>matic.<b>startWithdrawForNFT()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
-- <a href="#confirmWithdrawERC721"><code>matic.<b>confirmWithdrawERC721()</b></code><a>
+- <a href="#withdrawNFT"><code>matic.<b>withdrawNFT()</b></code><a>
 - <a href="#processExits"><code>matic.<b>processExits()</b></code><a>
+
+##### **WithdrawManager**
+
+- <a href="#startExitForMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMintableBurntToken()</b></code></a>
+- <a href="#startExitForMetadataMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMetadataMintableBurntToken()</b></code></a>
 ---
 
 <a name="initialize"></a>
@@ -355,9 +361,9 @@ matic
 
 ---
 
-<a name="startWithdrawERC721"></a>
+<a name="startWithdrawForNFT"></a>
 
-#### matic.startWithdrawERC721(token, tokenId, options)
+#### matic.startWithdrawForNFT(token, tokenId, options)
 
 Start withdraw process with given `tokenId` for `token`.
 
@@ -371,7 +377,7 @@ Example:
 
 ```js
 matic
-  .startWithdrawERC721("0x718Ca123...", "1000000000000000000", {
+  .startWithdrawForNFT("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
 ```
@@ -399,9 +405,9 @@ matic.withdraw("0xabcd...789", {
 
 ---
 
-<a name="confirmWithdrawERC721"></a>
+<a name="withdrawNFT"></a>
 
-#### matic.confirmWithdrawERC721(txId, options)
+#### matic.withdrawNFT(txId, options)
 
 Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
 
@@ -413,7 +419,7 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.confirmWithdrawERC721("0xabcd...789", {
+matic.withdrawNFT("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```
@@ -439,6 +445,47 @@ matic.processExits("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```
+---
+
+#### **WithdrawManager**
+
+<a name="startExitForMintableBurntToken"></a>
+
+#### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
+```
+/**
+  * Start an exit for a token that was minted and burnt on the side chain
+  * Wrapper over contract call: MintableERC721Predicate.startExitForMintableBurntToken
+  * @param burnTxHash Hash of the burn transaction on Matic
+  * @param predicate address of MintableERC721Predicate
+  */
+```
+See [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)
+
+```
+const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
+await this.maticClient.withdrawManager.startExitForMintableBurntToken(burn.transactionHash, predicate.address)
+```
+---
+
+<a name="startExitForMetadataMintableBurntToken"></a>
+
+#### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
+```
+/**
+  * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
+  * Wrapper over contract call: MintableERC721Predicate.startExitForMetadataMintableBurntToken
+  * @param burnTxHash Hash of the burn transaction on Matic
+  * @param predicate address of MintableERC721Predicate
+  */
+```
+See [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L66)
+
+```
+const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
+await this.maticClient.withdrawManager.startExitForMetadataMintableBurntToken(burn.transactionHash, predicate.address)
+```
+---
 
 ### Support
 

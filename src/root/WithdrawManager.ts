@@ -173,7 +173,7 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   /**
-   * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
+   * Start an exit for a token that was minted and burnt on the side chain
    * Wrapper over contract call: [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)
    * @param burnTxHash Hash of the burn transaction on Matic
    * @param predicate address of MintableERC721Predicate
@@ -245,7 +245,7 @@ export default class WithdrawManager extends ContractsBase {
         .getRawContract()
         .methods.headerBlocks(this.encode(headerBlockNumber)),
     )
-    logger.info( { 'headerBlockNumber': headerBlockNumber.toString(), headerBlock } )
+    logger.info({ 'headerBlockNumber': headerBlockNumber.toString(), headerBlock })
 
     // build block proof
     const blockProof = await Proofs.buildBlockProof(

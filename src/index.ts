@@ -169,10 +169,19 @@ export default class Matic extends ContractsBase {
   }
 
   withdraw(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
     return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
   }
 
   withdrawNFT(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }

@@ -20,7 +20,7 @@ const matic = new Matic({
 matic.initialize().then(() => {
   matic.setWallet(config.PRIVATE_KEY)
   matic
-    .startWithdrawERC721(token, tokenId, {
+    .startWithdrawForNFT(token, tokenId, {
       from,
     }).then((res) => {
       console.log(res) // eslint-disable-line
