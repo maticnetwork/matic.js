@@ -14,7 +14,7 @@
   "author": "Sayli Patil <sayli@matic.network>",
   "license": "ISC",
   "dependencies": {
-    "@maticnetwork/maticjs": "2.0.0-beta.4",
+    "@maticnetwork/maticjs": "2.0.0-beta.5",
     "web3": "1.2.4"
   }
 }
