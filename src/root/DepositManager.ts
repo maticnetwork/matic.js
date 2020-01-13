@@ -132,11 +132,22 @@ export default class DepositManager extends ContractsBase {
     )
   }
 
-  depositEther(amount: string, options: SendOptions = {}) {
-    return this.web3Client.send(
-      this.depositManagerContract.methods.depositEther(),
-      Object.assign(options, { value: amount }),
+  async depositEther(amount: BN | string, options: SendOptions = {}) {
+    const txObject = this.depositManagerContract.methods.depositEther()
+
+    const _options = await this._fillOptions(
+      Object.assign(options, { value: this.encode(amount) }),
+      txObject,
+      this.web3Client.getParentWeb3(),
     )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = this.depositManagerContract.options.address
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
   }
 
   getAddress() {

@@ -110,6 +110,16 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  depositEther(
+    amount: BN | string,
+    options?: SendOptions,
+  ) {
+    if (options && (!options.from || !amount )) {
+      throw new Error('options.from or amount is missing')
+    }
+    return this.depositManager.depositEther(amount, options)
+  }
+
   approveERC20TokensForDeposit(
     token: address,
     amount: BN | string,
