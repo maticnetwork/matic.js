@@ -4,12 +4,6 @@ import Web3 from 'web3'
 import utils from 'ethereumjs-util'
 import queryString from 'query-string'
 
-import {
-  verifyTxProof,
-  verifyReceiptProof,
-  verifyHeaderProof,
-} from './helpers/proofs'
-
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
 import ChildERC721Artifacts from '../artifacts/ChildERC721'
@@ -470,20 +464,12 @@ export default class Matic {
     return txProof
   }
 
-  verifyTxProof(txProof) {
-    return verifyTxProof(txProof)
-  }
-
   async getReceiptProof(txId) {
     const { proof: receiptProof } = await this._apiCall({
       url: `${this._syncerUrl}/tx/${txId}/receipt/proof`,
     })
 
     return receiptProof
-  }
-
-  verifyReceiptProof(receiptProof) {
-    return verifyReceiptProof(receiptProof)
   }
 
   getHeaderObject(blockNumber) {
@@ -502,10 +488,6 @@ export default class Matic {
     })
 
     return headerProof
-  }
-
-  verifyHeaderProof(headerProof) {
-    return verifyHeaderProof(headerProof)
   }
 
   async withdraw(txId, options = {}) {
