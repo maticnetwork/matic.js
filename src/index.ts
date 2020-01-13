@@ -169,28 +169,50 @@ export default class Matic extends ContractsBase {
   }
 
   startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !token)) {
-      throw new Error(`options.from, amount or token is missing`)
-    }
+    this._validateInputs(token, amount, options)
     return this.withdrawManager.burnERC20Tokens(token, amount, options)
   }
 
-  startWithdrawERC721(token: address, tokenId: string, options?: SendOptions) {
-    if (options && (!options.from || !tokenId || !token)) {
-      throw new Error(`options.from, tokenId or token is missing`)
-    }
+  startWithdrawForNFT(token: address, tokenId: BN | string, options?: SendOptions) {
+    this._validateInputs(token, tokenId, options)
     return this.withdrawManager.burnERC721Token(token, tokenId, options)
   }
 
   withdraw(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
     return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
   }
 
-  confirmWithdrawERC721(txHash: string, options?: SendOptions) {
+  withdrawNFT(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
     return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
   }
 
   processExits(tokenAddress: string, options?: SendOptions) {
     return this.withdrawManager.processExits(tokenAddress, options)
+  }
+
+  private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(
+      this.web3Client.web3.utils.toChecksumAddress(token))) {
+        throw new Error(`${token} is not a valid token address`)
+    }
+    if (!amountOrTokenId) {
+      // ${amountOrTokenId} will stringify it while printing which might be a problem
+      throw new Error(`${amountOrTokenId} is not a amountOrTokenId`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
   }
 }
