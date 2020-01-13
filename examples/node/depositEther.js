@@ -1,11 +1,8 @@
-const bn = require('bn.js')
-
 const Matic = require('../../dist/index').default
 
 const config = require('./config')
 const utils = require('./utils')
 
-const amount = new bn(1).mul(utils.SCALING_FACTOR)
 const from = config.FROM_ADDRESS
 
 // Create Matic object
@@ -17,6 +14,8 @@ const matic = new Matic({
   depositManager: config.DEPOSITMANAGER_ADDRESS,
   withdrawManager: config.WITHDRAWMANAGER_ADDRESS,
 })
+
+const amount = matic.web3Client.web3.utils.toWei('.001', 'ether')
 
 async function execute() {
   await matic.initialize()
