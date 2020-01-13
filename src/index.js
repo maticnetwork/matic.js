@@ -5,16 +5,10 @@ import utils from 'ethereumjs-util'
 import queryString from 'query-string'
 
 import {
-  getTxBytes,
-  getReceiptBytes,
-  getTxProof,
-  getReceiptProof,
   verifyTxProof,
   verifyReceiptProof,
   verifyHeaderProof,
 } from './helpers/proofs'
-import { getHeaders, getBlockHeader } from './helpers/blocks'
-import MerkleTree from './helpers/merkle-tree'
 
 import RootChainArtifacts from '../artifacts/RootChain'
 import ChildERC20Artifacts from '../artifacts/ChildERC20'
@@ -587,73 +581,6 @@ export default class Matic {
     return this._wrapWeb3Promise(processExits.send(_options), options)
   }
 
-  async withdrawLocally(txId, options = {}) {
-    const withdrawTx = await this._web3.eth.getTransaction(txId)
-    const withdrawReceipt = await this._web3.eth.getTransactionReceipt(txId)
-    const withdrawBlock = await this._web3.eth.getBlock(
-      withdrawReceipt.blockNumber,
-      true
-    )
-
-    // draft withdraw obj
-    const withdrawObj = {
-      txId: txId,
-      block: withdrawBlock,
-      tx: withdrawTx,
-      receipt: withdrawReceipt,
-    }
-
-    const txProof = await getTxProof(withdrawObj.tx, withdrawObj.block)
-    const receiptProof = await getReceiptProof(
-      withdrawObj.receipt,
-      withdrawObj.block,
-      this._web3
-    )
-
-    const currentHeaderBlock = await this._rootChainContract.methods
-      .currentHeaderBlock()
-      .call()
-
-    const header = await this._rootChainContract.methods
-      .headerBlock(parseInt(currentHeaderBlock, 10) - 1)
-      .call()
-
-    const headerNumber = +currentHeaderBlock - 1
-    const start = header.start
-    const end = header.end
-    const headers = await getHeaders(start, end, this._web3)
-    const tree = new MerkleTree(headers)
-    const headerProof = await tree.getProof(getBlockHeader(withdrawObj.block))
-
-    const withdrawTxObject = this._withdrawManagerContract.methods.withdrawBurntTokens(
-      headerNumber.toString(), // header block
-      utils.bufferToHex(Buffer.concat(headerProof)), // header proof
-      withdrawObj.block.number.toString(), // block number
-      withdrawObj.block.timestamp.toString(), // block timestamp
-      utils.bufferToHex(withdrawObj.block.transactionsRoot.toString()), // tx root
-      utils.bufferToHex(withdrawObj.block.receiptsRoot.toString()), // tx root
-      utils.bufferToHex(rlp.encode(receiptProof.path)), // key for trie (both tx and receipt)
-      utils.bufferToHex(getTxBytes(withdrawObj.tx)), // tx bytes
-      utils.bufferToHex(rlp.encode(txProof.parentNodes)), // tx proof nodes
-      utils.bufferToHex(getReceiptBytes(withdrawObj.receipt)), // receipt bytes
-      utils.bufferToHex(rlp.encode(receiptProof.parentNodes)) // reciept proof nodes
-    )
-
-    options.data = withdrawTxObject.encodeABI()
-
-    const _options = await this._fillOptions(
-      options,
-      withdrawTxObject,
-      this._parentWeb3
-    )
-
-    if (options.encodeAbi) {
-      return _options
-    }
-
-    return this._wrapWeb3Promise(withdrawTxObject.send(_options), options)
-  }
-
   sendSignedTransaction(signedTransactionData, options) {
     let web3Object = this._web3
     if (options.parent) {
@@ -725,9 +652,9 @@ export default class Matic {
     ])
     return {
       from,
-      gas: gasLimit,
-      gasLimit,
-      gasPrice,
+      gas: Web3.utils.toHex(gasLimit),
+      gasLimit: Web3.utils.toHex(gasLimit),
+      gasPrice: Web3.utils.toHex(gasPrice),
       nonce,
       chainId,
       value: options.value || 0,
