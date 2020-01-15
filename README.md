@@ -56,6 +56,11 @@ matic.initialize()
 // Warning: Not-safe
 // matic.setWallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
 
+// Deposit Ether into Matic chain
+await matic.depositEthers(
+  amount, // amount in wei for deposit
+  options // transaction fields
+)
 
 // Approve ERC20 token for deposit
 await matic.approveERC20TokensForDeposit(
@@ -158,6 +163,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 ### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
+- <a href="#depositEther"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20ForUser"><code>matic.<b>depositERC20ForUser()</b></code></a>
 - <a href="#safeDepositERC721Tokens"><code>matic.<b>safeDepositERC721Tokens()</b></code></a>
@@ -203,6 +209,26 @@ matic.initialize()
   - `withdrawManager` must be valid Ethereum contract address.
   - `depositManager` must be valid Ethereum contract address.
 ---
+
+<a name="depositEthers"></a>
+
+#### matic.depositEthers(amount, options)
+
+Deposit `options.value`
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit).
+  - `from` must be valid account address(required)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.depositEthers(amount, {
+  from: '0xABc578455...'
+})
+```
 
 ---
 <a name="approveERC20TokensForDeposit"></a>
