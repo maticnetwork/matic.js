@@ -56,6 +56,28 @@ matic.initialize()
 // Warning: Not-safe
 // matic.setWallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
 
+// get ERC20 token balance
+await matic.balanceOfERC20(
+  user, //User address
+  tokenAddress, // Token address
+  options // transaction fields
+)
+
+// get ERC721 token balance
+await matic.balanceOfERC721(
+  user, // User address
+  tokenAddress,  // Token address
+  options // transaction fields
+)
+
+// get ERC721 token ID
+await matic.tokenOfOwnerByIndexERC721(
+  from, // User address
+  tokenAddress,  // Token address
+  index, // index of tokenId
+  options // transaction fields
+)
+
 // Deposit Ether into Matic chain
 await matic.depositEthers(
   amount, // amount in wei for deposit
@@ -163,6 +185,9 @@ Please write to info@matic.network to request TEST tokens for development purpos
 ### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
+- <a href="#balanceOfERC20"><code>matic.<b>balanceOfERC20()</b></code></a>
+- <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
+- <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
 - <a href="#depositEther"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
 - <a href="#depositERC20ForUser"><code>matic.<b>depositERC20ForUser()</b></code></a>
@@ -209,6 +234,88 @@ matic.initialize()
   - `withdrawManager` must be valid Ethereum contract address.
   - `depositManager` must be valid Ethereum contract address.
 ---
+
+
+---
+<a name="balanceOfERC20"></a>
+
+
+#### matic.balanceOfERC20(userAddress, token, options)
+
+get balance of ERC20 `token` for `address`.
+
+- `token` must be valid token address
+- `userAddress` must be valid user address
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `parent` must be boolean value. For balance on Main chain, use `parent: true`
+
+This returns `balance`.
+
+Example:
+
+```js
+matic
+  .balanceOfERC20("0xABc578455...", "0x5E9c4ccB05...", {
+    from: "0xABc578455..."
+  })
+  .then(balance => {
+    console.log("balance", balance)
+  })
+```
+
+---
+<a name="balanceOfERC721"></a>
+
+
+#### matic.balanceOfERC721(userAddress, token, options)
+
+get balance of ERC721 `token` for `address`.
+
+- `token` must be valid token address
+- `userAddress` must be valid user address
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `parent` must be boolean value. For balance on Main chain, use `parent: true`
+
+This returns `balance`.
+
+Example:
+
+```js
+matic
+  .balanceOfERC721("0xABc578455...", "0x5E9c4ccB05...", {
+    from: "0xABc578455..."
+  })
+  .then(balance => {
+    console.log("balance", balance)
+  })
+```
+
+---
+<a name="tokenOfOwnerByIndexERC721"></a>
+
+
+#### matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
+
+get ERC721 tokenId at `index` for `token` and for `address`.
+
+- `token` must be valid token address
+- `userAddress` must be valid user address
+- `index` index of tokenId 
+
+
+This returns matic `tokenId`.
+
+Example:
+
+```js
+matic
+  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
+    from: "0xABc578455..."
+  })
+  .then(tokenID => {
+    console.log("Token ID", tokenID)
+  })
+```
 
 <a name="depositEthers"></a>
 
