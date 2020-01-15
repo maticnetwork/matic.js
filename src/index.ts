@@ -46,6 +46,30 @@ export default class Matic extends ContractsBase {
     this.web3Client.wallet = _wallet
   }
 
+  async balanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+
+    const balance = this.getERC20TokenContract(
+      token,
+      options.parent,
+    ).methods.balanceOf(userAddress).call()
+    return balance
+  }
+
+  async tokenOfOwnerByIndexERC721(userAddress: address, token: address, index: number, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+
+    const tokenID = this.getERC721TokenContract(
+      token,
+      options.parent,
+    ).methods.tokenOfOwnerByIndex(userAddress, index).call()
+    return tokenID
+  }
+
   async transferERC20Tokens(
     token: address,
     to: address,
