@@ -58,6 +58,18 @@ export default class Matic extends ContractsBase {
     return balance
   }
 
+  async balanceOfERC721(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+
+    const balance = this.getERC721TokenContract(
+      token,
+      options.parent,
+    ).methods.balanceOf(userAddress).call()
+    return balance
+  }
+
   async tokenOfOwnerByIndexERC721(userAddress: address, token: address, index: number, options?: SendOptions) {
     if (options && (!token || !userAddress)) {
       throw new Error('token address or user address is missing')
