@@ -375,6 +375,7 @@ Deposit given `amount` of `token` with user `user`.
 - `user` must be value account address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -424,6 +425,7 @@ Transfer given `amount` of `token` to `user`.
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -453,6 +455,7 @@ Transfer given `tokenId` of `token` to `user`.
 - `tokenId` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -480,6 +483,7 @@ Start withdraw process with given `amount` for `token`.
 - `token` must be valid ERC20 token address
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -503,6 +507,7 @@ Start withdraw process with given `tokenId` for `token`.
 - `token` must be valid ERC721 token address
 - `tokenId` must be token tokenId (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -546,6 +551,7 @@ Withdraw tokens on mainchain using `txId` from `startWithdraw` method after head
 
 - `txId` must be valid tx hash
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
