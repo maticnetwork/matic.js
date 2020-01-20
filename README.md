@@ -14,36 +14,21 @@ We will be improving this library to make all features available like Plasma Fas
 ---
 
 ```bash
-$ npm install --save web3 maticjs # or yarn add web3 maticjs
+$ npm install --save @maticnetwork/maticjs
 ```
-_Note: This library is dependent on [web3.js](https://github.com/ethereum/web3.js) library. Tested with web3@1.0.0-beta.34_
-
-
-#### Direct `<script>` Include
----
-
-Simply download `dist/matic.js` and include with a script tag. `Matic` will be registered as a global variable.
-
-##### CDN
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/maticjs/dist/matic.js"></script>
-```
-
-Matic is also available on [unpkg](https://unpkg.com/maticjs/dist/matic.js)
-
 
 ### Getting started
 
 ```js
 // Import Matic sdk
-import Matic from 'maticjs'
+import Matic from '@maticnetwork/maticjs'
 
 // Create sdk instance
 const matic = new Matic({
 
   // Set Matic provider - string or provider instance
   // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3.providers.WebsocketProvider('ws://localhost:8546')
   maticProvider: <web3-provider>,
 
   // Set Mainchain provider - string or provider instance
@@ -51,34 +36,25 @@ const matic = new Matic({
   parentProvider: <web3-provider>,
 
   // Set rootchain contract. See below for more information
-  rootChainAddress: <root-contract-address>,
+  rootChain: <root-contract-address>,
+
+  // Set registry contract. See below for more information
+  registry: <registry-contract-address>,
 
   // Set withdraw-manager Address. See below for more information
-  withdrawManagerAddress: <withdraw-manager-address>,
+  withdrawManager: <withdraw-manager-address>,
 
   // Set deposit-manager Address. See below for more information
-  depositManagerAddress: <deposit-manager-address>,
-
-  // Set matic network's WETH address. See below for more information
-  maticWethAddress: <matic-weth-address>,
-
-  // Syncer API URL
-  // Fetches tx/receipt proof data instead of fetching whole block on client side
-  syncerUrl: 'https://matic-syncer2.api.matic.network/api/v1', // (optional)
-
-  // Watcher API URL
-  // Fetches headerBlock info from mainchain & finds appropriate headerBlock for given blockNumber
-  watcherUrl: 'https://ropsten-watcher2.api.matic.network/api/v1', // (optional)
+  depositManager: <deposit-manager-address>,
 })
+
+// init matic
+
+matic.initialize()
 
 // Set wallet
 // Warning: Not-safe
-// matic.wallet = <private-key> // Use metamask provider or use WalletConnect provider instead.
-
-// get token address mapped with mainchain token address
-const tokenAddressOnMatic = await matic.getMappedTokenAddress(
-  tokenAddress // token address on mainchain
-)
+// matic.setWallet(<private-key>) // Use metamask provider or use WalletConnect provider instead.
 
 // get ERC20 token balance
 await matic.balanceOfERC20(
@@ -104,6 +80,7 @@ await matic.tokenOfOwnerByIndexERC721(
 
 // Deposit Ether into Matic chain
 await matic.depositEthers(
+  amount, // amount in wei for deposit
   options // transaction fields
 )
 
@@ -115,39 +92,22 @@ await matic.approveERC20TokensForDeposit(
 )
 
 // Deposit token into Matic chain. Remember to call `approveERC20TokensForDeposit` before
-await matic.depositERC20Tokens(
+await matic.depositERC20ForUser(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
   amount,  // Token amount for deposit (in wei)
   options // transaction fields
 )
 
-// Deposit ERC721 token into Matic chain.(older ERC721 or some newer contracts will not support this.
-// in that case, first call `approveERC721TokenForDeposit` and `depositERC721Tokens`)
+// Deposit ERC721 token into Matic chain.
 await matic.safeDepositERC721Tokens(
-  token,  // Token addres
-  tokenId,  // Token Id for deposit
-  options // transaction fields
-)
-
-// Approve ERC721 token for deposit
-await matic.approveERC721TokenForDeposit(
-  token,  // Token address,
-  tokenId,  // Token Id
-  options // transaction fields
-)
-
-
-// Deposit token into Matic chain. Remember to call `approveERC721TokenForDeposit` before
-await matic.depositERC721Tokens(
   token,  // Token address
-  user,   // User address (in most cases, this will be sender's address),
-  tokenId,  // Token Id
+  tokenId,  // TokenId for deposit
   options // transaction fields
 )
 
 // Transfer token on Matic
-await matic.transferTokens(
+await matic.transferERC20Tokens(
   token,  // Token address
   user,   // Recipient address
   amount,  // Token amount
@@ -158,14 +118,7 @@ await matic.transferTokens(
 await matic.transferERC721Tokens(
   token,  // Token address
   user,   // Recipient address
-  tokenId,  // Token Id
-  options // transaction fields
-)
-
-// Transfer Ether
-await matic.transferEthers(
-  user,   // Recipient address
-  amount,  // Token amount
+  tokenId,  // TokenId
   options // transaction fields
 )
 
@@ -177,9 +130,9 @@ await matic.startWithdraw(
 )
 
 // Initiate withdrawal of ERC721 from Matic and retrieve the Transaction id
-await matic.startERC721Withdraw(
+await matic.startWithdrawForNFT(
   token, // Token address
-  tokenId, // tokenId
+  tokenId, // TokenId for withdraw
   options // transaction fields
 )
 
@@ -190,11 +143,16 @@ await matic.withdraw(
   options // transaction fields
 )
 
-// Process exits after completion of challenge period
-await matic.processExits(
-  rootTokenAddress, // RootToken address
+await matic.withdrawNFT(
+  txId, // Transaction id generated from the 'startWithdraw' method
   options // transaction fields
 )
+
+await matic.processExits(
+  tokenAddress, // root `token` addres
+  options // transaction fields
+)
+
 ```
 
 ### How it works?
@@ -210,15 +168,15 @@ The flow for asset transfers on the Matic Network is as follows:
 
 **Matic Testnet**
 
-- RPC endpoint host: https://testnet2.matic.network
-- TEST childchain ERC20 token: 0xcc5de81d1af53dcb5d707b6b33a50f4ee46d983e
+- RPC endpoint host: https://testnetv3.matic.network
+- TEST childchain ERC20 token: 0x9a93c912F4eFf0254d178a18ACD980C1B05b57b0
 
 **Ropsten testnet addresses**
 
-- TEST mainchain ERC20 token: 0x6b0b0e265321e788af11b6f1235012ae7b5a6808
-- Root Contract: 0x60e2b19b9a87a3f37827f2c8c8306be718a5f9b4
-- DepositManager Contract: 0x4072fab2a132bf98207cbfcd2c341adb904a67e9
-- WithdrawManager Contract: 0x4ef2b60cdd4611fa0bc815792acc14de4c158d22
+- TEST mainchain ERC20 token: 0x28C8713DDe7F063Fdc4cA01aB2A8856e0F243Fec
+- Root Contract: 0x82a72315E16cE224f28E1F1fB97856d3bF83f010
+- DepositManager Contract: 0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989
+- WithdrawManager Contract: 0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4
 
 ### Faucet
 
@@ -227,28 +185,25 @@ Please write to info@matic.network to request TEST tokens for development purpos
 ### API
 
 - <a href="#initialize"><code>new Matic()</code></a>
-- <a href="#getMappedTokenAddress"><code>matic.<b>getMappedTokenAddress()</b></code></a>
 - <a href="#balanceOfERC20"><code>matic.<b>balanceOfERC20()</b></code></a>
 - <a href="#balanceOfERC721"><code>matic.<b>balanceOfERC721()</b></code></a>
 - <a href="#tokenOfOwnerByIndexERC721"><code>matic.<b>tokenOfOwnerByIndexERC721()</b></code></a>
-- <a href="#depositEthers"><code>matic.<b>depositEther()</b></code></a>
+- <a href="#depositEther"><code>matic.<b>depositEther()</b></code></a>
 - <a href="#approveERC20TokensForDeposit"><code>matic.<b>approveERC20TokensForDeposit()</b></code></a>
-- <a href="#depositERC20Tokens"><code>matic.<b>depositERC20Tokens()</b></code></a>
+- <a href="#depositERC20ForUser"><code>matic.<b>depositERC20ForUser()</b></code></a>
 - <a href="#safeDepositERC721Tokens"><code>matic.<b>safeDepositERC721Tokens()</b></code></a>
-- <a href="#approveERC721TokenForDeposit"><code>matic.<b>approveERC721TokenForDeposit()</b></code></a>
-- <a href="#depositERC721Tokens"><code>matic.<b>depositERC721Tokens()</b></code></a>
-- <a href="#depositEthers"><code>matic.<b>depositEthers()</b></code></a>
-- <a href="#transferTokens"><code>matic.<b>transferTokens()</b></code></a>
+- <a href="#transferERC20Tokens"><code>matic.<b>transferERC20Tokens()</b></code></a>
 - <a href="#transferERC721Tokens"><code>matic.<b>transferERC721Tokens()</b></code></a>
-- <a href="#transferEthers"><code>matic.<b>transferEthers()</b></code></a>
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
-- <a href="#startERC721Withdraw"><code>matic.<b>startERC721Withdraw()</b></code></a>
-- <a href="#getHeaderObject"><code>matic.<b>getHeaderObject()</b></code></a>
+- <a href="#startWithdrawForNFT"><code>matic.<b>startWithdrawForNFT()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
-- <a href="#processExits"><code>matic.<b>processExits()</b></code></a>
-- <a href="#getTx"><code>matic.<b>getTx()</b></code></a>
-- <a href="#getReceipt"><code>matic.<b>getReceipt()</b></code></a>
+- <a href="#withdrawNFT"><code>matic.<b>withdrawNFT()</b></code><a>
+- <a href="#processExits"><code>matic.<b>processExits()</b></code><a>
 
+##### **WithdrawManager**
+
+- <a href="#startExitForMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMintableBurntToken()</b></code></a>
+- <a href="#startExitForMetadataMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMetadataMintableBurntToken()</b></code></a>
 ---
 
 <a name="initialize"></a>
@@ -261,54 +216,36 @@ Creates Matic SDK instance with give options. It returns a MaticSDK object.
 import Matic from "maticjs"
 
 const matic = new Matic(options)
+matic.initialize()
+
 ```
 
 - `options` is simple Javascript `object` which can have following fields:
   - `maticProvider` can be `string` or `Web3.providers` instance. This provider must connect to Matic chain. Value can be anyone of following:
-    - `'https://testnet2.matic.network'`
+    - `'https://testnetv3.matic.network'`
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
   - `parentProvider` can be `string` or `Web3.providers` instance. This provider must connect to Ethereum chain (testnet or mainchain). Value can be anyone of following:
     - `'https://ropsten.infura.io'`
     - `new Web3.providers.HttpProvider('http://localhost:8545')`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
-  - `rootChainAddress` must be valid Ethereum contract address.
-  - `syncerUrl` must be valid API host. MaticSDK uses this value to fetch receipt/tx proofs instead of getting whole block to client side.
-  - `watcherUrl` must be valid API host. MaticSDK uses this value to fetch headerBlock info from mainchain and to find appropriate headerBlock for given blockNumber.
-  - `withdrawManagerAddress` must be valid Ethereum contract address.
-  - `depositManagerAddress` must be valid Ethereum contract address.
+  - `rootChain` must be valid Ethereum contract address.
+  - `registry` must be valid Ethereum contract address.
+  - `withdrawManager` must be valid Ethereum contract address.
+  - `depositManager` must be valid Ethereum contract address.
 ---
 
-<a name="getMappedTokenAddress"></a>
-
-#### matic.getMappedTokenAddress(tokenAddress)
-
-get matic token `address` mapped with mainchain `tokenAddress`.
-
-- `tokenAddress` must be valid token address
-
-This returns matic `address`.
-
-Example:
-
-```js
-matic
-  .getMappedTokenAddress("0x670568761764f53E6C10cd63b71024c31551c9EC")
-  .then(address => {
-    console.log("matic address", address)
-  })
-```
 
 ---
 <a name="balanceOfERC20"></a>
 
 
-#### matic.balanceOfERC20(address, token, options)
+#### matic.balanceOfERC20(userAddress, token, options)
 
 get balance of ERC20 `token` for `address`.
 
 - `token` must be valid token address
-- `address` must be valid user address
+- `userAddress` must be valid user address
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For balance on Main chain, use `parent: true`
 
@@ -330,12 +267,12 @@ matic
 <a name="balanceOfERC721"></a>
 
 
-#### matic.balanceOfERC721(address, token, options)
+#### matic.balanceOfERC721(userAddress, token, options)
 
 get balance of ERC721 `token` for `address`.
 
 - `token` must be valid token address
-- `address` must be valid user address
+- `userAddress` must be valid user address
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For balance on Main chain, use `parent: true`
 
@@ -357,12 +294,12 @@ matic
 <a name="tokenOfOwnerByIndexERC721"></a>
 
 
-#### matic.tokenOfOwnerByIndexERC721(address, token, index, options)
+#### matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
 
 get ERC721 tokenId at `index` for `token` and for `address`.
 
 - `token` must be valid token address
-- `address` must be valid user address
+- `userAddress` must be valid user address
 - `index` index of tokenId 
 
 
@@ -380,6 +317,26 @@ matic
   })
 ```
 
+<a name="depositEthers"></a>
+
+#### matic.depositEthers(amount, options)
+
+Deposit `options.value`
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit).
+  - `from` must be valid account address(required)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.depositEthers(amount, {
+  from: '0xABc578455...'
+})
+```
+
 ---
 <a name="approveERC20TokensForDeposit"></a>
 
@@ -394,13 +351,7 @@ Approves given `amount` of `token` to `rootChainContract`.
   - `gasPrice` same as Ethereum `sendTransaction`
   - `gasLimit` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
-  - `nonce` same as Ethereum `sendTransaction`
   - `value` contains ETH value. Same as Ethereum `sendTransaction`.
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
-  - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
-  - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
-  - `onError` must be `function`. This function will be called when sending transaction fails.
-
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
 Example:
@@ -410,16 +361,13 @@ matic
   .approveERC20TokensForDeposit("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
-  .on("onTransactionHash", txHash => {
-    console.log("New transaction", txHash)
-  })
 ```
 
 ---
 
-<a name="depositERC20Tokens"></a>
+<a name="depositERC20ForUser"></a>
 
-#### matic.depositERC20Tokens(token, user, amount, options)
+#### matic.depositERC20ForUser(token, user, amount, options)
 
 Deposit given `amount` of `token` with user `user`.
 
@@ -447,12 +395,11 @@ matic.depositToken('0x718Ca123...', user, '1000000000000000000', {
 
 #### matic.safeDepositERC721Tokens(token, tokenId, options)
 
-Deposit given `tokenId` of `token`.
+Deposit given `TokenID` of `token` with user `user`.
 
-- `token` must be valid ERC721 token address
-- `tokenId` must be tokenId
+- `token` must be valid ERC20 token address
+- `tokenId` must be valid token ID
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -460,102 +407,16 @@ Example:
 
 ```js
 
-matic.safeDepositERC721Tokens('0x718Ca123...', '21', {
+matic.safeDepositERC721Tokens('0x718Ca123...', '70000000000', {
   from: '0xABc578455...'
 })
 ```
 
 ---
 
-<a name="depositERC721Tokens"></a>
+<a name="transferERC20Tokens"></a>
 
-#### matic.approveERC721TokenForDeposit(token, tokenId, options)
-
-Approves given `amount` of `token` to `rootChainContract`.
-
-- `token` must be valid ERC721 token address
-- `tokenId` must be tokenId (string, not in Number)
-- `options` (optional) must be valid javascript object containing `from`, `gasPrice`, `gasLimit`, `nonce`, `value`, `onTransactionHash`, `onReceipt` or `onError`
-  - `from` must be valid account address(required)
-  - `gasPrice` same as Ethereum `sendTransaction`
-  - `gasLimit` same as Ethereum `sendTransaction`
-  - `nonce` same as Ethereum `sendTransaction`
-  - `nonce` same as Ethereum `sendTransaction`
-  - `value` contains ETH value. Same as Ethereum `sendTransaction`.
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
-  - `onTransactionHash` must be `function`. This function will be called when transaction will be broadcasted.
-  - `onReceipt` must be `function`. This function will be called when transaction will be included in block (when transaction gets confirmed)
-  - `onError` must be `function`. This function will be called when sending transaction fails.
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-matic
-  .approveERC721TokenForDeposit("0x718Ca123...", "21", {
-    from: "0xABc578455..."
-  })
-  .on("onTransactionHash", txHash => {
-    console.log("New transaction", txHash)
-  })
-```
-
----
-
-<a name="depositERC20Tokens"></a>
-
-#### matic.depositERC721Tokens(token, user, tokenId, options)
-
-Deposit given `tokenId` of `token` with user `user`.
-
-- `token` must be valid ERC721 token address
-- `user` must be value account address
-- `tokenId` must be valid tokenId
-- `options` see [more infomation here](#approveERC20TokensForDeposit)
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-const user = <your-address> or <any-account-address>
-
-matic.depositERC721Tokens('0x718Ca123...', user, tokenId, {
-  from: '0xABc578455...'
-})
-```
-
----
-
-<a name="depositEthers"></a>
-
-#### matic.depositEthers(options)
-
-Deposit `options.value`
-
-- `options` see [more infomation here](#approveERC20TokensForDeposit).
-  - `value` amount of ethers.
-  - `from` must be valid account address(required)
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-matic.depositEthers({
-  from: '0xABc578455...',
-  value: '1000000000000000000'
-})
-```
-
----
-
-<a name="transferTokens"></a>
-
-#### matic.transferTokens(token, user, amount, options)
+#### matic.transferERC20Tokens(token, user, amount, options)
 
 Transfer given `amount` of `token` to `user`.
 
@@ -587,11 +448,11 @@ matic.transferERC20Tokens('0x718Ca123...', user, '1000000000000000000', {
 
 #### matic.transferERC721Tokens(token, user, tokenId, options)
 
-Transfer ownership `tokenId` of `token` to `user`.
+Transfer given `tokenId` of `token` to `user`.
 
 - `token` must be valid ERC721 token address
 - `user` must be value account address
-- `tokenId` tokenId
+- `tokenId` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `parent` must be boolean value. For token transfer on Main chain, use `parent: true`
   - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
@@ -603,37 +464,7 @@ Example:
 ```js
 const user = <your-address> or <any-account-address>
 
-matic.transferERC721Tokens('0x718Ca123...', user, tokenId, {
-  from: '0xABc578455...',
-
-  // For token transfer on Main network
-  // parent: true
-})
-```
-
----
-
-<a name="transferEthers"></a>
-
-#### matic.transferEthers(user, amount, options)
-
-Transfer given `amount` of ethers to `user`.
-
-- `user` must be value account address
-- `amount` must be ethers amount in wei (string, not in Number)
-- `options` see [more infomation here](#approveERC20TokensForDeposit)
-  - `parent` must be boolean value. For ether transfer on Main chain, use `parent: true`
-  - `isCustomEth` must be boolean value. For custom ether transfer on Matic Chain, use `isCustomEth: true`
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
-
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
-
-Example:
-
-```js
-const user = <your-address> or <any-account-address>
-
-matic.transferEthers(user, '1000000000000000000', {
+matic.transferERC721Tokens('0x718Ca123...', user, '100006500000000000000', {
   from: '0xABc578455...',
 
   // For token transfer on Main network
@@ -663,23 +494,18 @@ matic
   .startWithdraw("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
-  .on("onTransactionHash", txHash => {
-    console.log("Started withdraw process with txId", txHash)
-  })
 ```
 
 ---
 
-<a name="getHeaderObject"></a>
+<a name="startWithdrawForNFT"></a>
 
-
-
-#### matic.startERC721Withdraw(token, tokenId, options)
+#### matic.startWithdrawForNFT(token, tokenId, options)
 
 Start withdraw process with given `tokenId` for `token`.
 
 - `token` must be valid ERC721 token address
-- `tokenId` must be token tokenId in wei (string, not in Number)
+- `tokenId` must be token tokenId (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
@@ -689,35 +515,9 @@ Example:
 
 ```js
 matic
-  .startERC721Withdraw("0x718Ca123...", "21", {
+  .startWithdrawForNFT("0x718Ca123...", "1000000000000000000", {
     from: "0xABc578455..."
   })
-  .on("onTransactionHash", txHash => {
-    console.log("Started withdraw process with txId", txHash)
-  })
-```
-
----
-
-<a name="getHeaderObject"></a>
-
-#### matic.getHeaderObject(blockNumber)
-
-Fetch header/checkpoint corresponding to `blockNumber`
-
-- `blockNumber` must be valid Matic's sidechain block number
-
-This returns `Promise` object, which will be fulfilled when header/checkpoint is found corresponding to `blockNumber`.
-
-Example:
-
-```js
-matic.getHeaderObject(673874).then(header => {
-  // header.start
-  // header.end
-  // header.proposer
-  // header.number
-})
 ```
 
 ---
@@ -730,7 +530,6 @@ Withdraw tokens on mainchain using `txId` from `startWithdraw` method after head
 
 - `txId` must be valid tx hash
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
-  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
@@ -738,6 +537,28 @@ Example:
 
 ```js
 matic.withdraw("0xabcd...789", {
+  from: "0xABc578455..."
+})
+```
+
+---
+
+<a name="withdrawNFT"></a>
+
+#### matic.withdrawNFT(txId, options)
+
+Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
+
+- `txId` must be valid tx hash
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.withdrawNFT("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```
@@ -763,52 +584,47 @@ matic.processExits("0xabcd...789", {
   from: "0xABc578455..."
 })
 ```
-
 ---
 
-<a name="getTx"></a>
+#### **WithdrawManager**
 
-#### matic.getTx(txId)
+<a name="startExitForMintableBurntToken"></a>
 
-Get transaction object using `txId` from Matic chain.
-
-- `txId` must be valid tx id
-
-This returns `Promise` object.
-
-Example:
-
-```js
-matic
-  .getTx("0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b")
-  .then(txObject => {
-    console.log(txObject)
-  })
+#### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
 ```
+/**
+  * Start an exit for a token that was minted and burnt on the side chain
+  * Wrapper over contract call: MintableERC721Predicate.startExitForMintableBurntToken
+  * @param burnTxHash Hash of the burn transaction on Matic
+  * @param predicate address of MintableERC721Predicate
+  */
+```
+See [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)
 
+```
+const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
+await this.maticClient.withdrawManager.startExitForMintableBurntToken(burn.transactionHash, predicate.address)
+```
 ---
 
-<a name="getReceipt"></a>
+<a name="startExitForMetadataMintableBurntToken"></a>
 
-#### matic.getReceipt(txId)
-
-Get receipt object using `txId` from Matic chain.
-
-- `txId` must be valid tx id
-
-This returns `Promise` object.
-
-Example:
-
-```js
-matic
-  .getReceipt(
-    "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b"
-  )
-  .then(obj => {
-    console.log(obj)
-  })
+#### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
 ```
+/**
+  * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
+  * Wrapper over contract call: MintableERC721Predicate.startExitForMetadataMintableBurntToken
+  * @param burnTxHash Hash of the burn transaction on Matic
+  * @param predicate address of MintableERC721Predicate
+  */
+```
+See [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L66)
+
+```
+const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
+await this.maticClient.withdrawManager.startExitForMetadataMintableBurntToken(burn.transactionHash, predicate.address)
+```
+---
 
 ### Support
 

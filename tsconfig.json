@@ -1,6 +1,21 @@
 {
-    "compilerOptions": {
-        "lib": ["es2015"],
-        "target": "es5"
-    }
+  "compileOnSave": true,
+  "compilerOptions": {
+    "lib": ["es2015", "dom"],
+    "target": "es5",
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "declaration": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/index.js"
+  ]
 }
