@@ -1,6 +1,5 @@
 import Web3Client from './Web3Client'
 import BN from 'bn.js'
-import assert from 'assert'
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
 import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
 
