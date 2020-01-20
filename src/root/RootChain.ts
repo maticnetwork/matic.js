@@ -29,9 +29,9 @@ export default class RootChain extends ContractsBase {
     // binary search on all the checkpoints to find the checkpoint that contains the childBlockNumber
     let ans
     while(start.lte(end)) {
-      if (start.eq(end)) { ans = start; break; }
+      if (start.eq(end)) { ans = start; break }
       let mid = start.add(end).div(new BN(2))
-      console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() })
+      console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() }) // eslint-disable-line
       const headerBlock = await this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new BN(10000)).toString()))
       // console.log('headerBlock', headerBlock)
       const headerStart = new BN(headerBlock.start)

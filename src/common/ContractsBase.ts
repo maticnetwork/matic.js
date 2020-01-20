@@ -3,7 +3,7 @@ import BN from 'bn.js'
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
 import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
 
-import { address, SendOptions } from '../types/Common'
+import { address } from '../types/Common'
 
 export default class ContractsBase {
   web3Client: Web3Client

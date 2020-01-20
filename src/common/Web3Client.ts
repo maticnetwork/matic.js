@@ -73,7 +73,7 @@ export default class Web3Client {
   async sendOnMatic(method, options?) {
     const _options = options || this.maticDefaultOptions
     if (!_options.from) return new Error('from is not specified')
-    console.log('sending tx on matic with', _options)
+    console.log('sending tx on matic with', _options) // eslint-disable-line
     return this.wrapWeb3Promise(method.send(_options), _options)
   }
 

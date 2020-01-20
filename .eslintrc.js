@@ -1,6 +1,10 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
+  plugins: ["@typescript-eslint"],
   extends: 'eslint:recommended',
+  parserOptions: {
+    "sourceType": "module",
+  },
   globals: {
     Promise: true,
     Buffer: true,
@@ -21,4 +25,12 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     quotes: ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }],
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': [2, { args: 'none' }]
+      }
+    }
+  ]
 }

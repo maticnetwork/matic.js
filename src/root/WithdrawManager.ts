@@ -1,6 +1,5 @@
 import assert from 'assert'
 import ethUtils from 'ethereumjs-util'
-import bluebird from 'bluebird'
 import Contract from 'web3/eth/contract'
 
 import BN from 'bn.js'
@@ -19,7 +18,7 @@ import Registry from './Registry'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
-  debug: require('debug')('maticjs:debug:WithdrawManager')
+  debug: require('debug')('maticjs:debug:WithdrawManager'),
 }
 
 export default class WithdrawManager extends ContractsBase {
@@ -110,9 +109,7 @@ export default class WithdrawManager extends ContractsBase {
   async processExits(token: address, options?: SendOptions) {
     options = options || {}
     if (!options || !options.gas || options.gas < 2000000) {
-      console.log(
-        'processExits can be gas expensive, sending in 2000000 gas but even this might not be enough',
-      )
+      console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough') // eslint-disable-line
       options.gas = 2000000
     }
     const txObject = this.withdrawManager.methods.processExits(token)
