@@ -9,6 +9,7 @@ module.exports = {
   SYNCER_URL: 'https://testnetv3-syncer.api.matic.network/api/v1', // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma. 
   WATCHER_URL: 'https://testnetv3-watcher.api.matic.network/api/v1', // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract. 
   ROOTWETH_ADDRESS: '0x7BdDd37621186f1382FD59e1cCAE0316F979a866',  // This is a wrapped ETH ERC20 contract address so that we can support ETH deposits to the sidechain 
+  CHILDCHAIN_ADDRESS: '0xa2EF03edfA084ac9e5Bf110e409Ed5483BAe4101', // This is child chain contract address
   MATICWETH_ADDRESS: '0x8567184E6F9b1B77f24AfF6168453419AD22f90e', // The corresponding wrapped ETH ERC20 contract address on the Matic chain 
   PRIVATE_KEY: '<paste your private key here>', // A sample private key prefix with `0x`
   FROM_ADDRESS: '<paste address belonging to private key here>',// Your address 

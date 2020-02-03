@@ -1,12 +1,15 @@
 import BN from 'bn.js'
 import Contract from 'web3/eth/contract'
 import DepositManagerArtifact from 'matic-protocol/contracts-core/artifacts/DepositManager.json'
+import ChildChainArtifact from 'matic-protocol/contracts-core/artifacts/ChildChain.json'
 
 import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 
 export default class DepositManager extends ContractsBase {
+  static NEW_DEPOSIT_EVENT_SIG = '0x1dadc8d0683c6f9824e885935c1bec6f76816730dcec148dda8cf25a7b9f797b'.toLowerCase()
+
   public depositManagerContract: Contract
 
   constructor(depositManager: address, web3Client: Web3Client) {
@@ -15,6 +18,14 @@ export default class DepositManager extends ContractsBase {
       DepositManagerArtifact.abi,
       depositManager,
     )
+  }
+
+  async depositDataByID(depositId: number, childChainAddress: address) {
+    const childChainContract = new this.web3Client.web3.eth.Contract(
+      ChildChainArtifact.abi,
+      childChainAddress
+    )
+    return childChainContract.methods.deposits(this.encode(depositId)).call()
   }
 
   async approveERC20(

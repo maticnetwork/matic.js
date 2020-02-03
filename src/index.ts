@@ -14,6 +14,7 @@ export default class Matic extends ContractsBase {
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
+  public childChainAddress: address
 
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
@@ -36,6 +37,7 @@ export default class Matic extends ContractsBase {
       this.web3Client,
       this.registry,
     )
+    this.childChainAddress = options.childChain
   }
 
   initialize() {
@@ -154,6 +156,24 @@ export default class Matic extends ContractsBase {
       throw new Error('options.from or amount is missing')
     }
     return this.depositManager.depositEther(amount, options)
+  }
+
+  async depositDataByHash(txHash: string) {
+    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
+    if(!depositReceipt) {
+      return 'Transaction hash is not Found'
+    }
+    const newDepositEvent = depositReceipt.logs.find(
+      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG,
+    )
+
+    const data = newDepositEvent.data
+    const depositId = parseInt(data.substring(data.length - 64), 16)
+    const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress)
+    if (!depositExists) {
+      return 'Deposit is not processed on Matic chain'
+    }
+    return depositReceipt
   }
 
   approveERC20TokensForDeposit(
