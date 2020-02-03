@@ -21,23 +21,14 @@ export default class Matic extends ContractsBase {
       options.parentProvider,
       options.maticProvider,
       options.parentDefaultOptions || {},
-      options.maticDefaultOptions || {},
+      options.maticDefaultOptions || {}
     )
     super(web3Client)
     this.web3Client = web3Client
     this.registry = new Registry(options.registry, this.web3Client)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(
-      options.depositManager,
-      this.web3Client,
-    )
-    this.withdrawManager = new WithdrawManager(
-      options.withdrawManager,
-      this.rootChain,
-      this.web3Client,
-      this.registry,
-    )
-    this.childChainAddress = options.childChain
+    this.depositManager = new DepositManager(options.depositManager, this.web3Client)
+    this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
   }
 
   initialize() {
@@ -53,10 +44,9 @@ export default class Matic extends ContractsBase {
       throw new Error('token address or user address is missing')
     }
 
-    const balance = this.getERC20TokenContract(
-      token,
-      options.parent,
-    ).methods.balanceOf(userAddress).call()
+    const balance = this.getERC20TokenContract(token, options.parent)
+      .methods.balanceOf(userAddress)
+      .call()
     return balance
   }
 
@@ -65,10 +55,9 @@ export default class Matic extends ContractsBase {
       throw new Error('token address or user address is missing')
     }
 
-    const balance = this.getERC721TokenContract(
-      token,
-      options.parent,
-    ).methods.balanceOf(userAddress).call()
+    const balance = this.getERC721TokenContract(token, options.parent)
+      .methods.balanceOf(userAddress)
+      .call()
     return balance
   }
 
@@ -77,34 +66,23 @@ export default class Matic extends ContractsBase {
       throw new Error('token address or user address is missing')
     }
 
-    const tokenID = this.getERC721TokenContract(
-      token,
-      options.parent,
-    ).methods.tokenOfOwnerByIndex(userAddress, index).call()
+    const tokenID = this.getERC721TokenContract(token, options.parent)
+      .methods.tokenOfOwnerByIndex(userAddress, index)
+      .call()
     return tokenID
   }
 
-  async transferERC20Tokens(
-    token: address,
-    to: address,
-    amount: BN | string,
-    options?: SendOptions,
-  ) {
+  async transferERC20Tokens(token: address, to: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token || !to)) {
       throw new Error('options.from, to, token or amount is missing')
     }
 
-    const txObject = this.getERC20TokenContract(
-      token,
-      options.parent,
-    ).methods.transfer(to, this.encode(amount))
+    const txObject = this.getERC20TokenContract(token, options.parent).methods.transfer(to, this.encode(amount))
 
     const _options = await this._fillOptions(
       options,
       txObject,
-      options.parent
-        ? this.web3Client.getParentWeb3()
-        : this.web3Client.getMaticWeb3(),
+      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
     )
 
     if (options.encodeAbi) {
@@ -116,27 +94,17 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async transferERC721Tokens(
-    token: address,
-    to: address,
-    tokenId: string,
-    options?: SendOptions,
-  ) {
+  async transferERC721Tokens(token: address, to: address, tokenId: string, options?: SendOptions) {
     if (options && (!options.from || !tokenId || !token || !to)) {
       throw new Error('options.from, to, token or tokenId is missing')
     }
 
-    const txObject = this.getERC721TokenContract(
-      token,
-      options.parent,
-    ).methods.transferFrom(options.from, to, tokenId)
+    const txObject = this.getERC721TokenContract(token, options.parent).methods.transferFrom(options.from, to, tokenId)
 
     const _options = await this._fillOptions(
       options,
       txObject,
-      options.parent
-        ? this.web3Client.getParentWeb3()
-        : this.web3Client.getMaticWeb3(),
+      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
     )
 
     if (options.encodeAbi) {
@@ -148,23 +116,22 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  depositEther(
-    amount: BN | string,
-    options?: SendOptions,
-  ) {
-    if (options && (!options.from || !amount )) {
+  depositEther(amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount)) {
       throw new Error('options.from or amount is missing')
     }
     return this.depositManager.depositEther(amount, options)
   }
 
   async depositDataByHash(txHash: string) {
+    this.childChainAddress = await this.registry.registry.methods.getChildChainAndStateSender().call()
+
     const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
-    if(!depositReceipt) {
+    if (!depositReceipt) {
       return 'Transaction hash is not Found'
     }
     const newDepositEvent = depositReceipt.logs.find(
-      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG,
+      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
     )
 
     const data = newDepositEvent.data
@@ -176,11 +143,7 @@ export default class Matic extends ContractsBase {
     return depositReceipt
   }
 
-  approveERC20TokensForDeposit(
-    token: address,
-    amount: BN | string,
-    options?: SendOptions,
-  ) {
+  approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('options.from, token or amount is missing')
     }
@@ -188,12 +151,7 @@ export default class Matic extends ContractsBase {
     return this.depositManager.approveERC20(token, amount, options)
   }
 
-  depositERC20ForUser(
-    token: address,
-    user: address,
-    amount: BN | string,
-    options?: SendOptions,
-  ) {
+  depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('options.from, token or amount is missing')
     }
@@ -204,16 +162,13 @@ export default class Matic extends ContractsBase {
     if (options && (!options.from || !tokenId || !token)) {
       throw new Error('options.from, token or tokenId is missing')
     }
-    const txObject = this.getERC721TokenContract(
-      token,
-      true,
-    ).methods.safeTransferFrom(options.from, this.depositManager.getAddress(), tokenId)
-
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getParentWeb3()
+    const txObject = this.getERC721TokenContract(token, true).methods.safeTransferFrom(
+      options.from,
+      this.depositManager.getAddress(),
+      tokenId
     )
+
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -259,9 +214,8 @@ export default class Matic extends ContractsBase {
   }
 
   private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(
-      this.web3Client.web3.utils.toChecksumAddress(token))) {
-        throw new Error(`${token} is not a valid token address`)
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(token))) {
+      throw new Error(`${token} is not a valid token address`)
     }
     if (!amountOrTokenId) {
       // ${amountOrTokenId} will stringify it while printing which might be a problem

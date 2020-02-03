@@ -70,7 +70,6 @@ var Matic = /** @class */ (function (_super) {
         _this.rootChain = new RootChain_1.default(options.rootChain, _this.web3Client);
         _this.depositManager = new DepositManager_1.default(options.depositManager, _this.web3Client);
         _this.withdrawManager = new WithdrawManager_1.default(options.withdrawManager, _this.rootChain, _this.web3Client, _this.registry);
-        _this.childChainAddress = options.childChain;
         return _this;
     }
     Matic.prototype.initialize = function () {
@@ -173,12 +172,17 @@ var Matic = /** @class */ (function (_super) {
     };
     Matic.prototype.depositDataByHash = function (txHash) {
         return __awaiter(this, void 0, void 0, function () {
-            var depositReceipt, newDepositEvent, data, depositId, depositExists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)];
+            var _a, depositReceipt, newDepositEvent, data, depositId, depositExists;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, this.registry.registry.methods.getChildChainAndStateSender().call()];
                     case 1:
-                        depositReceipt = _a.sent();
+                        _a.childChainAddress = _b.sent();
+                        return [4 /*yield*/, this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)];
+                    case 2:
+                        depositReceipt = _b.sent();
                         if (!depositReceipt) {
                             return [2 /*return*/, 'Transaction hash is not Found'];
                         }
@@ -186,8 +190,8 @@ var Matic = /** @class */ (function (_super) {
                         data = newDepositEvent.data;
                         depositId = parseInt(data.substring(data.length - 64), 16);
                         return [4 /*yield*/, this.depositManager.depositDataByID(depositId, this.childChainAddress)];
-                    case 2:
-                        depositExists = _a.sent();
+                    case 3:
+                        depositExists = _b.sent();
                         if (!depositExists) {
                             return [2 /*return*/, 'Deposit is not processed on Matic chain'];
                         }
