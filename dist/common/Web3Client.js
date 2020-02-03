@@ -121,7 +121,7 @@ var Web3Client = /** @class */ (function () {
                 _options = options || this.maticDefaultOptions;
                 if (!_options.from)
                     return [2 /*return*/, new Error('from is not specified')];
-                console.log('sending tx on matic with', _options);
+                console.log('sending tx on matic with', _options); // eslint-disable-line
                 return [2 /*return*/, this.wrapWeb3Promise(method.send(_options), _options)];
             });
         });

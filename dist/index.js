@@ -70,6 +70,7 @@ var Matic = /** @class */ (function (_super) {
         _this.rootChain = new RootChain_1.default(options.rootChain, _this.web3Client);
         _this.depositManager = new DepositManager_1.default(options.depositManager, _this.web3Client);
         _this.withdrawManager = new WithdrawManager_1.default(options.withdrawManager, _this.rootChain, _this.web3Client, _this.registry);
+        _this.childChainAddress = options.childChain;
         return _this;
     }
     Matic.prototype.initialize = function () {
@@ -169,6 +170,31 @@ var Matic = /** @class */ (function (_super) {
             throw new Error('options.from or amount is missing');
         }
         return this.depositManager.depositEther(amount, options);
+    };
+    Matic.prototype.depositDataByHash = function (txHash) {
+        return __awaiter(this, void 0, void 0, function () {
+            var depositReceipt, newDepositEvent, data, depositId, depositExists;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)];
+                    case 1:
+                        depositReceipt = _a.sent();
+                        if (!depositReceipt) {
+                            return [2 /*return*/, 'Transaction hash is not Found'];
+                        }
+                        newDepositEvent = depositReceipt.logs.find(function (l) { return l.topics[0].toLowerCase() === DepositManager_1.default.NEW_DEPOSIT_EVENT_SIG; });
+                        data = newDepositEvent.data;
+                        depositId = parseInt(data.substring(data.length - 64), 16);
+                        return [4 /*yield*/, this.depositManager.depositDataByID(depositId, this.childChainAddress)];
+                    case 2:
+                        depositExists = _a.sent();
+                        if (!depositExists) {
+                            return [2 /*return*/, 'Deposit is not processed on Matic chain'];
+                        }
+                        return [2 /*return*/, depositReceipt];
+                }
+            });
+        });
     };
     Matic.prototype.approveERC20TokensForDeposit = function (token, amount, options) {
         if (options && (!options.from || !amount || !token)) {

@@ -4,8 +4,10 @@ import ContractsBase from '../common/ContractsBase';
 import { address, SendOptions } from '../types/Common';
 import Web3Client from '../common/Web3Client';
 export default class DepositManager extends ContractsBase {
+    static NEW_DEPOSIT_EVENT_SIG: string;
     depositManagerContract: Contract;
     constructor(depositManager: address, web3Client: Web3Client);
+    depositDataByID(depositId: number, childChainAddress: address): Promise<any>;
     approveERC20(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     depositERC20(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     depositERC721(token: address, tokenId: string, options?: SendOptions): Promise<any>;

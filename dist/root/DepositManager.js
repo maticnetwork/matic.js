@@ -53,6 +53,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var DepositManager_json_1 = __importDefault(require("matic-protocol/contracts-core/artifacts/DepositManager.json"));
+var ChildChain_json_1 = __importDefault(require("matic-protocol/contracts-core/artifacts/ChildChain.json"));
 var ContractsBase_1 = __importDefault(require("../common/ContractsBase"));
 var DepositManager = /** @class */ (function (_super) {
     __extends(DepositManager, _super);
@@ -61,6 +62,15 @@ var DepositManager = /** @class */ (function (_super) {
         _this.depositManagerContract = new _this.web3Client.parentWeb3.eth.Contract(DepositManager_json_1.default.abi, depositManager);
         return _this;
     }
+    DepositManager.prototype.depositDataByID = function (depositId, childChainAddress) {
+        return __awaiter(this, void 0, void 0, function () {
+            var childChainContract;
+            return __generator(this, function (_a) {
+                childChainContract = new this.web3Client.web3.eth.Contract(ChildChain_json_1.default.abi, childChainAddress);
+                return [2 /*return*/, childChainContract.methods.deposits(this.encode(depositId)).call()];
+            });
+        });
+    };
     DepositManager.prototype.approveERC20 = function (token, amount, options) {
         return __awaiter(this, void 0, void 0, function () {
             var txObject, _options;
@@ -154,6 +164,7 @@ var DepositManager = /** @class */ (function (_super) {
     DepositManager.prototype.getAddress = function () {
         return this.depositManagerContract.options.address;
     };
+    DepositManager.NEW_DEPOSIT_EVENT_SIG = '0x1dadc8d0683c6f9824e885935c1bec6f76816730dcec148dda8cf25a7b9f797b'.toLowerCase();
     return DepositManager;
 }(ContractsBase_1.default));
 exports.default = DepositManager;

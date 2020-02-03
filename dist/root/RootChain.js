@@ -85,7 +85,7 @@ var RootChain = /** @class */ (function (_super) {
                             return [3 /*break*/, 4];
                         }
                         mid = start.add(end).div(new bn_js_1.default(2));
-                        console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() });
+                        console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() }); // eslint-disable-line
                         return [4 /*yield*/, this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new bn_js_1.default(10000)).toString()))
                             // console.log('headerBlock', headerBlock)
                         ];
