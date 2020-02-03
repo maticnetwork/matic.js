@@ -22,11 +22,12 @@ const matic = new Matic({
 async function execute() {
   await matic.initialize()
   matic.setWallet(config.PRIVATE_KEY)
-  // return matic.depositDataByHash('0x8cff1ef2b198273fe7f9fb41918cd7e3e8d04c58650614af39b3086e1de1a7e6')
-  return matic.depositManager.depositDataByID(101230019, '0xa2EF03edfA084ac9e5Bf110e409Ed5483BAe4101')
+  return matic.depositDataByHash('0x8cff1ef2b198273fe7f9fb41918cd7e3e8d04c58650614af39b3086e1de1a7e6')
+  // return matic.depositManager.depositDataByID(101230019, '0xa2EF03edfA084ac9e5Bf110e409Ed5483BAe4101')
 }
 
-async function executeRaw() { // eslint-disable-line
+async function executeRaw() {
+  // eslint-disable-line
   await matic.initialize()
   let txParams = await matic.approveERC20TokensForDeposit(token, amount, { from, encodeAbi: true })
   let serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)

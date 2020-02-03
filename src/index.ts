@@ -135,8 +135,8 @@ export default class Matic extends ContractsBase {
     )
 
     const data = newDepositEvent.data
-    const depositId = parseInt(data.substring(data.length - 64), 16)
-    const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress)
+    const depositId = new BN(data.substring(data.length - 64), 16)
+    const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress[0])
     if (!depositExists) {
       throw new Error('Deposit is not processed on Matic chain')
     }

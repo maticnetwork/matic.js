@@ -52,6 +52,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var bn_js_1 = __importDefault(require("bn.js"));
 var DepositManager_1 = __importDefault(require("./root/DepositManager"));
 var RootChain_1 = __importDefault(require("./root/RootChain"));
 var Registry_1 = __importDefault(require("./root/Registry"));
@@ -85,7 +86,9 @@ var Matic = /** @class */ (function (_super) {
                 if (options && (!token || !userAddress)) {
                     throw new Error('token address or user address is missing');
                 }
-                balance = this.getERC20TokenContract(token, options.parent).methods.balanceOf(userAddress).call();
+                balance = this.getERC20TokenContract(token, options.parent)
+                    .methods.balanceOf(userAddress)
+                    .call();
                 return [2 /*return*/, balance];
             });
         });
@@ -97,7 +100,9 @@ var Matic = /** @class */ (function (_super) {
                 if (options && (!token || !userAddress)) {
                     throw new Error('token address or user address is missing');
                 }
-                balance = this.getERC721TokenContract(token, options.parent).methods.balanceOf(userAddress).call();
+                balance = this.getERC721TokenContract(token, options.parent)
+                    .methods.balanceOf(userAddress)
+                    .call();
                 return [2 /*return*/, balance];
             });
         });
@@ -109,7 +114,9 @@ var Matic = /** @class */ (function (_super) {
                 if (options && (!token || !userAddress)) {
                     throw new Error('token address or user address is missing');
                 }
-                tokenID = this.getERC721TokenContract(token, options.parent).methods.tokenOfOwnerByIndex(userAddress, index).call();
+                tokenID = this.getERC721TokenContract(token, options.parent)
+                    .methods.tokenOfOwnerByIndex(userAddress, index)
+                    .call();
                 return [2 /*return*/, tokenID];
             });
         });
@@ -124,9 +131,7 @@ var Matic = /** @class */ (function (_super) {
                             throw new Error('options.from, to, token or amount is missing');
                         }
                         txObject = this.getERC20TokenContract(token, options.parent).methods.transfer(to, this.encode(amount));
-                        return [4 /*yield*/, this._fillOptions(options, txObject, options.parent
-                                ? this.web3Client.getParentWeb3()
-                                : this.web3Client.getMaticWeb3())];
+                        return [4 /*yield*/, this._fillOptions(options, txObject, options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3())];
                     case 1:
                         _options = _a.sent();
                         if (options.encodeAbi) {
@@ -149,9 +154,7 @@ var Matic = /** @class */ (function (_super) {
                             throw new Error('options.from, to, token or tokenId is missing');
                         }
                         txObject = this.getERC721TokenContract(token, options.parent).methods.transferFrom(options.from, to, tokenId);
-                        return [4 /*yield*/, this._fillOptions(options, txObject, options.parent
-                                ? this.web3Client.getParentWeb3()
-                                : this.web3Client.getMaticWeb3())];
+                        return [4 /*yield*/, this._fillOptions(options, txObject, options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3())];
                     case 1:
                         _options = _a.sent();
                         if (options.encodeAbi) {
@@ -184,16 +187,16 @@ var Matic = /** @class */ (function (_super) {
                     case 2:
                         depositReceipt = _b.sent();
                         if (!depositReceipt) {
-                            return [2 /*return*/, 'Transaction hash is not Found'];
+                            throw new Error('Transaction hash is not Found');
                         }
                         newDepositEvent = depositReceipt.logs.find(function (l) { return l.topics[0].toLowerCase() === DepositManager_1.default.NEW_DEPOSIT_EVENT_SIG; });
                         data = newDepositEvent.data;
-                        depositId = parseInt(data.substring(data.length - 64), 16);
-                        return [4 /*yield*/, this.depositManager.depositDataByID(depositId, this.childChainAddress)];
+                        depositId = new bn_js_1.default(data.substring(data.length - 64), 16);
+                        return [4 /*yield*/, this.depositManager.depositDataByID(depositId, this.childChainAddress[0])];
                     case 3:
                         depositExists = _b.sent();
                         if (!depositExists) {
-                            return [2 /*return*/, 'Deposit is not processed on Matic chain'];
+                            throw new Error('Deposit is not processed on Matic chain');
                         }
                         return [2 /*return*/, depositReceipt];
                 }
