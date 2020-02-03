@@ -22,7 +22,7 @@ export default class Matic extends ContractsBase {
     transferERC20Tokens(token: address, to: address, amount: BN | string, options?: SendOptions): Promise<any>;
     transferERC721Tokens(token: address, to: address, tokenId: string, options?: SendOptions): Promise<any>;
     depositEther(amount: BN | string, options?: SendOptions): Promise<any>;
-    depositDataByHash(txHash: string): Promise<import("web3/types").TransactionReceipt | "Transaction hash is not Found" | "Deposit is not processed on Matic chain">;
+    depositDataByHash(txHash: string): Promise<import("web3/types").TransactionReceipt>;
     approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions): Promise<any>;
     depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions): Promise<any>;
     safeDepositERC721Tokens(token: address, tokenId: BN, options?: SendOptions): Promise<any>;

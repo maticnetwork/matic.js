@@ -128,7 +128,7 @@ export default class Matic extends ContractsBase {
 
     const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
     if (!depositReceipt) {
-      return 'Transaction hash is not Found'
+      throw new Error('Transaction hash is not Found')
     }
     const newDepositEvent = depositReceipt.logs.find(
       l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
@@ -138,7 +138,7 @@ export default class Matic extends ContractsBase {
     const depositId = parseInt(data.substring(data.length - 64), 16)
     const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress)
     if (!depositExists) {
-      return 'Deposit is not processed on Matic chain'
+      throw new Error('Deposit is not processed on Matic chain')
     }
     return depositReceipt
   }
