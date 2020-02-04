@@ -1,6 +1,6 @@
 node_modules
 lib
-dist/
+dist
 .DS_Store
 *.log
 dump.rdb
