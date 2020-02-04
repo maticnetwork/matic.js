@@ -122,11 +122,11 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositEther(amount, options)
   }
 
-  depositDataByHash(txHash: string) {
+  depositStatusFromTxHash(txHash: string): Promise<{ receipt: any; deposits: any[] }> {
     if (!txHash) {
       throw new Error('txHash is missing')
     }
-    return this.depositManager.depositDataByHash(txHash)
+    return this.depositManager.depositStatusFromTxHash(txHash)
   }
 
   approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
