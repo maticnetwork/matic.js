@@ -20,7 +20,7 @@ export default class DepositManager extends ContractsBase {
     )
   }
 
-  async depositDataByID(depositId: BN, childChainAddress: address) {
+  async isDepositExistById(depositId: BN, childChainAddress: address) {
     const childChainContract = new this.web3Client.web3.eth.Contract(ChildChainArtifact.abi, childChainAddress)
     return childChainContract.methods.deposits(this.encode(depositId)).call()
   }
