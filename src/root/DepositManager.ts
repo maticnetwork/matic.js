@@ -46,11 +46,15 @@ export default class DepositManager extends ContractsBase {
         const depositId = '0x' + data.substring(data.length - 64)
         deposits.push({
           depositId,
-          isProcessed: await this.childChainContract.methods.deposits(depositId).call(),
+          isProcessed: await this.isDepositProcessed(depositId),
         })
       })
     }
     return { receipt: depositReceipt, deposits }
+  }
+
+  isDepositProcessed(depositId) {
+    return this.childChainContract.methods.deposits(depositId).call()
   }
 
   async approveERC20(token: address, amount: BN | string, options?: SendOptions) {
