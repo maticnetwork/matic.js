@@ -6,23 +6,56 @@ import ChildChainArtifact from 'matic-protocol/contracts-core/artifacts/ChildCha
 import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
+import Registry from './Registry'
 
 export default class DepositManager extends ContractsBase {
   static NEW_DEPOSIT_EVENT_SIG = '0x1dadc8d0683c6f9824e885935c1bec6f76816730dcec148dda8cf25a7b9f797b'.toLowerCase()
 
   public depositManagerContract: Contract
+  public childChainContract: Contract
 
-  constructor(depositManager: address, web3Client: Web3Client) {
+  private registry: Registry
+
+  constructor(depositManager: address, web3Client: Web3Client, registry: Registry) {
     super(web3Client)
     this.depositManagerContract = new this.web3Client.parentWeb3.eth.Contract(
       DepositManagerArtifact.abi,
       depositManager
     )
+    this.registry = registry
   }
 
-  async isDepositExistById(depositId: BN, childChainAddress: address) {
-    const childChainContract = new this.web3Client.web3.eth.Contract(ChildChainArtifact.abi, childChainAddress)
-    return childChainContract.methods.deposits(this.encode(depositId)).call()
+  async initialize() {
+    const childChainAddress = await this.registry.registry.methods.getChildChainAndStateSender().call()
+    this.childChainContract = new this.web3Client.web3.eth.Contract(ChildChainArtifact.abi, childChainAddress[0])
+  }
+
+  async depositDataByHash(txHash: string) {
+    const depositExistList = []
+    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
+    if (!depositReceipt) {
+      throw new Error('Transaction hash is not Found')
+    }
+    const newDepositEventList = depositReceipt.logs.filter(
+      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
+    )
+    if (newDepositEventList.length > 0) {
+      newDepositEventList.forEach(newDepositEvent => {
+        const data = newDepositEvent.data
+        const depositId = new BN(data.substring(data.length - 64), 16)
+        depositExistList.push(this.isDepositExistById(depositId))
+      })
+      Promise.all(depositExistList)
+    }
+    return depositReceipt
+  }
+
+  async isDepositExistById(depositId: BN) {
+    const depositExists = this.childChainContract.methods.deposits(this.encode(depositId)).call()
+    if (!depositExists) {
+      throw new Error('Deposit is not processed on Matic chain')
+    }
+    return depositExists
   }
 
   async approveERC20(token: address, amount: BN | string, options?: SendOptions) {

@@ -14,7 +14,6 @@ export default class Matic extends ContractsBase {
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
-  public childChainAddress: address
 
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
@@ -27,12 +26,12 @@ export default class Matic extends ContractsBase {
     this.web3Client = web3Client
     this.registry = new Registry(options.registry, this.web3Client)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(options.depositManager, this.web3Client)
+    this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
   }
 
   initialize() {
-    return Promise.all([this.withdrawManager.initialize()])
+    return Promise.all([this.withdrawManager.initialize(), this.depositManager.initialize()])
   }
 
   setWallet(_wallet) {
@@ -123,24 +122,11 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositEther(amount, options)
   }
 
-  async depositDataByHash(txHash: string) {
-    this.childChainAddress = await this.registry.registry.methods.getChildChainAndStateSender().call()
-
-    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
-    if (!depositReceipt) {
-      throw new Error('Transaction hash is not Found')
+  depositDataByHash(txHash: string) {
+    if (!txHash) {
+      throw new Error('txHash is missing')
     }
-    const newDepositEvent = depositReceipt.logs.find(
-      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
-    )
-
-    const data = newDepositEvent.data
-    const depositId = new BN(data.substring(data.length - 64), 16)
-    const depositExists = await this.depositManager.isDepositExistById(depositId, this.childChainAddress[0])
-    if (!depositExists) {
-      throw new Error('Deposit is not processed on Matic chain')
-    }
-    return depositReceipt
+    return this.depositManager.depositDataByHash(txHash)
   }
 
   approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
