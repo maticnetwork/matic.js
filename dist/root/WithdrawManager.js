@@ -64,7 +64,7 @@ var proofs_js_1 = __importDefault(require("matic-protocol/contracts-core/helpers
 var ContractsBase_1 = __importDefault(require("../common/ContractsBase"));
 var logger = {
     info: require('debug')('maticjs:WithdrawManager'),
-    debug: require('debug')('maticjs:debug:WithdrawManager')
+    debug: require('debug')('maticjs:debug:WithdrawManager'),
 };
 var WithdrawManager = /** @class */ (function (_super) {
     __extends(WithdrawManager, _super);
@@ -145,7 +145,7 @@ var WithdrawManager = /** @class */ (function (_super) {
                     case 0:
                         options = options || {};
                         if (!options || !options.gas || options.gas < 2000000) {
-                            console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough');
+                            console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough'); // eslint-disable-line
                             options.gas = 2000000;
                         }
                         txObject = this.withdrawManager.methods.processExits(token);
