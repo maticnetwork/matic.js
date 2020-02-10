@@ -2,7 +2,7 @@ const bn = require('bn.js')
 
 const utils = require('./utils')
 
-function execute() {
+async function execute() {
   const { matic, network } = await utils.getMaticClient('beta', 'v2')
   matic.setWallet(utils.getPrivateKey())
 
