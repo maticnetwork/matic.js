@@ -7,4 +7,5 @@ export declare interface SendOptions {
   gasPrice?: string | number
   encodeAbi?: boolean
   parent?: boolean
+  to?: string
 }

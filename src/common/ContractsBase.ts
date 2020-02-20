@@ -2,6 +2,7 @@ import Web3Client from './Web3Client'
 import BN from 'bn.js'
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
 import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
+import ChildMaticArtifact from 'matic-protocol/contracts-core/artifacts/MaticChildERC20.json'
 
 import { address } from '../types/Common'
 
@@ -34,13 +35,15 @@ export default class ContractsBase {
     return new web3.eth.Contract(ChildERC721Artifact.abi, token)
   }
 
+  public getChildMaticContract(childMaticAddress: address) {
+    return new this.web3Client.web3.eth.Contract(ChildMaticArtifact.abi, childMaticAddress)
+  }
+
   async _fillOptions(options, txObject, web3) {
     delete txObject.chainId
     const from = options.from
     if (!from) {
-      throw new Error(
-        '`from` required in options or set wallet using maticObject.wallet = <private key>',
-      )
+      throw new Error('`from` required in options or set wallet using maticObject.wallet = <private key>')
     }
 
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
@@ -48,9 +51,7 @@ export default class ContractsBase {
         ? txObject.estimateGas({ from, value: options.value })
         : options.gasLimit || options.gas,
       !options.gasPrice ? web3.eth.getGasPrice() : options.gasPrice,
-      !options.nonce
-        ? web3.eth.getTransactionCount(from, 'pending')
-        : options.nonce,
+      !options.nonce ? web3.eth.getTransactionCount(from, 'pending') : options.nonce,
       !options.chainId ? web3.eth.net.getId() : options.chainId,
     ])
     return {
