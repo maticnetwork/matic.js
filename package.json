@@ -41,6 +41,7 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
+    "@maticnetwork/meta": "^1.0.3",
     "@types/bluebird": "^3.5.29",
     "@types/bn.js": "4.11.5",
     "@types/web3": "1.0.19",

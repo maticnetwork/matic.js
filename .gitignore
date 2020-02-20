@@ -3,6 +3,7 @@ lib
 .DS_Store
 *.log
 dump.rdb
+dist
 
 test-blockchain/geth
 test-blockchain/history
