@@ -1,4 +1,5 @@
 import BN from 'bn.js'
+import bluebird from 'bluebird'
 import Contract from 'web3/eth/contract'
 import DepositManagerArtifact from 'matic-protocol/contracts-core/artifacts/DepositManager.json'
 import ChildChainArtifact from 'matic-protocol/contracts-core/artifacts/ChildChain.json'
@@ -6,16 +7,54 @@ import ChildChainArtifact from 'matic-protocol/contracts-core/artifacts/ChildCha
 import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
+import Registry from './Registry'
 
 export default class DepositManager extends ContractsBase {
-  public depositManagerContract: Contract
+  static NEW_DEPOSIT_EVENT_SIG = '0x1dadc8d0683c6f9824e885935c1bec6f76816730dcec148dda8cf25a7b9f797b'
 
-  constructor(depositManager: address, web3Client: Web3Client) {
+  public depositManagerContract: Contract
+  public childChainContract: Contract
+
+  private registry: Registry
+
+  constructor(depositManager: address, web3Client: Web3Client, registry: Registry) {
     super(web3Client)
     this.depositManagerContract = new this.web3Client.parentWeb3.eth.Contract(
       DepositManagerArtifact.abi,
       depositManager
     )
+    this.registry = registry
+  }
+
+  async initialize() {
+    const childChainAddress = (await this.registry.registry.methods.getChildChainAndStateSender().call())[0]
+    this.childChainContract = new this.web3Client.web3.eth.Contract(ChildChainArtifact.abi, childChainAddress)
+  }
+
+  async depositStatusFromTxHash(txHash: string) {
+    const deposits = []
+    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
+    if (!depositReceipt) {
+      throw new Error('Transaction hash not found')
+    }
+    const depositEvents = depositReceipt.logs.filter(
+      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
+    )
+    if (depositEvents.length > 0) {
+      await bluebird.map(depositEvents, async event => {
+        const data = event.data
+        const depositId = '0x' + data.substring(data.length - 64)
+        deposits.push({
+          depositId,
+          isProcessed: await this.isDepositProcessed(depositId),
+        })
+      })
+    }
+    return { receipt: depositReceipt, deposits }
+  }
+
+  isDepositProcessed(depositId) {
+    return this.childChainContract.methods.deposits(depositId).call()
   }
 
   async approveERC20(token: address, amount: BN | string, options?: SendOptions) {

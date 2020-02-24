@@ -14,8 +14,6 @@ export default class Matic extends ContractsBase {
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
-  public childChainAddress: address
-  public childMaticAddress: address
 
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
@@ -28,14 +26,12 @@ export default class Matic extends ContractsBase {
     this.web3Client = web3Client
     this.registry = new Registry(options.registry, this.web3Client)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(options.depositManager, this.web3Client)
+    this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
-    this.childChainAddress = options.childChain
-    this.childMaticAddress = '0000000000000000000000000000000000001010'
   }
 
   initialize() {
-    return Promise.all([this.withdrawManager.initialize()])
+    return Promise.all([this.withdrawManager.initialize(), this.depositManager.initialize()])
   }
 
   setWallet(_wallet) {
@@ -150,6 +146,13 @@ export default class Matic extends ContractsBase {
       throw new Error('options.from or amount is missing')
     }
     return this.depositManager.depositEther(amount, options)
+  }
+
+  depositStatusFromTxHash(txHash: string): Promise<{ receipt: any; deposits: any[] }> {
+    if (!txHash) {
+      throw new Error('txHash is missing')
+    }
+    return this.depositManager.depositStatusFromTxHash(txHash)
   }
 
   approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
