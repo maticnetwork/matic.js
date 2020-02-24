@@ -152,24 +152,6 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositEther(amount, options)
   }
 
-  async depositDataByHash(txHash: string) {
-    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
-    if (!depositReceipt) {
-      return 'Transaction hash is not Found'
-    }
-    const newDepositEvent = depositReceipt.logs.find(
-      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
-    )
-
-    const data = newDepositEvent.data
-    const depositId = parseInt(data.substring(data.length - 64), 16)
-    const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress)
-    if (!depositExists) {
-      return 'Deposit is not processed on Matic chain'
-    }
-    return depositReceipt
-  }
-
   approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('options.from, token or amount is missing')
