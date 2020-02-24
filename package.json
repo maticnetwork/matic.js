@@ -70,6 +70,7 @@
     "husky": "2.4.1",
     "lint-staged": "8.2.1",
     "mocha": "5.2.0",
+    "prettier": "^1.19.1",
     "rimraf": "2.6.3",
     "typescript": "^3.7.5",
     "webpack": "4.35.0",
@@ -86,19 +87,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "tsc && lint-staged"
     }
-  },
-  "lint-staged": {
-    "linters": {
-      "*.{ts,js}": [
-        "eslint --fix src",
-        "git add"
-      ]
-    },
-    "ignore": [
-      "dist",
-      "lib"
-    ]
   }
 }

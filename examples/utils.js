@@ -1,6 +1,6 @@
 const bn = require('bn.js')
 
-const Network = require("@maticnetwork/meta/network")
+const Network = require('@maticnetwork/meta/network')
 const Matic = require('../dist/index').default
 
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
@@ -33,5 +33,5 @@ function getPrivateKey() {
 module.exports = {
   SCALING_FACTOR,
   getMaticClient,
-  getPrivateKey
+  getPrivateKey,
 }
