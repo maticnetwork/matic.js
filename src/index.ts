@@ -14,7 +14,6 @@ export default class Matic extends ContractsBase {
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
-  public childChainAddress: address
   public childMaticAddress: address
 
   constructor(options: any = {}) {
@@ -28,14 +27,13 @@ export default class Matic extends ContractsBase {
     this.web3Client = web3Client
     this.registry = new Registry(options.registry, this.web3Client)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(options.depositManager, this.web3Client)
+    this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
-    this.childChainAddress = options.childChain
     this.childMaticAddress = '0000000000000000000000000000000000001010'
   }
 
   initialize() {
-    return Promise.all([this.withdrawManager.initialize()])
+    return Promise.all([this.withdrawManager.initialize(), this.depositManager.initialize()])
   }
 
   setWallet(_wallet) {
@@ -142,8 +140,8 @@ export default class Matic extends ContractsBase {
     const from = options.from
     const value = this.encode(amount)
     if (!options.parent) {
-      console.log('--->', toAddress, amount, options) // eslint-disable-line
-      return this.transferMatic(toAddress, value, options)
+      const maticWeth = await this.registry.registry.methods.getWethTokenAddress().call()
+      return this.transferERC20Tokens(maticWeth, toAddress, value, options)
     }
     const web3Object = this.web3Client.getParentWeb3()
     const gasLimit = await web3Object.eth.estimateGas({
@@ -157,7 +155,6 @@ export default class Matic extends ContractsBase {
     if (options.encodeAbi) {
       return _options
     }
-    console.log('I am here', web3Object, _options) // eslint-disable-line
     return this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
   }
 
@@ -168,22 +165,11 @@ export default class Matic extends ContractsBase {
     return this.depositManager.depositEther(amount, options)
   }
 
-  async depositDataByHash(txHash: string) {
-    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
-    if (!depositReceipt) {
-      return 'Transaction hash is not Found'
+  depositStatusFromTxHash(txHash: string): Promise<{ receipt: any; deposits: any[] }> {
+    if (!txHash) {
+      throw new Error('txHash is missing')
     }
-    const newDepositEvent = depositReceipt.logs.find(
-      l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
-    )
-
-    const data = newDepositEvent.data
-    const depositId = parseInt(data.substring(data.length - 64), 16)
-    const depositExists = await this.depositManager.depositDataByID(depositId, this.childChainAddress)
-    if (!depositExists) {
-      return 'Deposit is not processed on Matic chain'
-    }
-    return depositReceipt
+    return this.depositManager.depositStatusFromTxHash(txHash)
   }
 
   approveERC20TokensForDeposit(token: address, amount: BN | string, options?: SendOptions) {
