@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,6 +41,7 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
+    "@maticnetwork/meta": "^1.0.3",
     "@types/bluebird": "^3.5.29",
     "@types/bn.js": "4.11.5",
     "@types/web3": "1.0.19",

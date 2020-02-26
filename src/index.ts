@@ -115,6 +115,34 @@ export default class Matic extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async transferEther(to: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !to)) {
+      throw new Error('Missing Parameters')
+    }
+    const from = options.from
+    const value = this.encode(amount)
+    if (!options.parent) {
+      const maticWeth = await this.registry.registry.methods.getWethTokenAddress().call()
+      return this.transferERC20Tokens(maticWeth, to, value, options)
+    }
+    const web3Object = this.web3Client.getParentWeb3()
+    if (!options.gas) {
+      options.gas = await web3Object.eth.estimateGas({
+        from,
+        value,
+      })
+    }
+
+    Object.assign(options, { value, to })
+
+    const _options = await this._fillOptions(options, {}, web3Object)
+    if (options.encodeAbi) {
+      return _options
+    }
+
+    return this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
+  }
+
   depositEther(amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount)) {
       throw new Error('options.from or amount is missing')
