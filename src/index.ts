@@ -126,11 +126,14 @@ export default class Matic extends ContractsBase {
       return this.transferERC20Tokens(maticWeth, to, value, options)
     }
     const web3Object = this.web3Client.getParentWeb3()
-    const gas = await web3Object.eth.estimateGas({
-      from,
-      value,
-    })
-    Object.assign(options, { gas, value, to })
+    if (!options.gas) {
+      options.gas = await web3Object.eth.estimateGas({
+        from,
+        value,
+      })
+    }
+
+    Object.assign(options, { value, to })
 
     const _options = await this._fillOptions(options, {}, web3Object)
     if (options.encodeAbi) {
