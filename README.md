@@ -79,7 +79,7 @@ await matic.tokenOfOwnerByIndexERC721(
 )
 
 // Deposit Ether into Matic chain
-await matic.depositEthers(
+await matic.depositEther(
   amount, // amount in wei for deposit
   options // transaction fields
 )
