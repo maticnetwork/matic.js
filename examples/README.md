@@ -14,6 +14,5 @@ Be careful with your private key, Use a  key your are comfortable with for devel
 ### Install and run:
 
 ```bash
-cd examples
-npm run build
-node balance-of-ERC20.js
+cd .. // make sure you are on matic.js directory
+npm run build && node examples/balance-of-ERC20.js
