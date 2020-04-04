@@ -7,12 +7,7 @@ export default class Web3Client {
   public parentDefaultOptions: SendOptions
   public maticDefaultOptions: SendOptions
 
-  constructor(
-    parentProvider,
-    maticProvider,
-    parentDefaultOptions,
-    maticDefaultOptions,
-  ) {
+  constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions) {
     this.parentWeb3 = new Web3(parentProvider)
     this.web3 = new Web3(maticProvider)
     this.parentDefaultOptions = parentDefaultOptions
@@ -39,9 +34,7 @@ export default class Web3Client {
         ? txObject.estimateGas({ from, value: _options.value })
         : _options.gasLimit || _options.gas,
       !_options.gasPrice ? web3.eth.getGasPrice() : _options.gasPrice,
-      !_options.nonce
-        ? web3.eth.getTransactionCount(from, 'pending')
-        : _options.nonce,
+      !_options.nonce ? web3.eth.getTransactionCount(from, 'pending') : _options.nonce,
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
 
@@ -96,6 +89,10 @@ export default class Web3Client {
 
   getMaticWeb3() {
     return this.web3
+  }
+
+  getWallet() {
+    return this.web3.eth.accounts.wallet
   }
 
   setParentDefaultOptions(options: any) {
