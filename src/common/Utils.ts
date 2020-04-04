@@ -10,8 +10,7 @@ export class Utils {
     ])
     return EthUtil.keccak256(orderData)
   }
-  // @todo take chain id as a param
-  getTypedData({ token, spender, tokenIdOrAmount, data, expiration }) {
+  getTypedData({ token, spender, tokenIdOrAmount, data, expiration, chainId }) {
     return {
       types: {
         EIP712Domain: [
@@ -30,7 +29,7 @@ export class Utils {
       domain: {
         name: 'Matic Network',
         version: '1',
-        chainId: 15001,
+        chainId: chainId,
         contract: token,
       },
       primaryType: 'TokenTransferOrder',

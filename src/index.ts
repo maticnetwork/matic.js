@@ -168,7 +168,7 @@ export default class Matic extends ContractsBase {
     return this.depositManager.approveERC20(token, amount, options)
   }
 
-  getTransferSignature(sellOrder: order, buyOrder: order, options: SendOptions) {
+  async getTransferSignature(sellOrder: order, buyOrder: order, options: SendOptions) {
     if (!sellOrder.orderId || !sellOrder.spender) {
       throw new Error('orderId or spender missing from sell order')
     }
@@ -183,12 +183,14 @@ export default class Matic extends ContractsBase {
       expiration: sellOrder.expiry,
     }
     const orderHash = this.utils.getOrderHash(orderObj)
+    let chainId = await this.web3Client.web3.eth.net.getId()
     const dataToSign = {
       token: sellOrder.token,
       tokenIdOrAmount: sellOrder.amount,
       spender: sellOrder.spender,
       data: orderHash,
       expiration: sellOrder.expiry,
+      chainId: chainId,
     }
     const typedData = this.utils.getTypedData(dataToSign)
     const wallet = this.web3Client.getWallet()
