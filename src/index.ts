@@ -5,8 +5,9 @@ import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
 import Web3Client from './common/Web3Client'
-import { address, SendOptions } from './types/Common'
+import { address, SendOptions, order } from './types/Common'
 import ContractsBase from './common/ContractsBase'
+import { Utils } from './common/Utils'
 
 export default class Matic extends ContractsBase {
   public web3Client: Web3Client
@@ -14,6 +15,7 @@ export default class Matic extends ContractsBase {
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
+  public utils: Utils
 
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
@@ -28,6 +30,7 @@ export default class Matic extends ContractsBase {
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
     this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
+    this.utils = new Utils()
   }
 
   initialize() {
@@ -163,6 +166,33 @@ export default class Matic extends ContractsBase {
     }
 
     return this.depositManager.approveERC20(token, amount, options)
+  }
+
+  getTransferSignature(sellOrder: order, buyOrder: order, options: SendOptions) {
+    if (!sellOrder.orderId || !sellOrder.spender) {
+      throw new Error('orderId or spender missing from sell order')
+    }
+    if (!options.from) {
+      throw new Error('options.from is missing')
+    }
+
+    const orderObj = {
+      token: buyOrder.token,
+      amount: buyOrder.amount,
+      id: sellOrder.orderId,
+      expiration: sellOrder.expiry,
+    }
+    const orderHash = this.utils.getOrderHash(orderObj)
+    const dataToSign = {
+      token: sellOrder.token,
+      tokenIdOrAmount: sellOrder.amount,
+      spender: sellOrder.spender,
+      data: orderHash,
+      expiration: sellOrder.expiry,
+    }
+    const typedData = this.utils.getTypedData(dataToSign)
+    const wallet = this.web3Client.getWallet()
+    return this.utils.signEIP712TypedData(typedData, wallet[options.from].privateKey)
   }
 
   depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions) {
