@@ -195,6 +195,46 @@ export default class Matic extends ContractsBase {
     return this.utils.signEIP712TypedData(typedData, wallet[options.from].privateKey)
   }
 
+  async transferWithSignature(
+    token: address,
+    sig: string,
+    sellOrder: order,
+    buyOrder: order,
+    to: address,
+    options: SendOptions
+  ) {
+    if (!options.from) {
+      throw new Error('options.from is missing')
+    }
+    let web3Util = this.web3Client.web3.utils
+    let data = web3Util.soliditySha3(
+      {
+        t: 'bytes32',
+        v: sellOrder.orderId,
+      },
+      {
+        t: 'address',
+        v: buyOrder.token,
+      },
+      {
+        t: 'uint256',
+        v: buyOrder.amount,
+      }
+    )
+
+    const txObj = this.getTokenContractForTransferWithSig(token).methods.transferWithSig(
+      sig,
+      sellOrder.amount,
+      data,
+      sellOrder.expiry,
+      to
+    )
+
+    const _options = await this._fillOptions(options, txObj, this.web3Client.getMaticWeb3())
+
+    return this.web3Client.send(txObj, _options)
+  }
+
   depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !token)) {
       throw new Error('options.from, token or amount is missing')

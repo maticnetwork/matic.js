@@ -12,7 +12,7 @@ export declare interface SendOptions {
 
 export declare interface order {
   token: string
-  amount: string | number
+  amount: string
   expiry?: string | number
   orderId?: string
   spender?: string
