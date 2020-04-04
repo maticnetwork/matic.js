@@ -197,14 +197,7 @@ export default class Matic extends ContractsBase {
     return this.utils.signEIP712TypedData(typedData, wallet[options.from].privateKey)
   }
 
-  async transferWithSignature(
-    token: address,
-    sig: string,
-    sellOrder: order,
-    buyOrder: order,
-    to: address,
-    options: SendOptions
-  ) {
+  async transferWithSignature(sig: string, sellOrder: order, buyOrder: order, to: address, options: SendOptions) {
     if (!options.from) {
       throw new Error('options.from is missing')
     }
@@ -224,7 +217,7 @@ export default class Matic extends ContractsBase {
       }
     )
 
-    const txObj = this.getTokenContractForTransferWithSig(token).methods.transferWithSig(
+    const txObj = this.getTokenContractForTransferWithSig(sellOrder.token).methods.transferWithSig(
       sig,
       sellOrder.amount,
       data,
