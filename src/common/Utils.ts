@@ -10,7 +10,8 @@ export class Utils {
     ])
     return EthUtil.keccak256(orderData)
   }
-  getTypedData({ token, spender, tokenIdOrAmount, data, expiration, chainId }) {
+
+    getTypedData({ token, spender, tokenIdOrAmount, data, expiration, chainId }) {
     return {
       types: {
         EIP712Domain: [
