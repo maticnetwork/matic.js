@@ -217,7 +217,7 @@ export default class Matic extends ContractsBase {
       }
     )
 
-    const txObj = this.getTokenContractForTransferWithSig(sellOrder.token).methods.transferWithSig(
+    const txObj = this.getERC721TokenContract(sellOrder.token).methods.transferWithSig(
       sig,
       sellOrder.amount,
       data,
