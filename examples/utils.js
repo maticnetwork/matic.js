@@ -17,7 +17,8 @@ async function getMaticClient(_network, _version) {
   })
   await matic.initialize()
   const wallet = matic.web3Client.getWallet()
-  return { matic, network, wallet }
+  const parent = matic.web3Client.getParentWeb3()
+  return { matic, network, wallet, parent }
 }
 
 function getPrivateKey() {
