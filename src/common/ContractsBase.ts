@@ -3,7 +3,6 @@ import BN from 'bn.js'
 import ChildERC20Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC20.json'
 import ChildERC721Artifact from 'matic-protocol/contracts-core/artifacts/ChildERC721.json'
 import ChildMaticArtifact from 'matic-protocol/contracts-core/artifacts/MaticChildERC20.json'
-
 import { address } from '../types/Common'
 
 export default class ContractsBase {

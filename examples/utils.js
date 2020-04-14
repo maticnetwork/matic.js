@@ -16,16 +16,14 @@ async function getMaticClient(_network, _version) {
     withdrawManager: network.Main.Contracts.WithdrawManagerProxy,
   })
   await matic.initialize()
-  return { matic, network }
+  const wallet = matic.web3Client.getWallet()
+  const parent = matic.web3Client.getParentWeb3()
+  return { matic, network, wallet, parent }
 }
 
 function getPrivateKey() {
   if (!process.env.PRIVATE_KEY) {
     throw new Error('Please set the PRIVATE_KEY env variable')
-  }
-  // @todo find "from" the privateKey or web3.getAccounts()
-  if (!process.env.FROM) {
-    throw new Error('Please set the FROM env variable')
   }
   return process.env.PRIVATE_KEY
 }

@@ -9,3 +9,11 @@ export declare interface SendOptions {
   parent?: boolean
   to?: string
 }
+
+export declare interface order {
+  token: string
+  amount: string
+  expiry?: string | number
+  orderId?: string
+  spender?: string
+}
