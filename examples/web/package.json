@@ -1,0 +1,18 @@
+{
+  "name": "maticjs-web",
+  "version": "2.0.0-beta.9",
+  "description": "example code to interact with maticjs in the browser",
+  "scripts": {
+    "start": "webpack-dev-server --hot",
+    "build": "webpack --env.NODE_ENV=production --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@maticnetwork/maticjs": "2.0.0-beta.9",
+    "@maticnetwork/meta": "^1.0.3"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.1",
+    "webpack-dev-server": "^3.1.14"
+  }
+}
