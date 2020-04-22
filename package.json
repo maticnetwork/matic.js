@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "2.0.0-beta.8",
+  "version": "2.0.0-beta.9",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.node.js",
   "types": "dist/index.d.ts",
