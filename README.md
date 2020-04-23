@@ -11,11 +11,24 @@ We will be improving this library to make all features available like Plasma Fas
 ### Installation
 
 #### NPM
+
 ---
 
 ```bash
 $ npm install --save @maticnetwork/maticjs
 ```
+
+#### CDN
+
+---
+
+```bash
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js"></script>
+```
+
+Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js)
+
+---
 
 ### Getting started
 
@@ -204,6 +217,7 @@ Please write to info@matic.network to request TEST tokens for development purpos
 
 - <a href="#startExitForMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMintableBurntToken()</b></code></a>
 - <a href="#startExitForMetadataMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMetadataMintableBurntToken()</b></code></a>
+
 ---
 
 <a name="initialize"></a>
@@ -213,11 +227,10 @@ Please write to info@matic.network to request TEST tokens for development purpos
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
 
 ```js
-import Matic from "maticjs"
+import Matic from 'maticjs'
 
 const matic = new Matic(options)
 matic.initialize()
-
 ```
 
 - `options` is simple Javascript `object` which can have following fields:
@@ -233,12 +246,12 @@ matic.initialize()
   - `registry` must be valid Ethereum contract address.
   - `withdrawManager` must be valid Ethereum contract address.
   - `depositManager` must be valid Ethereum contract address.
----
-
 
 ---
+
+---
+
 <a name="balanceOfERC20"></a>
-
 
 #### matic.balanceOfERC20(userAddress, token, options)
 
@@ -255,17 +268,17 @@ Example:
 
 ```js
 matic
-  .balanceOfERC20("0xABc578455...", "0x5E9c4ccB05...", {
-    from: "0xABc578455..."
+  .balanceOfERC20('0xABc578455...', '0x5E9c4ccB05...', {
+    from: '0xABc578455...',
   })
   .then(balance => {
-    console.log("balance", balance)
+    console.log('balance', balance)
   })
 ```
 
 ---
-<a name="balanceOfERC721"></a>
 
+<a name="balanceOfERC721"></a>
 
 #### matic.balanceOfERC721(userAddress, token, options)
 
@@ -282,17 +295,17 @@ Example:
 
 ```js
 matic
-  .balanceOfERC721("0xABc578455...", "0x5E9c4ccB05...", {
-    from: "0xABc578455..."
+  .balanceOfERC721('0xABc578455...', '0x5E9c4ccB05...', {
+    from: '0xABc578455...',
   })
   .then(balance => {
-    console.log("balance", balance)
+    console.log('balance', balance)
   })
 ```
 
 ---
-<a name="tokenOfOwnerByIndexERC721"></a>
 
+<a name="tokenOfOwnerByIndexERC721"></a>
 
 #### matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
 
@@ -300,8 +313,7 @@ get ERC721 tokenId at `index` for `token` and for `address`.
 
 - `token` must be valid token address
 - `userAddress` must be valid user address
-- `index` index of tokenId 
-
+- `index` index of tokenId
 
 This returns matic `tokenId`.
 
@@ -309,11 +321,11 @@ Example:
 
 ```js
 matic
-  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
-    from: "0xABc578455..."
+  .tokenOfOwnerByIndexERC721('0xfeb14b...', '21', 0, {
+    from: '0xABc578455...',
   })
   .then(tokenID => {
-    console.log("Token ID", tokenID)
+    console.log('Token ID', tokenID)
   })
 ```
 
@@ -322,6 +334,7 @@ matic
 #### matic.depositEthers(amount, options)
 
 Deposit `options.value`
+
 - `amount` must be token amount in wei (string, not in Number)
 - `options` see [more infomation here](#approveERC20TokensForDeposit).
   - `from` must be valid account address(required)
@@ -333,11 +346,12 @@ Example:
 
 ```js
 matic.depositEthers(amount, {
-  from: '0xABc578455...'
+  from: '0xABc578455...',
 })
 ```
 
 ---
+
 <a name="approveERC20TokensForDeposit"></a>
 
 #### matic.approveERC20TokensForDeposit(token, amount, options)
@@ -352,15 +366,14 @@ Approves given `amount` of `token` to `rootChainContract`.
   - `gasLimit` same as Ethereum `sendTransaction`
   - `nonce` same as Ethereum `sendTransaction`
   - `value` contains ETH value. Same as Ethereum `sendTransaction`.
-This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+    This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
 Example:
 
 ```js
-matic
-  .approveERC20TokensForDeposit("0x718Ca123...", "1000000000000000000", {
-    from: "0xABc578455..."
-  })
+matic.approveERC20TokensForDeposit('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
@@ -406,9 +419,8 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-
 matic.safeDepositERC721Tokens('0x718Ca123...', '70000000000', {
-  from: '0xABc578455...'
+  from: '0xABc578455...',
 })
 ```
 
@@ -490,10 +502,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic
-  .startWithdraw("0x718Ca123...", "1000000000000000000", {
-    from: "0xABc578455..."
-  })
+matic.startWithdraw('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
@@ -514,10 +525,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic
-  .startWithdrawForNFT("0x718Ca123...", "1000000000000000000", {
-    from: "0xABc578455..."
-  })
+matic.startWithdrawForNFT('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
@@ -536,8 +546,8 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.withdraw("0xabcd...789", {
-  from: "0xABc578455..."
+matic.withdraw('0xabcd...789', {
+  from: '0xABc578455...',
 })
 ```
 
@@ -558,8 +568,8 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.withdrawNFT("0xabcd...789", {
-  from: "0xABc578455..."
+matic.withdrawNFT('0xabcd...789', {
+  from: '0xABc578455...',
 })
 ```
 
@@ -580,10 +590,11 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.processExits("0xabcd...789", {
-  from: "0xABc578455..."
+matic.processExits('0xabcd...789', {
+  from: '0xABc578455...',
 })
 ```
+
 ---
 
 #### **WithdrawManager**
@@ -591,6 +602,7 @@ matic.processExits("0xabcd...789", {
 <a name="startExitForMintableBurntToken"></a>
 
 #### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
+
 ```
 /**
   * Start an exit for a token that was minted and burnt on the side chain
@@ -599,17 +611,20 @@ matic.processExits("0xabcd...789", {
   * @param predicate address of MintableERC721Predicate
   */
 ```
+
 See [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)
 
 ```
 const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
 await this.maticClient.withdrawManager.startExitForMintableBurntToken(burn.transactionHash, predicate.address)
 ```
+
 ---
 
 <a name="startExitForMetadataMintableBurntToken"></a>
 
 #### matic.withdrawManager.startExitForMintableBurntToken(burnTxHash, predicate: address, options)
+
 ```
 /**
   * Start an exit for a token with metadata (token uri) that was minted and burnt on the side chain
@@ -618,12 +633,14 @@ await this.maticClient.withdrawManager.startExitForMintableBurntToken(burn.trans
   * @param predicate address of MintableERC721Predicate
   */
 ```
+
 See [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L66)
 
 ```
 const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
 await this.maticClient.withdrawManager.startExitForMetadataMintableBurntToken(burn.transactionHash, predicate.address)
 ```
+
 ---
 
 ### Support
