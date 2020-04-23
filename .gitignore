@@ -1,13 +1,12 @@
 node_modules
 lib
-dist
 .DS_Store
 *.log
 dump.rdb
-dist
 
 test-blockchain/geth
 test-blockchain/history
 test-blockchain/data/**
 !test-blockchain/data/.gitkeep
 .env
+bundle.js

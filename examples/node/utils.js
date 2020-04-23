@@ -2,7 +2,7 @@ const bn = require('bn.js')
 const EthereumTx = require('ethereumjs-tx')
 
 const config = require('./config')
-const Matic = require('../../dist/index').default
+const Matic = require('../../lib/index').default
 
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
