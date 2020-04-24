@@ -18,6 +18,18 @@ We will be improving this library to make all features available like Plasma Fas
 $ npm install --save @maticnetwork/maticjs
 ```
 
+#### CDN
+
+---
+
+```bash
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js"></script>
+```
+
+Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js)
+
+---
+
 ### Getting started
 
 ```js
@@ -181,7 +193,7 @@ The flow for asset transfers on the Matic Network is as follows:
 
 ### Faucet
 
-Please write to info@matic.network to request TEST tokens for development purposes. We will soon have a faucet in place for automatic distribution of tokens for testing.
+https://faucet.matic.network
 
 ### API
 
@@ -199,6 +211,8 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#startWithdrawForNFT"><code>matic.<b>startWithdrawForNFT()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
 - <a href="#withdrawNFT"><code>matic.<b>withdrawNFT()</b></code><a>
+- <a href="#getTransferSignature"><code>matic.<b>getTransferSignature()</b></code><a>
+- <a href="#transferWithSignature"><code>matic.<b>transferWithSignature()</b></code><a>
 - <a href="#processExits"><code>matic.<b>processExits()</b></code><a>
 
 ##### **WithdrawManager**
@@ -563,24 +577,79 @@ matic.withdrawNFT('0xabcd...789', {
 
 ---
 
-#### Execute Signatured Order
-
 #### matic.getTransferSignature
 
 Off-chain signature generation for [transferWithSig](https://github.com/maticnetwork/contracts/blob/a9b77252ece25adcd3f74443411821883bb970e6/contracts/child/BaseERC20.sol#L35) function call
 
-```javascript
-const sig = await matic.getTransferSignature(toSell, toBuy, {
-  from: tokenOwner,
-})
-```
+- `toSell` object
+  - `token`: address of token owned,
+  - `amount`: amount/tokenId of the token to sell,
+  - `expiry`: expiry (block number after which the signature should be invalid),
+  - `orderId`: a random 32 byte hex string,
+  - `spender`: the address approved to execute this transaction
+- `toBuy` object
+  - `token`: address of token to buy
+  - `amount`: amount/tokenId of token to buy
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+  - `from`: owner of the token (toSell)
+
+  ```javascript
+  // sell order
+  let toSell = {
+    token: token2,
+    amount: value2,
+    expiry: expire,
+    orderId: orderId,
+    spender: spender,
+  }
+
+  // buy order
+  let toBuy = {
+    token: token1,
+    amount: value1,
+  }
+
+  const sig = await matic.getTransferSignature(toSell, toBuy, {
+    from: tokenOwner,
+  })
+  ```
 
 #### matic.transferWithSignature
 
 Executes [transferWithSig](https://github.com/maticnetwork/contracts/blob/a9b77252ece25adcd3f74443411821883bb970e6/contracts/child/BaseERC20.sol#L35) on child token (erc20/721). Takes input as signature generated from `matic.getTransferSignature`
 
+- `sig`: signature generated with matic.getTransferSignature
+- `toSell`: object
+  - `token`: address of token owned,
+  - `amount`: amount/tokenId of the token to sell,
+  - `expiry`: expiry (block number after which the signature should be invalid),
+  - `orderId`: a random 32 byte hex string,
+  - `spender`: the address approved to execute this transaction
+- `toBuy`: object
+  - `token`: address of token to buy
+  - `amount`: amount/tokenId of token to buy
+- `orderFiller`: address of user to transfer the tokens to
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `from`: the approved spender in the `toSell` object by the token owner
+
+transfers `toSell.token` from `tokenOwner` to `orderFiller`
+
 ```javascript
-// transfers `toSell.token` from `tokenOwner` to `orderFiller`
+// sell order
+let toSell = {
+  token: token2,
+  amount: value2,
+  expiry: expire,
+  orderId: orderId,
+  spender: spender,
+}
+
+// buy order
+let toBuy = {
+  token: token1,
+  amount: value1,
+}
 
 const tx = await matic.transferWithSignature(
   sig, // signature with the intent to buy tokens

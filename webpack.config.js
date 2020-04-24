@@ -12,7 +12,7 @@ if (env === 'build') {
 
 const clientConfig = {
   mode,
-  entry: `${__dirname}/src/index.js`,
+  entry: `${__dirname}/src/index.ts`,
   target: 'web',
   output: {
     path: `${__dirname}/dist`,
@@ -34,6 +34,14 @@ const clientConfig = {
         loader: 'eslint-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+      },
+      {
+        test: /\.css$/,
+        use: 'css-loader',
+      },
     ],
   },
   externals: {
@@ -43,7 +51,7 @@ const clientConfig = {
   },
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
-    extensions: ['.json', '.js'],
+    extensions: ['.json', '.js', '.ts', 'tsx'],
   },
 }
 

@@ -1,7 +1,7 @@
 const bn = require('bn.js')
 
 const Network = require('@maticnetwork/meta/network')
-const Matic = require('../dist/index').default
+const Matic = require('../lib/index').default
 
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
@@ -18,7 +18,12 @@ async function getMaticClient(_network, _version) {
   await matic.initialize()
   const wallet = matic.web3Client.getWallet()
   const parent = matic.web3Client.getParentWeb3()
-  return { matic, network, wallet, parent }
+  return {
+    matic,
+    network,
+    wallet,
+    parent,
+  }
 }
 
 function getPrivateKey() {
