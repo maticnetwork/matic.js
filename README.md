@@ -503,6 +503,8 @@ matic.transferERC721Tokens('0x718Ca123...', user, '100006500000000000000', {
 
 ---
 
+<a name="getTransferSignature"></a>
+
 #### matic.getTransferSignature(toSell, toBuy)
 
 Off-chain signature generation for [transferWithSig](https://github.com/maticnetwork/contracts/blob/a9b77252ece25adcd3f74443411821883bb970e6/contracts/child/BaseERC20.sol#L35) function call
@@ -542,6 +544,8 @@ Off-chain signature generation for [transferWithSig](https://github.com/maticnet
   ```
 
 ---
+
+<a name="transferWithSignature"></a>
 
 #### matic.transferWithSignature(sig, toSell, toBuy, orderFiller)
 
