@@ -135,6 +135,23 @@ await matic.transferERC721Tokens(
   options // transaction fields
 )
 
+// generate transfer signature off-chain (can be used to in place of `approve`)
+await matic.getTransferSignature(
+  toSell, // sell order obj
+  toBuy, // buy order obj
+  options // transaction fields
+)
+
+// execute transfer/swap of assets on-chain, using off-chain signature
+await matic.transferWithSignature(
+  sig, // signature: intent to sell tokens
+  toSell, // sell order obj
+  toBuy, // buy order obj
+  orderFiller, // address to transfer tokens to
+  options // transaction fields
+)
+
+
 // Initiate withdrawal of ERC20 from Matic and retrieve the Transaction id
 await matic.startWithdraw(
   token, // Token address
@@ -186,14 +203,14 @@ The flow for asset transfers on the Matic Network is as follows:
 
 **Ropsten testnet addresses**
 
-- TEST mainchain ERC20 token: 0x28C8713DDe7F063Fdc4cA01aB2A8856e0F243Fec
-- Root Contract: 0x82a72315E16cE224f28E1F1fB97856d3bF83f010
-- DepositManager Contract: 0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989
-- WithdrawManager Contract: 0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4
+- TEST mainchain ERC20 token: `0x28C8713DDe7F063Fdc4cA01aB2A8856e0F243Fec`
+- Root Contract: `0x82a72315E16cE224f28E1F1fB97856d3bF83f010`
+- DepositManager Contract: `0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989`
+- WithdrawManager Contract: `0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4`
 
 ### Faucet
 
-Please write to info@matic.network to request TEST tokens for development purposes. We will soon have a faucet in place for automatic distribution of tokens for testing.
+https://faucet.matic.network
 
 ### API
 
@@ -210,8 +227,10 @@ Please write to info@matic.network to request TEST tokens for development purpos
 - <a href="#startWithdraw"><code>matic.<b>startWithdraw()</b></code></a>
 - <a href="#startWithdrawForNFT"><code>matic.<b>startWithdrawForNFT()</b></code></a>
 - <a href="#withdraw"><code>matic.<b>withdraw()</b></code></a>
-- <a href="#withdrawNFT"><code>matic.<b>withdrawNFT()</b></code><a>
-- <a href="#processExits"><code>matic.<b>processExits()</b></code><a>
+- <a href="#withdrawNFT"><code>matic.<b>withdrawNFT()</b></code></a>
+- <a href="#getTransferSignature"><code>matic.<b>getTransferSignature()</b></code></a>
+- <a href="#transferWithSignature"><code>matic.<b>transferWithSignature()</b></code></a>
+- <a href="#processExits"><code>matic.<b>processExits()</b></code></a>
 
 ##### **WithdrawManager**
 
@@ -246,8 +265,6 @@ matic.initialize()
   - `registry` must be valid Ethereum contract address.
   - `withdrawManager` must be valid Ethereum contract address.
   - `depositManager` must be valid Ethereum contract address.
-
----
 
 ---
 
@@ -482,6 +499,101 @@ matic.transferERC721Tokens('0x718Ca123...', user, '100006500000000000000', {
   // For token transfer on Main network
   // parent: true
 })
+```
+
+---
+
+<a name="getTransferSignature"></a>
+
+#### matic.getTransferSignature(toSell, toBuy)
+
+Off-chain signature generation for [transferWithSig](https://github.com/maticnetwork/contracts/blob/a9b77252ece25adcd3f74443411821883bb970e6/contracts/child/BaseERC20.sol#L35) function call
+
+- `toSell` object
+  - `token`: address of token owned,
+  - `amount`: amount/tokenId of the token to sell,
+  - `expiry`: expiry (block number after which the signature should be invalid),
+  - `orderId`: a random 32 byte hex string,
+  - `spender`: the address approved to execute this transaction
+- `toBuy` object
+  - `token`: address of token to buy
+  - `amount`: amount/tokenId of token to buy
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+  - `from`: owner of the token (toSell)
+
+  ```javascript
+  // sell order
+  let toSell = {
+    token: token2,
+    amount: value2,
+    expiry: expire,
+    orderId: orderId,
+    spender: spender,
+  }
+
+  // buy order
+  let toBuy = {
+    token: token1,
+    amount: value1,
+  }
+
+  const sig = await matic.getTransferSignature(toSell, toBuy, {
+    from: tokenOwner,
+  })
+  ```
+
+---
+
+<a name="transferWithSignature"></a>
+
+#### matic.transferWithSignature(sig, toSell, toBuy, orderFiller)
+
+Executes [transferWithSig](https://github.com/maticnetwork/contracts/blob/a9b77252ece25adcd3f74443411821883bb970e6/contracts/child/BaseERC20.sol#L35) on child token (erc20/721). Takes input as signature generated from `matic.getTransferSignature`
+
+- `sig`: signature generated with matic.getTransferSignature
+- `toSell`: object
+  - `token`: address of token owned,
+  - `amount`: amount/tokenId of the token to sell,
+  - `expiry`: expiry (block number after which the signature should be invalid),
+  - `orderId`: a random 32 byte hex string,
+  - `spender`: the address approved to execute this transaction
+- `toBuy`: object
+  - `token`: address of token to buy
+  - `amount`: amount/tokenId of token to buy
+- `orderFiller`: address of user to transfer the tokens to
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `from`: the approved spender in the `toSell` object by the token owner
+
+transfers `toSell.token` from `tokenOwner` to `orderFiller`
+
+```javascript
+// sell order
+let toSell = {
+  token: token2,
+  amount: value2,
+  expiry: expire,
+  orderId: orderId,
+  spender: spender,
+}
+
+// buy order
+let toBuy = {
+  token: token1,
+  amount: value1,
+}
+
+let sig = await matic.getTransferSignature(toSell, toBuy, { from: tokenOwner })
+
+const tx = await matic.transferWithSignature(
+  sig, // signature with the intent to buy tokens
+  toSell, // sell order
+  toBuy, // buy order
+  orderFiller, // order fulfiller
+  {
+    from: spender, // approved spender
+  }
+)
 ```
 
 ---
