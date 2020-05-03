@@ -4,6 +4,7 @@ import DepositManager from './root/DepositManager'
 import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
+import POSRootChainManager from './root/POSRootChainManager'
 import Web3Client from './common/Web3Client'
 import { address, SendOptions, order } from './types/Common'
 import ContractsBase from './common/ContractsBase'
@@ -14,6 +15,7 @@ export default class Matic extends ContractsBase {
   public depositManager: DepositManager
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
+  public posRootChainManager: POSRootChainManager
   public registry: Registry
   public utils: Utils
 
@@ -30,6 +32,7 @@ export default class Matic extends ContractsBase {
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
     this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
+    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
     this.utils = new Utils()
   }
 
@@ -290,6 +293,36 @@ export default class Matic extends ContractsBase {
 
   processExits(tokenAddress: string, options?: SendOptions) {
     return this.withdrawManager.processExits(tokenAddress, options)
+  }
+
+  approvePOSERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken)) {
+      throw new Error('options.from, token or amount is missing')
+    }
+
+    return this.posRootChainManager.approveERC20(rootToken, amount, options)
+  }
+
+  depositPOSERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken)) {
+      throw new Error('options.from, token or amount is missing')
+    }
+    return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
+  }
+
+  burnPOSERC20(childToken: address, amount: BN | string, options?: SendOptions) {
+    this._validateInputs(childToken, amount, options)
+    return this.posRootChainManager.burnERC20(childToken, amount, options)
+  }
+
+  exitPOSERC20(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitERC20(txHash, options)
   }
 
   private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
