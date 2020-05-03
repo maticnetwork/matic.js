@@ -17,4 +17,6 @@ module.exports = {
   MATIC_TEST_TOKEN: '0x9a93c912F4eFf0254d178a18ACD980C1B05b57b0', // Contract for ERC20 in Matic testnet
   ROPSTEN_ERC721_TOKEN: '0x07d799252cf13c01f602779b4dce24f4e5b08bbd', // Contract for ERC721 in Ropsten testnet
   MATIC_ERC721_TOKEN: '0x8D5231e0B79edD9331e0CF0d4B9f3F30d05C47A5', // Contract for ERC721 in matic testnet
+  POS_ROOT_CHAIN_MANAGER_ADDRESS: '0x86B4EC021875d0123ED209A333B29D67F9AC6540', // Address of RootChainManager for POS Portal
+  MATIC_POS_TEST_TOKEN: '0x7f57bd9A688b1461633aE56452C2391b2f0d2e91', // Contract for POS ERC20 on matic testnet
 }
