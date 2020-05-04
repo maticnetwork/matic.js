@@ -215,7 +215,7 @@ await matic.burnPOSERC20(
 
 // Exit funds from the POS Portal using the Transaction id generated from the 'burnPOSERC20' method
 // Can be called after checkpoint has been submitted for the block containing burn tx.
-await matic.withdraw(
+await matic.exitPOSERC20(
   txId, // Transaction id generated from the 'burnPOSERC20' method
   options // transaction fields
 )
