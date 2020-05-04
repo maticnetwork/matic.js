@@ -52,13 +52,20 @@ const matic = new Matic({
   rootChain: <root-contract-address>,
 
   // Set registry contract. See below for more information
+  // Can be ignored if using POS Portal
   registry: <registry-contract-address>,
 
   // Set withdraw-manager Address. See below for more information
+  // Can be ignored if using POS Portal
   withdrawManager: <withdraw-manager-address>,
 
   // Set deposit-manager Address. See below for more information
+  // Can be ignored if using POS Portal
   depositManager: <deposit-manager-address>,
+
+  // Set pos-root-chain-manager Address. See below for more information
+  // Can be ignored if using Plasma Portal
+  posRootChainManager: <pos-root-chain-manager-address>,
 })
 
 // init matic
@@ -183,6 +190,36 @@ await matic.processExits(
   options // transaction fields
 )
 
+// Approve ERC20 tokens for deposit using POS Portal
+await matic.approvePOSERC20ForDeposit(
+  rootToken, // RootToken address,
+  amount, // Amount for approval (in wei)
+  options // transaction fields
+)
+
+// Deposit tokens into Matic chain using POS Portal.
+// Remember to call `approvePOSERC20ForDeposit` before this
+await matic.depositPOSERC20ForUser(
+  rootToken, // RootToken address
+  user, // User address (in most cases, this will be sender's address),
+  amount, // Amount for deposit (in wei)
+  options // transaction fields
+)
+
+// Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction id
+await matic.burnPOSERC20(
+  childToken, // ChildToken address
+  amount, // Amount to burn (in wei)
+  options // transaction fields
+)
+
+// Exit funds from the POS Portal using the Transaction id generated from the 'burnPOSERC20' method
+// Can be called after checkpoint has been submitted for the block containing burn tx.
+await matic.withdraw(
+  txId, // Transaction id generated from the 'burnPOSERC20' method
+  options // transaction fields
+)
+
 ```
 
 ### How it works?
@@ -236,6 +273,13 @@ https://faucet.matic.network
 
 - <a href="#startExitForMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMintableBurntToken()</b></code></a>
 - <a href="#startExitForMetadataMintableBurntToken"><code>matic.<b>withdrawManager.startExitForMetadataMintableBurntToken()</b></code></a>
+
+##### **POS Portal**
+
+- <a href="#approvePOSERC20ForDeposit"><code>matic.<b>approvePOSERC20ForDeposit()</b></code></a>
+- <a href="#depositPOSERC20ForUser"><code>matic.<b>depositPOSERC20ForUser()</b></code></a>
+- <a href="#burnPOSERC20"><code>matic.<b>burnPOSERC20()</b></code></a>
+- <a href="#exitPOSERC20"><code>matic.<b>exitPOSERC20()</b></code></a>
 
 ---
 
@@ -751,6 +795,102 @@ See [MintableERC721Predicate.startExitForMetadataMintableBurntToken](https://git
 ```
 const burn = await this.maticClient.startWithdrawForNFT(childErc721.address, tokenId)
 await this.maticClient.withdrawManager.startExitForMetadataMintableBurntToken(burn.transactionHash, predicate.address)
+```
+
+---
+
+#### **POS Portal**
+
+<a name="approvePOSERC20ForDeposit"></a>
+
+#### matic.approvePOSERC20ForDeposit(rootToken, amount, options)
+
+Approves given `amount` of `rootToken` to POS Portal contract.
+
+- `rootToken` must be valid ERC20 token address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.approvePOSERC20ForDeposit('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
+```
+
+---
+
+<a name="depositPOSERC20ForUser"></a>
+
+#### matic.depositPOSERC20ForUser(rootToken, user, amount, options)
+
+Deposit given `amount` of `rootToken` for `user` via POS Portal.
+
+- `rootToken` must be valid ERC20 token address
+- `user` must be valid account address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+The given amount must be [approved](#approvePOSERC20ForDeposit) for deposit beforehand.
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.depositPOSERC20ForUser('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="burnPOSERC20"></a>
+
+#### matic.burnPOSERC20(childToken, amount, options)
+
+Burn given `amount` of `childToken` to be exited from POS Portal.
+
+- `childToken` must be valid ERC20 token address
+- `amount` must be token amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.burnPOSERC20('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
+```
+
+---
+
+<a name="exitPOSERC20"></a>
+
+#### matic.exitPOSERC20(burnTxHash, options)
+
+Exit tokens from POS Portal. This can be called after checkpoint has been submitted for the block containing burn tx.
+
+- `burnTxHash` must be valid tx hash for token burn using [burnPOSERC20](#burnPOSERC20).
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+matic.exitPOSERC20('0xabcd...789', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
