@@ -206,6 +206,14 @@ await matic.depositPOSERC20ForUser(
   options // transaction fields
 )
 
+// Deposit ether into Matic chain using POS Portal.
+// It is an ERC20 token on Matic chain
+await matic.depositPOSEtherForUser(
+  user, // User address (in most cases, this will be sender's address),
+  amount, // Amount for deposit (in wei)
+  options // transaction fields
+)
+
 // Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction id
 await matic.burnPOSERC20(
   childToken, // ChildToken address
@@ -278,6 +286,7 @@ https://faucet.matic.network
 
 - <a href="#approvePOSERC20ForDeposit"><code>matic.<b>approvePOSERC20ForDeposit()</b></code></a>
 - <a href="#depositPOSERC20ForUser"><code>matic.<b>depositPOSERC20ForUser()</b></code></a>
+- <a href="#depositPOSEtherForUser"><code>matic.<b>depositPOSEtherForUser()</b></code></a>
 - <a href="#burnPOSERC20"><code>matic.<b>burnPOSERC20()</b></code></a>
 - <a href="#exitPOSERC20"><code>matic.<b>exitPOSERC20()</b></code></a>
 
@@ -845,6 +854,32 @@ Example:
 const user = <your-address> or <any-account-address>
 
 matic.depositPOSERC20ForUser('0x718Ca123...', user, '1000000000000000000', {
+  from: '0xABc578455...'
+})
+```
+
+---
+
+<a name="depositPOSEtherForUser"></a>
+
+#### matic.depositPOSEtherForUser(rootToken, user, amount, options)
+
+Deposit given `amount` of ETH for `user` via POS Portal.
+ETH is an ERC20 token on Matic chain, follow ERC20 [burn](#burnPOSERC20) and [exit](#exitPOSERC20) to withdraw it.
+
+- `user` must be valid account address
+- `amount` must be ETH amount in wei (string, not in Number)
+- `options` see [more infomation here](#approveERC20TokensForDeposit)
+  - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
+
+This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
+
+Example:
+
+```js
+const user = <your-address> or <any-account-address>
+
+matic.depositPOSEtherForUser(user, '1000000000000000000', {
   from: '0xABc578455...'
 })
 ```
