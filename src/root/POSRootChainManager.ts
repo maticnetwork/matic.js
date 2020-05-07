@@ -62,6 +62,24 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
+    const txObject = this.posRootChainManager.methods.depositEtherFor(user)
+
+    const _options = await this._fillOptions(
+      Object.assign(options, { value: this.encode(amount) }),
+      txObject,
+      this.web3Client.getParentWeb3()
+    )
+
+    if (options.encodeAbi) {
+      _options.data = txObject.encodeABI()
+      _options.to = this.posRootChainManager.options.address
+      return _options
+    }
+
+    return this.web3Client.send(txObject, _options)
+  }
+
   async burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
     const childTokenContract = new this.web3Client.web3.eth.Contract(ChildTokenArtifact.abi, childToken)
     const txObject = childTokenContract.methods.withdraw(this.encode(amount))

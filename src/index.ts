@@ -309,6 +309,13 @@ export default class Matic extends ContractsBase {
     return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
   }
 
+  depositPOSEtherForUser(user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !user)) {
+      throw new Error('options.from, user or amount is missing')
+    }
+    return this.posRootChainManager.depositEtherForUser(amount, user, options)
+  }
+
   burnPOSERC20(childToken: address, amount: BN | string, options?: SendOptions) {
     this._validateInputs(childToken, amount, options)
     return this.posRootChainManager.burnERC20(childToken, amount, options)
