@@ -17,12 +17,12 @@ const matic = new Matic({
 })
 
 async function execute() {
-  await matic.initialize()
   matic.setWallet(config.PRIVATE_KEY)
   return matic.approvePOSERC20ForDeposit(rootToken, amount, { from })
 }
 
-async function executeRaw() { // eslint-disable-line
+async function executeRaw() {
+  // eslint-disable-line
   await matic.initialize()
   const txParams = await matic.approvePOSERC20ForDeposit(rootToken, amount, { from, encodeAbi: true })
   let serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)

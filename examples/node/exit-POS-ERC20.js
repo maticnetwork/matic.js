@@ -15,13 +15,11 @@ const matic = new Matic({
   posRootChainManager: config.POS_ROOT_CHAIN_MANAGER_ADDRESS,
 })
 
-matic.initialize().then(() => {
-  matic.setWallet(config.PRIVATE_KEY)
-  matic
-    .exitPOSERC20(burnTxHash, {
-      from,
-    })
-    .then(res => {
-      console.log(res) // eslint-disable-line
-    })
-})
+matic.setWallet(config.PRIVATE_KEY)
+matic
+  .exitPOSERC20(burnTxHash, {
+    from,
+  })
+  .then(res => {
+    console.log(res) // eslint-disable-line
+  })
