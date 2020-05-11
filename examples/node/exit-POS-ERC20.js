@@ -21,5 +21,6 @@ matic
     from,
   })
   .then(res => {
-    console.log(res) // eslint-disable-line
+    // eslint-disable-next-line
+    console.log(res)
   })

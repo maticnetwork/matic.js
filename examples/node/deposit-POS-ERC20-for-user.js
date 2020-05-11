@@ -22,8 +22,8 @@ async function execute() {
   return matic.depositPOSERC20ForUser(rootToken, from, amount, { from, gasPrice: '10000000000' })
 }
 
+// eslint-disable-next-line
 async function executeRaw() {
-  // eslint-disable-line
   await matic.initialize()
   let txParams = await matic.approvePOSERC20ForDeposit(rootToken, amount, { from, encodeAbi: true })
   let serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)
@@ -34,4 +34,5 @@ async function executeRaw() {
   return matic.web3Client.parentWeb3.eth.sendSignedTransaction(serializedTx)
 }
 
-execute().then(console.log) // eslint-disable-line
+// eslint-disable-next-line
+execute().then(console.log)

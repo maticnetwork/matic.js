@@ -20,4 +20,5 @@ async function execute() {
   return matic.depositPOSEtherForUser(from, amount, { from, gasPrice: '10000000000' })
 }
 
-execute().then(console.log) // eslint-disable-line
+// eslint-disable-next-line
+execute().then(console.log)
