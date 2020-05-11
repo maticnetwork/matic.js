@@ -5,120 +5,28 @@ import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
 import POSRootChainManager from './root/POSRootChainManager'
-import Web3Client from './common/Web3Client'
 import { address, SendOptions, order } from './types/Common'
-import ContractsBase from './common/ContractsBase'
+import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
 
-export default class Matic extends ContractsBase {
-  public web3Client: Web3Client
+export default class Matic extends SDKClient {
   public depositManager: DepositManager
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
-  public posRootChainManager: POSRootChainManager
   public registry: Registry
   public utils: Utils
 
   constructor(options: any = {}) {
-    const web3Client = new Web3Client(
-      options.parentProvider,
-      options.maticProvider,
-      options.parentDefaultOptions || {},
-      options.maticDefaultOptions || {}
-    )
-    super(web3Client)
-    this.web3Client = web3Client
+    super(options)
     this.registry = new Registry(options.registry, this.web3Client)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
     this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
     this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
-    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
     this.utils = new Utils()
   }
 
   initialize() {
     return Promise.all([this.withdrawManager.initialize(), this.depositManager.initialize()])
-  }
-
-  setWallet(_wallet) {
-    this.web3Client.wallet = _wallet
-  }
-
-  async balanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
-    if (options && (!token || !userAddress)) {
-      throw new Error('token address or user address is missing')
-    }
-
-    const balance = this.getERC20TokenContract(token, options.parent)
-      .methods.balanceOf(userAddress)
-      .call()
-    return balance
-  }
-
-  async balanceOfERC721(userAddress: address, token: address, options?: SendOptions) {
-    if (options && (!token || !userAddress)) {
-      throw new Error('token address or user address is missing')
-    }
-
-    const balance = this.getERC721TokenContract(token, options.parent)
-      .methods.balanceOf(userAddress)
-      .call()
-    return balance
-  }
-
-  async tokenOfOwnerByIndexERC721(userAddress: address, token: address, index: number, options?: SendOptions) {
-    if (options && (!token || !userAddress)) {
-      throw new Error('token address or user address is missing')
-    }
-
-    const tokenID = this.getERC721TokenContract(token, options.parent)
-      .methods.tokenOfOwnerByIndex(userAddress, index)
-      .call()
-    return tokenID
-  }
-
-  async transferERC20Tokens(token: address, to: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !token || !to)) {
-      throw new Error('options.from, to, token or amount is missing')
-    }
-
-    const txObject = this.getERC20TokenContract(token, options.parent).methods.transfer(to, this.encode(amount))
-
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
-    )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
-    }
-
-    return this.web3Client.send(txObject, _options)
-  }
-
-  async transferERC721Tokens(token: address, to: address, tokenId: string, options?: SendOptions) {
-    if (options && (!options.from || !tokenId || !token || !to)) {
-      throw new Error('options.from, to, token or tokenId is missing')
-    }
-
-    const txObject = this.getERC721TokenContract(token, options.parent).methods.transferFrom(options.from, to, tokenId)
-
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
-    )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
-    }
-
-    return this.web3Client.send(txObject, _options)
   }
 
   async transferEther(to: address, amount: BN | string, options?: SendOptions) {
@@ -295,42 +203,6 @@ export default class Matic extends ContractsBase {
     return this.withdrawManager.processExits(tokenAddress, options)
   }
 
-  approvePOSERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !rootToken)) {
-      throw new Error('options.from, rootToken or amount is missing')
-    }
-    return this.posRootChainManager.approveERC20(rootToken, amount, options)
-  }
-
-  depositPOSERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !rootToken || !user)) {
-      throw new Error('options.from, rootToken, user, or amount is missing')
-    }
-    return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
-  }
-
-  depositPOSEtherForUser(user: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !user)) {
-      throw new Error('options.from, user or amount is missing')
-    }
-    return this.posRootChainManager.depositEtherForUser(amount, user, options)
-  }
-
-  burnPOSERC20(childToken: address, amount: BN | string, options?: SendOptions) {
-    this._validateInputs(childToken, amount, options)
-    return this.posRootChainManager.burnERC20(childToken, amount, options)
-  }
-
-  exitPOSERC20(txHash: string, options?: SendOptions) {
-    if (!txHash) {
-      throw new Error(`txHash not provided`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
-    }
-    return this.posRootChainManager.exitERC20(txHash, options)
-  }
-
   private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
     if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(token))) {
       throw new Error(`${token} is not a valid token address`)
@@ -342,5 +214,60 @@ export default class Matic extends ContractsBase {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
+  }
+}
+export class MaticPOSClient extends SDKClient {
+  private rootChain: RootChain
+  private posRootChainManager: POSRootChainManager
+
+  constructor(options: any = {}) {
+    super(options)
+    this.rootChain = new RootChain(options.rootChain, this.web3Client)
+    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
+  }
+
+  approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken)) {
+      throw new Error('options.from, rootToken or amount is missing')
+    }
+    return this.posRootChainManager.approveERC20(rootToken, amount, options)
+  }
+
+  depositERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or amount is missing')
+    }
+    return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
+  }
+
+  depositEtherForUser(user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !user)) {
+      throw new Error('options.from, user or amount is missing')
+    }
+    return this.posRootChainManager.depositEtherForUser(amount, user, options)
+  }
+
+  burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!amount) {
+      // ${amount} will stringify it while printing which might be a problem
+      throw new Error(`${amount} is not a amount`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnERC20(childToken, amount, options)
+  }
+
+  exitERC20(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitERC20(txHash, options)
   }
 }
