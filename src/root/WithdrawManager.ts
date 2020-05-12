@@ -1,4 +1,3 @@
-import assert from 'assert'
 import ethUtils from 'ethereumjs-util'
 import Contract from 'web3/eth/contract'
 
@@ -15,6 +14,7 @@ import Web3Client from '../common/Web3Client'
 import ContractsBase from '../common/ContractsBase'
 import RootChain from './RootChain'
 import Registry from './Registry'
+import ExitManager from '../common/ExitManager'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
@@ -22,58 +22,38 @@ const logger = {
 }
 
 export default class WithdrawManager extends ContractsBase {
-  static WITHDRAW_EVENT_SIG = '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb'.toLowerCase()
+  static ERC721_WITHDRAW_EVENT_SIG = '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb'.toLowerCase()
+  static ERC20_WITHDRAW_EVENT_SIG = '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f'.toLowerCase()
 
   public withdrawManager: Contract
   public erc20Predicate: Contract
   public erc721Predicate: Contract
   private rootChain: RootChain
   private registry: Registry
+  private exitManager: ExitManager
 
-  constructor(
-    withdrawManager: address,
-    rootChain: RootChain,
-    web3Client: Web3Client,
-    registry: Registry,
-  ) {
+  constructor(withdrawManager: address, rootChain: RootChain, web3Client: Web3Client, registry: Registry) {
     super(web3Client)
-    this.withdrawManager = new this.web3Client.parentWeb3.eth.Contract(
-      WithdrawManagerArtifact.abi,
-      withdrawManager,
-    )
+    this.withdrawManager = new this.web3Client.parentWeb3.eth.Contract(WithdrawManagerArtifact.abi, withdrawManager)
     this.rootChain = rootChain
     this.registry = registry
+    this.exitManager = new ExitManager(rootChain, web3Client)
   }
 
   async initialize() {
-    const erc20PredicateAddress = await this.registry.registry.methods
-      .erc20Predicate()
-      .call()
-    const erc721PredicateAddress = await this.registry.registry.methods
-      .erc721Predicate()
-      .call()
-    this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(
-      ERC20PredicateArtifact.abi,
-      erc20PredicateAddress,
-    )
+    const erc20PredicateAddress = await this.registry.registry.methods.erc20Predicate().call()
+    const erc721PredicateAddress = await this.registry.registry.methods.erc721Predicate().call()
+    this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(ERC20PredicateArtifact.abi, erc20PredicateAddress)
     this.erc721Predicate = new this.web3Client.parentWeb3.eth.Contract(
       ERC721PredicateArtifact.abi,
-      erc721PredicateAddress,
+      erc721PredicateAddress
     )
   }
 
-  async burnERC20Tokens(
-    token: address,
-    amount: BN | string,
-    options?: SendOptions
-  ) {
+  async burnERC20Tokens(token: address, amount: BN | string, options?: SendOptions) {
     const txObject = this.getERC20TokenContract(token).methods.withdraw(this.encode(amount))
 
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getMaticWeb3(),
-    )
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getMaticWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -84,18 +64,10 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async burnERC721Token(
-    token: address,
-    tokenId: BN | string,
-    options?: SendOptions
-  ) {
+  async burnERC721Token(token: address, tokenId: BN | string, options?: SendOptions) {
     const txObject = this.getERC721TokenContract(token).methods.withdraw(this.encode(tokenId))
 
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getMaticWeb3(),
-    )
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getMaticWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -114,11 +86,7 @@ export default class WithdrawManager extends ContractsBase {
     }
     const txObject = this.withdrawManager.methods.processExits(token)
 
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getParentWeb3(),
-    )
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -130,16 +98,10 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {
-    const payload = await this._buildPayloadForExit(burnTxHash)
-    const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(
-      payload,
-    )
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC20_WITHDRAW_EVENT_SIG)
+    const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
 
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getParentWeb3(),
-    )
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -150,16 +112,10 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   async startExitWithBurntERC721Tokens(burnTxHash, options?) {
-    const payload = await this._buildPayloadForExit(burnTxHash)
-    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(
-      payload,
-    )
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
+    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
 
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      this.web3Client.getParentWeb3(),
-    )
+    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
 
     if (options.encodeAbi) {
       _options.data = txObject.encodeABI()
@@ -198,105 +154,26 @@ export default class WithdrawManager extends ContractsBase {
   }
 
   private async _buildPayloadAndFindMintTransaction(burnTxHash) {
-    const payload = await this._buildPayloadForExit(burnTxHash)
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
     const burnReceipt = await this.web3Client.web3.eth.getTransactionReceipt(burnTxHash)
     const withdrawEvent = burnReceipt.logs.find(
-      l => l.topics[0].toLowerCase() === WithdrawManager.WITHDRAW_EVENT_SIG,
+      l => l.topics[0].toLowerCase() === WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
     )
     const tokenId = withdrawEvent.data
     logger.debug({ burnTxHash, burnReceipt, withdrawEvent, tokenId })
     const contract = new this.web3Client.web3.eth.Contract(ChildERC721MintableArtifact.abi, burnReceipt.to)
-    const mintEvents = await contract.getPastEvents('Transfer', { filter: { tokenId }, fromBlock: 0, toBlock: 'latest' })
+    const mintEvents = await contract.getPastEvents('Transfer', {
+      filter: { tokenId },
+      fromBlock: 0,
+      toBlock: 'latest',
+    })
     logger.debug({ mintEvents })
     if (!mintEvents || !mintEvents.length) {
       throw new Error('Could not retrieve the mint event')
     }
-    const mintTxHash = mintEvents.find(event => event.raw.topics[3] === tokenId)
-      .transactionHash
+    const mintTxHash = mintEvents.find(event => event.raw.topics[3] === tokenId).transactionHash
     let mint: any = await this.web3Client.web3.eth.getTransaction(mintTxHash)
     mint = ethUtils.bufferToHex(await Proofs.getTxBytes(mint))
     return { payload, mint }
-  }
-
-  private async _buildPayloadForExit(burnTxHash) {
-    // check checkpoint
-    const lastChildBlock = await this.rootChain.getLastChildBlock()
-    const burnTx = await this.web3Client
-      .getMaticWeb3()
-      .eth.getTransaction(burnTxHash)
-    const receipt = await this.web3Client
-      .getMaticWeb3()
-      .eth.getTransactionReceipt(burnTxHash)
-    const block: any = await this.web3Client
-      .getMaticWeb3()
-      .eth.getBlock(burnTx.blockNumber, true /* returnTransactionObjects */)
-
-    logger.info( { 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock } )
-    assert.ok(
-      new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
-      'Burn transaction has not been checkpointed as yet',
-    )
-    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
-    const headerBlock = await this.web3Client.call(
-      this.rootChain
-        .getRawContract()
-        .methods.headerBlocks(this.encode(headerBlockNumber)),
-    )
-    logger.info({ 'headerBlockNumber': headerBlockNumber.toString(), headerBlock })
-
-    // build block proof
-    const blockProof = await Proofs.buildBlockProof(
-      this.web3Client.getMaticWeb3(),
-      headerBlock.start,
-      headerBlock.end,
-      burnTx.blockNumber,
-    )
-    // console.log('blockProof', blockProof)
-    const receiptProof = await Proofs.getReceiptProof(
-      receipt,
-      block,
-      this.web3Client.getMaticWeb3(),
-    )
-    return this._encodePayload(
-      headerBlockNumber,
-      blockProof,
-      burnTx.blockNumber,
-      block.timestamp,
-      Buffer.from(block.transactionsRoot.slice(2), 'hex'),
-      Buffer.from(block.receiptsRoot.slice(2), 'hex'),
-      Proofs.getReceiptBytes(receipt), // rlp encoded
-      receiptProof.parentNodes,
-      receiptProof.path,
-      // @todo logIndex can vary
-      1, // logIndex
-    )
-  }
-
-  private _encodePayload(
-    headerNumber,
-    buildBlockProof,
-    blockNumber,
-    timestamp,
-    transactionsRoot,
-    receiptsRoot,
-    receipt,
-    receiptParentNodes,
-    path,
-    logIndex,
-  ) {
-    return ethUtils.bufferToHex(
-      ethUtils.rlp.encode([
-        headerNumber,
-        buildBlockProof,
-        blockNumber,
-        timestamp,
-        ethUtils.bufferToHex(transactionsRoot),
-        ethUtils.bufferToHex(receiptsRoot),
-        ethUtils.bufferToHex(receipt),
-        ethUtils.bufferToHex(ethUtils.rlp.encode(receiptParentNodes)),
-        ethUtils.bufferToHex(ethUtils.rlp.encode(path)),
-        logIndex,
-      ]),
-    )
   }
 }

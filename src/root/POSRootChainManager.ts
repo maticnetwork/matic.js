@@ -1,27 +1,20 @@
 import BN from 'bn.js'
-import assert from 'assert'
-import ethUtils from 'ethereumjs-util'
 import Contract from 'web3/eth/contract'
 
 import RootChainManagerArtifact from 'matic-pos-portal/artifacts/RootChainManager.json'
 import ChildTokenArtifact from 'matic-pos-portal/artifacts/ChildToken.json'
 
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
-
 import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import RootChain from './RootChain'
+import ExitManager from '../common/ExitManager'
 
-const logger = {
-  info: require('debug')('maticjs:POSRootChainManager'),
-  debug: require('debug')('maticjs:debug:POSRootChainManager'),
-}
+const TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
 export default class POSRootChainManager extends ContractsBase {
   public posRootChainManager: Contract
-  public rootChain: RootChain
-  private TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+  private exitManager: ExitManager
 
   constructor(posRootChainManager: address, rootChain: RootChain, web3Client: Web3Client) {
     super(web3Client)
@@ -29,7 +22,7 @@ export default class POSRootChainManager extends ContractsBase {
       RootChainManagerArtifact.abi,
       posRootChainManager
     )
-    this.rootChain = rootChain
+    this.exitManager = new ExitManager(rootChain, web3Client)
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -96,7 +89,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async exitERC20(burnTxHash, options?) {
-    const payload = await this._buildPayloadForExit(burnTxHash)
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, TRANSFER_EVENT_SIG)
     const txObject = this.posRootChainManager.methods.exit(payload)
 
     const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
@@ -107,85 +100,5 @@ export default class POSRootChainManager extends ContractsBase {
       return _options
     }
     return this.web3Client.send(txObject, _options)
-  }
-
-  private async _buildPayloadForExit(burnTxHash) {
-    // check checkpoint
-    const lastChildBlock = await this.rootChain.getLastChildBlock()
-    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
-
-    const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
-
-    const block: any = await this.web3Client
-      .getMaticWeb3()
-      .eth.getBlock(burnTx.blockNumber, true /* returnTransactionObjects */)
-
-    logger.info({ 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock })
-    assert.ok(
-      new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
-      'Burn transaction has not been checkpointed as yet'
-    )
-    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
-    const headerBlock = await this.web3Client.call(
-      this.rootChain.getRawContract().methods.headerBlocks(this.encode(headerBlockNumber))
-    )
-    logger.info({ headerBlockNumber: headerBlockNumber.toString(), headerBlock })
-
-    // build block proof
-    const blockProof = await Proofs.buildBlockProof(
-      this.web3Client.getMaticWeb3(),
-      headerBlock.start,
-      headerBlock.end,
-      burnTx.blockNumber
-    )
-
-    const receiptProof = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-
-    const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == this.TRANSFER_EVENT_SIG)
-    assert.ok(logIndex > -1, 'Burn log not found in receipt')
-
-    return this._encodePayload(
-      headerBlockNumber,
-      blockProof,
-      burnTx.blockNumber,
-      block.timestamp,
-      Buffer.from(block.transactionsRoot.slice(2), 'hex'),
-      Buffer.from(block.receiptsRoot.slice(2), 'hex'),
-      Proofs.getReceiptBytes(receipt), // rlp encoded
-      receiptProof.parentNodes,
-      receiptProof.path,
-      logIndex,
-      burnTxHash
-    )
-  }
-
-  private _encodePayload(
-    headerNumber,
-    buildBlockProof,
-    blockNumber,
-    timestamp,
-    transactionsRoot,
-    receiptsRoot,
-    receipt,
-    receiptParentNodes,
-    path,
-    logIndex,
-    burnTxHash
-  ) {
-    return ethUtils.bufferToHex(
-      ethUtils.rlp.encode([
-        headerNumber,
-        buildBlockProof,
-        blockNumber,
-        timestamp,
-        ethUtils.bufferToHex(transactionsRoot),
-        ethUtils.bufferToHex(receiptsRoot),
-        ethUtils.bufferToHex(receipt),
-        ethUtils.bufferToHex(ethUtils.rlp.encode(receiptParentNodes)),
-        ethUtils.bufferToHex(ethUtils.rlp.encode(path)),
-        logIndex,
-        burnTxHash,
-      ])
-    )
   }
 }
