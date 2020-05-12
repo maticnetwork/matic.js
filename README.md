@@ -33,7 +33,7 @@ Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0
 ### Getting started
 
 ```js
-// Import Matic sdk
+// Import default Matic sdk
 import Matic from '@maticnetwork/maticjs'
 
 // Create sdk instance
@@ -52,20 +52,13 @@ const matic = new Matic({
   rootChain: <root-contract-address>,
 
   // Set registry contract. See below for more information
-  // Can be ignored if using POS Portal
   registry: <registry-contract-address>,
 
   // Set withdraw-manager Address. See below for more information
-  // Can be ignored if using POS Portal
   withdrawManager: <withdraw-manager-address>,
 
   // Set deposit-manager Address. See below for more information
-  // Can be ignored if using POS Portal
   depositManager: <deposit-manager-address>,
-
-  // Set pos-root-chain-manager Address. See below for more information
-  // Can be ignored if using Plasma Portal
-  posRootChainManager: <pos-root-chain-manager-address>,
 })
 
 // init matic
@@ -190,16 +183,38 @@ await matic.processExits(
   options // transaction fields
 )
 
+
+// Import Matic sdk for POS Portal
+import MaticPOSClient from '@maticnetwork/maticjs'
+
+const maticPOSClient = new MaticPOSClient({
+
+  // Set Matic provider - string or provider instance
+  // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3.providers.WebsocketProvider('ws://localhost:8546')
+  maticProvider: <web3-provider>,
+
+  // Set Mainchain provider - string or provider instance
+  // Example: 'https://kovan.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  parentProvider: <web3-provider>,
+
+  // Set rootchain contract. See below for more information
+  rootChain: <root-contract-address>,
+
+  // Set pos-root-chain-manager Address. See below for more information
+  posRootChainManager: <pos-root-chain-manager-address>,
+})
+
 // Approve ERC20 tokens for deposit using POS Portal
-await matic.approvePOSERC20ForDeposit(
+await maticPOSClient.approveERC20ForDeposit(
   rootToken, // RootToken address,
   amount, // Amount for approval (in wei)
   options // transaction fields
 )
 
 // Deposit tokens into Matic chain using POS Portal.
-// Remember to call `approvePOSERC20ForDeposit` before this
-await matic.depositPOSERC20ForUser(
+// Remember to call `approveERC20ForDeposit` before this
+await maticPOSClient.depositERC20ForUser(
   rootToken, // RootToken address
   user, // User address (in most cases, this will be sender's address),
   amount, // Amount for deposit (in wei)
@@ -208,23 +223,23 @@ await matic.depositPOSERC20ForUser(
 
 // Deposit ether into Matic chain using POS Portal.
 // It is an ERC20 token on Matic chain
-await matic.depositPOSEtherForUser(
+await maticPOSClient.depositEtherForUser(
   user, // User address (in most cases, this will be sender's address),
   amount, // Amount for deposit (in wei)
   options // transaction fields
 )
 
 // Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction id
-await matic.burnPOSERC20(
+await maticPOSClient.burnERC20(
   childToken, // ChildToken address
   amount, // Amount to burn (in wei)
   options // transaction fields
 )
 
-// Exit funds from the POS Portal using the Transaction id generated from the 'burnPOSERC20' method
+// Exit funds from the POS Portal using the Transaction id generated from the 'burnERC20' method
 // Can be called after checkpoint has been submitted for the block containing burn tx.
-await matic.exitPOSERC20(
-  txId, // Transaction id generated from the 'burnPOSERC20' method
+await maticPOSClient.exitERC20(
+  txId, // Transaction id generated from the 'burnERC20' method
   options // transaction fields
 )
 
@@ -284,11 +299,11 @@ https://faucet.matic.network
 
 ##### **POS Portal**
 
-- <a href="#approvePOSERC20ForDeposit"><code>matic.<b>approvePOSERC20ForDeposit()</b></code></a>
-- <a href="#depositPOSERC20ForUser"><code>matic.<b>depositPOSERC20ForUser()</b></code></a>
-- <a href="#depositPOSEtherForUser"><code>matic.<b>depositPOSEtherForUser()</b></code></a>
-- <a href="#burnPOSERC20"><code>matic.<b>burnPOSERC20()</b></code></a>
-- <a href="#exitPOSERC20"><code>matic.<b>exitPOSERC20()</b></code></a>
+- <a href="#pos-approveERC20ForDeposit"><code>maticPOSClient.<b>approveERC20ForDeposit()</b></code></a>
+- <a href="#pos-depositERC20ForUser"><code>maticPOSClient.<b>depositERC20ForUser()</b></code></a>
+- <a href="#pos-depositEtherForUser"><code>maticPOSClient.<b>depositEtherForUser()</b></code></a>
+- <a href="#pos-burnERC20"><code>maticPOSClient.<b>burnERC20()</b></code></a>
+- <a href="#pos-exitERC20"><code>maticPOSClient.<b>exitERC20()</b></code></a>
 
 ---
 
@@ -810,9 +825,9 @@ await this.maticClient.withdrawManager.startExitForMetadataMintableBurntToken(bu
 
 #### **POS Portal**
 
-<a name="approvePOSERC20ForDeposit"></a>
+<a name="pos-approveERC20ForDeposit"></a>
 
-#### matic.approvePOSERC20ForDeposit(rootToken, amount, options)
+#### maticPOSClient.approveERC20ForDeposit(rootToken, amount, options)
 
 Approves given `amount` of `rootToken` to POS Portal contract.
 
@@ -826,16 +841,16 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.approvePOSERC20ForDeposit('0x718Ca123...', '1000000000000000000', {
+maticPOSClient.approveERC20ForDeposit('0x718Ca123...', '1000000000000000000', {
   from: '0xABc578455...',
 })
 ```
 
 ---
 
-<a name="depositPOSERC20ForUser"></a>
+<a name="pos-depositERC20ForUser"></a>
 
-#### matic.depositPOSERC20ForUser(rootToken, user, amount, options)
+#### maticPOSClient.depositERC20ForUser(rootToken, user, amount, options)
 
 Deposit given `amount` of `rootToken` for `user` via POS Portal.
 
@@ -845,7 +860,7 @@ Deposit given `amount` of `rootToken` for `user` via POS Portal.
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
   - `encodeAbi` must be boolean value. For Byte code of transaction, use `encodeAbi: true`
 
-The given amount must be [approved](#approvePOSERC20ForDeposit) for deposit beforehand.
+The given amount must be [approved](#pos-approveERC20ForDeposit) for deposit beforehand.
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
 
 Example:
@@ -853,19 +868,19 @@ Example:
 ```js
 const user = <your-address> or <any-account-address>
 
-matic.depositPOSERC20ForUser('0x718Ca123...', user, '1000000000000000000', {
+maticPOSClient.depositERC20ForUser('0x718Ca123...', user, '1000000000000000000', {
   from: '0xABc578455...'
 })
 ```
 
 ---
 
-<a name="depositPOSEtherForUser"></a>
+<a name="pos-depositEtherForUser"></a>
 
-#### matic.depositPOSEtherForUser(rootToken, user, amount, options)
+#### maticPOSClient.depositEtherForUser(rootToken, user, amount, options)
 
 Deposit given `amount` of ETH for `user` via POS Portal.
-ETH is an ERC20 token on Matic chain, follow ERC20 [burn](#burnPOSERC20) and [exit](#exitPOSERC20) to withdraw it.
+ETH is an ERC20 token on Matic chain, follow ERC20 [burn](#pos-burnERC20) and [exit](#pos-exitERC20) to withdraw it.
 
 - `user` must be valid account address
 - `amount` must be ETH amount in wei (string, not in Number)
@@ -879,16 +894,16 @@ Example:
 ```js
 const user = <your-address> or <any-account-address>
 
-matic.depositPOSEtherForUser(user, '1000000000000000000', {
+maticPOSClient.depositEtherForUser(user, '1000000000000000000', {
   from: '0xABc578455...'
 })
 ```
 
 ---
 
-<a name="burnPOSERC20"></a>
+<a name="pos-burnERC20"></a>
 
-#### matic.burnPOSERC20(childToken, amount, options)
+#### maticPOSClient.burnERC20(childToken, amount, options)
 
 Burn given `amount` of `childToken` to be exited from POS Portal.
 
@@ -902,20 +917,20 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.burnPOSERC20('0x718Ca123...', '1000000000000000000', {
+maticPOSClient.burnERC20('0x718Ca123...', '1000000000000000000', {
   from: '0xABc578455...',
 })
 ```
 
 ---
 
-<a name="exitPOSERC20"></a>
+<a name="pos-exitERC20"></a>
 
-#### matic.exitPOSERC20(burnTxHash, options)
+#### maticPOSClient.exitERC20(burnTxHash, options)
 
 Exit tokens from POS Portal. This can be called after checkpoint has been submitted for the block containing burn tx.
 
-- `burnTxHash` must be valid tx hash for token burn using [burnPOSERC20](#burnPOSERC20).
+- `burnTxHash` must be valid tx hash for token burn using [burnERC20](#pos-burnERC20).
 - `options` see [more infomation here](#approveERC20TokensForDeposit)
 
 This returns `Promise` object, which will be fulfilled when transaction gets confirmed (when receipt is generated).
@@ -923,7 +938,7 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.exitPOSERC20('0xabcd...789', {
+maticPOSClient.exitERC20('0xabcd...789', {
   from: '0xABc578455...',
 })
 ```
