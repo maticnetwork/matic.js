@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0-beta.11",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.node.js",
   "types": "dist/index.d.ts",
@@ -54,6 +54,7 @@
     "ethereumjs-util": "^5.2.0",
     "isomorphic-fetch": "2.2.1",
     "matic-protocol": "github:maticnetwork/contracts#fa6862dc6ddae97351aa1b4d16c087861b5a489e",
+    "matic-pos-portal": "github:maticnetwork/pos-portal#93b4791aadf3a4faf9971e1587f421b4fe0b73c3",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
     "web3": "1.2.1",
