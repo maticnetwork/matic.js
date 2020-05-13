@@ -11,4 +11,4 @@ test-blockchain/data/**
 .env
 bundle.js
 
-dist/
+
