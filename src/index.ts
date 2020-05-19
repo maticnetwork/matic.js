@@ -9,12 +9,69 @@ import { address, SendOptions, order } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
 
+export class MaticPOSClient extends SDKClient {
+  private rootChain: RootChain
+  private posRootChainManager: POSRootChainManager
+
+  constructor(options: any = {}) {
+    super(options)
+    this.rootChain = new RootChain(options.rootChain, this.web3Client)
+    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
+  }
+
+  approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken)) {
+      throw new Error('options.from, rootToken or amount is missing')
+    }
+    return this.posRootChainManager.approveERC20(rootToken, amount, options)
+  }
+
+  depositERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or amount is missing')
+    }
+    return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
+  }
+
+  depositEtherForUser(user: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !amount || !user)) {
+      throw new Error('options.from, user or amount is missing')
+    }
+    return this.posRootChainManager.depositEtherForUser(amount, user, options)
+  }
+
+  burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!amount) {
+      // ${amount} will stringify it while printing which might be a problem
+      throw new Error(`${amount} is not a amount`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnERC20(childToken, amount, options)
+  }
+
+  exitERC20(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitERC20(txHash, options)
+  }
+}
+
 export default class Matic extends SDKClient {
   public depositManager: DepositManager
   public rootChain: RootChain
   public withdrawManager: WithdrawManager
   public registry: Registry
   public utils: Utils
+  public static MaticPOSClient = MaticPOSClient // workaround for web compatibility
 
   constructor(options: any = {}) {
     super(options)
@@ -214,60 +271,5 @@ export default class Matic extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-  }
-}
-export class MaticPOSClient extends SDKClient {
-  private rootChain: RootChain
-  private posRootChainManager: POSRootChainManager
-
-  constructor(options: any = {}) {
-    super(options)
-    this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
-  }
-
-  approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !rootToken)) {
-      throw new Error('options.from, rootToken or amount is missing')
-    }
-    return this.posRootChainManager.approveERC20(rootToken, amount, options)
-  }
-
-  depositERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !rootToken || !user)) {
-      throw new Error('options.from, rootToken, user, or amount is missing')
-    }
-    return this.posRootChainManager.depositERC20ForUser(rootToken, amount, user, options)
-  }
-
-  depositEtherForUser(user: address, amount: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !amount || !user)) {
-      throw new Error('options.from, user or amount is missing')
-    }
-    return this.posRootChainManager.depositEtherForUser(amount, user, options)
-  }
-
-  burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
-      throw new Error(`${childToken} is not a valid token address`)
-    }
-    if (!amount) {
-      // ${amount} will stringify it while printing which might be a problem
-      throw new Error(`${amount} is not a amount`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
-    }
-    return this.posRootChainManager.burnERC20(childToken, amount, options)
-  }
-
-  exitERC20(txHash: string, options?: SendOptions) {
-    if (!txHash) {
-      throw new Error(`txHash not provided`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
-    }
-    return this.posRootChainManager.exitERC20(txHash, options)
   }
 }
