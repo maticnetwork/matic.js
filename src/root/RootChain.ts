@@ -5,6 +5,11 @@ import { MaticClientInitializationOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import BN from 'bn.js'
 
+const logger = {
+  info: require('debug')('maticjs:Web3Client'),
+  debug: require('debug')('maticjs:debug:Web3Client'),
+}
+
 export default class RootChain extends ContractsBase {
   public rootChain: Contract
 
@@ -33,11 +38,10 @@ export default class RootChain extends ContractsBase {
         break
       }
       let mid = start.add(end).div(new BN(2))
-      console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() }) // eslint-disable-line
+      logger.debug({ start: start.toString(), mid: mid.toString(), end: end.toString() }) // eslint-disable-line
       const headerBlock = await this.web3Client.call(
         this.rootChain.methods.headerBlocks(mid.mul(new BN(10000)).toString())
       )
-      // console.log('headerBlock', headerBlock)
       const headerStart = new BN(headerBlock.start)
       const headerEnd = new BN(headerBlock.end)
       if (headerStart.lte(childBlockNumber) && childBlockNumber.lte(headerEnd)) {

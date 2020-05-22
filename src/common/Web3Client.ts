@@ -1,6 +1,11 @@
 import Web3 from 'web3'
 import { SendOptions, address } from '../types/Common'
 
+const logger = {
+  info: require('debug')('maticjs:Web3Client'),
+  debug: require('debug')('maticjs:debug:Web3Client'),
+}
+
 export default class Web3Client {
   public parentWeb3: Web3
   public web3: Web3
@@ -80,7 +85,7 @@ export default class Web3Client {
       _options.gas = _options.gas || this.maticDefaultOptions.gas
       _options.gasPrice = _options.gasPrice || this.maticDefaultOptions.gasPrice
     }
-    console.log('sending tx with', { _options })
+    logger.debug('sending tx with', { _options })
     return this.wrapWeb3Promise(txObject.send(_options), _options)
   }
 

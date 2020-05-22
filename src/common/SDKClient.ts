@@ -80,7 +80,6 @@ export default class SDKClient extends ContractsBase {
   }
 
   async transferMaticEth(to: address, amount: BN | string, options?: SendOptions) {
-    console.log(to, this.encode(amount))
     if (options && (!options.from || !amount || !to)) {
       throw new Error('options.from, to or amount is missing')
     }

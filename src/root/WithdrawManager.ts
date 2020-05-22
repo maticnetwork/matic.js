@@ -83,7 +83,7 @@ export default class WithdrawManager extends ContractsBase {
   async processExits(token: address, options?: SendOptions) {
     options = options || {}
     if (!options || !options.gas || options.gas < 2000000) {
-      console.log('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough') // eslint-disable-line
+      logger.info('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough') // eslint-disable-line
       options.gas = 2000000
     }
     const txObject = this.withdrawManager.methods.processExits(token)

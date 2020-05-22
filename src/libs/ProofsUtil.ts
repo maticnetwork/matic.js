@@ -7,6 +7,11 @@ const MerkleTree = require('./MerkleTree')
 const EthereumBlock = require('ethereumjs-block/from-rpc')
 const rlp = ethUtils.rlp
 
+const logger = {
+  info: require('debug')('maticjs:Web3Client'),
+  debug: require('debug')('maticjs:debug:Web3Client'),
+}
+
 export default class ProofsUtil {
   static getBlockHeader(block) {
     const n = new BN(block.number).toArrayLike(Buffer, 'be', 32)
@@ -17,27 +22,27 @@ export default class ProofsUtil {
   }
 
   static async buildCheckpointRoot(web3, start, end) {
-    console.log('buildCheckpointRoot...')
+    logger.debug('buildCheckpointRoot...')
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
     return ethUtils.bufferToHex(tree.getRoot())
   }
 
   static async buildBlockProof(web3, start, end, blockNumber) {
-    console.log('buildBlockProof...', start, end, blockNumber)
+    logger.debug('buildBlockProof...', start, end, blockNumber)
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
     const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber, true)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
   static async buildBlockHeaderMerkle(web3, start, end) {
-  const headers = []
-  for (let i = start; i <= end; i++) {
-    console.log('fetching block', i)
-    const _blockHeader = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i, true))
-    headers.push(_blockHeader)
+    const headers = []
+    for (let i = start; i <= end; i++) {
+      logger.debug('fetching block', i)
+      const _blockHeader = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i, true))
+      headers.push(_blockHeader)
+    }
+    return new MerkleTree(headers)
   }
-  return new MerkleTree(headers)
-}
 
   static async getTxProof(tx, block) {
     const txTrie = new Trie()
@@ -58,27 +63,24 @@ export default class ProofsUtil {
 
     // promise
     return new Promise((resolve, reject) => {
-      txTrie.findPath(
-        rlp.encode(tx.transactionIndex),
-        (err, rawTxNode, reminder, stack) => {
-          if (err) {
-            return reject(err)
-          }
-
-          if (reminder.length > 0) {
-            return reject(new Error('Node does not contain the key'))
-          }
-
-          const prf = {
-            blockHash: ethUtils.toBuffer(tx.blockHash),
-            parentNodes: stack.map(s => s.raw),
-            root: ProofsUtil.getRawHeader(block).transactionsTrie,
-            path: rlp.encode(tx.transactionIndex),
-            value: rlp.decode(rawTxNode.value)
-          }
-          resolve(prf)
+      txTrie.findPath(rlp.encode(tx.transactionIndex), (err, rawTxNode, reminder, stack) => {
+        if (err) {
+          return reject(err)
         }
-      )
+
+        if (reminder.length > 0) {
+          return reject(new Error('Node does not contain the key'))
+        }
+
+        const prf = {
+          blockHash: ethUtils.toBuffer(tx.blockHash),
+          parentNodes: stack.map(s => s.raw),
+          root: ProofsUtil.getRawHeader(block).transactionsTrie,
+          path: rlp.encode(tx.transactionIndex),
+          value: rlp.decode(rawTxNode.value),
+        }
+        resolve(prf)
+      })
     })
   }
 
@@ -130,36 +132,31 @@ export default class ProofsUtil {
 
     // promise
     return new Promise((resolve, reject) => {
-      receiptsTrie.findPath(
-        rlp.encode(receipt.transactionIndex),
-        (err, rawReceiptNode, reminder, stack) => {
-          if (err) {
-            return reject(err)
-          }
-
-          if (reminder.length > 0) {
-            return reject(new Error('Node does not contain the key'))
-          }
-
-          const prf = {
-            blockHash: ethUtils.toBuffer(receipt.blockHash),
-            parentNodes: stack.map(s => s.raw),
-            root: ProofsUtil.getRawHeader(block).receiptTrie,
-            path: rlp.encode(receipt.transactionIndex),
-            value: rlp.decode(rawReceiptNode.value)
-          }
-          resolve(prf)
+      receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), (err, rawReceiptNode, reminder, stack) => {
+        if (err) {
+          return reject(err)
         }
-      )
+
+        if (reminder.length > 0) {
+          return reject(new Error('Node does not contain the key'))
+        }
+
+        const prf = {
+          blockHash: ethUtils.toBuffer(receipt.blockHash),
+          parentNodes: stack.map(s => s.raw),
+          root: ProofsUtil.getRawHeader(block).receiptTrie,
+          path: rlp.encode(receipt.transactionIndex),
+          value: rlp.decode(rawReceiptNode.value),
+        }
+        resolve(prf)
+      })
     })
   }
 
   static getReceiptBytes(receipt) {
     return rlp.encode([
       ethUtils.toBuffer(
-        receipt.status !== undefined && receipt.status != null
-          ? receipt.status ? 1 : 0
-          : receipt.root
+        receipt.status !== undefined && receipt.status != null ? (receipt.status ? 1 : 0) : receipt.root
       ),
       ethUtils.toBuffer(receipt.cumulativeGasUsed),
       ethUtils.toBuffer(receipt.logsBloom),
@@ -170,9 +167,9 @@ export default class ProofsUtil {
         return [
           ethUtils.toBuffer(l.address), // convert address to buffer
           l.topics.map(ethUtils.toBuffer), // convert topics to buffer
-          ethUtils.toBuffer(l.data) // convert data to buffer
+          ethUtils.toBuffer(l.data), // convert data to buffer
         ]
-      })
+      }),
     ])
   }
 }
