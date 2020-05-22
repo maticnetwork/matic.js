@@ -1,6 +1,6 @@
 import Contract from 'web3/eth/contract'
-import RootChainArtifact from 'matic-protocol/contracts-core/artifacts/RootChain.json'
 
+import network from '../common/matic-protocol'
 import ContractsBase from '../common/ContractsBase'
 import { address } from '../types/Common'
 import Web3Client from '../common/Web3Client'
@@ -11,7 +11,7 @@ export default class RootChain extends ContractsBase {
 
   constructor(rootChain: address, web3Client: Web3Client) {
     super(web3Client)
-    this.rootChain = new this.web3Client.parentWeb3.eth.Contract(RootChainArtifact.abi, rootChain)
+    this.rootChain = new this.web3Client.parentWeb3.eth.Contract(network.abi('RootChain'), rootChain)
   }
 
   getLastChildBlock() {
@@ -28,11 +28,16 @@ export default class RootChain extends ContractsBase {
 
     // binary search on all the checkpoints to find the checkpoint that contains the childBlockNumber
     let ans
-    while(start.lte(end)) {
-      if (start.eq(end)) { ans = start; break }
+    while (start.lte(end)) {
+      if (start.eq(end)) {
+        ans = start
+        break
+      }
       let mid = start.add(end).div(new BN(2))
       console.log({ start: start.toString(), mid: mid.toString(), end: end.toString() }) // eslint-disable-line
-      const headerBlock = await this.web3Client.call(this.rootChain.methods.headerBlocks(mid.mul(new BN(10000)).toString()))
+      const headerBlock = await this.web3Client.call(
+        this.rootChain.methods.headerBlocks(mid.mul(new BN(10000)).toString())
+      )
       // console.log('headerBlock', headerBlock)
       const headerStart = new BN(headerBlock.start)
       const headerEnd = new BN(headerBlock.end)

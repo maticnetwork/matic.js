@@ -103,15 +103,11 @@ export default class Matic extends SDKClient {
         value,
       })
     }
-
     Object.assign(options, { value, to })
-
-    const _options = await this._fillOptions(options, {}, web3Object)
-    if (options.encodeAbi) {
-      return _options
-    }
-
-    return this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
+    const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
+    return _options.encodeAbi
+      ? _options
+      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {
@@ -192,9 +188,7 @@ export default class Matic extends SDKClient {
       sellOrder.expiry,
       to
     )
-
-    const _options = await this._fillOptions(options, txObj, this.web3Client.getMaticWeb3())
-
+    const _options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
     return this.web3Client.send(txObj, _options)
   }
 
@@ -214,15 +208,10 @@ export default class Matic extends SDKClient {
       this.depositManager.getAddress(),
       tokenId
     )
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 

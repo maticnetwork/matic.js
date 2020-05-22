@@ -6,7 +6,6 @@ import ContractsBase from '../common/ContractsBase'
 
 export default class Matic extends ContractsBase {
   public web3Client: Web3Client
-
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
       options.parentProvider,
@@ -59,21 +58,12 @@ export default class Matic extends ContractsBase {
     if (options && (!options.from || !amount || !token || !to)) {
       throw new Error('options.from, to, token or amount is missing')
     }
-
     const txObject = this.getERC20TokenContract(token, options.parent).methods.transfer(to, this.encode(amount))
-
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
-    )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
+    const onRootChain = options.parent ? true : false
+    const _options = await this.web3Client.fillOptions(txObject, onRootChain, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
@@ -83,19 +73,26 @@ export default class Matic extends ContractsBase {
     }
 
     const txObject = this.getERC721TokenContract(token, options.parent).methods.transferFrom(options.from, to, tokenId)
-
-    const _options = await this._fillOptions(
-      options,
-      txObject,
-      options.parent ? this.web3Client.getParentWeb3() : this.web3Client.getMaticWeb3()
-    )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
+    const onRootChain = options.parent ? true : false
+    const _options = await this.web3Client.fillOptions(txObject, onRootChain, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
+    return this.web3Client.send(txObject, _options)
+  }
 
+  async transferMaticEth(to: address, amount: BN | string, options?: SendOptions) {
+    console.log(to, this.encode(amount))
+    if (options && (!options.from || !amount || !to)) {
+      throw new Error('options.from, to or amount is missing')
+    }
+    const token = ContractsBase.MATIC_CHILD_TOKEN
+    const txObject = this.getChildMaticContract().methods.transfer(to, this.encode(amount))
+    options.value = this.encode(amount)
+    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    }
     return this.web3Client.send(txObject, _options)
   }
 }

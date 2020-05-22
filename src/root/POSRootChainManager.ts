@@ -30,74 +30,51 @@ export default class POSRootChainManager extends ContractsBase {
       this.posRootChainManager.options.address,
       this.encode(amount)
     )
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = rootToken
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
   async depositERC20ForUser(rootToken: address, amount: BN | string, user: address, options?: SendOptions) {
     const txObject = this.posRootChainManager.methods.depositFor(user, rootToken, this.encode(amount))
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.posRootChainManager.options.address
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
   async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
     const txObject = this.posRootChainManager.methods.depositEtherFor(user)
-
-    const _options = await this._fillOptions(
-      Object.assign(options, { value: this.encode(amount) }),
+    const _options = await this.web3Client.fillOptions(
       txObject,
-      this.web3Client.getParentWeb3()
+      true /* onRootChain */,
+      Object.assign(options, { value: this.encode(amount) })
     )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.posRootChainManager.options.address
-      return _options
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
   async burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
     const childTokenContract = new this.web3Client.web3.eth.Contract(ChildTokenArtifact.abi, childToken)
     const txObject = childTokenContract.methods.withdraw(this.encode(amount))
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getMaticWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = childToken
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
   async exitERC20(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, TRANSFER_EVENT_SIG)
     const txObject = this.posRootChainManager.methods.exit(payload)
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.posRootChainManager.options.address
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
     return this.web3Client.send(txObject, _options)
   }
