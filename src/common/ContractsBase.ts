@@ -39,12 +39,4 @@ export default class ContractsBase {
   public getChildMaticContract() {
     return new this.web3Client.web3.eth.Contract(network.abi('MRC20'), ContractsBase.MATIC_CHILD_TOKEN)
   }
-
-  // wrapWeb3Promise(promise, options) {
-  //   const _emptyFunc = () => {}
-  //   return promise
-  //     .on('transactionHash', options.onTransactionHash || _emptyFunc)
-  //     .on('receipt', options.onReceipt || _emptyFunc)
-  //     .on('error', options.onError || _emptyFunc)
-  // }
 }

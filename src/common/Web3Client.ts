@@ -30,7 +30,7 @@ export default class Web3Client {
     return this._fillOptions(txObject, this.web3, options || this.maticDefaultOptions)
   }
 
-  async _fillOptions(txObject, web3, _options) {
+  private async _fillOptions(txObject, web3, _options) {
     if (!_options.from) throw new Error('from is not specified')
     const from = _options.from
     delete txObject.chainId
@@ -64,17 +64,6 @@ export default class Web3Client {
       .on('transactionHash', options.onTransactionHash || _emptyFunc)
       .on('receipt', options.onReceipt || _emptyFunc)
       .on('error', options.onError || _emptyFunc)
-  }
-
-  async callOnMatic(method, options?) {
-    return method.call(options || this.maticDefaultOptions)
-  }
-
-  async sendOnMatic(method, options?) {
-    const _options = options || this.maticDefaultOptions
-    if (!_options.from) return new Error('from is not specified')
-    console.log('sending tx on matic with', _options) // eslint-disable-line
-    return this.wrapWeb3Promise(method.send(_options), _options)
   }
 
   async send(txObject, options?) {

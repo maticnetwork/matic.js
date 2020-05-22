@@ -3,7 +3,7 @@ import Contract from 'web3/eth/contract'
 
 import BN from 'bn.js'
 import network from '../common/matic-protocol'
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
+import Proofs from '../libs/ProofsUtil.js'
 
 import { address, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
@@ -11,7 +11,6 @@ import ContractsBase from '../common/ContractsBase'
 import RootChain from './RootChain'
 import Registry from './Registry'
 import ExitManager from '../common/ExitManager'
-import Matic from '../common/SDKClient'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),

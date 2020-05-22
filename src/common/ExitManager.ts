@@ -6,7 +6,7 @@ import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
 import RootChain from '../root/RootChain'
 
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
+import Proofs from '../libs/ProofsUtil.js'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
@@ -49,7 +49,7 @@ export default class ExitManager extends ContractsBase {
       burnTx.blockNumber
     )
 
-    const receiptProof = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
+    const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
     assert.ok(logIndex > -1, 'Log not found in receipt')
