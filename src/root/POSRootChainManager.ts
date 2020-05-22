@@ -5,7 +5,7 @@ import RootChainManagerArtifact from 'matic-pos-portal/artifacts/RootChainManage
 import ChildTokenArtifact from 'matic-pos-portal/artifacts/ChildToken.json'
 
 import ContractsBase from '../common/ContractsBase'
-import { address, SendOptions } from '../types/Common'
+import { address, SendOptions, MaticClientInitializationOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import RootChain from './RootChain'
 import ExitManager from '../common/ExitManager'
@@ -16,13 +16,13 @@ export default class POSRootChainManager extends ContractsBase {
   public posRootChainManager: Contract
   private exitManager: ExitManager
 
-  constructor(posRootChainManager: address, rootChain: RootChain, web3Client: Web3Client) {
-    super(web3Client)
+  constructor(options: MaticClientInitializationOptions, rootChain: RootChain, web3Client: Web3Client) {
+    super(web3Client, options.network)
     this.posRootChainManager = new this.web3Client.parentWeb3.eth.Contract(
       RootChainManagerArtifact.abi,
-      posRootChainManager
+      options.posRootChainManager
     )
-    this.exitManager = new ExitManager(rootChain, web3Client)
+    this.exitManager = new ExitManager(rootChain, options, web3Client)
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {

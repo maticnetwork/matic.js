@@ -5,7 +5,7 @@ import ethUtils from 'ethereumjs-util'
 import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
 import RootChain from '../root/RootChain'
-
+import { MaticClientInitializationOptions } from '../types/Common'
 import Proofs from '../libs/ProofsUtil.js'
 
 const logger = {
@@ -16,8 +16,8 @@ const logger = {
 export default class ExitManager extends ContractsBase {
   private rootChain: RootChain
 
-  constructor(rootChain: RootChain, web3Client: Web3Client) {
-    super(web3Client)
+  constructor(rootChain: RootChain, options: MaticClientInitializationOptions, web3Client: Web3Client) {
+    super(web3Client, options.network)
     this.rootChain = rootChain
   }
 

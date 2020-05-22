@@ -1,11 +1,12 @@
 import BN from 'bn.js'
+import Network from '@maticnetwork/meta/network'
 
 import DepositManager from './root/DepositManager'
 import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
 import POSRootChainManager from './root/POSRootChainManager'
-import { address, SendOptions, order } from './types/Common'
+import { address, SendOptions, order, MaticClientInitializationOptions } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
 
@@ -73,12 +74,32 @@ export default class Matic extends SDKClient {
   public utils: Utils
   public static MaticPOSClient = MaticPOSClient // workaround for web compatibility
 
-  constructor(options: any = {}) {
+  constructor(options: MaticClientInitializationOptions = {}) {
+    let network
+    if (options.network && options.version) {
+      network = new Network(options.network, options.version)
+      if (!network) throw new Error(`network ${options.network} - ${options.version} is not supported`)
+    } else {
+      // User provided the contract addresses in options object
+      // We'll use latest network that this version of maticjs supports to pickup abis.
+      network = new Network('testnet', 'cs-2007')
+    }
+    // override contract addresses if they were provided during initialization
+    options = Object.assign(
+      {
+        registry: network.Main.Contracts.Registry,
+        rootChain: network.Main.Contracts.Registry,
+        depositManager: network.Main.Contracts.DepositManagerProxy,
+        withdrawManager: network.Main.Contracts.WithdrawManagerProxy,
+      },
+      options
+    )
+    options.network = network
     super(options)
-    this.registry = new Registry(options.registry, this.web3Client)
-    this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
-    this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
+    this.registry = new Registry(options, this.web3Client)
+    this.rootChain = new RootChain(options, this.web3Client)
+    this.depositManager = new DepositManager(options, this.web3Client, this.registry)
+    this.withdrawManager = new WithdrawManager(options, this.rootChain, this.web3Client, this.registry)
     this.utils = new Utils()
   }
 

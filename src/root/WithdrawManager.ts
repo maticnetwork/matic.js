@@ -2,10 +2,9 @@ import ethUtils from 'ethereumjs-util'
 import Contract from 'web3/eth/contract'
 
 import BN from 'bn.js'
-import network from '../common/matic-protocol'
 import Proofs from '../libs/ProofsUtil.js'
 
-import { address, SendOptions } from '../types/Common'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import ContractsBase from '../common/ContractsBase'
 import RootChain from './RootChain'
@@ -28,23 +27,31 @@ export default class WithdrawManager extends ContractsBase {
   private registry: Registry
   private exitManager: ExitManager
 
-  constructor(withdrawManager: address, rootChain: RootChain, web3Client: Web3Client, registry: Registry) {
-    super(web3Client)
-    this.withdrawManager = new this.web3Client.parentWeb3.eth.Contract(network.abi('WithdrawManager'), withdrawManager)
+  constructor(
+    options: MaticClientInitializationOptions,
+    rootChain: RootChain,
+    web3Client: Web3Client,
+    registry: Registry
+  ) {
+    super(web3Client, options.network)
+    this.withdrawManager = new this.web3Client.parentWeb3.eth.Contract(
+      this.network.abi('WithdrawManager'),
+      options.withdrawManager
+    )
     this.rootChain = rootChain
     this.registry = registry
-    this.exitManager = new ExitManager(rootChain, web3Client)
+    this.exitManager = new ExitManager(rootChain, options, web3Client)
   }
 
   async initialize() {
     const erc20PredicateAddress = await this.registry.registry.methods.erc20Predicate().call()
     const erc721PredicateAddress = await this.registry.registry.methods.erc721Predicate().call()
     this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(
-      network.abi('ERC20Predicate'),
+      this.network.abi('ERC20Predicate'),
       erc20PredicateAddress
     )
     this.erc721Predicate = new this.web3Client.parentWeb3.eth.Contract(
-      network.abi('ERC721Predicate'),
+      this.network.abi('ERC721Predicate'),
       erc721PredicateAddress
     )
   }
@@ -115,7 +122,10 @@ export default class WithdrawManager extends ContractsBase {
    */
   async startExitForMintableBurntToken(burnTxHash, predicate: address, options?) {
     const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
-    const _predicate = new this.web3Client.parentWeb3.eth.Contract(network.abi('MintableERC721Predicate'), predicate)
+    const _predicate = new this.web3Client.parentWeb3.eth.Contract(
+      this.network.abi('MintableERC721Predicate'),
+      predicate
+    )
     const txObject = _predicate.methods.startExitForMintableBurntToken(payload, mint)
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     return this.web3Client.send(txObject, _options)
@@ -129,7 +139,10 @@ export default class WithdrawManager extends ContractsBase {
    */
   async startExitForMetadataMintableBurntToken(burnTxHash, predicate: address, options?) {
     const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
-    const _predicate = new this.web3Client.parentWeb3.eth.Contract(network.abi('MintableERC721Predicate'), predicate)
+    const _predicate = new this.web3Client.parentWeb3.eth.Contract(
+      this.network.abi('MintableERC721Predicate'),
+      predicate
+    )
     const txObject = _predicate.methods.startExitForMetadataMintableBurntToken(payload, mint)
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     return this.web3Client.send(txObject, _options)
@@ -143,7 +156,7 @@ export default class WithdrawManager extends ContractsBase {
     )
     const tokenId = withdrawEvent.data
     logger.debug({ burnTxHash, burnReceipt, withdrawEvent, tokenId })
-    const contract = new this.web3Client.web3.eth.Contract(network.abi('ChildERC721Mintable'), burnReceipt.to)
+    const contract = new this.web3Client.web3.eth.Contract(this.network.abi('ChildERC721Mintable'), burnReceipt.to)
     const mintEvents = await contract.getPastEvents('Transfer', {
       filter: { tokenId },
       fromBlock: 0,

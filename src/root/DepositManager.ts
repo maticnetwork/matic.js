@@ -2,10 +2,8 @@ import BN from 'bn.js'
 import bluebird from 'bluebird'
 import Contract from 'web3/eth/contract'
 
-import network from '../common/matic-protocol'
-
 import ContractsBase from '../common/ContractsBase'
-import { address, SendOptions } from '../types/Common'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import Registry from './Registry'
 
@@ -17,18 +15,18 @@ export default class DepositManager extends ContractsBase {
 
   private registry: Registry
 
-  constructor(depositManager: address, web3Client: Web3Client, registry: Registry) {
-    super(web3Client)
+  constructor(options: MaticClientInitializationOptions, web3Client: Web3Client, registry: Registry) {
+    super(web3Client, options.network)
     this.depositManagerContract = new this.web3Client.parentWeb3.eth.Contract(
-      network.abi('DepositManager'),
-      depositManager
+      options.network.abi('DepositManager'),
+      options.depositManager
     )
     this.registry = registry
   }
 
   async initialize() {
     const childChainAddress = (await this.registry.registry.methods.getChildChainAndStateSender().call())[0]
-    this.childChainContract = new this.web3Client.web3.eth.Contract(network.abi('ChildChain'), childChainAddress)
+    this.childChainContract = new this.web3Client.web3.eth.Contract(this.network.abi('ChildChain'), childChainAddress)
   }
 
   async depositStatusFromTxHash(txHash: string) {

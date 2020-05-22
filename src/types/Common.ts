@@ -17,3 +17,17 @@ export declare interface order {
   orderId?: string
   spender?: string
 }
+
+export declare interface MaticClientInitializationOptions {
+  network?: any
+  version?: string
+  parentProvider?: any
+  maticProvider?: any
+  parentDefaultOptions?: any
+  maticDefaultOptions?: any
+  registry?: string
+  rootChain?: string
+  depositManager?: string
+  withdrawManager?: string
+  posRootChainManager?: string
+}

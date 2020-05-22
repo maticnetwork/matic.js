@@ -4,17 +4,15 @@ import Web3Client from '../common/Web3Client'
 import { address, SendOptions } from '../types/Common'
 import ContractsBase from '../common/ContractsBase'
 
-export default class Matic extends ContractsBase {
-  public web3Client: Web3Client
+export default class SDKClient extends ContractsBase {
   constructor(options: any = {}) {
     const web3Client = new Web3Client(
-      options.parentProvider,
-      options.maticProvider,
+      options.parentProvider || options.network.Main.RPC,
+      options.maticProvider || options.network.Matic.RPC,
       options.parentDefaultOptions || {},
       options.maticDefaultOptions || {}
     )
-    super(web3Client)
-    this.web3Client = web3Client
+    super(web3Client, options.network)
   }
 
   setWallet(_wallet) {
