@@ -1,4 +1,5 @@
 const BN = require('bn.js')
+const bluebird = require('bluebird')
 
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')
@@ -30,17 +31,20 @@ export default class ProofsUtil {
   static async buildBlockProof(web3, start, end, blockNumber) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
-    const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber, true)))
+    const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
   static async buildBlockHeaderMerkle(web3, start, end) {
-    const headers = []
-    for (let i = start; i <= end; i++) {
-      logger.debug('fetching block', i)
-      const _blockHeader = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i, true))
-      headers.push(_blockHeader)
-    }
+    const headers = new Array(end - start + 1)
+    await bluebird.map(
+      headers,
+      async (_, i) => {
+        logger.debug('fetching block', i)
+        headers[i] = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i + start))
+      },
+      { concurrency: 20 }
+    )
     return new MerkleTree(headers)
   }
 

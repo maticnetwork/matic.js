@@ -44,9 +44,9 @@ export default class ExitManager extends ContractsBase {
     // build block proof
     const blockProof = await Proofs.buildBlockProof(
       this.web3Client.getMaticWeb3(),
-      headerBlock.start,
-      headerBlock.end,
-      burnTx.blockNumber
+      parseInt(headerBlock.start, 10),
+      parseInt(headerBlock.end, 10),
+      parseInt(burnTx.blockNumber + '', 10)
     )
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())

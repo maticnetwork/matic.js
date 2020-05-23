@@ -17,11 +17,7 @@ export default class MerkleTree {
       throw new Error('Depth must be 20 or less')
     }
 
-    const l = leaves.concat(
-      Array.from(Array(Math.pow(2, depth) - leaves.length), () =>
-        utils.zeros(32)
-      )
-    )
+    const l = leaves.concat(Array.from(Array(Math.pow(2, depth) - leaves.length), () => utils.zeros(32)))
 
     this.leaves = l
     this.layers = [l]
@@ -79,7 +75,7 @@ export default class MerkleTree {
         } else {
           siblingIndex = index - 1
         }
-        index = index / 2
+        index = Math.floor(index / 2)
         proof.push(this.layers[i][siblingIndex])
       }
     }
@@ -100,7 +96,7 @@ export default class MerkleTree {
         hash = sha3(SafeBuffer.concat([node, hash]))
       }
 
-      index = index / 2
+      index = Math.floor(index / 2)
     }
 
     return SafeBuffer.compare(hash, root) === 0
