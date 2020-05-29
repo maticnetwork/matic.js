@@ -12,7 +12,8 @@ export default class Matic extends ContractsBase {
       options.parentProvider,
       options.maticProvider,
       options.parentDefaultOptions || {},
-      options.maticDefaultOptions || {}
+      options.maticDefaultOptions || {},
+      options.biconomyAPIKey,
     )
     super(web3Client)
     this.web3Client = web3Client

@@ -54,11 +54,12 @@
     "ethereumjs-util": "^5.2.0",
     "isomorphic-fetch": "2.2.1",
     "matic-protocol": "github:maticnetwork/contracts#fa6862dc6ddae97351aa1b4d16c087861b5a489e",
-    "matic-pos-portal": "github:maticnetwork/pos-portal#93b4791aadf3a4faf9971e1587f421b4fe0b73c3",
+    "matic-pos-portal": "github:maticnetwork/pos-portal#33c57a413fa6882d31c0c3e2dae7be955bd3ee1d",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
     "web3": "1.2.1",
-    "web3-providers-ws": "1.2.4"
+    "web3-providers-ws": "1.2.4",
+    "@biconomy/mexa": "^1.5.11"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.16.0",

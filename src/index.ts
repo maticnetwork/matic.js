@@ -5,6 +5,7 @@ import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
 import POSRootChainManager from './root/POSRootChainManager'
+import NetworkAgnostic from './root/NetworkAgnostic'
 import { address, SendOptions, order } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
@@ -12,11 +13,13 @@ import { Utils } from './common/Utils'
 export class MaticPOSClient extends SDKClient {
   private rootChain: RootChain
   private posRootChainManager: POSRootChainManager
+  private networkAgnostic: NetworkAgnostic
 
   constructor(options: any = {}) {
     super(options)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
     this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
+    this.networkAgnostic = new NetworkAgnostic(this.web3Client)
   }
 
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -62,6 +65,26 @@ export class MaticPOSClient extends SDKClient {
       throw new Error(`options.from is missing`)
     }
     return this.posRootChainManager.exitERC20(txHash, options)
+  }
+
+  networkAgnosticTransfer(childToken: address, recipientAddress: address, amount: BN, user: address | string,options?: SendOptions){
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!recipientAddress) {
+      throw new Error(`$(recipientAddress) is not defined`)
+    }
+    if (!user) {
+      throw new Error(`$(user) is not defined`)
+    }
+    if(options){
+      throw new Error(`$(options) is not defined`)
+    }
+    if (!amount) {
+      // ${amount} will stringify it while printing which might be a problem
+      throw new Error(`${amount} is not a amount`)
+    }
+    return this.networkAgnostic.transfer(childToken, recipientAddress,amount, user)
   }
 }
 
