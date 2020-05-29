@@ -1,36 +1,31 @@
 const bn = require('bn.js')
+const HDWalletProvider = require('@truffle/hdwallet-provider')
 
 const Network = require('@maticnetwork/meta/network')
 const Matic = require('../lib/index').default
 
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
-async function getMaticClient(_network, _version) {
+async function getMaticClient(_network = 'testnet', _version = 'cs-2008') {
   const network = new Network(_network, _version)
+  const { from } = getPrivateKey()
   const matic = new Matic({
-    maticProvider: network.Matic.RPC,
-    parentProvider: network.Main.RPC,
-    rootChain: network.Main.Contracts.RootChain,
-    registry: network.Main.Contracts.Registry,
-    depositManager: network.Main.Contracts.DepositManagerProxy,
-    withdrawManager: network.Main.Contracts.WithdrawManagerProxy,
+    network: _network,
+    version: _version,
+    parentProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Main.RPC),
+    maticProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Matic.RPC),
+    parentDefaultOptions: { from },
+    maticDefaultOptions: { from },
   })
   await matic.initialize()
-  const wallet = matic.web3Client.getWallet()
-  const parent = matic.web3Client.getParentWeb3()
-  return {
-    matic,
-    network,
-    wallet,
-    parent,
-  }
+  return { matic, network }
 }
 
 function getPrivateKey() {
-  if (!process.env.PRIVATE_KEY) {
-    throw new Error('Please set the PRIVATE_KEY env variable')
+  if (!process.env.PRIVATE_KEY || !process.env.FROM) {
+    throw new Error('Please set the PRIVATE_KEY/FROM env vars')
   }
-  return process.env.PRIVATE_KEY
+  return { privateKey: process.env.PRIVATE_KEY, from: process.env.FROM }
 }
 
 module.exports = {

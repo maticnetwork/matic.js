@@ -40,7 +40,7 @@ export default class ProofsUtil {
     await bluebird.map(
       headers,
       async (_, i) => {
-        logger.debug('fetching block', i)
+        logger.debug('fetching block', i + start)
         headers[i] = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i + start))
       },
       { concurrency: 20 }

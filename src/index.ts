@@ -82,13 +82,13 @@ export default class Matic extends SDKClient {
     } else {
       // User provided the contract addresses in options object
       // We'll use latest network that this version of maticjs supports to pickup abis.
-      network = new Network('testnet', 'cs-2007')
+      network = new Network('testnet', 'cs-2008')
     }
     // override contract addresses if they were provided during initialization
     options = Object.assign(
       {
         registry: network.Main.Contracts.Registry,
-        rootChain: network.Main.Contracts.Registry,
+        rootChain: network.Main.Contracts.RootChainProxy,
         depositManager: network.Main.Contracts.DepositManagerProxy,
         withdrawManager: network.Main.Contracts.WithdrawManagerProxy,
       },
@@ -221,7 +221,7 @@ export default class Matic extends SDKClient {
   }
 
   async safeDepositERC721Tokens(token: address, tokenId: BN, options?: SendOptions) {
-    if (options && (!options.from || !tokenId || !token)) {
+    if (!options || !options.from || !tokenId || !token) {
       throw new Error('options.from, token or tokenId is missing')
     }
     const txObject = this.getERC721TokenContract(token, true).methods.safeTransferFrom(
