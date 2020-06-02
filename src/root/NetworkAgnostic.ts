@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-// import Contract from 'web3/eth/contract'
+import Contract from 'web3/eth/contract'
 // import RootChainManagerArtifact from 'matic-pos-portal/artifacts/RootChainManager.json'
 import ChildTokenArtifact from 'matic-pos-portal/artifacts/ChildToken.json'
 
@@ -7,7 +7,7 @@ import ContractsBase from '../common/ContractsBase'
 import { address } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 
-let sigUtil = require('eth-sig-util')
+// let sigUtil = require('eth-sig-util')
 
 const domainType = [
   { name: 'name', type: 'string' },
@@ -30,26 +30,40 @@ export default class NetworkAgnostic extends ContractsBase {
     this.web3Client = web3Client
   }
 
-  async transfer(tokenAddress: address, recipientAddress: address, amount: BN, user: address | string) {
-    const contract = await this.getTokenContract(tokenAddress)
-    let functionSignature = contract.methods.transfer(recipientAddress, amount).encodeABI()
-    this.executeMetaTransaction(tokenAddress, functionSignature, user)
-  }
-
   async getTokenContract(tokenAddress: address) {
     const contract = new this.web3Client.networkAgnosticWeb3.eth.Contract(ChildTokenArtifact.abi, tokenAddress)
     return contract
   }
 
-  async executeMetaTransaction(tokenAddress: address, functionSignature: any | string, userAddress: address) {
+  async getContract(contractABI: any, contractAddress: address) {
+    const contract = new this.web3Client.networkAgnosticWeb3.eth.Contract(contractABI, contractAddress)
+    return contract
+  }
+  async transfer(tokenAddress: address, recipientAddress: address, amount: BN, user: address | string) {
     const contract = await this.getTokenContract(tokenAddress)
+    let functionSignature = await contract.methods.transfer(recipientAddress, this.encode(amount)).encodeABI()
+    await this.networkAgnosticTransaction(tokenAddress, contract, functionSignature, user)
+  }
+
+  async approve(tokenAddress: address, spender: address, amount: BN, user: address) {
+    const contract = await this.getTokenContract(tokenAddress)
+    let functionSignature = await contract.methods.approve(spender, this.encode(amount)).encodeABI()
+    await this.networkAgnosticTransaction(tokenAddress, contract, functionSignature, user)
+  }
+
+  async networkAgnosticTransaction(
+    contractAddress: address,
+    contract: Contract,
+    functionSignature: any | string,
+    userAddress: address
+  ) {
     const tokenName = await contract.methods.name().call()
     const parentChainId = '3' // chain id of the network tx is signed on
     let domainData = {
       name: tokenName,
       version: '1',
       chainId: parentChainId,
-      verifyingContract: tokenAddress,
+      verifyingContract: contractAddress,
     }
     let nonce = await contract.methods.getNonce(userAddress).call()
 
@@ -59,7 +73,6 @@ export default class NetworkAgnostic extends ContractsBase {
       functionSignature: functionSignature,
       network: 'Interact with Matic Network',
     }
-
     const dataToSign = JSON.stringify({
       types: {
         EIP712Domain: domainType,
@@ -69,22 +82,15 @@ export default class NetworkAgnostic extends ContractsBase {
       primaryType: 'MetaTransaction',
       message: message,
     })
-    return this.web3Client.parentWeb3.eth.currentProvider.send(
+    return await this.web3Client.parentWeb3.eth.currentProvider.send(
       {
         jsonrpc: '2.0',
         id: 999999999999,
         method: 'eth_signTypedData_v4',
         params: [userAddress, dataToSign],
       },
-      async function(response) {
-        if (response.error) {
-          // handle error
-        }
-        let { r, s, v } = this.getSignatureParameters(response.result)
-        sigUtil.recoverTypedSignature_v4({
-          data: JSON.parse(dataToSign),
-          sig: response.result,
-        })
+      async (...response) => {
+        let { r, s, v } = await this.getSignatureParameters(response[1].result)
         await contract.methods.executeMetaTransaction(userAddress, functionSignature, r, s, v).send({
           from: userAddress,
         })

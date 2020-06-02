@@ -67,7 +67,7 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.exitERC20(txHash, options)
   }
 
-  networkAgnosticTransfer(childToken: address, recipientAddress: address, amount: BN, user: address | string,options?: SendOptions){
+  networkAgnosticTransfer(childToken: address, recipientAddress: address, amount: BN, user: address | string) {
     if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
       throw new Error(`${childToken} is not a valid token address`)
     }
@@ -77,14 +77,45 @@ export class MaticPOSClient extends SDKClient {
     if (!user) {
       throw new Error(`$(user) is not defined`)
     }
-    if(options){
-      throw new Error(`$(options) is not defined`)
+    if (!amount) {
+      // ${amount} will stringify it while printing which might be a problem
+      throw new Error(`${amount} is not a amount`)
+    }
+    return this.networkAgnostic.transfer(childToken, recipientAddress, amount, user)
+  }
+
+  networkAgnosticApprove(childToken: address, spender: address, amount: BN, user: address | string) {
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!spender) {
+      throw new Error(`$(recipientAddress) is not defined`)
+    }
+    if (!user) {
+      throw new Error(`$(user) is not defined`)
     }
     if (!amount) {
       // ${amount} will stringify it while printing which might be a problem
       throw new Error(`${amount} is not a amount`)
     }
-    return this.networkAgnostic.transfer(childToken, recipientAddress,amount, user)
+    return this.networkAgnostic.approve(childToken, spender, amount, user)
+  }
+
+  networkAgnosticGetContract(contractABI: any, contractAddress: address) {
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(contractAddress))) {
+      throw new Error(`${contractAddress} is not a valid token address`)
+    }
+    if (!contractABI) {
+      throw new Error(`${contractABI} is not a valid Contract ABI`)
+    }
+    return this.networkAgnostic.getContract(contractABI, contractAddress)
+  }
+
+  networkAgnosticGetChildTokenContract(tokenAddress: address) {
+    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(tokenAddress))) {
+      throw new Error(`${tokenAddress} is not a valid token address`)
+    }
+    return this.networkAgnostic.getTokenContract(tokenAddress)
   }
 }
 

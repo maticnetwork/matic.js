@@ -4,6 +4,7 @@ import Biconomy from '@biconomy/mexa'
 
 export default class Web3Client {
   public parentWeb3: Web3
+  public biconomy: Biconomy
   public web3: Web3
   public networkAgnostic: Web3
   public parentDefaultOptions: SendOptions
@@ -12,12 +13,11 @@ export default class Web3Client {
   constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions, biconomyAPIKey?: string) {
     this.parentWeb3 = new Web3(parentProvider)
     this.web3 = new Web3(maticProvider)
-    this.networkAgnostic = new Web3(
-      new Biconomy(new Web3.providers.HttpProvider(maticProvider), {
-        apiKey: biconomyAPIKey,
-        debug: true,
-      })
-    )
+    this.biconomy = new Biconomy(new Web3.providers.HttpProvider(maticProvider), {
+      apiKey: biconomyAPIKey,
+      debug: true,
+    })
+    this.networkAgnostic = new Web3(this.biconomy)
     this.parentDefaultOptions = parentDefaultOptions
     this.maticDefaultOptions = maticDefaultOptions
   }
@@ -99,10 +99,17 @@ export default class Web3Client {
     return this.web3
   }
 
-  get networkAgnosticWeb3(){
-    if(!this.networkAgnostic){
+  get networkAgnosticWeb3() {
+    if (!this.networkAgnostic) {
       throw new Error(`API KEY is not define`)
     }
+    this.biconomy
+      .onEvent(this.biconomy.READY, () => {
+        console.log('Mexa is Ready') // eslint-disable-line
+      })
+      .onEvent(this.biconomy.ERROR, (error, message) => {
+        console.error(error, message) // eslint-disable-line
+      })
     return this.networkAgnostic
   }
 
