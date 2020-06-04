@@ -18,7 +18,6 @@ const maticPOSClient = new MaticPOSClient({
   posRootChainManager: config.POS_ROOT_CHAIN_MANAGER_ADDRESS,
   biconomyAPIKey: config.BICONOMY_API_KEY,
 })
-console.log(childToken, amount, recipient, from)
 
 export const approve = async () => {
   await maticPOSClient.networkAgnosticApprove(childToken, recipient, amount, from).then(res => {

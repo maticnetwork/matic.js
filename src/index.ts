@@ -19,7 +19,7 @@ export class MaticPOSClient extends SDKClient {
     super(options)
     this.rootChain = new RootChain(options.rootChain, this.web3Client)
     this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
-    this.networkAgnostic = new NetworkAgnostic(this.web3Client)
+    this.networkAgnostic = new NetworkAgnostic(this.web3Client, options.maticProvider, options.biconomyAPIKey)
   }
 
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -68,10 +68,10 @@ export class MaticPOSClient extends SDKClient {
   }
 
   networkAgnosticTransfer(childToken: address, recipientAddress: address, amount: BN, user: address | string) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
-    if (!recipientAddress) {
+    if (!this.web3Client.web3.utils.isAddress(recipientAddress)) {
       throw new Error(`$(recipientAddress) is not defined`)
     }
     if (!user) {
@@ -85,11 +85,11 @@ export class MaticPOSClient extends SDKClient {
   }
 
   networkAgnosticApprove(childToken: address, spender: address, amount: BN, user: address | string) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
-    if (!spender) {
-      throw new Error(`$(recipientAddress) is not defined`)
+    if (!this.web3Client.web3.utils.isAddress(spender)) {
+      throw new Error(`$(spender) is not defined`)
     }
     if (!user) {
       throw new Error(`$(user) is not defined`)
@@ -102,7 +102,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   networkAgnosticGetContract(contractABI: any, contractAddress: address) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(contractAddress))) {
+    if (!this.web3Client.web3.utils.isAddress(contractAddress)) {
       throw new Error(`${contractAddress} is not a valid token address`)
     }
     if (!contractABI) {
@@ -112,7 +112,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   networkAgnosticGetChildTokenContract(tokenAddress: address) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(tokenAddress))) {
+    if (!this.web3Client.web3.utils.isAddress(tokenAddress)) {
       throw new Error(`${tokenAddress} is not a valid token address`)
     }
     return this.networkAgnostic.getTokenContract(tokenAddress)

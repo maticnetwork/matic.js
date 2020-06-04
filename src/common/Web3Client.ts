@@ -1,25 +1,19 @@
 import Web3 from 'web3'
 import { SendOptions } from '../types/Common'
-import Biconomy from '@biconomy/mexa'
 
 export default class Web3Client {
   public parentWeb3: Web3
-  public biconomy: Biconomy
   public web3: Web3
-  public networkAgnostic: Web3
   public parentDefaultOptions: SendOptions
   public maticDefaultOptions: SendOptions
+  public biconomyAPIKey: SendOptions
 
-  constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions, biconomyAPIKey?: string) {
+  constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions, biconomyAPIKey) {
     this.parentWeb3 = new Web3(parentProvider)
     this.web3 = new Web3(maticProvider)
-    this.biconomy = new Biconomy(new Web3.providers.HttpProvider(maticProvider), {
-      apiKey: biconomyAPIKey,
-      debug: true,
-    })
-    this.networkAgnostic = new Web3(this.biconomy)
     this.parentDefaultOptions = parentDefaultOptions
     this.maticDefaultOptions = maticDefaultOptions
+    this.biconomyAPIKey = biconomyAPIKey
   }
 
   set wallet(_wallet) {
@@ -97,20 +91,6 @@ export default class Web3Client {
 
   getMaticWeb3() {
     return this.web3
-  }
-
-  get networkAgnosticWeb3() {
-    if (!this.networkAgnostic) {
-      throw new Error(`API KEY is not define`)
-    }
-    this.biconomy
-      .onEvent(this.biconomy.READY, () => {
-        console.log('Mexa is Ready') // eslint-disable-line
-      })
-      .onEvent(this.biconomy.ERROR, (error, message) => {
-        console.error(error, message) // eslint-disable-line
-      })
-    return this.networkAgnostic
   }
 
   getWallet() {
