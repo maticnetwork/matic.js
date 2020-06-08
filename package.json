@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
-    "@maticnetwork/meta": "github:maticnetwork/static#6fcc2eee5dd3fd4ab7ca0331aa5a09b604a0214d",
+    "@maticnetwork/meta": "^2.0.0",
     "@truffle/hdwallet-provider": "^1.0.35",
     "@types/bluebird": "^3.5.29",
     "@types/bn.js": "4.11.5",

@@ -6,7 +6,7 @@ const Matic = require('../lib/index').default
 
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
-async function getMaticClient(_network = 'testnet', _version = 'cs-2008') {
+async function getMaticClient(_network = 'testnet', _version = 'mumbai') {
   const network = new Network(_network, _version)
   const { from } = getAccount()
   const matic = new Matic({

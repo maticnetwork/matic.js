@@ -1,5 +1,4 @@
 import BN from 'bn.js'
-import Network from '@maticnetwork/meta/network'
 
 import DepositManager from './root/DepositManager'
 import RootChain from './root/RootChain'
@@ -15,8 +14,12 @@ export class MaticPOSClient extends SDKClient {
   private posRootChainManager: POSRootChainManager
 
   constructor(options: any = {}) {
+    if (!options.rootChain) {
+      const network = SDKClient.initializeNetwork(options.network, options.version)
+      options.rootChain = network.Main.Contracts.RootChainProxy
+    }
     super(options)
-    this.rootChain = new RootChain(options.rootChain, this.web3Client)
+    this.rootChain = new RootChain(options, this.web3Client)
     this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
   }
 
@@ -75,15 +78,7 @@ export default class Matic extends SDKClient {
   public static MaticPOSClient = MaticPOSClient // workaround for web compatibility
 
   constructor(options: MaticClientInitializationOptions = {}) {
-    let network
-    if (options.network && options.version) {
-      network = new Network(options.network, options.version)
-      if (!network) throw new Error(`network ${options.network} - ${options.version} is not supported`)
-    } else {
-      // User provided the contract addresses in options object
-      // We'll use latest network that this version of maticjs supports to pickup abis.
-      network = new Network('testnet', 'cs-2008')
-    }
+    const network = SDKClient.initializeNetwork(options.network, options.version)
     // override contract addresses if they were provided during initialization
     options = Object.assign(
       {
