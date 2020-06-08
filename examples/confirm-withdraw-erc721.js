@@ -2,7 +2,7 @@ const utils = require('./utils')
 
 async function execute() {
   const { matic } = await utils.getMaticClient()
-  const { from } = utils.getPrivateKey()
+  const { from } = utils.getAccount()
 
   // provide the burn tx hash
   const txHash = '<>'

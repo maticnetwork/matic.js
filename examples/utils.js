@@ -8,7 +8,7 @@ const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
 async function getMaticClient(_network = 'testnet', _version = 'cs-2008') {
   const network = new Network(_network, _version)
-  const { from } = getPrivateKey()
+  const { from } = getAccount()
   const matic = new Matic({
     network: _network,
     version: _version,
@@ -21,7 +21,7 @@ async function getMaticClient(_network = 'testnet', _version = 'cs-2008') {
   return { matic, network }
 }
 
-function getPrivateKey() {
+function getAccount() {
   if (!process.env.PRIVATE_KEY || !process.env.FROM) {
     throw new Error('Please set the PRIVATE_KEY/FROM env vars')
   }
@@ -31,5 +31,5 @@ function getPrivateKey() {
 module.exports = {
   SCALING_FACTOR,
   getMaticClient,
-  getPrivateKey,
+  getAccount,
 }

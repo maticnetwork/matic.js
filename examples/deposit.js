@@ -2,7 +2,7 @@ const utils = require('./utils')
 
 async function execute() {
   const { matic, network } = await utils.getMaticClient()
-  const { from } = utils.getPrivateKey()
+  const { from } = utils.getAccount()
 
   const token = network.Main.Contracts.Tokens.MaticToken
   const amount = matic.web3Client.web3.utils.toWei('10.567')

@@ -2,7 +2,7 @@ const utils = require('./utils')
 
 async function execute() {
   const { matic, network } = await utils.getMaticClient()
-  const { from } = utils.getPrivateKey()
+  const { from } = utils.getAccount()
 
   // burning erc721 tokens are also supported
   const token = network.Matic.Contracts.Tokens.MaticToken

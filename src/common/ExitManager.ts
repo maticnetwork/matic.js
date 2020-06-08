@@ -37,7 +37,7 @@ export default class ExitManager extends ContractsBase {
     )
     const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
     const headerBlock = await this.web3Client.call(
-      this.rootChain.getRawContract().methods.headerBlocks(this.encode(headerBlockNumber))
+      this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
     )
     logger.info({ headerBlockNumber: headerBlockNumber.toString(), headerBlock })
 
