@@ -39,6 +39,7 @@ export default class ProofsUtil {
     const headers = new Array(end - start + 1)
     await bluebird.map(
       headers,
+      // eslint-disable-next-line
       async (_, i) => {
         logger.debug('fetching block', i + start)
         headers[i] = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i + start))
