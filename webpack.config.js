@@ -37,6 +37,7 @@ const clientConfig = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
