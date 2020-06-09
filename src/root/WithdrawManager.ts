@@ -2,7 +2,7 @@ import ethUtils from 'ethereumjs-util'
 import Contract from 'web3/eth/contract'
 
 import BN from 'bn.js'
-import Proofs from '../libs/ProofsUtil.js'
+import Proofs from '../libs/ProofsUtil'
 
 import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'

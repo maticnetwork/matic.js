@@ -6,7 +6,7 @@ import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
 import RootChain from '../root/RootChain'
 import { MaticClientInitializationOptions } from '../types/Common'
-import Proofs from '../libs/ProofsUtil.js'
+import Proofs from '../libs/ProofsUtil'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),

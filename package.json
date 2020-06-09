@@ -15,10 +15,10 @@
   "scripts": {
     "clean": "rimraf lib dist",
     "build:babel": "babel src/ --out-dir lib/",
-    "build:webpack": "webpack --env build",
+    "build:webpack": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env build",
     "build:legacy": "npm run lint && npm run clean && npm run build:babel && npm run build:webpack",
     "build": "tsc",
-    "lint": "eslint --ext .ts src",
+    "lint": "eslint --ext .ts src --fix",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
     "test:ci": "scripts/run-test.sh",
@@ -79,7 +79,7 @@
     "rimraf": "2.6.3",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3",
-    "webpack": "4.35.0",
+    "webpack": "^4.43.0",
     "webpack-cli": "3.3.4",
     "yargs": "8.0.2"
   },
