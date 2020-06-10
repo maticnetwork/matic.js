@@ -1,6 +1,11 @@
 import Web3 from 'web3'
 import { SendOptions } from '../types/Common'
 
+const logger = {
+  info: require('debug')('maticjs:Web3Client'),
+  debug: require('debug')('maticjs:debug:Web3Client'),
+}
+
 export default class Web3Client {
   public parentWeb3: Web3
   public web3: Web3
@@ -23,9 +28,15 @@ export default class Web3Client {
     return method.call(options || this.parentDefaultOptions)
   }
 
-  async _fillOptions(options, txObject, web3) {
-    const _options = options || this.parentDefaultOptions
-    if (!_options.from) return new Error('from is not specified')
+  async fillOptions(txObject: any, onRootChain: boolean, options?: SendOptions) {
+    if (onRootChain) {
+      return this._fillOptions(txObject, this.parentWeb3, options || this.parentDefaultOptions)
+    }
+    return this._fillOptions(txObject, this.web3, options || this.maticDefaultOptions)
+  }
+
+  private async _fillOptions(txObject, web3, _options) {
+    if (!_options.from) throw new Error('from is not specified')
     const from = _options.from
     delete txObject.chainId
 
@@ -45,9 +56,10 @@ export default class Web3Client {
       gasPrice,
       nonce,
       chainId,
-      value: options.value || 0,
-      to: options.to || null,
-      data: options.data,
+      value: _options.value || 0,
+      to: _options.to || null,
+      data: _options.data,
+      encodeAbi: _options.encodeAbi || false,
     }
   }
 
@@ -59,17 +71,6 @@ export default class Web3Client {
       .on('error', options.onError || _emptyFunc)
   }
 
-  async callOnMatic(method, options?) {
-    return method.call(options || this.maticDefaultOptions)
-  }
-
-  async sendOnMatic(method, options?) {
-    const _options = options || this.maticDefaultOptions
-    if (!_options.from) return new Error('from is not specified')
-    console.log('sending tx on matic with', _options) // eslint-disable-line
-    return this.wrapWeb3Promise(method.send(_options), _options)
-  }
-
   async send(txObject, options?) {
     const _options = options || {}
 
@@ -77,9 +78,14 @@ export default class Web3Client {
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
     // @todo handle hex values of gas
-    _options.gas = options.parent ? _options.gas + 1000000 : _options.gas
-    _options.gasPrice = options.parent ? _options.gasPrice : 0
-
+    if (options.parent) {
+      _options.gas = (_options.gas || this.parentDefaultOptions.gas) + 1000000
+      _options.gasPrice = _options.gasPrice || this.parentDefaultOptions.gasPrice
+    } else {
+      _options.gas = _options.gas || this.maticDefaultOptions.gas
+      _options.gasPrice = _options.gasPrice || this.maticDefaultOptions.gasPrice
+    }
+    logger.debug('sending tx with', { _options })
     return this.wrapWeb3Promise(txObject.send(_options), _options)
   }
 

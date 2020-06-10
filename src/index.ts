@@ -5,7 +5,7 @@ import RootChain from './root/RootChain'
 import Registry from './root/Registry'
 import WithdrawManager from './root/WithdrawManager'
 import POSRootChainManager from './root/POSRootChainManager'
-import { address, SendOptions, order } from './types/Common'
+import { address, SendOptions, order, MaticClientInitializationOptions } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
 
@@ -14,8 +14,12 @@ export class MaticPOSClient extends SDKClient {
   private posRootChainManager: POSRootChainManager
 
   constructor(options: any = {}) {
+    options.network = SDKClient.initializeNetwork(options.network, options.version)
+    if (!options.rootChain) {
+      options.rootChain = options.network.Main.Contracts.RootChainProxy
+    }
     super(options)
-    this.rootChain = new RootChain(options.rootChain, this.web3Client)
+    this.rootChain = new RootChain(options, this.web3Client)
     this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
   }
 
@@ -73,12 +77,24 @@ export default class Matic extends SDKClient {
   public utils: Utils
   public static MaticPOSClient = MaticPOSClient // workaround for web compatibility
 
-  constructor(options: any = {}) {
+  constructor(options: MaticClientInitializationOptions = {}) {
+    const network = SDKClient.initializeNetwork(options.network, options.version)
+    // override contract addresses if they were provided during initialization
+    options = Object.assign(
+      {
+        registry: network.Main.Contracts.Registry,
+        rootChain: network.Main.Contracts.RootChainProxy,
+        depositManager: network.Main.Contracts.DepositManagerProxy,
+        withdrawManager: network.Main.Contracts.WithdrawManagerProxy,
+      },
+      options
+    )
+    options.network = network
     super(options)
-    this.registry = new Registry(options.registry, this.web3Client)
-    this.rootChain = new RootChain(options.rootChain, this.web3Client)
-    this.depositManager = new DepositManager(options.depositManager, this.web3Client, this.registry)
-    this.withdrawManager = new WithdrawManager(options.withdrawManager, this.rootChain, this.web3Client, this.registry)
+    this.registry = new Registry(options, this.web3Client)
+    this.rootChain = new RootChain(options, this.web3Client)
+    this.depositManager = new DepositManager(options, this.web3Client, this.registry)
+    this.withdrawManager = new WithdrawManager(options, this.rootChain, this.web3Client, this.registry)
     this.utils = new Utils()
   }
 
@@ -103,15 +119,11 @@ export default class Matic extends SDKClient {
         value,
       })
     }
-
     Object.assign(options, { value, to })
-
-    const _options = await this._fillOptions(options, {}, web3Object)
-    if (options.encodeAbi) {
-      return _options
-    }
-
-    return this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
+    const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
+    return _options.encodeAbi
+      ? _options
+      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {
@@ -192,9 +204,7 @@ export default class Matic extends SDKClient {
       sellOrder.expiry,
       to
     )
-
-    const _options = await this._fillOptions(options, txObj, this.web3Client.getMaticWeb3())
-
+    const _options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
     return this.web3Client.send(txObj, _options)
   }
 
@@ -206,7 +216,7 @@ export default class Matic extends SDKClient {
   }
 
   async safeDepositERC721Tokens(token: address, tokenId: BN, options?: SendOptions) {
-    if (options && (!options.from || !tokenId || !token)) {
+    if (!options || !options.from || !tokenId || !token) {
       throw new Error('options.from, token or tokenId is missing')
     }
     const txObject = this.getERC721TokenContract(token, true).methods.safeTransferFrom(
@@ -214,15 +224,10 @@ export default class Matic extends SDKClient {
       this.depositManager.getAddress(),
       tokenId
     )
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 

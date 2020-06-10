@@ -1,11 +1,12 @@
 const utils = require('./utils')
 
 async function execute() {
-  const { matic } = await utils.getMaticClient('beta', 'v2')
-  matic.setWallet(utils.getPrivateKey())
+  const { matic } = await utils.getMaticClient()
+  const { from } = utils.getAccount()
 
-  const txHash = '0xffbf65e00f3f9c75229e5e70a69fcb93d74ea7750a4170685193a4271ae270d4'
-  return matic.withdraw(txHash, { from: process.env.FROM })
+  // provide the burn tx hash
+  const txHash = '<>'
+  console.log(await matic.withdraw(txHash, { from, gas: '7000000' }))
 }
 
-execute().then(console.log)
+execute().then(_ => process.exit(0))

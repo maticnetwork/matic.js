@@ -5,8 +5,8 @@ import ethUtils from 'ethereumjs-util'
 import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
 import RootChain from '../root/RootChain'
-
-import Proofs from 'matic-protocol/contracts-core/helpers/proofs.js'
+import { MaticClientInitializationOptions } from '../types/Common'
+import Proofs from '../libs/ProofsUtil'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
@@ -16,8 +16,8 @@ const logger = {
 export default class ExitManager extends ContractsBase {
   private rootChain: RootChain
 
-  constructor(rootChain: RootChain, web3Client: Web3Client) {
-    super(web3Client)
+  constructor(rootChain: RootChain, options: MaticClientInitializationOptions, web3Client: Web3Client) {
+    super(web3Client, options.network)
     this.rootChain = rootChain
   }
 
@@ -37,19 +37,19 @@ export default class ExitManager extends ContractsBase {
     )
     const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
     const headerBlock = await this.web3Client.call(
-      this.rootChain.getRawContract().methods.headerBlocks(this.encode(headerBlockNumber))
+      this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
     )
     logger.info({ headerBlockNumber: headerBlockNumber.toString(), headerBlock })
 
     // build block proof
     const blockProof = await Proofs.buildBlockProof(
       this.web3Client.getMaticWeb3(),
-      headerBlock.start,
-      headerBlock.end,
-      burnTx.blockNumber
+      parseInt(headerBlock.start, 10),
+      parseInt(headerBlock.end, 10),
+      parseInt(burnTx.blockNumber + '', 10)
     )
 
-    const receiptProof = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
+    const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
     assert.ok(logIndex > -1, 'Log not found in receipt')

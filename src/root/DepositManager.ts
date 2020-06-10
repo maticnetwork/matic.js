@@ -1,11 +1,9 @@
 import BN from 'bn.js'
 import bluebird from 'bluebird'
 import Contract from 'web3/eth/contract'
-import DepositManagerArtifact from 'matic-protocol/contracts-core/artifacts/DepositManager.json'
-import ChildChainArtifact from 'matic-protocol/contracts-core/artifacts/ChildChain.json'
 
 import ContractsBase from '../common/ContractsBase'
-import { address, SendOptions } from '../types/Common'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
 import Registry from './Registry'
 
@@ -17,18 +15,18 @@ export default class DepositManager extends ContractsBase {
 
   private registry: Registry
 
-  constructor(depositManager: address, web3Client: Web3Client, registry: Registry) {
-    super(web3Client)
+  constructor(options: MaticClientInitializationOptions, web3Client: Web3Client, registry: Registry) {
+    super(web3Client, options.network)
     this.depositManagerContract = new this.web3Client.parentWeb3.eth.Contract(
-      DepositManagerArtifact.abi,
-      depositManager
+      options.network.abi('DepositManager'),
+      options.depositManager
     )
     this.registry = registry
   }
 
   async initialize() {
     const childChainAddress = (await this.registry.registry.methods.getChildChainAndStateSender().call())[0]
-    this.childChainContract = new this.web3Client.web3.eth.Contract(ChildChainArtifact.abi, childChainAddress)
+    this.childChainContract = new this.web3Client.web3.eth.Contract(this.network.abi('ChildChain'), childChainAddress)
   }
 
   async depositStatusFromTxHash(txHash: string) {
@@ -62,29 +60,19 @@ export default class DepositManager extends ContractsBase {
       this.depositManagerContract.options.address,
       this.encode(amount)
     )
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = token
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
   async depositERC20(token: address, amount: BN | string, options?: SendOptions) {
     const txObject = this.depositManagerContract.methods.depositERC20(token, this.encode(amount))
-
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.depositManagerContract.options.address
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
@@ -101,14 +89,10 @@ export default class DepositManager extends ContractsBase {
 
   async depositERC20ForUser(token: address, amount: BN | string, user: address, options?: SendOptions) {
     const txObject = this.depositManagerContract.methods.depositERC20ForUser(token, user, this.encode(amount))
-    const _options = await this._fillOptions(options, txObject, this.web3Client.getParentWeb3())
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.depositManagerContract.options.address
-      return _options
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
@@ -118,19 +102,14 @@ export default class DepositManager extends ContractsBase {
 
   async depositEther(amount: BN | string, options: SendOptions = {}) {
     const txObject = this.depositManagerContract.methods.depositEther()
-
-    const _options = await this._fillOptions(
-      Object.assign(options, { value: this.encode(amount) }),
+    const _options = await this.web3Client.fillOptions(
       txObject,
-      this.web3Client.getParentWeb3()
+      true /* onRootChain */,
+      Object.assign(options, { value: this.encode(amount) })
     )
-
-    if (options.encodeAbi) {
-      _options.data = txObject.encodeABI()
-      _options.to = this.depositManagerContract.options.address
-      return _options
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-
     return this.web3Client.send(txObject, _options)
   }
 
