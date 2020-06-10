@@ -23,10 +23,10 @@ $ npm install --save @maticnetwork/maticjs
 ---
 
 ```bash
-<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.0/dist/matic.js"></script>
 ```
 
-Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0-beta.10/dist/matic.js)
+Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0/dist/matic.js)
 
 ---
 
@@ -35,30 +35,29 @@ Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0
 ```js
 // Import default Matic sdk
 import Matic from '@maticnetwork/maticjs'
+// create network instance
+  const network = new Network(
+    _network, // set network name e.g `testnet` or `mainnet`
+    _version // set version e.g `mumbai` or `v1`
+  )
 
 // Create sdk instance
 const matic = new Matic({
+  network: <network-name>, // set network name
+  version: <network-version> // set network version
 
   // Set Matic provider - string or provider instance
-  // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
-  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3.providers.WebsocketProvider('ws://localhost:8546')
+  // Example: <network.Matic.RPC> OR new Web3.providers.HttpProvide(<network.Matic.RPC>)
+  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3 providers.WebsocketProvider('ws://localhost:8546')
   maticProvider: <web3-provider>,
 
   // Set Mainchain provider - string or provider instance
-  // Example: 'https://kovan.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  // Example: 'https://ropsten.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
   parentProvider: <web3-provider>,
-
-  // Set rootchain contract. See below for more information
-  rootChain: <root-contract-address>,
-
-  // Set registry contract. See below for more information
-  registry: <registry-contract-address>,
-
-  // Set withdraw-manager Address. See below for more information
-  withdrawManager: <withdraw-manager-address>,
-
-  // Set deposit-manager Address. See below for more information
-  depositManager: <deposit-manager-address>,
+  // set default options e.g { from }
+  parentDefaultOptions: { <options> },
+  // set default options
+  maticDefaultOptions: { <options> },
 })
 
 // init matic
@@ -108,7 +107,7 @@ await matic.approveERC20TokensForDeposit(
 await matic.depositERC20ForUser(
   token,  // Token address
   user,   // User address (in most cases, this will be sender's address),
-  amount,  // Token amount for deposit (in wei)
+  amount,  // Token amount for deposit (in wei),
   options // transaction fields
 )
 
@@ -254,19 +253,15 @@ The flow for asset transfers on the Matic Network is as follows:
 - The user can now transfer tokens to anyone they want instantly with negligible fees. Matic chain has faster blocks (approximately ~ 1 second). That way, the transfer will be done almost instantly.
 - Once a user is ready, they can withdraw remaining tokens from the mainchain by establishing proof of remaining tokens on Root contract (contract deployed on Ethereum chain)
 
+### Network and version
+
+- Network is network name you want to use e.g mainnet or testnet
+
+- version is network verstion e.g v1, v2, mumbai
+
 ### Contracts and addresses
 
-**Matic Testnet**
-
-- RPC endpoint host: https://testnetv3.matic.network
-- TEST childchain ERC20 token: 0x9a93c912F4eFf0254d178a18ACD980C1B05b57b0
-
-**Ropsten testnet addresses**
-
-- TEST mainchain ERC20 token: `0x28C8713DDe7F063Fdc4cA01aB2A8856e0F243Fec`
-- Root Contract: `0x82a72315E16cE224f28E1F1fB97856d3bF83f010`
-- DepositManager Contract: `0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989`
-- WithdrawManager Contract: `0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4`
+You don't have to worry about contract addresses, giving correct network name and version will pickup respective addresses :grinning:
 
 ### Faucet
 
@@ -321,18 +316,20 @@ matic.initialize()
 ```
 
 - `options` is simple Javascript `object` which can have following fields:
+  - `network` can be `string`
+  - `version` can be `string`
   - `maticProvider` can be `string` or `Web3.providers` instance. This provider must connect to Matic chain. Value can be anyone of following:
-    - `'https://testnetv3.matic.network'`
-    - `new Web3.providers.HttpProvider('http://localhost:8545')`
+    - `network.Matic.RPC`
+    - `new Web3.providers.HttpProvider(network.Matic.RPC)`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
   - `parentProvider` can be `string` or `Web3.providers` instance. This provider must connect to Ethereum chain (testnet or mainchain). Value can be anyone of following:
-    - `'https://ropsten.infura.io'`
-    - `new Web3.providers.HttpProvider('http://localhost:8545')`
+    - `network.Main.RPC`
+    - `new Web3.providers.HttpProvider(network.Main.RPC)`
     - [WalletConnect Provider instance](https://github.com/WalletConnect/walletconnect-monorepo#for-web3-provider-web3js)
-  - `rootChain` must be valid Ethereum contract address.
-  - `registry` must be valid Ethereum contract address.
-  - `withdrawManager` must be valid Ethereum contract address.
-  - `depositManager` must be valid Ethereum contract address.
+  - `parentDefaultOptions` is simple Javascript `object` with following options
+    - `from` must be valid account address(required)
+  - `maticDefaultOptions` is simple Javascript `object` with following options
+    - `from` must be valid account address(required)
 
 ---
 
