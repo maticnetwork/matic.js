@@ -14,9 +14,9 @@ export class MaticPOSClient extends SDKClient {
   private posRootChainManager: POSRootChainManager
 
   constructor(options: any = {}) {
+    options.network = SDKClient.initializeNetwork(options.network, options.version)
     if (!options.rootChain) {
-      const network = SDKClient.initializeNetwork(options.network, options.version)
-      options.rootChain = network.Main.Contracts.RootChainProxy
+      options.rootChain = options.network.Main.Contracts.RootChainProxy
     }
     super(options)
     this.rootChain = new RootChain(options, this.web3Client)
