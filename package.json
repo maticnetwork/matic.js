@@ -15,8 +15,8 @@
   "scripts": {
     "clean": "rimraf lib dist",
     "build:babel": "babel src/ --out-dir lib/",
-    "build:webpack": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env build",
-    "build:legacy": "npm run lint && npm run clean && npm run build:babel && npm run build:webpack",
+    "build:webpack": "webpack --env build",
+    "build:legacy": "npm run clean && npm run build:babel && npm run build:webpack",
     "build": "tsc",
     "lint": "eslint --ext .ts src --fix",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
