@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { SendOptions, address } from '../types/Common'
+import { SendOptions } from '../types/Common'
 
 const logger = {
   info: require('debug')('maticjs:Web3Client'),
