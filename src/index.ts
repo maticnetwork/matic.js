@@ -261,7 +261,7 @@ export default class Matic extends SDKClient {
     return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
   }
 
-  processExits(tokenAddress: string, options?: SendOptions) {
+  processExits(tokenAddress: string | string[], options?: SendOptions) {
     return this.withdrawManager.processExits(tokenAddress, options)
   }
 
