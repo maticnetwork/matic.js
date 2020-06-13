@@ -23,10 +23,10 @@ $ npm install --save @maticnetwork/maticjs
 ---
 
 ```bash
-<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.0/dist/matic.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.1/dist/matic.js"></script>
 ```
 
-Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.0/dist/matic.js)
+Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.1/dist/matic.js)
 
 ---
 
