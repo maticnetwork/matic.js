@@ -17,11 +17,9 @@ export default class MerkleTree {
       throw new Error('Depth must be 20 or less')
     }
 
-    const l = leaves.concat(Array.from(Array(Math.pow(2, depth) - leaves.length), () => utils.zeros(32)))
-
-    this.leaves = l
-    this.layers = [l]
-    this.createHashes(leaves)
+    this.leaves = leaves.concat(Array.from(Array(Math.pow(2, depth) - leaves.length), () => utils.zeros(32)))
+    this.layers = [this.leaves]
+    this.createHashes(this.leaves)
   }
 
   createHashes(nodes) {
