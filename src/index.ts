@@ -45,7 +45,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!amount) {
@@ -83,7 +83,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!tokenId) {
