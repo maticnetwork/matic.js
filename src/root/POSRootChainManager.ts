@@ -15,6 +15,9 @@ const TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628
 export default class POSRootChainManager extends ContractsBase {
   public posRootChainManager: Contract
   private exitManager: ExitManager
+  private erc20Predicate: address | null
+  private erc721Predicate: address | null
+  private erc1155Predicate: address | null
 
   constructor(options: MaticClientInitializationOptions, rootChain: RootChain, web3Client: Web3Client) {
     super(web3Client, options.network)
@@ -23,6 +26,9 @@ export default class POSRootChainManager extends ContractsBase {
       options.posRootChainManager
     )
     this.exitManager = new ExitManager(rootChain, options, web3Client)
+    this.erc20Predicate = options.posERC20Predicate
+    this.erc721Predicate = options.posERC721Predicate
+    this.erc1155Predicate = options.posERC1155Predicate
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
