@@ -12,6 +12,8 @@ import ExitManager from '../common/ExitManager'
 
 const ERC20_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 const ERC721_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+const ERC1155_TRANSFER_SINGLE_EVENT_SIG = '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62'
+const ERC1155_TRANSFER_BATCH_EVENT_SIG = '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
 
 const abiCoder: ethers.utils.AbiCoder = ethers.utils.defaultAbiCoder
 
@@ -134,5 +136,79 @@ export default class POSRootChainManager extends ContractsBase {
 
   async exitERC721(burnTxHash: string, options?: SendOptions) {
     return this.exit(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
+  }
+
+  async approveERC1155(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (!this.erc1155Predicate) {
+      throw new Error('Set posERC1155Predicate while constructing client')
+    }
+    const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(
+      this.erc1155Predicate,
+      true
+    )
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async depositSingleERC1155ForUser(rootToken: address, tokenId: BN | string, amount: BN | string, user: address, options?: SendOptions) {
+    const depositData = abiCoder.encode(
+      [
+        'uint256[]',
+        'uint256[]',
+      ],
+      [
+        [this.formatUint256(tokenId)],
+        [this.formatUint256(amount)],
+      ]
+    )
+    return this.depositFor(user, rootToken, depositData, options)
+  }
+
+  async depositBatchERC1155ForUser(rootToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], user: address, options?: SendOptions) {
+    const depositData = abiCoder.encode(
+      [
+        'uint256[]',
+        'uint256[]',
+      ],
+      [
+        tokenIds.map(t => this.formatUint256(t)),
+        amounts.map(a => this.formatUint256(a)),
+      ]
+    )
+    return this.depositFor(user, rootToken, depositData, options)
+  }
+
+  async burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
+    const childTokenContract = this.getPOSERC1155TokenContract(childToken)
+    const txObject = childTokenContract.methods.withdrawSingle(this.formatUint256(tokenId), this.formatUint256(amount))
+    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async burnBatchERC1155(childToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+    const childTokenContract = this.getPOSERC1155TokenContract(childToken)
+    const txObject = childTokenContract.methods.withdrawBatch(
+      tokenIds.map(t => this.formatUint256(t)),
+      amounts.map(a => this.formatUint256(a))
+    )
+    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async exitSingleERC1155(burnTxHash: string, options?: SendOptions) {
+    return this.exit(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG, options)
+  }
+
+  async exitBatchERC1155(burnTxHash: string, options?: SendOptions) {
+    return this.exit(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG, options)
   }
 }

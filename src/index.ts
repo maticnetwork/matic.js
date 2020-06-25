@@ -105,6 +105,73 @@ export class MaticPOSClient extends SDKClient {
     }
     return this.posRootChainManager.exitERC721(txHash, options)
   }
+
+  approveERC1155ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !rootToken)) {
+      throw new Error('options.from, rootToken or tokenId is missing')
+    }
+    return this.posRootChainManager.approveERC1155(rootToken, tokenId, options)
+  }
+
+  depositSingleERC1155ForUser(rootToken: address, user: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !amount || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, tokenId or amount is missing')
+    }
+    return this.posRootChainManager.depositSingleERC1155ForUser(rootToken, tokenId, amount, user, options)
+  }
+
+  depositBatchERC1155ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+    if (options && (!options.from || !tokenIds || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, tokenIds or amounts is missing')
+    }
+    return this.posRootChainManager.depositBatchERC1155ForUser(rootToken, tokenIds, amounts, user, options)
+  }
+
+  burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenId || !amount) {
+      throw new Error(`tokenId or amount is missing`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnSingleERC1155(childToken, tokenId, amount, options)
+  }
+
+  burnBatchERC1155(childToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenIds || !amounts) {
+      throw new Error(`tokenIds or amounts missing`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnBatchERC1155(childToken, tokenIds, amounts, options)
+  }
+
+  exitSingleERC1155(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitSingleERC1155(txHash, options)
+  }
+
+  exitBatchERC1155(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitBatchERC1155(txHash, options)
+  }
 }
 
 export default class Matic extends SDKClient {
