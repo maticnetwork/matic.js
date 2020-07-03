@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import Contract from 'web3/eth/contract'
-import ethers from 'ethers'
+import Web3 from 'web3'
 
 import RootChainManagerArtifact from 'matic-pos-portal/artifacts/RootChainManager.json'
 
@@ -15,7 +15,8 @@ const ERC721_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c
 const ERC1155_TRANSFER_SINGLE_EVENT_SIG = '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62'
 const ERC1155_TRANSFER_BATCH_EVENT_SIG = '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
 
-const abiCoder: ethers.utils.AbiCoder = ethers.utils.defaultAbiCoder
+const web3 = new Web3()
+const abiCoder: Web3['eth']['abi'] = web3.eth.abi
 
 export default class POSRootChainManager extends ContractsBase {
   public posRootChainManager: Contract
@@ -86,7 +87,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async depositERC20ForUser(rootToken: address, amount: BN | string, user: address, options?: SendOptions) {
-    const depositData = abiCoder.encode(['uint256'], [this.formatUint256(amount)])
+    const depositData = abiCoder.encodeParameter('uint256', this.formatUint256(amount))
     return this.depositFor(user, rootToken, depositData, options)
   }
 
@@ -120,7 +121,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async depositERC721ForUser(rootToken: address, tokenId: BN | string, user: address, options?: SendOptions) {
-    const depositData = abiCoder.encode(['uint256'], [this.formatUint256(tokenId)])
+    const depositData = abiCoder.encodeParameter('uint256', this.formatUint256(tokenId))
     return this.depositFor(user, rootToken, depositData, options)
   }
 
@@ -153,30 +154,30 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async depositSingleERC1155ForUser(rootToken: address, tokenId: BN | string, amount: BN | string, user: address, options?: SendOptions) {
-    const depositData = abiCoder.encode(
-      [
-        'uint256[]',
-        'uint256[]',
-      ],
-      [
-        [this.formatUint256(tokenId)],
-        [this.formatUint256(amount)],
-      ]
+  async depositSingleERC1155ForUser(
+    rootToken: address,
+    tokenId: BN | string,
+    amount: BN | string,
+    user: address,
+    options?: SendOptions
+  ) {
+    const depositData = abiCoder.encodeParameters(
+      ['uint256[]', 'uint256[]'],
+      [[this.formatUint256(tokenId)], [this.formatUint256(amount)]]
     )
     return this.depositFor(user, rootToken, depositData, options)
   }
 
-  async depositBatchERC1155ForUser(rootToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], user: address, options?: SendOptions) {
-    const depositData = abiCoder.encode(
-      [
-        'uint256[]',
-        'uint256[]',
-      ],
-      [
-        tokenIds.map(t => this.formatUint256(t)),
-        amounts.map(a => this.formatUint256(a)),
-      ]
+  async depositBatchERC1155ForUser(
+    rootToken: address,
+    tokenIds: (BN | string)[],
+    amounts: (BN | string)[],
+    user: address,
+    options?: SendOptions
+  ) {
+    const depositData = abiCoder.encodeParameters(
+      ['uint256[]', 'uint256[]'],
+      [tokenIds.map(t => this.formatUint256(t)), amounts.map(a => this.formatUint256(a))]
     )
     return this.depositFor(user, rootToken, depositData, options)
   }
@@ -191,7 +192,12 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async burnBatchERC1155(childToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+  async burnBatchERC1155(
+    childToken: address,
+    tokenIds: (BN | string)[],
+    amounts: (BN | string)[],
+    options?: SendOptions
+  ) {
     const childTokenContract = this.getPOSERC1155TokenContract(childToken)
     const txObject = childTokenContract.methods.withdrawBatch(
       tokenIds.map(t => this.formatUint256(t)),
