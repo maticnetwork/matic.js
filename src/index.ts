@@ -20,7 +20,7 @@ export class MaticPOSClient extends SDKClient {
     }
     super(options)
     this.rootChain = new RootChain(options, this.web3Client)
-    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
+    this.posRootChainManager = new POSRootChainManager(options, this.rootChain, this.web3Client)
   }
 
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -113,14 +113,26 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC1155(rootToken, tokenId, options)
   }
 
-  depositSingleERC1155ForUser(rootToken: address, user: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
+  depositSingleERC1155ForUser(
+    rootToken: address,
+    user: address,
+    tokenId: BN | string,
+    amount: BN | string,
+    options?: SendOptions
+  ) {
     if (options && (!options.from || !tokenId || !amount || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, tokenId or amount is missing')
     }
     return this.posRootChainManager.depositSingleERC1155ForUser(rootToken, tokenId, amount, user, options)
   }
 
-  depositBatchERC1155ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+  depositBatchERC1155ForUser(
+    rootToken: address,
+    user: address,
+    tokenIds: (BN | string)[],
+    amounts: (BN | string)[],
+    options?: SendOptions
+  ) {
     if (options && (!options.from || !tokenIds || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, tokenIds or amounts is missing')
     }
