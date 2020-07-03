@@ -53,6 +53,9 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async depositFor(user: address, rootToken: address, depositData: string, options?: SendOptions) {
+    if (!this.posRootChainManager.options.address) {
+      throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
+    }
     const txObject = this.posRootChainManager.methods.depositFor(user, rootToken, depositData)
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (_options.encodeAbi) {
@@ -62,6 +65,9 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async exit(burnTxHash: string, logSignature: string, options?: SendOptions) {
+    if (!this.posRootChainManager.options.address) {
+      throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
+    }
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, logSignature)
     const txObject = this.posRootChainManager.methods.exit(payload)
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
@@ -73,7 +79,7 @@ export default class POSRootChainManager extends ContractsBase {
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
     if (!this.erc20Predicate) {
-      throw new Error('Set posERC20Predicate while constructing client')
+      throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
     }
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       this.erc20Predicate,
@@ -107,7 +113,7 @@ export default class POSRootChainManager extends ContractsBase {
 
   async approveERC721(rootToken: address, tokenId: BN | string, options?: SendOptions) {
     if (!this.erc721Predicate) {
-      throw new Error('Set posERC721Predicate while constructing client')
+      throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
     }
     const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.approve(
       this.erc721Predicate,
@@ -141,7 +147,7 @@ export default class POSRootChainManager extends ContractsBase {
 
   async approveERC1155(rootToken: address, tokenId: BN | string, options?: SendOptions) {
     if (!this.erc1155Predicate) {
-      throw new Error('Set posERC1155Predicate while constructing client')
+      throw new Error('posERC1155Predicate address not found. Set it while constructing MaticPOSClient.')
     }
     const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(
       this.erc1155Predicate,
