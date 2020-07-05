@@ -106,11 +106,11 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.exitERC721(txHash, options)
   }
 
-  approveERC1155ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
-    if (options && (!options.from || !tokenId || !rootToken)) {
-      throw new Error('options.from, rootToken or tokenId is missing')
+  approveERC1155ForDeposit(rootToken: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from or rootToken is missing')
     }
-    return this.posRootChainManager.approveERC1155(rootToken, tokenId, options)
+    return this.posRootChainManager.approveERC1155(rootToken, options)
   }
 
   depositSingleERC1155ForUser(
@@ -118,12 +118,13 @@ export class MaticPOSClient extends SDKClient {
     user: address,
     tokenId: BN | string,
     amount: BN | string,
+    data?: string,
     options?: SendOptions
   ) {
     if (options && (!options.from || !tokenId || !amount || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, tokenId or amount is missing')
     }
-    return this.posRootChainManager.depositSingleERC1155ForUser(rootToken, tokenId, amount, user, options)
+    return this.posRootChainManager.depositSingleERC1155ForUser(rootToken, tokenId, amount, user, data, options)
   }
 
   depositBatchERC1155ForUser(
@@ -131,12 +132,13 @@ export class MaticPOSClient extends SDKClient {
     user: address,
     tokenIds: (BN | string)[],
     amounts: (BN | string)[],
+    data?: string,
     options?: SendOptions
   ) {
     if (options && (!options.from || !tokenIds || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, tokenIds or amounts is missing')
     }
-    return this.posRootChainManager.depositBatchERC1155ForUser(rootToken, tokenIds, amounts, user, options)
+    return this.posRootChainManager.depositBatchERC1155ForUser(rootToken, tokenIds, amounts, user, data, options)
   }
 
   burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {

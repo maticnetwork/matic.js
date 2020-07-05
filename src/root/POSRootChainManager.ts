@@ -145,7 +145,7 @@ export default class POSRootChainManager extends ContractsBase {
     return this.exit(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
   }
 
-  async approveERC1155(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+  async approveERC1155(rootToken: address, options?: SendOptions) {
     if (!this.erc1155Predicate) {
       throw new Error('posERC1155Predicate address not found. Set it while constructing MaticPOSClient.')
     }
@@ -165,11 +165,12 @@ export default class POSRootChainManager extends ContractsBase {
     tokenId: BN | string,
     amount: BN | string,
     user: address,
+    data?: string,
     options?: SendOptions
   ) {
     const depositData = abiCoder.encodeParameters(
-      ['uint256[]', 'uint256[]'],
-      [[this.formatUint256(tokenId)], [this.formatUint256(amount)]]
+      ['uint256[]', 'uint256[]', 'bytes'],
+      [[this.formatUint256(tokenId)], [this.formatUint256(amount)], data || '0x0']
     )
     return this.depositFor(user, rootToken, depositData, options)
   }
@@ -179,11 +180,12 @@ export default class POSRootChainManager extends ContractsBase {
     tokenIds: (BN | string)[],
     amounts: (BN | string)[],
     user: address,
+    data?: string,
     options?: SendOptions
   ) {
     const depositData = abiCoder.encodeParameters(
-      ['uint256[]', 'uint256[]'],
-      [tokenIds.map(t => this.formatUint256(t)), amounts.map(a => this.formatUint256(a))]
+      ['uint256[]', 'uint256[]', 'bytes'],
+      [tokenIds.map(t => this.formatUint256(t)), amounts.map(a => this.formatUint256(a)), data || '0x0']
     )
     return this.depositFor(user, rootToken, depositData, options)
   }
