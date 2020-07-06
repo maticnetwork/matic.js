@@ -54,7 +54,7 @@
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "^5.2.0",
     "isomorphic-fetch": "2.2.1",
-    "matic-pos-portal": "github:maticnetwork/pos-portal#584ec3c5e14794cc8a5d6d903bd9c07af99f29f7",
+    "matic-pos-portal": "github:maticnetwork/pos-portal#v1.0.0",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
     "web3": "1.2.1",
