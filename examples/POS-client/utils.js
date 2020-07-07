@@ -1,5 +1,5 @@
 // const MaticPOSClient = require('@maticnetwork/maticjs').MaticPOSClient
-const MaticPOSClient = require('../../../lib/index').MaticPOSClient
+const MaticPOSClient = require('../../lib/index').MaticPOSClient
 const config = require('./config')
 const HDWalletProvider = require('@truffle/hdwallet-provider')
 
