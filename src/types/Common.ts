@@ -30,4 +30,7 @@ export declare interface MaticClientInitializationOptions {
   depositManager?: string
   withdrawManager?: string
   posRootChainManager?: string
+  posERC20Predicate?: string
+  posERC721Predicate?: string
+  posERC1155Predicate?: string
 }

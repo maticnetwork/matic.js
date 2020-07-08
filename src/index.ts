@@ -20,7 +20,7 @@ export class MaticPOSClient extends SDKClient {
     }
     super(options)
     this.rootChain = new RootChain(options, this.web3Client)
-    this.posRootChainManager = new POSRootChainManager(options.posRootChainManager, this.rootChain, this.web3Client)
+    this.posRootChainManager = new POSRootChainManager(options, this.rootChain, this.web3Client)
   }
 
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -45,7 +45,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(childToken))) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!amount) {
@@ -66,6 +66,125 @@ export class MaticPOSClient extends SDKClient {
       throw new Error(`options.from is missing`)
     }
     return this.posRootChainManager.exitERC20(txHash, options)
+  }
+
+  approveERC721ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !rootToken)) {
+      throw new Error('options.from, rootToken or tokenId is missing')
+    }
+    return this.posRootChainManager.approveERC721(rootToken, tokenId, options)
+  }
+
+  depositERC721ForUser(rootToken: address, user: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or tokenId is missing')
+    }
+    return this.posRootChainManager.depositERC721ForUser(rootToken, tokenId, user, options)
+  }
+
+  burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenId) {
+      // ${tokenId} will stringify it while printing which might be a problem
+      throw new Error(`${tokenId} is not a tokenId`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnERC721(childToken, tokenId, options)
+  }
+
+  exitERC721(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitERC721(txHash, options)
+  }
+
+  approveERC1155ForDeposit(rootToken: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from or rootToken is missing')
+    }
+    return this.posRootChainManager.approveERC1155(rootToken, options)
+  }
+
+  depositSingleERC1155ForUser(
+    rootToken: address,
+    user: address,
+    tokenId: BN | string,
+    amount: BN | string,
+    data?: string,
+    options?: SendOptions
+  ) {
+    if (options && (!options.from || !tokenId || !amount || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, tokenId or amount is missing')
+    }
+    return this.posRootChainManager.depositSingleERC1155ForUser(rootToken, tokenId, amount, user, data, options)
+  }
+
+  depositBatchERC1155ForUser(
+    rootToken: address,
+    user: address,
+    tokenIds: (BN | string)[],
+    amounts: (BN | string)[],
+    data?: string,
+    options?: SendOptions
+  ) {
+    if (options && (!options.from || !tokenIds || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, tokenIds or amounts is missing')
+    }
+    return this.posRootChainManager.depositBatchERC1155ForUser(rootToken, tokenIds, amounts, user, data, options)
+  }
+
+  burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenId || !amount) {
+      throw new Error(`tokenId or amount is missing`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnSingleERC1155(childToken, tokenId, amount, options)
+  }
+
+  burnBatchERC1155(childToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenIds || !amounts) {
+      throw new Error(`tokenIds or amounts missing`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnBatchERC1155(childToken, tokenIds, amounts, options)
+  }
+
+  exitSingleERC1155(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitSingleERC1155(txHash, options)
+  }
+
+  exitBatchERC1155(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitBatchERC1155(txHash, options)
   }
 }
 
