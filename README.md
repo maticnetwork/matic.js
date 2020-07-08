@@ -184,31 +184,50 @@ await matic.processExits(
 
 
 // Import Matic sdk for POS Portal
-import MaticPOSClient from '@maticnetwork/maticjs'
+const MaticPOSClient = require('@maticnetwork/maticjs').MaticPOSClient
 
 const maticPOSClient = new MaticPOSClient({
+  // optional parameter, defaults to 'testnet'
+  // use 'mainnet' for mainnet deployment
+  network: <network-type>,
 
-  // Set Matic provider - string or provider instance
-  // Example: 'https://testnet.matic.network' OR new Web3.providers.HttpProvider('http://localhost:8545')
-  // Some flows like startExitFor[Metadata]MintableBurntToken, require a webSocket provider such as new web3.providers.WebsocketProvider('ws://localhost:8546')
+  // optional parameter, defaults to mumbai
+  // use 'v1' for mainnet deployment
+  version: <netwotk-version>,
+
+  // Set Matic chain provider instance
+  // Example:
+  // new HDWalletProvider(<USER_PRIVATE_KEY>, 'https://rpc-mumbai.matic.today')
   maticProvider: <web3-provider>,
 
-  // Set Mainchain provider - string or provider instance
-  // Example: 'https://kovan.infura.io' OR new Web3.providers.HttpProvider('http://localhost:8545')
+  // Set Main chain provider instance
+  // Example: new HDWalletProvider(<USER_PRIVATE_KEY>, <GOERLI_RPC_URL>)
   parentProvider: <web3-provider>,
 
-  // Set rootchain contract. See below for more information
-  rootChain: <root-contract-address>,
-
-  // Set pos-root-chain-manager Address. See below for more information
+  // Set RootChainManager address of PoS Portal contracts.
   posRootChainManager: <pos-root-chain-manager-address>,
+
+  // Set ERC20Predicate address if working with ERC20 tokens
+  posERC20Predicate: <pos-erc20-predicate>,
+
+  // Set ERC721Predicate address if working with ERC721 tokens
+  posERC721Predicate: <pos-erc721-predicate>,
+
+  // Set ERC1155Predicate address if working with ERC1155 tokens
+  posERC1155Predicate: <pos-erc1155-predicate>,
+
+  // default transaction options can be set while constructing the client
+  parentDefaultOptions: <transaction-options>,
+
+  // default transaction options can be set while constructing the client
+  maticDefaultOptions: <transaction-options>,
 })
 
 // Approve ERC20 tokens for deposit using POS Portal
 await maticPOSClient.approveERC20ForDeposit(
   rootToken, // RootToken address,
   amount, // Amount for approval (in wei)
-  options // transaction fields
+  options // transaction fields, can be skipped if default options are set
 )
 
 // Deposit tokens into Matic chain using POS Portal.
@@ -217,7 +236,7 @@ await maticPOSClient.depositERC20ForUser(
   rootToken, // RootToken address
   user, // User address (in most cases, this will be sender's address),
   amount, // Amount for deposit (in wei)
-  options // transaction fields
+  options // transaction fields, can be skipped if default options are set
 )
 
 // Deposit ether into Matic chain using POS Portal.
@@ -225,21 +244,109 @@ await maticPOSClient.depositERC20ForUser(
 await maticPOSClient.depositEtherForUser(
   user, // User address (in most cases, this will be sender's address),
   amount, // Amount for deposit (in wei)
-  options // transaction fields
+  options // transaction fields, can be skipped if default options are set
 )
 
-// Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction id
+// Burn ERC20 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
 await maticPOSClient.burnERC20(
   childToken, // ChildToken address
   amount, // Amount to burn (in wei)
-  options // transaction fields
+  options // transaction fields, can be skipped if default options are set
 )
 
-// Exit funds from the POS Portal using the Transaction id generated from the 'burnERC20' method
+// Exit funds from the POS Portal using the Transaction hash generated from the 'burnERC20' method
 // Can be called after checkpoint has been submitted for the block containing burn tx.
 await maticPOSClient.exitERC20(
-  txId, // Transaction id generated from the 'burnERC20' method
-  options // transaction fields
+  txHash, // Transaction hash generated from the 'burnERC20' method
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Approve ERC721 tokens for deposit using POS Portal
+await maticPOSClient.approveERC721ForDeposit(
+  rootToken, // RootToken address,
+  tokenId, // tokenId for approval
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Deposit tokens into Matic chain using POS Portal.
+// Remember to call `approveERC721ForDeposit` before this
+await maticPOSClient.depositERC721ForUser(
+  rootToken, // RootToken address
+  user, // User address (in most cases, this will be sender's address),
+  tokenId, // tokenId for deposit
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Burn ERC721 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
+await maticPOSClient.burnERC721(
+  childToken, // ChildToken address
+  tokenId, // tokenId to burn
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Exit funds from the POS Portal using the Transaction hash generated from the 'burnERC721' method
+// Can be called after checkpoint has been submitted for the block containing burn tx.
+await maticPOSClient.exitERC721(
+  txHash, // Transaction hash generated from the 'burnERC721' method
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Approve all ERC1155 transfers for deposit using POS Portal
+await maticPOSClient.approveERC1155ForDeposit(
+  rootToken, // RootToken address,
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Deposit tokens into Matic chain using POS Portal.
+// Remember to call `approveERC1155ForDeposit` before this
+await maticPOSClient.depositSingleERC1155ForUser(
+  rootToken, // RootToken address
+  user, // User address (in most cases, this will be sender's address),
+  tokenId, // tokenId for deposit
+  amount, // amount of tokenId for deposit
+  data, // optional bytes data field
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Deposit tokens into Matic chain using POS Portal.
+// Remember to call `approveERC1155ForDeposit` before this
+await maticPOSClient.depositBatchERC1155ForUser(
+  rootToken, // RootToken address
+  user, // User address (in most cases, this will be sender's address),
+  tokenIds, // array of tokenIds for deposit
+  amounts, // array of amounts corresponding to to each tokenId
+  data, optional bytes data field
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Burn ERC1155 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
+await maticPOSClient.burnSingleERC1155(
+  childToken, // ChildToken address
+  tokenId, // tokenId to burn
+  amount, // amount of tokenId to burn
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Burn ERC1155 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
+await maticPOSClient.burnBatchERC1155(
+  childToken, // ChildToken address
+  tokenIds, // array of tokenIds to burn
+  amounts, array of amounts corresponding to to each tokenId
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Exit funds from the POS Portal using the Transaction hash generated from the 'burnSingleERC1155' method
+// Can be called after checkpoint has been submitted for the block containing burn tx.
+await maticPOSClient.exitSingleERC1155(
+  txHash, // Transaction hash generated from the 'burnSingleERC1155' method
+  options // transaction fields, can be skipped if default options are set
+)
+
+// Exit funds from the POS Portal using the Transaction hash generated from the 'burnBatchERC1155' method
+// Can be called after checkpoint has been submitted for the block containing burn tx.
+await maticPOSClient.exitBatchERC1155(
+  txHash, // Transaction hash generated from the 'burnBatchERC1155' method
+  options // transaction fields, can be skipped if default options are set
 )
 
 ```
