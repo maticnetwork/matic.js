@@ -39,7 +39,6 @@ export default class Web3Client {
     if (!_options.from) throw new Error('from is not specified')
     const from = _options.from
     delete txObject.chainId
-
     const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
       !(_options.gasLimit || _options.gas)
         ? txObject.estimateGas({ from, value: _options.value })

@@ -12,8 +12,10 @@ async function getMaticClient(_network = 'testnet', _version = 'mumbai') {
   const matic = new Matic({
     network: _network,
     version: _version,
-    parentProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Main.RPC),
-    maticProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Matic.RPC),
+    // parentProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Main.RPC),
+    parentProvider: new HDWalletProvider(process.env.PRIVATE_KEY, 'https://goerli.infura.io/v3/<>'),
+    // maticProvider: new HDWalletProvider(process.env.PRIVATE_KEY, network.Matic.RPC),
+    maticProvider: new HDWalletProvider(process.env.PRIVATE_KEY, 'wss://ws-mumbai.matic.today'),
     parentDefaultOptions: { from },
     maticDefaultOptions: { from },
   })
