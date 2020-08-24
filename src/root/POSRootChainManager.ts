@@ -2,8 +2,6 @@ import BN from 'bn.js'
 import Contract from 'web3/eth/contract'
 import Web3 from 'web3'
 
-import RootChainManagerArtifact from 'matic-pos-portal/artifacts/RootChainManager.json'
-
 import ContractsBase from '../common/ContractsBase'
 import { address, SendOptions, MaticClientInitializationOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
@@ -30,13 +28,13 @@ export default class POSRootChainManager extends ContractsBase {
   constructor(options: MaticClientInitializationOptions, rootChain: RootChain, web3Client: Web3Client) {
     super(web3Client, options.network)
     this.posRootChainManager = new this.web3Client.parentWeb3.eth.Contract(
-      RootChainManagerArtifact.abi,
-      options.posRootChainManager
+      options.network.abi('RootChainManager', 'pos'),
+      options.posRootChainManager || options.network.Main.POSContracts.RootChainManagerProxy
     )
     this.exitManager = new ExitManager(rootChain, options, web3Client)
-    this.erc20Predicate = options.posERC20Predicate
-    this.erc721Predicate = options.posERC721Predicate
-    this.erc1155Predicate = options.posERC1155Predicate
+    this.erc20Predicate = options.posERC20Predicate || options.network.Main.POSContracts.ERC20PredicateProxy
+    this.erc721Predicate = options.posERC721Predicate || options.network.Main.POSContracts.ERC721PredicateProxy
+    this.erc1155Predicate = options.posERC1155Predicate || options.network.Main.POSContracts.ERC1155PredicateProxy
   }
 
   async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
