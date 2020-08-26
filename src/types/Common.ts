@@ -8,6 +8,9 @@ export declare interface SendOptions {
   encodeAbi?: boolean
   parent?: boolean
   to?: string
+  onTransactionHash?: any
+  onReceipt?: any
+  onError?: any
 }
 
 export declare interface order {

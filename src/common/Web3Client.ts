@@ -60,6 +60,9 @@ export default class Web3Client {
       to: _options.to || null,
       data: _options.data,
       encodeAbi: _options.encodeAbi || false,
+      onTransactionHash: _options.onTransactionHash || null,
+      onReceipt: _options.onReceipt || null,
+      onError: _options.onError || null,
     }
   }
 
