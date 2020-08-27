@@ -90,7 +90,7 @@ export default class ExitManager extends ContractsBase {
         ethUtils.bufferToHex(receiptsRoot),
         ethUtils.bufferToHex(receipt),
         ethUtils.bufferToHex(ethUtils.rlp.encode(receiptParentNodes)),
-        ethUtils.bufferToHex(ethUtils.rlp.encode(path)),
+        ethUtils.bufferToHex(path),
         logIndex,
       ])
     )

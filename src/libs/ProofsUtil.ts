@@ -150,7 +150,7 @@ export default class ProofsUtil {
           blockHash: ethUtils.toBuffer(receipt.blockHash),
           parentNodes: stack.map(s => s.raw),
           root: ProofsUtil.getRawHeader(block).receiptTrie,
-          path: rlp.encode(receipt.transactionIndex),
+          path: Buffer.concat([Buffer.from('00', 'hex'), rlp.encode(receipt.transactionIndex)]),
           value: rlp.decode(rawReceiptNode.value),
         }
         resolve(prf)
@@ -161,7 +161,7 @@ export default class ProofsUtil {
   static getReceiptBytes(receipt) {
     return rlp.encode([
       ethUtils.toBuffer(
-        receipt.status !== undefined && receipt.status != null ? (receipt.status ? 1 : 0) : receipt.root
+        receipt.status !== undefined && receipt.status != null ? (receipt.status ? '0x1' : '0x') : receipt.root
       ),
       ethUtils.toBuffer(receipt.cumulativeGasUsed),
       ethUtils.toBuffer(receipt.logsBloom),

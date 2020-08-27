@@ -4,10 +4,6 @@ import Web3Client from './Web3Client'
 
 import { address } from '../types/Common'
 
-import posChildERC20Artifact from 'matic-pos-portal/artifacts/ChildERC20.json'
-import posChildERC721Artifact from 'matic-pos-portal/artifacts/ChildERC721.json'
-import posChildERC1155Artifact from 'matic-pos-portal/artifacts/ChildERC1155.json'
-
 export default class ContractsBase {
   static MATIC_CHILD_TOKEN: address = '0x0000000000000000000000000000000000001010'
 
@@ -47,16 +43,16 @@ export default class ContractsBase {
 
   public getPOSERC20TokenContract(token: address, parent: boolean = false) {
     const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(posChildERC20Artifact.abi, token)
+    return new web3.eth.Contract(this.network.abi('ChildERC20', 'pos'), token)
   }
 
   public getPOSERC721TokenContract(token: address, parent: boolean = false) {
     const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(posChildERC721Artifact.abi, token)
+    return new web3.eth.Contract(this.network.abi('ChildERC721', 'pos'), token)
   }
 
   public getPOSERC1155TokenContract(token: address, parent: boolean = false) {
     const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(posChildERC1155Artifact.abi, token)
+    return new web3.eth.Contract(this.network.abi('ChildERC1155', 'pos'), token)
   }
 }
