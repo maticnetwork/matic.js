@@ -240,9 +240,7 @@ export default class Matic extends SDKClient {
     }
     Object.assign(options, { value, to })
     const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
-    return _options.encodeAbi
-      ? _options
-      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), _options)
+    return _options.encodeAbi ? _options : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options))
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {

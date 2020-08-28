@@ -11,6 +11,7 @@ export default class Web3Client {
   public web3: Web3
   public parentDefaultOptions: SendOptions
   public maticDefaultOptions: SendOptions
+  public events: any
 
   constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions) {
     this.parentWeb3 = new Web3(parentProvider)
@@ -49,6 +50,12 @@ export default class Web3Client {
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
 
+    this.events = {
+      onTransactionHash: _options.onTransactionHash || null,
+      onReceipt: _options.onReceipt || null,
+      onError: _options.onError || null,
+    }
+
     return {
       from,
       gas: gasLimit,
@@ -60,18 +67,15 @@ export default class Web3Client {
       to: _options.to || null,
       data: _options.data,
       encodeAbi: _options.encodeAbi || false,
-      onTransactionHash: _options.onTransactionHash || null,
-      onReceipt: _options.onReceipt || null,
-      onError: _options.onError || null,
     }
   }
 
-  wrapWeb3Promise(promise, options) {
+  wrapWeb3Promise(promise) {
     const _emptyFunc = () => {}
     return promise
-      .on('transactionHash', options.onTransactionHash || _emptyFunc)
-      .on('receipt', options.onReceipt || _emptyFunc)
-      .on('error', options.onError || _emptyFunc)
+      .on('transactionHash', this.events.onTransactionHash || _emptyFunc)
+      .on('receipt', this.events.onReceipt || _emptyFunc)
+      .on('error', this.events.onError || _emptyFunc)
   }
 
   async send(txObject, options?) {
@@ -89,7 +93,7 @@ export default class Web3Client {
       _options.gasPrice = _options.gasPrice || this.maticDefaultOptions.gasPrice
     }
     logger.debug('sending tx with', { _options })
-    return this.wrapWeb3Promise(txObject.send(_options), _options)
+    return this.wrapWeb3Promise(txObject.send(_options))
   }
 
   getParentWeb3() {
