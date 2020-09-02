@@ -3,7 +3,6 @@ import Contract from 'web3/eth/contract'
 import ContractsBase from '../common/ContractsBase'
 import { MaticClientInitializationOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
-import fetch from 'node-fetch'
 import BN from 'bn.js'
 
 const logger = {
