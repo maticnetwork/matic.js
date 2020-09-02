@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import bluebird from 'bluebird'
+import bluebird, { all } from 'bluebird'
 import Contract from 'web3/eth/contract'
 
 import ContractsBase from '../common/ContractsBase'
@@ -65,6 +65,29 @@ export default class DepositManager extends ContractsBase {
       return Object.assign(_options, { data: txObject.encodeABI(), to: token })
     }
     return this.web3Client.send(txObject, _options)
+  }
+
+  async approveMaxERC20(token: address, options?: SendOptions) {
+    const txObject = this.getERC20TokenContract(token, true).methods.approve(
+      this.depositManagerContract.options.address,
+      '115792089237316195423570985008687907853269984665640564038166584007913129639935'
+    )
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async allowanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+    const allowance = await this.getERC20TokenContract(token, true)
+      .methods.allowance(userAddress, this.depositManagerContract.options.address)
+      .call()
+
+    return allowance
   }
 
   async depositERC20(token: address, amount: BN | string, options?: SendOptions) {

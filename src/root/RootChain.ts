@@ -3,6 +3,7 @@ import Contract from 'web3/eth/contract'
 import ContractsBase from '../common/ContractsBase'
 import { MaticClientInitializationOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
+import fetch from 'node-fetch'
 import BN from 'bn.js'
 
 const logger = {
@@ -63,5 +64,28 @@ export default class RootChain extends ContractsBase {
       }
     }
     return ans.mul(RootChain.CHECKPOINT_ID_INTERVAL)
+  }
+
+  async findHeaderBlockNumberHermoine(childBlockNumber: BN | string | number): Promise<string> {
+    childBlockNumber = new BN(childBlockNumber)
+
+    let currentHeader = await this.web3Client.call(this.rootChain.methods.currentHeaderBlock())
+
+    let hexCurrentHeader = this.web3Client.web3.utils.padLeft(
+      this.web3Client.web3.utils.numberToHex(currentHeader),
+      64,
+      ''
+    )
+
+    let response = await fetch('http://localhost:5000/api/v1/goerli/rootchain-logs/' + hexCurrentHeader)
+    let logDetails = await response.json()
+    let logs = logDetails.rootChainLogs
+    for (let data of logs) {
+      let transaction = this.web3Client.web3.eth.abi.decodeParameters(['uint256', 'uint256', 'bytes32'], data.data)
+
+      if (childBlockNumber >= transaction[0] && childBlockNumber <= transaction[1]) {
+        return this.web3Client.web3.utils.hexToNumberString(data.topic2)
+      }
+    }
   }
 }

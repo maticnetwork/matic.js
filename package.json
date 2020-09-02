@@ -55,6 +55,7 @@
     "ethereumjs-util": "^5.2.0",
     "isomorphic-fetch": "2.2.1",
     "merkle-patricia-tree": "2.3.2",
+    "node-fetch": "^2.6.0",
     "query-string": "6.8.1",
     "web3": "1.2.1",
     "web3-providers-ws": "1.2.4"

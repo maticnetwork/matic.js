@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const bluebird = require('bluebird')
-
+import fetch from 'node-fetch'
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')
 const ethUtils = require('ethereumjs-util')
@@ -22,6 +22,14 @@ export default class ProofsUtil {
     return ethUtils.keccak256(Buffer.concat([n, ts, txRoot, receiptsRoot]))
   }
 
+  static getBlockHeaderHermoine(block) {
+    const n = new BN(block.number).toArrayLike(Buffer, 'be', 32)
+    const ts = new BN(new Date(block.time).getTime() / 1000).toArrayLike(Buffer, 'be', 32)
+    const txRoot = ethUtils.toBuffer(block.tx_hash)
+    const receiptsRoot = ethUtils.toBuffer(block.receipt_hash)
+    return ethUtils.keccak256(Buffer.concat([n, ts, txRoot, receiptsRoot]))
+  }
+
   static async buildCheckpointRoot(web3, start, end) {
     logger.debug('buildCheckpointRoot...')
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
@@ -33,6 +41,24 @@ export default class ProofsUtil {
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
     const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
+  }
+
+  static async buildBlockProofHermoine(web3, start, end, blockNumber) {
+    logger.debug('buildBlockProof...', start, end, blockNumber)
+    const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(web3, start, end)
+    const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
+    return ethUtils.bufferToHex(Buffer.concat(proof))
+  }
+
+  static async buildBlockHeaderMerkleHermoine(web3, start, end) {
+    let response = await fetch('http://localhost:5000/api/v1/mumbai/generate-proof?start=' + start + '&end=' + end)
+    let log_details = await response.json()
+    let logs = log_details.merkle_headerblocks
+    let final = logs.map(data => {
+      return ProofsUtil.getBlockHeaderHermoine(data)
+    })
+
+    return final
   }
 
   static async buildBlockHeaderMerkle(web3, start, end) {

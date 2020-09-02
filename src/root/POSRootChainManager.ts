@@ -124,6 +124,43 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async approved(token: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && !token) {
+      throw new Error('token address is missing')
+    }
+    const approved = await this.getPOSERC721TokenContract(token, true)
+      .methods.getApproved(tokenId)
+      .call()
+
+    return approved == this.erc721Predicate
+  }
+
+  async approveAllERC721(rootToken: address, options?: SendOptions) {
+    if (!this.erc721Predicate) {
+      throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
+    }
+    const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.setApprovalForAll(
+      this.erc721Predicate,
+      true
+    )
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async approvedForAll(token: address, userAddress: address, options?: SendOptions) {
+    if (options && !token) {
+      throw new Error('token address is missing')
+    }
+    const approved = await this.getPOSERC721TokenContract(token, true)
+      .methods.isApprovedForAll(userAddress, this.erc721Predicate)
+      .call()
+
+    return approved
+  }
+
   async depositERC721ForUser(rootToken: address, tokenId: BN | string, user: address, options?: SendOptions) {
     const depositData = abiCoder.encodeParameter('uint256', this.formatUint256(tokenId))
     return this.depositFor(user, rootToken, depositData, options)

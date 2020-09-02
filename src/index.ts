@@ -75,6 +75,27 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC721(rootToken, tokenId, options)
   }
 
+  getApprovedERC721ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !rootToken)) {
+      throw new Error('options.from, rootToken or tokenId is missing')
+    }
+    return this.posRootChainManager.approved(rootToken, tokenId, options)
+  }
+
+  approveAllERC721ForDeposit(rootToken: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from, rootToken is missing')
+    }
+    return this.posRootChainManager.approveAllERC721(rootToken, options)
+  }
+
+  getApprovedAllERC721ForDeposit(rootToken: address, userAddress: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from, rootToken is missing')
+    }
+    return this.posRootChainManager.approved(rootToken, userAddress, options)
+  }
+
   depositERC721ForUser(rootToken: address, user: address, tokenId: BN | string, options?: SendOptions) {
     if (options && (!options.from || !tokenId || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, or tokenId is missing')
@@ -263,6 +284,22 @@ export default class Matic extends SDKClient {
     }
 
     return this.depositManager.approveERC20(token, amount, options)
+  }
+
+  approveMaxERC20TokensForDeposit(token: address, options?: SendOptions) {
+    if (options && (!options.from || !token)) {
+      throw new Error('options.from, token is missing')
+    }
+
+    return this.depositManager.approveMaxERC20(token, options)
+  }
+
+  checkERC20Allowance(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('user address, token is missing')
+    }
+
+    return this.depositManager.allowanceOfERC20(userAddress, token, options)
   }
 
   async getTransferSignature(sellOrder: order, buyOrder: order, options: SendOptions) {
