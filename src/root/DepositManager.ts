@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import bluebird, { all } from 'bluebird'
+import bluebird from 'bluebird'
 import Contract from 'web3/eth/contract'
 
 import ContractsBase from '../common/ContractsBase'
