@@ -27,6 +27,20 @@ export default class RootChain extends ContractsBase {
     return this.web3Client.call(this.rootChain.methods.getLastChildBlock())
   }
 
+  async getCheckpointInclusion(burnTxHash) {
+    // check checkpoint
+    const lastChildBlock = await this.getLastChildBlock()
+    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
+
+    if (new BN(lastChildBlock).gte(new BN(burnTx.blockNumber))) {
+      return 'Burn transaction has not been checkpointed as yet'
+    }
+
+    const headerBlockNumber = await this.findHeaderBlockNumber(burnTx.blockNumber)
+    const headerBlock = await this.web3Client.call(this.rootChain.methods.headerBlocks(this.encode(headerBlockNumber)))
+    return headerBlock
+  }
+
   async findHeaderBlockNumber(childBlockNumber: BN | string | number): Promise<BN> {
     childBlockNumber = new BN(childBlockNumber)
     // first checkpoint id = start * 10000
@@ -64,28 +78,5 @@ export default class RootChain extends ContractsBase {
       }
     }
     return ans.mul(RootChain.CHECKPOINT_ID_INTERVAL)
-  }
-
-  async findHeaderBlockNumberHermoine(childBlockNumber: BN | string | number): Promise<string> {
-    childBlockNumber = new BN(childBlockNumber)
-
-    let currentHeader = await this.web3Client.call(this.rootChain.methods.currentHeaderBlock())
-
-    let hexCurrentHeader = this.web3Client.web3.utils.padLeft(
-      this.web3Client.web3.utils.numberToHex(currentHeader),
-      64,
-      ''
-    )
-
-    let response = await fetch('http://localhost:5000/api/v1/goerli/rootchain-logs/' + hexCurrentHeader)
-    let logDetails = await response.json()
-    let logs = logDetails.rootChainLogs
-    for (let data of logs) {
-      let transaction = this.web3Client.web3.eth.abi.decodeParameters(['uint256', 'uint256', 'bytes32'], data.data)
-
-      if (childBlockNumber >= transaction[0] && childBlockNumber <= transaction[1]) {
-        return this.web3Client.web3.utils.hexToNumberString(data.topic2)
-      }
-    }
   }
 }

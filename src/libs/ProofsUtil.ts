@@ -45,20 +45,20 @@ export default class ProofsUtil {
 
   static async buildBlockProofHermoine(web3, start, end, blockNumber) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
-    const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(web3, start, end)
+    const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(start, end)
     const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
-  static async buildBlockHeaderMerkleHermoine(web3, start, end) {
-    let response = await fetch('http://localhost:5000/api/v1/mumbai/generate-proof?start=' + start + '&end=' + end)
+  static async buildBlockHeaderMerkleHermoine(start, end) {
+    let response = await fetch('https://apis.matic.network/api/v1/mumbai/generate-proof?start=' + start + '&end=' + end)
     let log_details = await response.json()
     let logs = log_details.merkle_headerblocks
-    let final = logs.map(data => {
-      return ProofsUtil.getBlockHeaderHermoine(data)
-    })
-
-    return final
+    const headers = new Array(end - start + 1)
+    for (let i = 0; i < end - start + 1; i++) {
+      headers[i] = ProofsUtil.getBlockHeaderHermoine(logs[i])
+    }
+    return new MerkleTree(headers)
   }
 
   static async buildBlockHeaderMerkle(web3, start, end) {

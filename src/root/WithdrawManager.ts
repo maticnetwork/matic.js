@@ -99,36 +99,6 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async buildPayloadHermoine(burnTxHash, type) {
-    let eventSig
-    if (type === 'ERC20') {
-      eventSig = WithdrawManager.ERC20_WITHDRAW_EVENT_SIG
-    }
-    if (type === 'ERC721') {
-      eventSig = WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
-    }
-    if (!eventSig) {
-      throw new Error('Incorrect Token Type')
-    }
-    const payload = await this.exitManager.buildPayloadForExitHermoine(burnTxHash, eventSig)
-    return payload
-  }
-
-  async buildPayload(burnTxHash, type) {
-    let eventSig
-    if (type === 'ERC20') {
-      eventSig = WithdrawManager.ERC20_WITHDRAW_EVENT_SIG
-    }
-    if (type === 'ERC721') {
-      eventSig = WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
-    }
-    if (!eventSig) {
-      throw new Error('Incorrect Token Type')
-    }
-    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, eventSig)
-    return payload
-  }
-
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC20_WITHDRAW_EVENT_SIG)
     const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
@@ -139,8 +109,34 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async startExitWithBurntERC20TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC20_WITHDRAW_EVENT_SIG
+    )
+    const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc20Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
   async startExitWithBurntERC721Tokens(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
+    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async startExitWithBurntERC721TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
+    )
     const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (_options.encodeAbi) {

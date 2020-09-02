@@ -82,10 +82,10 @@ export default class ExitManager extends ContractsBase {
       new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    const headerBlockNumber = await this.rootChain.findHeaderBlockNumberHermoine(burnTx.blockNumber)
-
-    const headerBlock = await this.web3Client.call(this.rootChain.rootChain.methods.headerBlocks(headerBlockNumber))
-
+    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
+    const headerBlock = await this.web3Client.call(
+      this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
+    )
     logger.info({ headerBlockNumber: headerBlockNumber.toString(), headerBlock })
 
     // build block proof
