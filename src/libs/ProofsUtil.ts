@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const bluebird = require('bluebird')
-import fetch from 'node-fetch'
+import fetch from 'isomorphic-fetch'
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')
 const ethUtils = require('ethereumjs-util')
@@ -43,15 +43,15 @@ export default class ProofsUtil {
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
-  static async buildBlockProofHermoine(web3, start, end, blockNumber) {
+  static async buildBlockProofHermoine(web3, start, end, blockNumber, networkApiUrl) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
-    const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(start, end)
+    const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(start, end, networkApiUrl)
     const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
-  static async buildBlockHeaderMerkleHermoine(start, end) {
-    let response = await fetch('https://apis.matic.network/api/v1/mumbai/generate-proof?start=' + start + '&end=' + end)
+  static async buildBlockHeaderMerkleHermoine(start, end, networkApiUrl) {
+    let response = await fetch(networkApiUrl + '/generate-proof?start=' + start + '&end=' + end)
     let log_details = await response.json()
     let logs = log_details.merkle_headerblocks
     const headers = new Array(end - start + 1)

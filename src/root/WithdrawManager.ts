@@ -145,6 +145,18 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async getExitTime(burnTxHash, confirmTxHash) {
+    const HALF_EXIT_PERIOD = parseInt(await this.web3Client.call(this.withdrawManager.methods.HALF_EXIT_PERIOD()))
+    let blockNumber = (await this.web3Client.getParentWeb3().eth.getTransaction(confirmTxHash)).blockNumber
+    let confirmTime = (await this.web3Client.getParentWeb3().eth.getBlock(blockNumber)).timestamp
+    let checkPointTime = (await this.rootChain.getCheckpointInclusion(burnTxHash)).createdAt
+    let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, confirmTime + HALF_EXIT_PERIOD)
+    return {
+      exitTime,
+      exitable: Date.now() / 1000 > exitTime,
+    }
+  }
+
   /**
    * Start an exit for a token that was minted and burnt on the side chain
    * Wrapper over contract call: [MintableERC721Predicate.startExitForMintableBurntToken](https://github.com/maticnetwork/contracts/blob/e2cb462b8487921463090b0bdcdd7433db14252b/contracts/root/predicates/MintableERC721Predicate.sol#L31)

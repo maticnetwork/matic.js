@@ -109,7 +109,7 @@ export default class POSRootChainManager extends ContractsBase {
     }
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       this.erc20Predicate,
-      this.formatUint256('115792089237316195423570985008687907853269984665640564038166584007913129639935')
+      '0xffffffffffffffffffffffffffffffff'
     )
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (_options.encodeAbi) {
@@ -167,7 +167,7 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async approved(token: address, tokenId: BN | string, options?: SendOptions) {
+  async isApprovedERC721(token: address, tokenId: BN | string, options?: SendOptions) {
     if (options && !token) {
       throw new Error('token address is missing')
     }
@@ -193,7 +193,7 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
-  async approvedForAll(token: address, userAddress: address, options?: SendOptions) {
+  async isApprovedForAllERC721(token: address, userAddress: address, options?: SendOptions) {
     if (options && !token) {
       throw new Error('token address is missing')
     }

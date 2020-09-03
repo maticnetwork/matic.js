@@ -31,7 +31,7 @@ export default class RootChain extends ContractsBase {
     const lastChildBlock = await this.getLastChildBlock()
     const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
 
-    if (new BN(lastChildBlock).gte(new BN(burnTx.blockNumber))) {
+    if (new BN(lastChildBlock).lt(new BN(burnTx.blockNumber))) {
       return 'Burn transaction has not been checkpointed as yet'
     }
 

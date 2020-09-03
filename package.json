@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
-    "@maticnetwork/meta": "^2.4.2",
+    "@maticnetwork/meta": "^2.4.3",
     "@truffle/hdwallet-provider": "^1.0.35",
     "@types/bluebird": "^3.5.29",
     "@types/bn.js": "4.11.5",
@@ -55,7 +55,6 @@
     "ethereumjs-util": "^5.2.0",
     "isomorphic-fetch": "2.2.1",
     "merkle-patricia-tree": "2.3.2",
-    "node-fetch": "^2.6.0",
     "query-string": "6.8.1",
     "web3": "1.2.1",
     "web3-providers-ws": "1.2.4"

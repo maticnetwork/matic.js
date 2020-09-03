@@ -15,10 +15,12 @@ const logger = {
 
 export default class ExitManager extends ContractsBase {
   private rootChain: RootChain
+  private networkApiUrl
 
   constructor(rootChain: RootChain, options: MaticClientInitializationOptions, web3Client: Web3Client) {
     super(web3Client, options.network)
     this.rootChain = rootChain
+    this.networkApiUrl = options.network.Matic.NetworkAPI
   }
 
   async buildPayloadForExit(burnTxHash, logEventSig) {
@@ -93,7 +95,8 @@ export default class ExitManager extends ContractsBase {
       this.web3Client.getMaticWeb3(),
       parseInt(headerBlock.start, 10),
       parseInt(headerBlock.end, 10),
-      parseInt(burnTx.blockNumber + '', 10)
+      parseInt(burnTx.blockNumber + '', 10),
+      this.networkApiUrl
     )
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
