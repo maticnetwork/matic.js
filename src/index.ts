@@ -77,22 +77,13 @@ export class MaticPOSClient extends SDKClient {
     if (!txHash) {
       throw new Error(`txHash not provided`)
     }
-    if (options && !options.from && !options.fastProof) {
-      throw new Error(`from or fastProof is missing`)
+    if (options && !options.from) {
+      throw new Error(`from missing`)
     }
     if (options.fastProof) {
       return this.posRootChainManager.exitERC20Hermoine(txHash, options)
     } else {
       return this.posRootChainManager.exitERC20(txHash, options)
-    }
-  }
-
-  exitERC20Token(txHash: string, options?: SendOptions) {
-    if (!txHash) {
-      throw new Error(`txHash not provided`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
     }
   }
 
