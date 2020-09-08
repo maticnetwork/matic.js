@@ -70,7 +70,7 @@ export default class DepositManager extends ContractsBase {
   async approveMaxERC20(token: address, options?: SendOptions) {
     const txObject = this.getERC20TokenContract(token, true).methods.approve(
       this.depositManagerContract.options.address,
-      '0xffffffffffffffffffffffffffffffff'
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
     )
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (_options.encodeAbi) {

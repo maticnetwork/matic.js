@@ -109,7 +109,7 @@ export default class POSRootChainManager extends ContractsBase {
     }
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       this.erc20Predicate,
-      '0xffffffffffffffffffffffffffffffff'
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
     )
     const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (_options.encodeAbi) {
