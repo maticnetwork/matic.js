@@ -23,6 +23,7 @@ export default class WithdrawManager extends ContractsBase {
   public withdrawManager: Contract
   public erc20Predicate: Contract
   public erc721Predicate: Contract
+  public exitNFT: Contract
   private rootChain: RootChain
   private registry: Registry
   private exitManager: ExitManager
@@ -53,6 +54,11 @@ export default class WithdrawManager extends ContractsBase {
     this.erc721Predicate = new this.web3Client.parentWeb3.eth.Contract(
       this.network.abi('ERC721Predicate'),
       erc721PredicateAddress
+    )
+
+    this.exitNFT = new this.web3Client.parentWeb3.eth.Contract(
+      this.network.abi('ExitNFT'),
+      this.network.Main.Contracts.ExitNFT
     )
   }
 
@@ -97,6 +103,21 @@ export default class WithdrawManager extends ContractsBase {
       return Object.assign(_options, { data: txObject.encodeABI(), to: this.withdrawManager.options.address })
     }
     return this.web3Client.send(txObject, _options)
+  }
+
+  async fastExit(exitNFTId, signature, fastExitAddress, options?) {
+    const txObject = this.exitNFT.methods.safeTransferFrom(options.from, fastExitAddress, exitNFTId, signature)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: fastExitAddress })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async getExitNFTId(confirmTxHash) {
+    let confirmTx = await this.web3Client.getParentWeb3().eth.getTransactionReceipt(confirmTxHash)
+    let exitNFTId = this.web3Client.getParentWeb3().utils.hexToNumberString(confirmTx.logs[0].topics[3])
+    return exitNFTId
   }
 
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {

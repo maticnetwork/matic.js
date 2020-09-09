@@ -8,6 +8,7 @@ import POSRootChainManager from './root/POSRootChainManager'
 import { address, SendOptions, order, MaticClientInitializationOptions } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
+import ethUtils from 'ethereumjs-util'
 
 export class MaticPOSClient extends SDKClient {
   private rootChain: RootChain
@@ -294,6 +295,25 @@ export default class Matic extends SDKClient {
     return this.utils.signEIP712TypedData(typedData, wallet[options.from].privateKey)
   }
 
+  async getSwapSignature(exitNFTId, userAddress, options: SendOptions) {
+    if (!exitNFTId || !userAddress) {
+      throw new Error('NFT id or user address is missing')
+    }
+    if (!options.from) {
+      throw new Error('options.from is missing')
+    }
+
+    const dataHash = this.web3Client.web3.utils.soliditySha3(
+      exitNFTId,
+      this.web3Client.web3.utils.toChecksumAddress(userAddress)
+    )
+
+    const wallet = this.web3Client.getWallet()
+    const vrs = ethUtils.ecsign(ethUtils.toBuffer(dataHash), ethUtils.toBuffer(wallet[options.from].privateKey))
+    let signature = ethUtils.toRpcSig(vrs.v, vrs.r, vrs.s)
+    return signature
+  }
+
   async transferWithSignature(sig: string, sellOrder: order, buyOrder: order, to: address, options: SendOptions) {
     if (!options.from) {
       throw new Error('options.from is missing')
@@ -380,6 +400,16 @@ export default class Matic extends SDKClient {
 
   processExits(tokenAddress: string | string[], options?: SendOptions) {
     return this.withdrawManager.processExits(tokenAddress, options)
+  }
+
+  fastExit(exitNFT: string, signature: string, fastExitAddress: string, options?: SendOptions) {
+    if (!exitNFT || !signature || !fastExitAddress) {
+      throw new Error(`txHash,signature or fastExitAddress not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.withdrawManager.fastExit(exitNFT, signature, fastExitAddress, options)
   }
 
   private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
