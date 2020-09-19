@@ -73,41 +73,32 @@ export default class ExitManager extends ContractsBase {
   async buildPayloadForExitHermoine(burnTxHash, logEventSig) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
-    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
     const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
     const block: any = await this.web3Client
       .getMaticWeb3()
-      .eth.getBlock(burnTx.blockNumber, true /* returnTransactionObjects */)
-
-    logger.info({ 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock })
+      .eth.getBlock(receipt.blockNumber, true /* returnTransactionObjects */)
+    logger.info({ 'receipt.blockNumber': receipt.blockNumber, lastCheckPointedBlockNumber: lastChildBlock })
     assert.ok(
-      new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
+      new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
-    const headerBlock = await this.web3Client.call(
-      this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
-    )
-    logger.info({ headerBlockNumber: headerBlockNumber.toString(), headerBlock })
-
+    let blockIncluded_response = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
+    let headerBlock = await blockIncluded_response.json()
     // build block proof
     const blockProof = await Proofs.buildBlockProofHermoine(
       this.web3Client.getMaticWeb3(),
       parseInt(headerBlock.start, 10),
       parseInt(headerBlock.end, 10),
-      parseInt(burnTx.blockNumber + '', 10),
+      parseInt(receipt.blockNumber + '', 10),
       this.networkApiUrl
     )
-
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
     assert.ok(logIndex > -1, 'Log not found in receipt')
-
     return this._encodePayload(
-      headerBlockNumber,
+      headerBlock.headerBlockNumber,
       blockProof,
-      burnTx.blockNumber,
+      receipt.blockNumber,
       block.timestamp,
       Buffer.from(block.transactionsRoot.slice(2), 'hex'),
       Buffer.from(block.receiptsRoot.slice(2), 'hex'),
