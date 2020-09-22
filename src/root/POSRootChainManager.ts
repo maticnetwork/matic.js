@@ -209,14 +209,6 @@ export default class POSRootChainManager extends ContractsBase {
     return this.depositFor(user, rootToken, depositData, options)
   }
 
-  async depositBatchERC721ForUser(rootToken: address, tokenIds: (BN | string)[], user: address, options?: SendOptions) {
-    let tokenIdArray = tokenIds.map(tokenId => {
-      return this.formatUint256(tokenId)
-    })
-    const depositData = abiCoder.encodeParameter('uint256[]', tokenIdArray)
-    return this.depositFor(user, rootToken, depositData, options)
-  }
-
   async burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
     const childTokenContract = this.getPOSERC721TokenContract(childToken)
     const txObject = childTokenContract.methods.withdraw(this.formatUint256(tokenId))
