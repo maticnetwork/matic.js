@@ -80,10 +80,10 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`from missing`)
     }
-    if (options.fastProof === undefined || options.fastProof === true) {
-      return this.posRootChainManager.exitERC20Hermoine(txHash, options)
-    } else {
+    if (options.legacyProof) {
       return this.posRootChainManager.exitERC20(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC20Hermoine(txHash, options)
     }
   }
 
@@ -122,6 +122,13 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.depositERC721ForUser(rootToken, tokenId, user, options)
   }
 
+  depositBatchERC721ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], options?: SendOptions) {
+    if (options && (!options.from || !tokenIds || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or tokenId is missing')
+    }
+    return this.posRootChainManager.depositBatchERC721ForUser(rootToken, tokenIds, user, options)
+  }
+
   burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
     if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
@@ -143,10 +150,10 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    if (options.fastProof === undefined || options.fastProof === true) {
-      return this.posRootChainManager.exitERC721Hermoine(txHash, options)
-    } else {
+    if (options.legacyProof) {
       return this.posRootChainManager.exitERC721(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC721Hermoine(txHash, options)
     }
   }
 
@@ -425,10 +432,10 @@ export default class Matic extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    if (options.fastProof === undefined || options.fastProof === true) {
-      return this.withdrawManager.startExitWithBurntERC20TokensHermoine(txHash, options)
-    } else {
+    if (options.legacyProof) {
       return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC20TokensHermoine(txHash, options)
     }
   }
 
@@ -440,10 +447,10 @@ export default class Matic extends SDKClient {
       throw new Error(`options.from is missing`)
     }
 
-    if (options.fastProof === undefined || options.fastProof === true) {
-      return this.withdrawManager.startExitWithBurntERC721TokensHermoine(txHash, options)
-    } else {
+    if (options.legacyProof) {
       return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC721TokensHermoine(txHash, options)
     }
   }
 
