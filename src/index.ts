@@ -143,20 +143,6 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.burnERC721(childToken, tokenId, options)
   }
 
-  burnBatchERC721(childToken: address, tokenIds: (BN | string)[], options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
-      throw new Error(`${childToken} is not a valid token address`)
-    }
-    if (!tokenIds) {
-      // ${tokenId} will stringify it while printing which might be a problem
-      throw new Error(`${tokenIds} is not a tokenId`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
-    }
-    return this.posRootChainManager.burnBatchERC721(childToken, tokenIds, options)
-  }
-
   exitERC721(txHash: string, options?: SendOptions) {
     if (!txHash) {
       throw new Error(`txHash not provided`)
@@ -169,16 +155,6 @@ export class MaticPOSClient extends SDKClient {
     } else {
       return this.posRootChainManager.exitERC721Hermoine(txHash, options)
     }
-  }
-
-  exitBatchERC721(txHash: string, options?: SendOptions) {
-    if (!txHash) {
-      throw new Error(`txHash not provided`)
-    }
-    if (options && !options.from) {
-      throw new Error(`options.from is missing`)
-    }
-    return this.posRootChainManager.exitBatchERC721(txHash, options)
   }
 
   approveERC1155ForDeposit(rootToken: address, options?: SendOptions) {
