@@ -80,10 +80,10 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`from missing`)
     }
-    if (options.legacyProof) {
-      return this.posRootChainManager.exitERC20(txHash, options)
-    } else {
+    if (options.fastProof) {
       return this.posRootChainManager.exitERC20Hermoine(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC20(txHash, options)
     }
   }
 
@@ -143,10 +143,10 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    if (options.legacyProof) {
-      return this.posRootChainManager.exitERC721(txHash, options)
-    } else {
+    if (options.fastProof) {
       return this.posRootChainManager.exitERC721Hermoine(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC721(txHash, options)
     }
   }
 
@@ -425,10 +425,10 @@ export default class Matic extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    if (options.legacyProof) {
-      return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
-    } else {
+    if (options.fastProof) {
       return this.withdrawManager.startExitWithBurntERC20TokensHermoine(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
     }
   }
 
@@ -440,10 +440,10 @@ export default class Matic extends SDKClient {
       throw new Error(`options.from is missing`)
     }
 
-    if (options.legacyProof) {
-      return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
-    } else {
+    if (options.fastProof) {
       return this.withdrawManager.startExitWithBurntERC721TokensHermoine(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
     }
   }
 
