@@ -26,6 +26,20 @@ export default class RootChain extends ContractsBase {
     return this.web3Client.call(this.rootChain.methods.getLastChildBlock())
   }
 
+  async getCheckpointInclusion(burnTxHash) {
+    // check checkpoint
+    const lastChildBlock = await this.getLastChildBlock()
+    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
+
+    if (new BN(lastChildBlock).lt(new BN(burnTx.blockNumber))) {
+      return 'Burn transaction has not been checkpointed as yet'
+    }
+
+    const headerBlockNumber = await this.findHeaderBlockNumber(burnTx.blockNumber)
+    const headerBlock = await this.web3Client.call(this.rootChain.methods.headerBlocks(this.encode(headerBlockNumber)))
+    return headerBlock
+  }
+
   async findHeaderBlockNumber(childBlockNumber: BN | string | number): Promise<BN> {
     childBlockNumber = new BN(childBlockNumber)
     // first checkpoint id = start * 10000

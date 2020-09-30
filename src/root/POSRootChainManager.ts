@@ -75,6 +75,19 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async exitHermoine(burnTxHash: string, logSignature: string, options?: SendOptions) {
+    if (!this.posRootChainManager.options.address) {
+      throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
+    }
+    const payload = await this.exitManager.buildPayloadForExitHermoine(burnTxHash, logSignature)
+    const txObject = this.posRootChainManager.methods.exit(payload)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
     if (!this.erc20Predicate) {
       throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
@@ -88,6 +101,32 @@ export default class POSRootChainManager extends ContractsBase {
       return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
     }
     return this.web3Client.send(txObject, _options)
+  }
+
+  async approveMaxERC20(rootToken: address, options?: SendOptions) {
+    if (!this.erc20Predicate) {
+      throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
+    }
+    const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
+      this.erc20Predicate,
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    )
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async allowanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+    const allowance = await this.getPOSERC20TokenContract(token, true)
+      .methods.allowance(userAddress, this.erc20Predicate)
+      .call()
+
+    return allowance
   }
 
   async depositERC20ForUser(rootToken: address, amount: BN | string, user: address, options?: SendOptions) {
@@ -109,6 +148,10 @@ export default class POSRootChainManager extends ContractsBase {
     return this.exit(burnTxHash, ERC20_TRANSFER_EVENT_SIG, options)
   }
 
+  async exitERC20Hermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, ERC20_TRANSFER_EVENT_SIG, options)
+  }
+
   async approveERC721(rootToken: address, tokenId: BN | string, options?: SendOptions) {
     if (!this.erc721Predicate) {
       throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
@@ -122,6 +165,43 @@ export default class POSRootChainManager extends ContractsBase {
       return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
     }
     return this.web3Client.send(txObject, _options)
+  }
+
+  async isApprovedERC721(token: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && !token) {
+      throw new Error('token address is missing')
+    }
+    const approved = await this.getPOSERC721TokenContract(token, true)
+      .methods.getApproved(tokenId)
+      .call()
+
+    return approved == this.erc721Predicate
+  }
+
+  async approveAllERC721(rootToken: address, options?: SendOptions) {
+    if (!this.erc721Predicate) {
+      throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
+    }
+    const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.setApprovalForAll(
+      this.erc721Predicate,
+      true
+    )
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async isApprovedForAllERC721(token: address, userAddress: address, options?: SendOptions) {
+    if (options && !token) {
+      throw new Error('token address is missing')
+    }
+    const approved = await this.getPOSERC721TokenContract(token, true)
+      .methods.isApprovedForAll(userAddress, this.erc721Predicate)
+      .call()
+
+    return approved
   }
 
   async depositERC721ForUser(rootToken: address, tokenId: BN | string, user: address, options?: SendOptions) {
@@ -141,6 +221,10 @@ export default class POSRootChainManager extends ContractsBase {
 
   async exitERC721(burnTxHash: string, options?: SendOptions) {
     return this.exit(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
+  }
+
+  async exitERC721Hermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
   }
 
   async approveERC1155(rootToken: address, options?: SendOptions) {

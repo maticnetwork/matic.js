@@ -11,6 +11,7 @@ export declare interface SendOptions {
   onTransactionHash?: any
   onReceipt?: any
   onError?: any
+  legacyProof?: boolean
 }
 
 export declare interface order {

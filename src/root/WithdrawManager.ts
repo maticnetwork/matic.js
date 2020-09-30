@@ -109,6 +109,19 @@ export default class WithdrawManager extends ContractsBase {
     return this.web3Client.send(txObject, _options)
   }
 
+  async startExitWithBurntERC20TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC20_WITHDRAW_EVENT_SIG
+    )
+    const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc20Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
   async startExitWithBurntERC721Tokens(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
     const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
@@ -117,6 +130,31 @@ export default class WithdrawManager extends ContractsBase {
       return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
     }
     return this.web3Client.send(txObject, _options)
+  }
+
+  async startExitWithBurntERC721TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
+    )
+    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
+    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (_options.encodeAbi) {
+      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, _options)
+  }
+
+  async getExitTime(burnTxHash, confirmTxHash) {
+    const HALF_EXIT_PERIOD = parseInt(await this.web3Client.call(this.withdrawManager.methods.HALF_EXIT_PERIOD()))
+    let blockNumber = (await this.web3Client.getParentWeb3().eth.getTransaction(confirmTxHash)).blockNumber
+    let confirmTime = (await this.web3Client.getParentWeb3().eth.getBlock(blockNumber)).timestamp
+    let checkPointTime = (await this.rootChain.getCheckpointInclusion(burnTxHash)).createdAt
+    let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, confirmTime + HALF_EXIT_PERIOD)
+    return {
+      exitTime,
+      exitable: Date.now() / 1000 > exitTime,
+    }
   }
 
   /**
