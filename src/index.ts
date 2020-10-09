@@ -382,8 +382,8 @@ export default class Matic extends SDKClient {
       sellOrder.expiry,
       to
     )
-    const _options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
-    return this.web3Client.send(txObj, _options)
+    const web3Options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
+    return this.web3Client.send(txObj, web3Options, options)
   }
 
   depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions) {
@@ -402,11 +402,11 @@ export default class Matic extends SDKClient {
       this.depositManager.getAddress(),
       tokenId
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
