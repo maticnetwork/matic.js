@@ -1,13 +1,12 @@
 import BN from 'bn.js'
-
-import DepositManager from './root/DepositManager'
-import RootChain from './root/RootChain'
-import Registry from './root/Registry'
-import WithdrawManager from './root/WithdrawManager'
-import POSRootChainManager from './root/POSRootChainManager'
-import { address, SendOptions, order, MaticClientInitializationOptions } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
+import DepositManager from './root/DepositManager'
+import POSRootChainManager from './root/POSRootChainManager'
+import Registry from './root/Registry'
+import RootChain from './root/RootChain'
+import WithdrawManager from './root/WithdrawManager'
+import { address, MaticClientInitializationOptions, order, SendOptions } from './types/Common'
 
 export class MaticPOSClient extends SDKClient {
   private rootChain: RootChain
@@ -284,7 +283,9 @@ export default class Matic extends SDKClient {
     }
     Object.assign(options, { value, to })
     const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
-    return _options.encodeAbi ? _options : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options))
+    return _options.encodeAbi
+      ? _options
+      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), options)
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {
