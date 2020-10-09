@@ -1,12 +1,11 @@
 import BN from 'bn.js'
-import Contract from 'web3/eth/contract'
 import Web3 from 'web3'
-
+import Contract from 'web3/eth/contract'
 import ContractsBase from '../common/ContractsBase'
-import { address, SendOptions, MaticClientInitializationOptions } from '../types/Common'
-import Web3Client from '../common/Web3Client'
-import RootChain from './RootChain'
 import ExitManager from '../common/ExitManager'
+import Web3Client from '../common/Web3Client'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
+import RootChain from './RootChain'
 
 const ERC20_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 const ERC721_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
@@ -39,15 +38,15 @@ export default class POSRootChainManager extends ContractsBase {
 
   async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
     const txObject = this.posRootChainManager.methods.depositEtherFor(user)
-    const _options = await this.web3Client.fillOptions(
+    const web3Options = await this.web3Client.fillOptions(
       txObject,
       true /* onRootChain */,
       Object.assign(options, { value: this.formatUint256(amount) })
     )
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async depositFor(user: address, rootToken: address, depositData: string, options?: SendOptions) {
@@ -55,11 +54,11 @@ export default class POSRootChainManager extends ContractsBase {
       throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
     }
     const txObject = this.posRootChainManager.methods.depositFor(user, rootToken, depositData)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async exit(burnTxHash: string, logSignature: string, options?: SendOptions) {
@@ -68,11 +67,11 @@ export default class POSRootChainManager extends ContractsBase {
     }
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, logSignature)
     const txObject = this.posRootChainManager.methods.exit(payload)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async exitHermoine(burnTxHash: string, logSignature: string, options?: SendOptions) {
@@ -81,11 +80,11 @@ export default class POSRootChainManager extends ContractsBase {
     }
     const payload = await this.exitManager.buildPayloadForExitHermoine(burnTxHash, logSignature)
     const txObject = this.posRootChainManager.methods.exit(payload)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
@@ -96,11 +95,11 @@ export default class POSRootChainManager extends ContractsBase {
       this.erc20Predicate,
       this.formatUint256(amount)
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async approveMaxERC20(rootToken: address, options?: SendOptions) {
@@ -111,11 +110,11 @@ export default class POSRootChainManager extends ContractsBase {
       this.erc20Predicate,
       '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async allowanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
@@ -137,11 +136,11 @@ export default class POSRootChainManager extends ContractsBase {
   async burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
     const childTokenContract = this.getPOSERC20TokenContract(childToken)
     const txObject = childTokenContract.methods.withdraw(this.formatUint256(amount))
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async exitERC20(burnTxHash: string, options?: SendOptions) {
@@ -160,11 +159,11 @@ export default class POSRootChainManager extends ContractsBase {
       this.erc721Predicate,
       this.formatUint256(tokenId)
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async isApprovedERC721(token: address, tokenId: BN | string, options?: SendOptions) {
@@ -186,11 +185,11 @@ export default class POSRootChainManager extends ContractsBase {
       this.erc721Predicate,
       true
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async isApprovedForAllERC721(token: address, userAddress: address, options?: SendOptions) {
@@ -212,11 +211,11 @@ export default class POSRootChainManager extends ContractsBase {
   async burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
     const childTokenContract = this.getPOSERC721TokenContract(childToken)
     const txObject = childTokenContract.methods.withdraw(this.formatUint256(tokenId))
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async exitERC721(burnTxHash: string, options?: SendOptions) {
@@ -235,11 +234,11 @@ export default class POSRootChainManager extends ContractsBase {
       this.erc1155Predicate,
       true
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: rootToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async depositSingleERC1155ForUser(
@@ -275,11 +274,11 @@ export default class POSRootChainManager extends ContractsBase {
   async burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
     const childTokenContract = this.getPOSERC1155TokenContract(childToken)
     const txObject = childTokenContract.methods.withdrawSingle(this.formatUint256(tokenId), this.formatUint256(amount))
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async burnBatchERC1155(
@@ -293,11 +292,11 @@ export default class POSRootChainManager extends ContractsBase {
       tokenIds.map(t => this.formatUint256(t)),
       amounts.map(a => this.formatUint256(a))
     )
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: childToken })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async exitSingleERC1155(burnTxHash: string, options?: SendOptions) {
