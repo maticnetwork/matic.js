@@ -6,7 +6,7 @@ const logger = {
   debug: require('debug')('maticjs:debug:Web3Client'),
 }
 
-const ONEMIL = 1000000
+const EXTRAGASFORPROXYCALL = 1000000
 
 export default class Web3Client {
   public parentWeb3: Web3
@@ -84,7 +84,7 @@ export default class Web3Client {
     // @todo handle hex values of gas
 
     if (web3Options.parent) {
-      _web3Options.gas = (_web3Options.gas || this.parentDefaultOptions.gas) + ONEMIL
+      _web3Options.gas = (_web3Options.gas || this.parentDefaultOptions.gas) + EXTRAGASFORPROXYCALL
       _web3Options.gasPrice = _web3Options.gasPrice || this.parentDefaultOptions.gasPrice
     } else {
       _web3Options.gas = _web3Options.gas || this.maticDefaultOptions.gas
