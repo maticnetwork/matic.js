@@ -168,7 +168,7 @@ export default class ProofsUtil {
           blockHash: ethUtils.toBuffer(receipt.blockHash),
           parentNodes: stack.map(s => s.raw),
           root: ProofsUtil.getRawHeader(block).receiptTrie,
-          path: Buffer.concat([Buffer.from('00', 'hex'), rlp.encode(receipt.transactionIndex)]),
+          path: rlp.encode(receipt.transactionIndex),
           value: rlp.decode(rawReceiptNode.value),
         }
         resolve(prf)
