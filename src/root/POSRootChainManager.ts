@@ -87,6 +87,11 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, web3Options, options)
   }
 
+  async isExitProcessed(burnTxHash: string, logSignature: string) {
+    const exitHash = await this.exitManager.getExitHash(burnTxHash, logSignature)
+    return this.posRootChainManager.methods.processedExits(exitHash).call()
+  }
+
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
     if (!this.erc20Predicate) {
       throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
@@ -149,6 +154,10 @@ export default class POSRootChainManager extends ContractsBase {
 
   async exitERC20Hermoine(burnTxHash: string, options?: SendOptions) {
     return this.exitHermoine(burnTxHash, ERC20_TRANSFER_EVENT_SIG, options)
+  }
+
+  async isERC20ExitProcessed(burnTxHash: string) {
+    return this.isExitProcessed(burnTxHash, ERC20_TRANSFER_EVENT_SIG)
   }
 
   async approveERC721(rootToken: address, tokenId: BN | string, options?: SendOptions) {
@@ -224,6 +233,10 @@ export default class POSRootChainManager extends ContractsBase {
 
   async exitERC721Hermoine(burnTxHash: string, options?: SendOptions) {
     return this.exitHermoine(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
+  }
+
+  async isERC721ExitProcessed(burnTxHash: string) {
+    return this.isExitProcessed(burnTxHash, ERC721_TRANSFER_EVENT_SIG)
   }
 
   async approveERC1155(rootToken: address, options?: SendOptions) {
@@ -303,7 +316,15 @@ export default class POSRootChainManager extends ContractsBase {
     return this.exit(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG, options)
   }
 
+  async isSingleERC1155ExitProcessed(burnTxHash: string) {
+    return this.isExitProcessed(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG)
+  }
+
   async exitBatchERC1155(burnTxHash: string, options?: SendOptions) {
     return this.exit(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG, options)
+  }
+
+  async isBatchERC1155ExitProcessed(burnTxHash: string) {
+    return this.isExitProcessed(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG)
   }
 }
