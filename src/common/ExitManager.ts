@@ -90,14 +90,11 @@ export default class ExitManager extends ContractsBase {
     let headerBlock = await blockIncluded_response.json()
     // build block proof
 
+    const start = parseInt(headerBlock.start, 10)
+    const end = parseInt(headerBlock.end, 10)
+    const number = parseInt(receipt.blockNumber + '', 10)
     let blockProof_response = await fetch(
-      this.networkApiUrl +
-        '/block-proof/?start=' +
-        parseInt(headerBlock.start, 10) +
-        '&end=' +
-        parseInt(headerBlock.end, 10) +
-        '&number=' +
-        parseInt(receipt.blockNumber + '', 10)
+      `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
     const blockProof = (await blockProof_response.json()).proof
 
