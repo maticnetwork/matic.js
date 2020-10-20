@@ -89,13 +89,18 @@ export default class ExitManager extends ContractsBase {
     let blockIncluded_response = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
     let headerBlock = await blockIncluded_response.json()
     // build block proof
-    const blockProof = await Proofs.buildBlockProofHermoine(
-      this.web3Client.getMaticWeb3(),
-      parseInt(headerBlock.start, 10),
-      parseInt(headerBlock.end, 10),
-      parseInt(receipt.blockNumber + '', 10),
-      this.networkApiUrl
+
+    let blockProof_response = await fetch(
+      this.networkApiUrl +
+        '/block-proof/?start=' +
+        parseInt(headerBlock.start, 10) +
+        '&end=' +
+        parseInt(headerBlock.end, 10) +
+        '&number=' +
+        parseInt(receipt.blockNumber + '', 10)
     )
+    const blockProof = (await blockProof_response.json()).proof
+
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
     assert.ok(logIndex > -1, 'Log not found in receipt')
