@@ -67,12 +67,21 @@ export default class Web3Client {
   }
 
   wrapWeb3Promise(promise, callbacks) {
-    const _emptyFunc = () => {}
+    if (callbacks) {
+      if (callbacks.onTransactionHash) {
+        promise.on('transactionHash', callbacks.onTransactionHash)
+      }
+      if (callbacks.onReceipt) {
+        promise.on('receipt', callbacks.onReceipt)
+      }
+      if (callbacks.onConfirmation) {
+        promise.on('confirmation', callbacks.onConfirmation)
+      }
+      if (callbacks.onError) {
+        promise.on('error', callbacks.onError)
+      }
+    }
     return promise
-      .on('transactionHash', callbacks.onTransactionHash || _emptyFunc)
-      .on('receipt', callbacks.onReceipt || _emptyFunc)
-      .on('confirmation', callbacks.onConfirmation || _emptyFunc)
-      .on('error', callbacks.onError || _emptyFunc)
   }
 
   send(txObject, web3Options?, callbacks?) {
