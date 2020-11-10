@@ -8,6 +8,10 @@ This library will help developers to move assets from Ethereum chain to Matic ch
 
 We will be improving this library to make all features available like Plasma Faster Exit, challenge exit, finalize exit and more.
 
+### Support
+
+Our [Discord](https://discord.gg/s2NPJNUvyc) is the best way to reach us ✨.
+
 ### Installation
 
 #### NPM
