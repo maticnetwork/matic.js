@@ -1053,10 +1053,6 @@ maticPOSClient.exitERC20('0xabcd...789', {
 
 ---
 
-### Support
-
-Please write to info@matic.network for integration support. If you have any queries, feedback or feature requests, feel free to reach out to us on telegram: [t.me/maticnetwork](https://t.me/maticnetwork)
-
 ### License
 
 MIT
