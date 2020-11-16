@@ -8,6 +8,10 @@ import RootChain from '../root/RootChain'
 import { MaticClientInitializationOptions } from '../types/Common'
 import Proofs from '../libs/ProofsUtil'
 
+import Web3 from 'web3'
+const web3 = new Web3()
+const hash: Web3['utils']['soliditySha3'] = web3.utils.soliditySha3
+
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
   debug: require('debug')('maticjs:debug:WithdrawManager'),
@@ -85,13 +89,15 @@ export default class ExitManager extends ContractsBase {
     let blockIncluded_response = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
     let headerBlock = await blockIncluded_response.json()
     // build block proof
-    const blockProof = await Proofs.buildBlockProofHermoine(
-      this.web3Client.getMaticWeb3(),
-      parseInt(headerBlock.start, 10),
-      parseInt(headerBlock.end, 10),
-      parseInt(receipt.blockNumber + '', 10),
-      this.networkApiUrl
+
+    const start = parseInt(headerBlock.start, 10)
+    const end = parseInt(headerBlock.end, 10)
+    const number = parseInt(receipt.blockNumber + '', 10)
+    let blockProof_response = await fetch(
+      `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
+    const blockProof = (await blockProof_response.json()).proof
+
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
     assert.ok(logIndex > -1, 'Log not found in receipt')
@@ -107,6 +113,31 @@ export default class ExitManager extends ContractsBase {
       receiptProof.path,
       logIndex
     )
+  }
+
+  async getExitHash(burnTxHash, logEventSig) {
+    const lastChildBlock = await this.rootChain.getLastChildBlock()
+    const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
+    const block: any = await this.web3Client
+      .getMaticWeb3()
+      .eth.getBlock(receipt.blockNumber, true /* returnTransactionObjects */)
+
+    assert.ok(
+      new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
+      'Burn transaction has not been checkpointed as yet'
+    )
+
+    const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
+    const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    assert.ok(logIndex > -1, 'Log not found in receipt')
+
+    const nibbleArr = []
+    receiptProof.path.forEach(byte => {
+      nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'))
+      nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'))
+    })
+
+    return hash(receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex)
   }
 
   private _encodePayload(
@@ -131,7 +162,7 @@ export default class ExitManager extends ContractsBase {
         ethUtils.bufferToHex(receiptsRoot),
         ethUtils.bufferToHex(receipt),
         ethUtils.bufferToHex(ethUtils.rlp.encode(receiptParentNodes)),
-        ethUtils.bufferToHex(path),
+        ethUtils.bufferToHex(Buffer.concat([Buffer.from('00', 'hex'), path])),
         logIndex,
       ])
     )

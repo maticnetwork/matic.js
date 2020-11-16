@@ -22,14 +22,6 @@ export default class ProofsUtil {
     return ethUtils.keccak256(Buffer.concat([n, ts, txRoot, receiptsRoot]))
   }
 
-  static getBlockHeaderHermoine(block) {
-    const n = new BN(block.number).toArrayLike(Buffer, 'be', 32)
-    const ts = new BN(new Date(block.time).getTime() / 1000).toArrayLike(Buffer, 'be', 32)
-    const txRoot = ethUtils.toBuffer(block.tx_hash)
-    const receiptsRoot = ethUtils.toBuffer(block.receipt_hash)
-    return ethUtils.keccak256(Buffer.concat([n, ts, txRoot, receiptsRoot]))
-  }
-
   static async buildCheckpointRoot(web3, start, end) {
     logger.debug('buildCheckpointRoot...')
     const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
@@ -56,7 +48,7 @@ export default class ProofsUtil {
     let logs = log_details.merkle_headerblocks
     const headers = new Array(end - start + 1)
     for (let i = 0; i < end - start + 1; i++) {
-      headers[i] = ProofsUtil.getBlockHeaderHermoine(logs[i])
+      headers[i] = ProofsUtil.getBlockHeader(logs[i])
     }
     return new MerkleTree(headers)
   }
@@ -176,7 +168,7 @@ export default class ProofsUtil {
           blockHash: ethUtils.toBuffer(receipt.blockHash),
           parentNodes: stack.map(s => s.raw),
           root: ProofsUtil.getRawHeader(block).receiptTrie,
-          path: Buffer.concat([Buffer.from('00', 'hex'), rlp.encode(receipt.transactionIndex)]),
+          path: rlp.encode(receipt.transactionIndex),
           value: rlp.decode(rawReceiptNode.value),
         }
         resolve(prf)

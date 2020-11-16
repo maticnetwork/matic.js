@@ -1,9 +1,8 @@
-import BN from 'bn.js'
 import Network from '@maticnetwork/meta/network'
-
+import BN from 'bn.js'
+import ContractsBase from '../common/ContractsBase'
 import Web3Client from '../common/Web3Client'
 import { address, SendOptions } from '../types/Common'
-import ContractsBase from '../common/ContractsBase'
 
 export default class SDKClient extends ContractsBase {
   static initializeNetwork(network = 'testnet', version = 'mumbai') {
@@ -65,11 +64,11 @@ export default class SDKClient extends ContractsBase {
     }
     const txObject = this.getERC20TokenContract(token, options.parent).methods.transfer(to, this.encode(amount))
     const onRootChain = options.parent ? true : false
-    const _options = await this.web3Client.fillOptions(txObject, onRootChain, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, onRootChain, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async transferERC721Tokens(token: address, to: address, tokenId: string, options?: SendOptions) {
@@ -79,11 +78,11 @@ export default class SDKClient extends ContractsBase {
 
     const txObject = this.getERC721TokenContract(token, options.parent).methods.transferFrom(options.from, to, tokenId)
     const onRootChain = options.parent ? true : false
-    const _options = await this.web3Client.fillOptions(txObject, onRootChain, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, onRootChain, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async transferMaticEth(to: address, amount: BN | string, options?: SendOptions) {
@@ -93,10 +92,10 @@ export default class SDKClient extends ContractsBase {
     const token = ContractsBase.MATIC_CHILD_TOKEN
     const txObject = this.getChildMaticContract().methods.transfer(to, this.encode(amount))
     options.value = this.encode(amount)
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 }
