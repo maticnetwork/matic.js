@@ -128,6 +128,17 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.depositERC721ForUser(rootToken, tokenId, user, options)
   }
 
+  depositBatchERC721ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], options?: SendOptions) {
+    if (options && (!options.from || !tokenIds || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or tokenIds is missing')
+    }
+
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being deposited can not exceed the limit of 20')
+    }
+    return this.posRootChainManager.depositBatchERC721ForUser(rootToken, tokenIds, user, options)
+  }
+
   burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
     if (!this.web3Client.web3.utils.isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
@@ -142,6 +153,23 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.burnERC721(childToken, tokenId, options)
   }
 
+  burnBatchERC721(childToken: address, tokenIds: (BN | string)[], options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenIds) {
+      // ${tokenId} will stringify it while printing which might be a problem
+      throw new Error(`tokenIds is missing`)
+    }
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being withdrawn can not exceed the limit of 20')
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnBatchERC721(childToken, tokenIds, options)
+  }
+
   exitERC721(txHash: string, options?: SendOptions) {
     if (!txHash) {
       throw new Error(`txHash not provided`)
@@ -154,6 +182,16 @@ export class MaticPOSClient extends SDKClient {
     } else {
       return this.posRootChainManager.exitERC721Hermoine(txHash, options)
     }
+  }
+
+  exitBatchERC721(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.exitBatchERC721(txHash, options)
   }
 
   isERC721ExitProcessed(txHash: string) {
