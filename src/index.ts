@@ -130,7 +130,11 @@ export class MaticPOSClient extends SDKClient {
 
   depositBatchERC721ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], options?: SendOptions) {
     if (options && (!options.from || !tokenIds || !rootToken || !user)) {
-      throw new Error('options.from, rootToken, user, or tokenId is missing')
+      throw new Error('options.from, rootToken, user, or tokenIds is missing')
+    }
+
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being deposited can not exceed the limit of 20')
     }
     return this.posRootChainManager.depositBatchERC721ForUser(rootToken, tokenIds, user, options)
   }
@@ -156,6 +160,9 @@ export class MaticPOSClient extends SDKClient {
     if (!tokenIds) {
       // ${tokenId} will stringify it while printing which might be a problem
       throw new Error(`${tokenIds} is not a tokenId`)
+    }
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being withdrawn can not exceed the limit of 20')
     }
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
