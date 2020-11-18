@@ -159,7 +159,7 @@ export class MaticPOSClient extends SDKClient {
     }
     if (!tokenIds) {
       // ${tokenId} will stringify it while printing which might be a problem
-      throw new Error(`${tokenIds} is not a tokenId`)
+      throw new Error(`tokenIds is missing`)
     }
     if (tokenIds.length > 20) {
       throw new Error('Number of tokens being withdrawn can not exceed the limit of 20')
