@@ -257,12 +257,19 @@ export default class POSRootChainManager extends ContractsBase {
     return this.exit(burnTxHash, ERC721_WITHDRAW_BATCH_EVENT_SIG, options)
   }
 
+  async exitBatchERC721Hermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, ERC721_WITHDRAW_BATCH_EVENT_SIG, options)
+  }
+
   async exitERC721Hermoine(burnTxHash: string, options?: SendOptions) {
     return this.exitHermoine(burnTxHash, ERC721_TRANSFER_EVENT_SIG, options)
   }
 
   async isERC721ExitProcessed(burnTxHash: string) {
     return this.isExitProcessed(burnTxHash, ERC721_TRANSFER_EVENT_SIG)
+  }
+  async isBatchERC721ExitProcessed(burnTxHash: string) {
+    return this.isExitProcessed(burnTxHash, ERC721_WITHDRAW_BATCH_EVENT_SIG)
   }
 
   async approveERC1155(rootToken: address, options?: SendOptions) {
