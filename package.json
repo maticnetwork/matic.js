@@ -16,7 +16,8 @@
     "clean": "rimraf lib dist",
     "build:webpack": "webpack --env build",
     "build": "tsc",
-    "lint": "eslint --ext .ts src --fix",
+    "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --ext .ts src --fix",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
