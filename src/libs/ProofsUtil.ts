@@ -13,6 +13,7 @@ const logger = {
   debug: require('debug')('maticjs:debug:Web3Client'),
 }
 
+// TODO: remove proofs util and use plasma-core library
 export default class ProofsUtil {
   static getBlockHeader(block) {
     const n = new BN(block.number).toArrayLike(Buffer, 'be', 32)
@@ -69,8 +70,14 @@ export default class ProofsUtil {
 
   static async getTxProof(tx, block) {
     const txTrie = new Trie()
+    const stateSyncTxHash = ethUtils.bufferToHex(ProofsUtil.getStateSyncTxHash(block))
+
     for (let i = 0; i < block.transactions.length; i++) {
       const siblingTx = block.transactions[i]
+      if (siblingTx.hash === stateSyncTxHash) {
+        // ignore if tx hash is bor state-sync tx
+        continue
+      }
       const path = rlp.encode(siblingTx.transactionIndex)
       const rawSignedSiblingTx = ProofsUtil.getTxBytes(siblingTx)
       await new Promise((resolve, reject) => {
@@ -129,10 +136,15 @@ export default class ProofsUtil {
   }
 
   static async getReceiptProof(receipt, block, web3, receipts?) {
+    const stateSyncTxHash = ethUtils.bufferToHex(ProofsUtil.getStateSyncTxHash(block))
     const receiptsTrie = new Trie()
     const receiptPromises = []
     if (!receipts) {
       block.transactions.forEach(tx => {
+        if (tx.hash === stateSyncTxHash) {
+          // ignore if tx hash is bor state-sync tx
+          return
+        }
         receiptPromises.push(web3.eth.getTransactionReceipt(tx.hash))
       })
       receipts = await Promise.all(receiptPromises)
@@ -194,5 +206,22 @@ export default class ProofsUtil {
         ]
       }),
     ])
+  }
+
+  // getStateSyncTxHash returns block's tx hash for state-sync receipt
+  // Bor blockchain includes extra receipt/tx for state-sync logs,
+  // but it is not included in transactionRoot or receiptRoot.
+  // So, while calculating proof, we have to exclude them.
+  //
+  // This is derived from block's hash and number
+  // state-sync tx hash = keccak256("matic-bor-receipt-" + block.number + block.hash)
+  static getStateSyncTxHash(block): Buffer {
+    return ethUtils.keccak256(
+      Buffer.concat([
+        ethUtils.toBuffer('matic-bor-receipt-'), // prefix for bor receipt
+        ethUtils.setLengthLeft(ethUtils.toBuffer(block.number), 8), // 8 bytes of block number (BigEndian)
+        ethUtils.toBuffer(block.hash), // block hash
+      ])
+    )
   }
 }
