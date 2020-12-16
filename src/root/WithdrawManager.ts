@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import ethUtils from 'ethereumjs-util'
-import Contract from 'web3/eth/contract'
+import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
 import ExitManager from '../common/ExitManager'
 import Web3Client from '../common/Web3Client'
@@ -148,7 +148,7 @@ export default class WithdrawManager extends ContractsBase {
     let blockNumber = (await this.web3Client.getParentWeb3().eth.getTransaction(confirmTxHash)).blockNumber
     let confirmTime = (await this.web3Client.getParentWeb3().eth.getBlock(blockNumber)).timestamp
     let checkPointTime = (await this.rootChain.getCheckpointInclusion(burnTxHash)).createdAt
-    let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, confirmTime + HALF_EXIT_PERIOD)
+    let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, +confirmTime + HALF_EXIT_PERIOD)
     return {
       exitTime,
       exitable: Date.now() / 1000 > exitTime,

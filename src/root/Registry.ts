@@ -1,4 +1,4 @@
-import Contract from 'web3/eth/contract'
+import { Contract } from 'web3-eth-contract'
 
 import ContractsBase from '../common/ContractsBase'
 import { MaticClientInitializationOptions } from '../types/Common'

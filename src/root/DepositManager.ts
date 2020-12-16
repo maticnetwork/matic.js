@@ -1,6 +1,6 @@
 import bluebird from 'bluebird'
 import BN from 'bn.js'
-import Contract from 'web3/eth/contract'
+import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
 import Web3Client from '../common/Web3Client'
 import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
