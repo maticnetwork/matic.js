@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/matic.node.js",
   "types": "lib/index.d.ts",
@@ -14,14 +14,12 @@
   ],
   "scripts": {
     "clean": "rimraf lib dist",
-    "build:babel": "babel src/ --out-dir lib/",
     "build:webpack": "webpack --env build",
-    "build:legacy": "npm run clean && npm run build:babel && npm run build:webpack",
     "build": "tsc",
-    "lint": "eslint --ext .ts src --fix",
+    "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --ext .ts src --fix",
     "test": "mocha --require @babel/register --colors ./test/**/*.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
-    "test:ci": "scripts/run-test.sh",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
   "repository": {
