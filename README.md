@@ -1,6 +1,6 @@
 # Matic SDK
 
-[![Build Status](https://travis-ci.org/maticnetwork/matic.js.svg?branch=master)](https://travis-ci.org/maticnetwork/matic.js)
+![Build Status](https://github.com/maticnetwork/matic.js/workflows/CI/badge.svg?branch=master)
 
 This repository contains the `maticjs` client library. `maticjs` makes it easy for developers, who may not be deeply familiar with smart contract development, to interact with the various components of Matic Network.
 
