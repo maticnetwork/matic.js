@@ -191,7 +191,12 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.posRootChainManager.exitBatchERC721(txHash, options)
+
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitBatchERC721(txHash, options)
+    } else {
+      return this.posRootChainManager.exitBatchERC721Hermoine(txHash, options)
+    }
   }
 
   isERC721ExitProcessed(txHash: string) {
@@ -199,6 +204,13 @@ export class MaticPOSClient extends SDKClient {
       throw new Error(`txHash not provided`)
     }
     return this.posRootChainManager.isERC721ExitProcessed(txHash)
+  }
+
+  isBatchERC721ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isBatchERC721ExitProcessed(txHash)
   }
 
   approveERC1155ForDeposit(rootToken: address, options?: SendOptions) {
