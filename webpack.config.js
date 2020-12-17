@@ -25,23 +25,9 @@ const clientConfig = {
   module: {
     rules: [
       {
-        test: /\.(js)$/,
-        loader: 'babel-loader',
-        exclude: /(node_modules|bower_components)/,
-      },
-      // {
-      //   test: /\.(js)$/,
-      //   loader: 'eslint-loader',
-      //   exclude: /node_modules/,
-      // },
-      {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/,
-        use: 'css-loader',
       },
     ],
   },

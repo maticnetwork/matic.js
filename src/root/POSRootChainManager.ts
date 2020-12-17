@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import Web3 from 'web3'
-import Contract from 'web3/eth/contract'
+import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
 import ExitManager from '../common/ExitManager'
 import Web3Client from '../common/Web3Client'
