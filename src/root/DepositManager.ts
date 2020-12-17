@@ -1,10 +1,9 @@
-import BN from 'bn.js'
 import bluebird from 'bluebird'
-import Contract from 'web3/eth/contract'
-
+import BN from 'bn.js'
+import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
-import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Web3Client from '../common/Web3Client'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Registry from './Registry'
 
 export default class DepositManager extends ContractsBase {
@@ -60,20 +59,43 @@ export default class DepositManager extends ContractsBase {
       this.depositManagerContract.options.address,
       this.encode(amount)
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async approveMaxERC20(token: address, options?: SendOptions) {
+    const txObject = this.getERC20TokenContract(token, true).methods.approve(
+      this.depositManagerContract.options.address,
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    )
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async allowanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('token address or user address is missing')
+    }
+    const allowance = await this.getERC20TokenContract(token, true)
+      .methods.allowance(userAddress, this.depositManagerContract.options.address)
+      .call()
+
+    return allowance
   }
 
   async depositERC20(token: address, amount: BN | string, options?: SendOptions) {
     const txObject = this.depositManagerContract.methods.depositERC20(token, this.encode(amount))
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   depositERC721(token: address, tokenId: string, options?: SendOptions) {
@@ -89,11 +111,11 @@ export default class DepositManager extends ContractsBase {
 
   async depositERC20ForUser(token: address, amount: BN | string, user: address, options?: SendOptions) {
     const txObject = this.depositManagerContract.methods.depositERC20ForUser(token, user, this.encode(amount))
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   depositERC721ForUser(token: address, tokenId: string, user: address, options?: SendOptions) {
@@ -102,15 +124,15 @@ export default class DepositManager extends ContractsBase {
 
   async depositEther(amount: BN | string, options: SendOptions = {}) {
     const txObject = this.depositManagerContract.methods.depositEther()
-    const _options = await this.web3Client.fillOptions(
+    const web3Options = await this.web3Client.fillOptions(
       txObject,
       true /* onRootChain */,
       Object.assign(options, { value: this.encode(amount) })
     )
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.depositManagerContract.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   getAddress() {

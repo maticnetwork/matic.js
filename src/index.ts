@@ -1,13 +1,12 @@
 import BN from 'bn.js'
-
-import DepositManager from './root/DepositManager'
-import RootChain from './root/RootChain'
-import Registry from './root/Registry'
-import WithdrawManager from './root/WithdrawManager'
-import POSRootChainManager from './root/POSRootChainManager'
-import { address, SendOptions, order, MaticClientInitializationOptions } from './types/Common'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
+import DepositManager from './root/DepositManager'
+import POSRootChainManager from './root/POSRootChainManager'
+import Registry from './root/Registry'
+import RootChain from './root/RootChain'
+import WithdrawManager from './root/WithdrawManager'
+import { address, MaticClientInitializationOptions, order, SendOptions } from './types/Common'
 
 export class MaticPOSClient extends SDKClient {
   private rootChain: RootChain
@@ -28,6 +27,21 @@ export class MaticPOSClient extends SDKClient {
       throw new Error('options.from, rootToken or amount is missing')
     }
     return this.posRootChainManager.approveERC20(rootToken, amount, options)
+  }
+
+  approveMaxERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from, rootToken is missing')
+    }
+    return this.posRootChainManager.approveMaxERC20(rootToken, options)
+  }
+
+  getERC20Allowance(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('user address, token is missing')
+    }
+
+    return this.posRootChainManager.allowanceOfERC20(userAddress, token, options)
   }
 
   depositERC20ForUser(rootToken: address, user: address, amount: BN | string, options?: SendOptions) {
@@ -63,9 +77,20 @@ export class MaticPOSClient extends SDKClient {
       throw new Error(`txHash not provided`)
     }
     if (options && !options.from) {
-      throw new Error(`options.from is missing`)
+      throw new Error(`from missing`)
     }
-    return this.posRootChainManager.exitERC20(txHash, options)
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitERC20(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC20Hermoine(txHash, options)
+    }
+  }
+
+  isERC20ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isERC20ExitProcessed(txHash)
   }
 
   approveERC721ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
@@ -75,11 +100,43 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC721(rootToken, tokenId, options)
   }
 
+  isApprovedERC721ForDeposit(rootToken: address, tokenId: BN | string, options?: SendOptions) {
+    if (options && (!options.from || !tokenId || !rootToken)) {
+      throw new Error('options.from, rootToken or tokenId is missing')
+    }
+    return this.posRootChainManager.isApprovedERC721(rootToken, tokenId, options)
+  }
+
+  approveAllERC721ForDeposit(rootToken: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from, rootToken is missing')
+    }
+    return this.posRootChainManager.approveAllERC721(rootToken, options)
+  }
+
+  isApprovedAllERC721ForDeposit(rootToken: address, userAddress: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from, rootToken is missing')
+    }
+    return this.posRootChainManager.isApprovedForAllERC721(rootToken, userAddress, options)
+  }
+
   depositERC721ForUser(rootToken: address, user: address, tokenId: BN | string, options?: SendOptions) {
     if (options && (!options.from || !tokenId || !rootToken || !user)) {
       throw new Error('options.from, rootToken, user, or tokenId is missing')
     }
     return this.posRootChainManager.depositERC721ForUser(rootToken, tokenId, user, options)
+  }
+
+  depositBatchERC721ForUser(rootToken: address, user: address, tokenIds: (BN | string)[], options?: SendOptions) {
+    if (options && (!options.from || !tokenIds || !rootToken || !user)) {
+      throw new Error('options.from, rootToken, user, or tokenIds is missing')
+    }
+
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being deposited can not exceed the limit of 20')
+    }
+    return this.posRootChainManager.depositBatchERC721ForUser(rootToken, tokenIds, user, options)
   }
 
   burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
@@ -96,6 +153,23 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.burnERC721(childToken, tokenId, options)
   }
 
+  burnBatchERC721(childToken: address, tokenIds: (BN | string)[], options?: SendOptions) {
+    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+      throw new Error(`${childToken} is not a valid token address`)
+    }
+    if (!tokenIds) {
+      // ${tokenId} will stringify it while printing which might be a problem
+      throw new Error(`tokenIds is missing`)
+    }
+    if (tokenIds.length > 20) {
+      throw new Error('Number of tokens being withdrawn can not exceed the limit of 20')
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+    return this.posRootChainManager.burnBatchERC721(childToken, tokenIds, options)
+  }
+
   exitERC721(txHash: string, options?: SendOptions) {
     if (!txHash) {
       throw new Error(`txHash not provided`)
@@ -103,7 +177,40 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.posRootChainManager.exitERC721(txHash, options)
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitERC721(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC721Hermoine(txHash, options)
+    }
+  }
+
+  exitBatchERC721(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitBatchERC721(txHash, options)
+    } else {
+      return this.posRootChainManager.exitBatchERC721Hermoine(txHash, options)
+    }
+  }
+
+  isERC721ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isERC721ExitProcessed(txHash)
+  }
+
+  isBatchERC721ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isBatchERC721ExitProcessed(txHash)
   }
 
   approveERC1155ForDeposit(rootToken: address, options?: SendOptions) {
@@ -177,6 +284,13 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.exitSingleERC1155(txHash, options)
   }
 
+  isSingleERC1155ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isSingleERC1155ExitProcessed(txHash)
+  }
+
   exitBatchERC1155(txHash: string, options?: SendOptions) {
     if (!txHash) {
       throw new Error(`txHash not provided`)
@@ -185,6 +299,13 @@ export class MaticPOSClient extends SDKClient {
       throw new Error(`options.from is missing`)
     }
     return this.posRootChainManager.exitBatchERC1155(txHash, options)
+  }
+
+  isBatchERC1155ExitProcessed(txHash: string) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    return this.posRootChainManager.isBatchERC1155ExitProcessed(txHash)
   }
 }
 
@@ -240,7 +361,9 @@ export default class Matic extends SDKClient {
     }
     Object.assign(options, { value, to })
     const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
-    return _options.encodeAbi ? _options : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options))
+    return _options.encodeAbi
+      ? _options
+      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), options)
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {
@@ -263,6 +386,22 @@ export default class Matic extends SDKClient {
     }
 
     return this.depositManager.approveERC20(token, amount, options)
+  }
+
+  approveMaxERC20TokensForDeposit(token: address, options?: SendOptions) {
+    if (options && (!options.from || !token)) {
+      throw new Error('options.from, token is missing')
+    }
+
+    return this.depositManager.approveMaxERC20(token, options)
+  }
+
+  getERC20Allowance(userAddress: address, token: address, options?: SendOptions) {
+    if (options && (!token || !userAddress)) {
+      throw new Error('user address, token is missing')
+    }
+
+    return this.depositManager.allowanceOfERC20(userAddress, token, options)
   }
 
   async getTransferSignature(sellOrder: order, buyOrder: order, options: SendOptions) {
@@ -321,8 +460,8 @@ export default class Matic extends SDKClient {
       sellOrder.expiry,
       to
     )
-    const _options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
-    return this.web3Client.send(txObj, _options)
+    const web3Options = await this.web3Client.fillOptions(txObj, false /* onRootChain */, options)
+    return this.web3Client.send(txObj, web3Options, options)
   }
 
   depositERC20ForUser(token: address, user: address, amount: BN | string, options?: SendOptions) {
@@ -341,11 +480,11 @@ export default class Matic extends SDKClient {
       this.depositManager.getAddress(),
       tokenId
     )
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   startWithdraw(token: address, amount: BN | string, options?: SendOptions) {
@@ -365,7 +504,11 @@ export default class Matic extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
+    if (options && options.legacyProof) {
+      return this.withdrawManager.startExitWithBurntERC20Tokens(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC20TokensHermoine(txHash, options)
+    }
   }
 
   withdrawNFT(txHash: string, options?: SendOptions) {
@@ -375,7 +518,12 @@ export default class Matic extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
+
+    if (options && options.legacyProof) {
+      return this.withdrawManager.startExitWithBurntERC721Tokens(txHash, options)
+    } else {
+      return this.withdrawManager.startExitWithBurntERC721TokensHermoine(txHash, options)
+    }
   }
 
   processExits(tokenAddress: string | string[], options?: SendOptions) {

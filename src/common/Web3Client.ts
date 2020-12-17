@@ -6,6 +6,8 @@ const logger = {
   debug: require('debug')('maticjs:debug:Web3Client'),
 }
 
+const EXTRAGASFORPROXYCALL = 1000000
+
 export default class Web3Client {
   public parentWeb3: Web3
   public web3: Web3
@@ -50,12 +52,6 @@ export default class Web3Client {
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
 
-    this.events = {
-      onTransactionHash: _options.onTransactionHash || null,
-      onReceipt: _options.onReceipt || null,
-      onError: _options.onError || null,
-    }
-
     return {
       from,
       gas: gasLimit,
@@ -70,30 +66,41 @@ export default class Web3Client {
     }
   }
 
-  wrapWeb3Promise(promise) {
-    const _emptyFunc = () => {}
+  wrapWeb3Promise(promise, callbacks) {
+    if (callbacks) {
+      if (callbacks.onTransactionHash) {
+        promise.on('transactionHash', callbacks.onTransactionHash)
+      }
+      if (callbacks.onReceipt) {
+        promise.on('receipt', callbacks.onReceipt)
+      }
+      if (callbacks.onConfirmation) {
+        promise.on('confirmation', callbacks.onConfirmation)
+      }
+      if (callbacks.onError) {
+        promise.on('error', callbacks.onError)
+      }
+    }
     return promise
-      .on('transactionHash', this.events.onTransactionHash || _emptyFunc)
-      .on('receipt', this.events.onReceipt || _emptyFunc)
-      .on('error', this.events.onError || _emptyFunc)
   }
 
-  async send(txObject, options?) {
-    const _options = options || {}
+  send(txObject, web3Options?, callbacks?) {
+    const _web3Options = web3Options || {}
 
     // since we use the delegated proxy patterns, the following should be a good way to provide enough gas
     // apparently even when provided with a buffer of 20k, the call reverts. This shouldn't be happening because the actual gas used is less than what the estimation returns
     // providing higher buffer for now
     // @todo handle hex values of gas
-    if (options.parent) {
-      _options.gas = (_options.gas || this.parentDefaultOptions.gas) + 1000000
-      _options.gasPrice = _options.gasPrice || this.parentDefaultOptions.gasPrice
+
+    if (web3Options.parent) {
+      _web3Options.gas = (_web3Options.gas || this.parentDefaultOptions.gas) + EXTRAGASFORPROXYCALL
+      _web3Options.gasPrice = _web3Options.gasPrice || this.parentDefaultOptions.gasPrice
     } else {
-      _options.gas = _options.gas || this.maticDefaultOptions.gas
-      _options.gasPrice = _options.gasPrice || this.maticDefaultOptions.gasPrice
+      _web3Options.gas = _web3Options.gas || this.maticDefaultOptions.gas
+      _web3Options.gasPrice = _web3Options.gasPrice || this.maticDefaultOptions.gasPrice
     }
-    logger.debug('sending tx with', { _options })
-    return this.wrapWeb3Promise(txObject.send(_options))
+    logger.debug('sending tx with', { _web3Options })
+    return this.wrapWeb3Promise(txObject.send(_web3Options), callbacks)
   }
 
   getParentWeb3() {

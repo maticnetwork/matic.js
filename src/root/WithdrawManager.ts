@@ -1,15 +1,13 @@
-import ethUtils from 'ethereumjs-util'
-import Contract from 'web3/eth/contract'
-
 import BN from 'bn.js'
-import Proofs from '../libs/ProofsUtil'
-
-import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
-import Web3Client from '../common/Web3Client'
+import ethUtils from 'ethereumjs-util'
+import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
-import RootChain from './RootChain'
-import Registry from './Registry'
 import ExitManager from '../common/ExitManager'
+import Web3Client from '../common/Web3Client'
+import Proofs from '../libs/ProofsUtil'
+import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
+import Registry from './Registry'
+import RootChain from './RootChain'
 
 const logger = {
   info: require('debug')('maticjs:WithdrawManager'),
@@ -64,20 +62,20 @@ export default class WithdrawManager extends ContractsBase {
     } else {
       txObject = this.getERC20TokenContract(token).methods.withdraw(this.encode(amount))
     }
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async burnERC721Token(token: address, tokenId: BN | string, options?: SendOptions) {
     const txObject = this.getERC721TokenContract(token).methods.withdraw(this.encode(tokenId))
-    const _options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: token })
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async processExits(tokens: address | address[], options?: SendOptions) {
@@ -92,31 +90,69 @@ export default class WithdrawManager extends ContractsBase {
       logger.info('processExits can be gas expensive, sending in 2000000 gas but even this might not be enough') // eslint-disable-line
       options.gas = 2000000
     }
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.withdrawManager.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.withdrawManager.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async startExitWithBurntERC20Tokens(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC20_WITHDRAW_EVENT_SIG)
     const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc20Predicate.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.erc20Predicate.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async startExitWithBurntERC20TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC20_WITHDRAW_EVENT_SIG
+    )
+    const txObject = this.erc20Predicate.methods.startExitWithBurntTokens(payload)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.erc20Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async startExitWithBurntERC721Tokens(burnTxHash, options?) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
     const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    if (_options.encodeAbi) {
-      return Object.assign(_options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
     }
-    return this.web3Client.send(txObject, _options)
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async startExitWithBurntERC721TokensHermoine(burnTxHash, options?) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(
+      burnTxHash,
+      WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
+    )
+    const txObject = this.erc721Predicate.methods.startExitWithBurntTokens(payload)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.erc721Predicate.options.address })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async getExitTime(burnTxHash, confirmTxHash) {
+    const HALF_EXIT_PERIOD = parseInt(await this.web3Client.call(this.withdrawManager.methods.HALF_EXIT_PERIOD()))
+    let blockNumber = (await this.web3Client.getParentWeb3().eth.getTransaction(confirmTxHash)).blockNumber
+    let confirmTime = (await this.web3Client.getParentWeb3().eth.getBlock(blockNumber)).timestamp
+    let checkPointTime = (await this.rootChain.getCheckpointInclusion(burnTxHash)).createdAt
+    let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, +confirmTime + HALF_EXIT_PERIOD)
+    return {
+      exitTime,
+      exitable: Date.now() / 1000 > exitTime,
+    }
   }
 
   /**
@@ -132,8 +168,8 @@ export default class WithdrawManager extends ContractsBase {
       predicate
     )
     const txObject = _predicate.methods.startExitForMintableBurntToken(payload, mint)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    return this.web3Client.send(txObject, _options)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   /**
@@ -149,8 +185,8 @@ export default class WithdrawManager extends ContractsBase {
       predicate
     )
     const txObject = _predicate.methods.startExitForMetadataMintableBurntToken(payload, mint)
-    const _options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
-    return this.web3Client.send(txObject, _options)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   private async _buildPayloadAndFindMintTransaction(burnTxHash) {
