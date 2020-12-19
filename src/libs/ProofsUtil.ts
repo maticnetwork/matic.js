@@ -1,6 +1,7 @@
+import fetch from 'node-fetch'
+
 const BN = require('bn.js')
 const bluebird = require('bluebird')
-import fetch from 'isomorphic-fetch'
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')
 const ethUtils = require('ethereumjs-util')
