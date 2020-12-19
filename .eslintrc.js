@@ -24,12 +24,13 @@ module.exports = {
     // trailing comma
     'comma-dangle': ['error', 'always-multiline'],
     quotes: ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }],
+    camelcase: ['error', {'properties': 'always'}]
   },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
       rules: {
-        '@typescript-eslint/no-unused-vars': [2, { args: 'none' }]
+        '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }]
       }
     }
   ]
