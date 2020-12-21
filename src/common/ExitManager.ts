@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 import assert from 'assert'
 import ethUtils from 'ethereumjs-util'
+import fetch from 'node-fetch'
 
 import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
