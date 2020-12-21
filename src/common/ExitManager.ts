@@ -87,17 +87,17 @@ export default class ExitManager extends ContractsBase {
       new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    let blockIncluded_response = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
-    let headerBlock = await blockIncluded_response.json()
+    let blockIncludedResponse = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
+    let headerBlock = await blockIncludedResponse.json()
     // build block proof
 
     const start = parseInt(headerBlock.start, 10)
     const end = parseInt(headerBlock.end, 10)
     const number = parseInt(receipt.blockNumber + '', 10)
-    let blockProof_response = await fetch(
+    let blockProofResponse = await fetch(
       `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
-    const blockProof = (await blockProof_response.json()).proof
+    const blockProof = (await blockProofResponse.json()).proof
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())

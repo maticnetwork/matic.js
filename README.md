@@ -24,13 +24,23 @@ $ npm install --save @maticnetwork/maticjs
 
 #### CDN
 
----
+There are two options available for CDN:
 
-```bash
-<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@2.0.1/dist/matic.js"></script>
+1. jsdeliver
+
+[https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@latest/dist/matic.js](https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@latest/dist/matic.js)
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@latest/dist/matic.js"></script>
 ```
 
-Matic is also available on [unpkg](https://unpkg.com/@maticnetwork/maticjs@2.0.1/dist/matic.js)
+2. unpkg
+
+[https://unpkg.com/@maticnetwork/maticjs@latest/dist/matic.js](https://unpkg.com/@maticnetwork/maticjs@latest/dist/matic.js)
+
+```html
+<script src="https://unpkg.com/@maticnetwork/maticjs@latest/dist/matic.js"></script>
+```
 
 ---
 
