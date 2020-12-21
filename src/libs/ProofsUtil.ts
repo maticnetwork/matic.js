@@ -45,8 +45,8 @@ export default class ProofsUtil {
 
   static async buildBlockHeaderMerkleHermoine(start, end, networkApiUrl) {
     let response = await fetch(networkApiUrl + '/generate-proof?start=' + start + '&end=' + end)
-    let log_details = await response.json()
-    let logs = log_details.merkle_headerblocks
+    let logDetails = await response.json()
+    let logs = logDetails.merkle_headerblocks
     const headers = new Array(end - start + 1)
     for (let i = 0; i < end - start + 1; i++) {
       headers[i] = ProofsUtil.getBlockHeader(logs[i])
