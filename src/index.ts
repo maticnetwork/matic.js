@@ -29,7 +29,7 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC20(rootToken, amount, options)
   }
 
-  approveMaxERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+  approveMaxERC20ForDeposit(rootToken: address, options?: SendOptions) {
     if (options && (!options.from || !rootToken)) {
       throw new Error('options.from, rootToken is missing')
     }
