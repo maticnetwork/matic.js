@@ -88,6 +88,14 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, web3Options, options)
   }
 
+  async getERC20ExitPayload(burnTxHash: string, options?: SendOptions) {
+    if (!this.posRootChainManager.options.address) {
+      throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
+    }
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, ERC20_TRANSFER_EVENT_SIG)
+    return payload
+  }
+
   async isExitProcessed(burnTxHash: string, logSignature: string) {
     const exitHash = await this.exitManager.getExitHash(burnTxHash, logSignature)
     return this.posRootChainManager.methods.processedExits(exitHash).call()
