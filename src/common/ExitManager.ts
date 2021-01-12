@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import assert from 'assert'
 import ethUtils from 'ethereumjs-util'
-import fetch from 'node-fetch'
+import axios from 'axios'
 
 import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
@@ -87,17 +87,17 @@ export default class ExitManager extends ContractsBase {
       new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    let blockIncludedResponse = await fetch(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
-    let headerBlock = await blockIncludedResponse.json()
+    let blockIncludedResponse = await axios.get(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
+    let headerBlock = blockIncludedResponse.data
     // build block proof
 
     const start = parseInt(headerBlock.start, 10)
     const end = parseInt(headerBlock.end, 10)
     const number = parseInt(receipt.blockNumber + '', 10)
-    let blockProofResponse = await fetch(
+    let blockProofResponse = await axios.get(
       `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
-    const blockProof = (await blockProofResponse.json()).proof
+    const blockProof = blockProofResponse.data.proof
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
