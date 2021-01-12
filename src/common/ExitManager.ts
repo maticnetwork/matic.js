@@ -88,7 +88,7 @@ export default class ExitManager extends ContractsBase {
       'Burn transaction has not been checkpointed as yet'
     )
     let blockIncludedResponse = await axios.get(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
-    let headerBlock = await blockIncludedResponse.data
+    let headerBlock = blockIncludedResponse.data
     // build block proof
 
     const start = parseInt(headerBlock.start, 10)
@@ -97,7 +97,7 @@ export default class ExitManager extends ContractsBase {
     let blockProofResponse = await axios.get(
       `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
-    const blockProof = (await blockProofResponse.data).proof
+    const blockProof = blockProofResponse.data.proof
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
     const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
