@@ -357,12 +357,20 @@ export default class POSRootChainManager extends ContractsBase {
     return this.exit(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG, options)
   }
 
+  async exitSingleERC1155Hermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG, options)
+  }
+
   async isSingleERC1155ExitProcessed(burnTxHash: string) {
     return this.isExitProcessed(burnTxHash, ERC1155_TRANSFER_SINGLE_EVENT_SIG)
   }
 
   async exitBatchERC1155(burnTxHash: string, options?: SendOptions) {
     return this.exit(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG, options)
+  }
+
+  async exitBatchERC1155Hermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG, options)
   }
 
   async isBatchERC1155ExitProcessed(burnTxHash: string) {

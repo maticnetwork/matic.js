@@ -29,7 +29,7 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC20(rootToken, amount, options)
   }
 
-  approveMaxERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
+  approveMaxERC20ForDeposit(rootToken: address, options?: SendOptions) {
     if (options && (!options.from || !rootToken)) {
       throw new Error('options.from, rootToken is missing')
     }
@@ -281,7 +281,12 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.posRootChainManager.exitSingleERC1155(txHash, options)
+
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitSingleERC1155(txHash, options)
+    } else {
+      return this.posRootChainManager.exitSingleERC1155Hermoine(txHash, options)
+    }
   }
 
   isSingleERC1155ExitProcessed(txHash: string) {
@@ -298,7 +303,12 @@ export class MaticPOSClient extends SDKClient {
     if (options && !options.from) {
       throw new Error(`options.from is missing`)
     }
-    return this.posRootChainManager.exitBatchERC1155(txHash, options)
+
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitBatchERC1155(txHash, options)
+    } else {
+      return this.posRootChainManager.exitBatchERC1155Hermoine(txHash, options)
+    }
   }
 
   isBatchERC1155ExitProcessed(txHash: string) {
