@@ -1,5 +1,4 @@
-import fetch from 'node-fetch'
-
+import axios from 'axios'
 const BN = require('bn.js')
 const bluebird = require('bluebird')
 const Trie = require('merkle-patricia-tree')
@@ -45,9 +44,8 @@ export default class ProofsUtil {
   }
 
   static async buildBlockHeaderMerkleHermoine(start, end, networkApiUrl) {
-    let response = await fetch(networkApiUrl + '/generate-proof?start=' + start + '&end=' + end)
-    let logDetails = await response.json()
-    let logs = logDetails.merkle_headerblocks
+    let logDetails = await axios.get(networkApiUrl + '/generate-proof?start=' + start + '&end=' + end)
+    let logs = logDetails.data.merkle_headerblocks
     const headers = new Array(end - start + 1)
     for (let i = 0; i < end - start + 1; i++) {
       headers[i] = ProofsUtil.getBlockHeader(logs[i])
