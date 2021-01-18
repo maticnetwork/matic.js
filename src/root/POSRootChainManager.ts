@@ -12,6 +12,7 @@ const ERC721_TRANSFER_EVENT_SIG = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c
 const ERC721_WITHDRAW_BATCH_EVENT_SIG = '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df'
 const ERC1155_TRANSFER_SINGLE_EVENT_SIG = '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62'
 const ERC1155_TRANSFER_BATCH_EVENT_SIG = '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
+const MESSAGE_SENT_EVENT_SIG = '0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036'
 
 const web3 = new Web3()
 const abiCoder: Web3['eth']['abi'] = web3.eth.abi
@@ -22,6 +23,7 @@ export default class POSRootChainManager extends ContractsBase {
   private erc20Predicate: address | null
   private erc721Predicate: address | null
   private erc1155Predicate: address | null
+  private rootTunnelContractAbi: any
 
   private formatUint256 = this.encode
 
@@ -31,6 +33,7 @@ export default class POSRootChainManager extends ContractsBase {
       options.network.abi('RootChainManager', 'pos'),
       options.posRootChainManager || options.network.Main.POSContracts.RootChainManagerProxy
     )
+    this.rootTunnelContractAbi = options.network.abi('RootTunnel', 'pos')
     this.exitManager = new ExitManager(rootChain, options, web3Client)
     this.erc20Predicate = options.posERC20Predicate || options.network.Main.POSContracts.ERC20PredicateProxy
     this.erc721Predicate = options.posERC721Predicate || options.network.Main.POSContracts.ERC721PredicateProxy
@@ -89,9 +92,6 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async getERC20ExitPayload(burnTxHash: string) {
-    if (!this.posRootChainManager.options.address) {
-      throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
-    }
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, ERC20_TRANSFER_EVENT_SIG)
     return payload
   }
@@ -99,6 +99,17 @@ export default class POSRootChainManager extends ContractsBase {
   async isExitProcessed(burnTxHash: string, logSignature: string) {
     const exitHash = await this.exitManager.getExitHash(burnTxHash, logSignature)
     return this.posRootChainManager.methods.processedExits(exitHash).call()
+  }
+
+  async processReceivedMessage(contractAddress: address, txHash: string) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(txHash, MESSAGE_SENT_EVENT_SIG)
+    let rootTunnelContract = new this.web3Client.parentWeb3.eth.Contract(this.rootTunnelContractAbi, contractAddress)
+    return rootTunnelContract.methods.receiveMessage(payload)
+  }
+
+  async customPayload(txHash: string, eventSig: string) {
+    const payload = await this.exitManager.buildPayloadForExitHermoine(txHash, eventSig)
+    return payload
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
