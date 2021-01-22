@@ -58,7 +58,11 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    const logIndex = receipt.logs.findIndex(
+      log =>
+        log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+        log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+    )
     assert.ok(logIndex > -1, 'Log not found in receipt')
 
     return this._encodePayload(
@@ -100,7 +104,11 @@ export default class ExitManager extends ContractsBase {
     const blockProof = blockProofResponse.data.proof
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-    const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    const logIndex = receipt.logs.findIndex(
+      log =>
+        log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+        log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+    )
     assert.ok(logIndex > -1, 'Log not found in receipt')
     return this._encodePayload(
       headerBlock.headerBlockNumber,
@@ -129,7 +137,11 @@ export default class ExitManager extends ContractsBase {
     )
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-    const logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    const logIndex = receipt.logs.findIndex(
+      log =>
+        log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+        log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+    )
     assert.ok(logIndex > -1, 'Log not found in receipt')
 
     const nibbleArr = []
