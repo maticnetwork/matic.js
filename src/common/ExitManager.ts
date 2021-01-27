@@ -58,11 +58,26 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    const logIndex = receipt.logs.findIndex(
-      log =>
-        log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-        log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-    )
+    // In 👇 ternary condition first one gets satisfied only for Plasma start 
+    // withdraw operations i.e. ERC20, ERC721 withdraw
+    //
+    // Event signatures : 
+    // 1. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/ChildERC721.sol#L16-L20
+    // 2. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/BaseERC20.sol#L14-L20 
+    //
+    // We get to reach second one if it's a POS exit operation
+    const logIndex = logEventSig == '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb' ||
+      logEventSig == '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f'
+      ? receipt.logs.findIndex(
+        log =>
+          log.topics[0].toLowerCase() == logEventSig.toLowerCase()
+      )
+      : receipt.logs.findIndex(
+        log =>
+          log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+          log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+      )
+
     assert.ok(logIndex > -1, 'Log not found in receipt')
 
     return this._encodePayload(
@@ -104,11 +119,27 @@ export default class ExitManager extends ContractsBase {
     const blockProof = blockProofResponse.data.proof
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-    const logIndex = receipt.logs.findIndex(
-      log =>
-        log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-        log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-    )
+
+    // In 👇 ternary condition first one gets satisfied only for Plasma start 
+    // withdraw operations i.e. ERC20, ERC721 withdraw
+    //
+    // Event signatures : 
+    // 1. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/ChildERC721.sol#L16-L20
+    // 2. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/BaseERC20.sol#L14-L20 
+    //
+    // We get to reach second one if it's a POS exit operation
+    const logIndex = logEventSig == '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb' ||
+      logEventSig == '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f'
+      ? receipt.logs.findIndex(
+        log =>
+          log.topics[0].toLowerCase() == logEventSig.toLowerCase()
+      )
+      : receipt.logs.findIndex(
+        log =>
+          log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+          log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+      )
+
     assert.ok(logIndex > -1, 'Log not found in receipt')
     return this._encodePayload(
       headerBlock.headerBlockNumber,
