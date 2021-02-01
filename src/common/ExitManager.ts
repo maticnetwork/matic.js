@@ -58,25 +58,17 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    // In 👇 ternary condition first one gets satisfied only for Plasma start 
-    // withdraw operations i.e. ERC20, ERC721 withdraw
-    //
-    // Event signatures : 
-    // 1. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/ChildERC721.sol#L16-L20
-    // 2. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/BaseERC20.sol#L14-L20 
-    //
-    // We get to reach second one if it's a POS exit operation
-    const logIndex = logEventSig == '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb' ||
-      logEventSig == '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f'
-      ? receipt.logs.findIndex(
-        log =>
-          log.topics[0].toLowerCase() == logEventSig.toLowerCase()
-      )
-      : receipt.logs.findIndex(
-        log =>
-          log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-          log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-      )
+    const logIndex =
+      logEventSig == '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' ||
+      logEventSig == '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df' ||
+      logEventSig == '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62' ||
+      logEventSig == '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
+        ? receipt.logs.findIndex(
+            log =>
+              log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+              log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+          )
+        : receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
 
     assert.ok(logIndex > -1, 'Log not found in receipt')
 
@@ -120,25 +112,17 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    // In 👇 ternary condition first one gets satisfied only for Plasma start 
-    // withdraw operations i.e. ERC20, ERC721 withdraw
-    //
-    // Event signatures : 
-    // 1. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/ChildERC721.sol#L16-L20
-    // 2. https://github.com/maticnetwork/contracts/blob/45aa3a62264f15b6bb4d50a3fa8f6ab7b9cde829/contracts/child/BaseERC20.sol#L14-L20 
-    //
-    // We get to reach second one if it's a POS exit operation
-    const logIndex = logEventSig == '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb' ||
-      logEventSig == '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f'
-      ? receipt.logs.findIndex(
-        log =>
-          log.topics[0].toLowerCase() == logEventSig.toLowerCase()
-      )
-      : receipt.logs.findIndex(
-        log =>
-          log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-          log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-      )
+    const logIndex =
+      logEventSig == '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' ||
+      logEventSig == '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df' ||
+      logEventSig == '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62' ||
+      logEventSig == '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
+        ? receipt.logs.findIndex(
+            log =>
+              log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+              log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+          )
+        : receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
 
     assert.ok(logIndex > -1, 'Log not found in receipt')
     return this._encodePayload(
