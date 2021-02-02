@@ -2,12 +2,6 @@ import BN from 'bn.js'
 import assert from 'assert'
 import ethUtils from 'ethereumjs-util'
 import axios from 'axios'
-global.fetch = require('node-fetch')
-import { HashZero } from '@ethersproject/constants'
-import { keccak256 as solidityKeccak256 } from '@ethersproject/solidity'
-import { JsonRpcProvider } from '@ethersproject/providers'
-const MerkleTree = require('../libs/MerkleTree')
-const ethers = require('ethers')
 
 import Web3Client from './Web3Client'
 import ContractsBase from './ContractsBase'
@@ -27,13 +21,11 @@ const logger = {
 export default class ExitManager extends ContractsBase {
   private rootChain: RootChain
   private networkApiUrl
-  private customHttpProvider
 
   constructor(rootChain: RootChain, options: MaticClientInitializationOptions, web3Client: Web3Client) {
     super(web3Client, options.network)
     this.rootChain = rootChain
     this.networkApiUrl = options.network.Matic.NetworkAPI
-    this.customHttpProvider = new ethers.providers.JsonRpcProvider(options.network.Matic.RPC)
   }
 
   async buildPayloadForExit(burnTxHash, logEventSig) {
@@ -117,11 +109,6 @@ export default class ExitManager extends ContractsBase {
       `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
     const blockProof = blockProofResponse.data.proof
-    console.log(blockProof)
-
-    let blockProofNew = await this.getFastMerkleProof(this.customHttpProvider, number, start, end)
-
-    console.log(blockProofNew)
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
     const logIndex =
@@ -149,93 +136,6 @@ export default class ExitManager extends ContractsBase {
       receiptProof.path,
       logIndex
     )
-  }
-
-  async queryRootHash(customHttpProvider: JsonRpcProvider, startBlock: number, endBlock: number) {
-    return `0x${await customHttpProvider.send('eth_getRootHash', [startBlock, endBlock])}`
-  }
-
-  async recursiveZeroHash(n: number) {
-    if (n === 0) return HashZero
-    const subHash = this.recursiveZeroHash(n - 1)
-    return solidityKeccak256(['bytes32', 'bytes32'], [subHash, subHash])
-  }
-
-  async getFastMerkleProof(
-    customHttpProvider: JsonRpcProvider,
-    blockNumber: number,
-    startBlock: number,
-    endBlock: number
-  ): Promise<string[]> {
-    const merkleTreeDepth = Math.ceil(Math.log2(endBlock - startBlock + 1))
-
-    // We generate the proof root down, whereas we need from leaf up
-    const reversedProof: string[] = []
-
-    const offset = startBlock
-    const targetIndex = blockNumber - offset
-    let leftBound = 0
-    let rightBound = endBlock - offset
-    //   console.log("Searching for", targetIndex);
-    for (let depth = 0; depth < merkleTreeDepth; depth += 1) {
-      const nLeaves = 2 ** (merkleTreeDepth - depth)
-
-      // The pivot leaf is the last leaf which is included in the left subtree
-      const pivotLeaf = leftBound + nLeaves / 2 - 1
-
-      if (targetIndex > pivotLeaf) {
-        // Get the root hash to the merkle subtree to the left
-        const newLeftBound = pivotLeaf + 1
-        // eslint-disable-next-line no-await-in-loop
-        const subTreeMerkleRoot = await this.queryRootHash(customHttpProvider, offset + leftBound, offset + pivotLeaf)
-        reversedProof.push(subTreeMerkleRoot)
-        leftBound = newLeftBound
-      } else {
-        // Things are more complex when querying to the right.
-        // Root hash may come some layers down so we need to build a full tree by padding with zeros
-        // Some trees may be completely empty
-
-        const newRightBound = Math.min(rightBound, pivotLeaf)
-
-        // Expect the merkle tree to have a height one less than the current layer
-        const expectedHeight = merkleTreeDepth - (depth + 1)
-        if (rightBound <= pivotLeaf) {
-          // Tree is empty so we repeatedly hash zero to correct height
-          const subTreeMerkleRoot = this.recursiveZeroHash(expectedHeight)
-          reversedProof.push(subTreeMerkleRoot)
-        } else {
-          // Height of tree given by RPC node
-          const subTreeHeight = Math.ceil(Math.log2(rightBound - pivotLeaf))
-
-          // Find the difference in height between this and the subtree we want
-          const heightDifference = expectedHeight - subTreeHeight
-
-          // For every extra layer we need to fill 2*n leaves filled with the merkle root of a zero-filled Merkle tree
-          // We need to build a tree which has heightDifference layers
-
-          // The first leaf will hold the root hash as returned by the RPC
-          // eslint-disable-next-line no-await-in-loop
-          const remainingNodesHash = await this.queryRootHash(
-            customHttpProvider,
-            offset + pivotLeaf + 1,
-            offset + rightBound
-          )
-
-          // The remaining leaves will hold the merkle root of a zero-filled tree of height subTreeHeight
-          const leafRoots = this.recursiveZeroHash(subTreeHeight)
-
-          // Build a merkle tree of correct size for the subtree using these merkle roots
-          const leaves = Array.from({ length: 2 ** heightDifference }, () => leafRoots)
-          leaves[0] = remainingNodesHash
-
-          const subTreeMerkleRoot = new MerkleTree(leaves).getRoot()
-          reversedProof.push(subTreeMerkleRoot)
-        }
-        rightBound = newRightBound
-      }
-    }
-
-    return reversedProof.reverse()
   }
 
   async getExitHash(burnTxHash, logEventSig) {

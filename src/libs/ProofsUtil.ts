@@ -31,9 +31,14 @@ export default class ProofsUtil {
 
   static async buildBlockProof(web3, start, end, blockNumber) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
-    const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
-    const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
-    return ethUtils.bufferToHex(Buffer.concat(proof))
+    const proof = await ProofsUtil.getFastMerkleProof(web3, blockNumber, start, end)
+    return ethUtils.bufferToHex(
+      Buffer.concat(
+        proof.map(p => {
+          return ethUtils.toBuffer(p)
+        })
+      )
+    )
   }
 
   static async buildBlockProofHermoine(web3, start, end, blockNumber, networkApiUrl) {
@@ -41,6 +46,95 @@ export default class ProofsUtil {
     const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(start, end, networkApiUrl)
     const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
+  }
+
+  static async queryRootHash(web3: any, startBlock: number, endBlock: number) {
+    try {
+      return `0x${await web3.bor.getRootHash(startBlock, endBlock)}`
+    } catch (err) {
+      return null
+    }
+  }
+
+  static async recursiveZeroHash(n: number, web3) {
+    if (n === 0) return '0x0000000000000000000000000000000000000000000000000000000000000000'
+    const subHash = this.recursiveZeroHash(n - 1, web3)
+    return ethUtils.keccak256(
+      ethUtils.toBuffer(web3.eth.abi.encodeParameter(['bytes32', 'bytes32'], [subHash, subHash]))
+    )
+  }
+
+  static async getFastMerkleProof(
+    web3: any,
+    blockNumber: number,
+    startBlock: number,
+    endBlock: number
+  ): Promise<string[]> {
+    const merkleTreeDepth = Math.ceil(Math.log2(endBlock - startBlock + 1))
+
+    // We generate the proof root down, whereas we need from leaf up
+    const reversedProof: string[] = []
+
+    const offset = startBlock
+    const targetIndex = blockNumber - offset
+    let leftBound = 0
+    let rightBound = endBlock - offset
+    //   console.log("Searching for", targetIndex);
+    for (let depth = 0; depth < merkleTreeDepth; depth += 1) {
+      const nLeaves = 2 ** (merkleTreeDepth - depth)
+
+      // The pivot leaf is the last leaf which is included in the left subtree
+      const pivotLeaf = leftBound + nLeaves / 2 - 1
+
+      if (targetIndex > pivotLeaf) {
+        // Get the root hash to the merkle subtree to the left
+        const newLeftBound = pivotLeaf + 1
+        // eslint-disable-next-line no-await-in-loop
+        const subTreeMerkleRoot = await this.queryRootHash(web3, offset + leftBound, offset + pivotLeaf)
+        reversedProof.push(subTreeMerkleRoot)
+        leftBound = newLeftBound
+      } else {
+        // Things are more complex when querying to the right.
+        // Root hash may come some layers down so we need to build a full tree by padding with zeros
+        // Some trees may be completely empty
+
+        const newRightBound = Math.min(rightBound, pivotLeaf)
+
+        // Expect the merkle tree to have a height one less than the current layer
+        const expectedHeight = merkleTreeDepth - (depth + 1)
+        if (rightBound <= pivotLeaf) {
+          // Tree is empty so we repeatedly hash zero to correct height
+          const subTreeMerkleRoot = this.recursiveZeroHash(expectedHeight, web3)
+          reversedProof.push(subTreeMerkleRoot)
+        } else {
+          // Height of tree given by RPC node
+          const subTreeHeight = Math.ceil(Math.log2(rightBound - pivotLeaf))
+
+          // Find the difference in height between this and the subtree we want
+          const heightDifference = expectedHeight - subTreeHeight
+
+          // For every extra layer we need to fill 2*n leaves filled with the merkle root of a zero-filled Merkle tree
+          // We need to build a tree which has heightDifference layers
+
+          // The first leaf will hold the root hash as returned by the RPC
+          // eslint-disable-next-line no-await-in-loop
+          const remainingNodesHash = await this.queryRootHash(web3, offset + pivotLeaf + 1, offset + rightBound)
+
+          // The remaining leaves will hold the merkle root of a zero-filled tree of height subTreeHeight
+          const leafRoots = this.recursiveZeroHash(subTreeHeight, web3)
+
+          // Build a merkle tree of correct size for the subtree using these merkle roots
+          const leaves = Array.from({ length: 2 ** heightDifference }, () => leafRoots)
+          leaves[0] = remainingNodesHash
+
+          const subTreeMerkleRoot = new MerkleTree(leaves).getRoot()
+          reversedProof.push(subTreeMerkleRoot)
+        }
+        rightBound = newRightBound
+      }
+    }
+
+    return reversedProof.reverse()
   }
 
   static async buildBlockHeaderMerkleHermoine(start, end, networkApiUrl) {
@@ -84,7 +178,7 @@ export default class ProofsUtil {
           if (err) {
             reject(err)
           } else {
-            resolve()
+            resolve({})
           }
         })
       })
@@ -158,7 +252,7 @@ export default class ProofsUtil {
           if (err) {
             reject(err)
           } else {
-            resolve()
+            resolve({})
           }
         })
       })
