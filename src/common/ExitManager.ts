@@ -109,6 +109,7 @@ export default class ExitManager extends ContractsBase {
       `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
     )
     const blockProof = blockProofResponse.data.proof
+
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
     const logIndex =
