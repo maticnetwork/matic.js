@@ -78,6 +78,11 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, web3Options, options)
   }
 
+  async exitFastMerkle(start: any, end: any, blockNumber: any) {
+    const proof = await this.exitManager.buildPayloadForExitFastMerkle(start, end, blockNumber)
+    return proof
+  }
+
   async exitHermoine(burnTxHash: string, logSignature: string, options?: SendOptions) {
     if (!this.posRootChainManager.options.address) {
       throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')

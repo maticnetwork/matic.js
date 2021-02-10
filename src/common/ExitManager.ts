@@ -86,6 +86,18 @@ export default class ExitManager extends ContractsBase {
     )
   }
 
+  async buildPayloadForExitFastMerkle(start, end, blockNumber) {
+    // build block proof
+    const blockProof = await Proofs.buildBlockProof(
+      this.web3Client.getMaticWeb3(),
+      parseInt(start, 10),
+      parseInt(end, 10),
+      parseInt(blockNumber + '', 10)
+    )
+
+    return blockProof
+  }
+
   async buildPayloadForExitHermoine(burnTxHash, logEventSig) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
@@ -106,7 +118,7 @@ export default class ExitManager extends ContractsBase {
     const end = parseInt(headerBlock.end, 10)
     const number = parseInt(receipt.blockNumber + '', 10)
     let blockProofResponse = await axios.get(
-      `${this.networkApiUrl}/block-proof?start=${start}&end=${end}&number=${number}`
+      `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
     )
     const blockProof = blockProofResponse.data.proof
 
