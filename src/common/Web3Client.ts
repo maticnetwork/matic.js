@@ -20,6 +20,18 @@ export default class Web3Client {
     this.web3 = new Web3(maticProvider)
     this.parentDefaultOptions = parentDefaultOptions
     this.maticDefaultOptions = maticDefaultOptions
+    this.web3.extend({
+      property: 'bor',
+      methods: [
+        {
+          name: 'getRootHash',
+          call: 'eth_getRootHash',
+          params: 2,
+          inputFormatter: [Number, Number],
+          outputFormatter: String,
+        },
+      ],
+    })
   }
 
   set wallet(_wallet) {
