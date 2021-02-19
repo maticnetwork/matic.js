@@ -58,17 +58,30 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    const logIndex =
-      logEventSig == '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' ||
-      logEventSig == '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df' ||
-      logEventSig == '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62' ||
-      logEventSig == '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
-        ? receipt.logs.findIndex(
-            log =>
-              log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-              log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-          )
-        : receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    let logIndex = -1
+
+    switch (logEventSig) {
+      case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+      case '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df':
+        logIndex = receipt.logs.findIndex(
+          log =>
+            log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+            log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+        )
+        break
+
+      case '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62':
+      case '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb':
+        logIndex = receipt.logs.findIndex(
+          log =>
+            log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+            log.topics[3].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+        )
+        break
+
+      default:
+        logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    }
 
     assert.ok(logIndex > -1, 'Log not found in receipt')
 
@@ -124,19 +137,33 @@ export default class ExitManager extends ContractsBase {
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
 
-    const logIndex =
-      logEventSig == '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' ||
-      logEventSig == '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df' ||
-      logEventSig == '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62' ||
-      logEventSig == '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
-        ? receipt.logs.findIndex(
-            log =>
-              log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
-              log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
-          )
-        : receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    let logIndex = -1
+
+    switch (logEventSig) {
+      case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+      case '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df':
+        logIndex = receipt.logs.findIndex(
+          log =>
+            log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+            log.topics[2].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+        )
+        break
+
+      case '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62':
+      case '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb':
+        logIndex = receipt.logs.findIndex(
+          log =>
+            log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
+            log.topics[3].toLowerCase() == '0x0000000000000000000000000000000000000000000000000000000000000000'
+        )
+        break
+
+      default:
+        logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() == logEventSig.toLowerCase())
+    }
 
     assert.ok(logIndex > -1, 'Log not found in receipt')
+
     return this._encodePayload(
       headerBlock.headerBlockNumber,
       blockProof,
