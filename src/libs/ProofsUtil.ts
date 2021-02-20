@@ -50,7 +50,7 @@ export default class ProofsUtil {
 
   static async queryRootHash(web3: any, startBlock: number, endBlock: number) {
     try {
-      return `0x${await web3.bor.getRootHash(startBlock, endBlock)}`
+      return ethUtils.toBuffer(`0x${await web3.bor.getRootHash(startBlock, endBlock)}`)
     } catch (err) {
       return null
     }
