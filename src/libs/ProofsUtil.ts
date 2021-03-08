@@ -57,7 +57,15 @@ export default class ProofsUtil {
   }
 
   static recursiveZeroHash(n: number, web3) {
-    if (n === 0) return '0x0000000000000000000000000000000000000000000000000000000000000000'
+    if (n === 0)
+      return ethUtils.keccak256(
+        ethUtils.toBuffer(
+          web3.eth.abi.encodeParameters(
+            ['bytes32'],
+            ['0x0000000000000000000000000000000000000000000000000000000000000000']
+          )
+        )
+      )
     const subHash = this.recursiveZeroHash(n - 1, web3)
     return ethUtils.keccak256(
       ethUtils.toBuffer(web3.eth.abi.encodeParameters(['bytes32', 'bytes32'], [subHash, subHash]))
