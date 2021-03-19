@@ -62,6 +62,7 @@ export default class ExitManager extends ContractsBase {
 
     switch (logEventSig) {
       case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+      case '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14':
         logIndex = receipt.logs.findIndex(
           log =>
             log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
@@ -140,6 +141,7 @@ export default class ExitManager extends ContractsBase {
 
     switch (logEventSig) {
       case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+      case '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14':
         logIndex = receipt.logs.findIndex(
           log =>
             log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
@@ -194,6 +196,7 @@ export default class ExitManager extends ContractsBase {
 
     switch (logEventSig) {
       case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+      case '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14':
         logIndex = receipt.logs.findIndex(
           log =>
             log.topics[0].toLowerCase() == logEventSig.toLowerCase() &&
