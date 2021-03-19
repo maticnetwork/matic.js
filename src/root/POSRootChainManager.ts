@@ -13,6 +13,7 @@ const ERC721_WITHDRAW_BATCH_EVENT_SIG = '0xf871896b17e9cb7a64941c62c188a4f5c621b
 const ERC1155_TRANSFER_SINGLE_EVENT_SIG = '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62'
 const ERC1155_TRANSFER_BATCH_EVENT_SIG = '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb'
 const MESSAGE_SENT_EVENT_SIG = '0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036'
+const TRANSFER_WITH_METADATA_EVENT_SIG = '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14'
 
 const web3 = new Web3()
 const abiCoder: Web3['eth']['abi'] = web3.eth.abi
@@ -284,6 +285,14 @@ export default class POSRootChainManager extends ContractsBase {
 
   async exitBatchERC721(burnTxHash: string, options?: SendOptions) {
     return this.exit(burnTxHash, ERC721_WITHDRAW_BATCH_EVENT_SIG, options)
+  }
+
+  async exitERC721WithMetadata(burnTxHash: string, options?: SendOptions) {
+    return this.exit(burnTxHash, TRANSFER_WITH_METADATA_EVENT_SIG, options)
+  }
+
+  async exitERC721WithMetadataHermoine(burnTxHash: string, options?: SendOptions) {
+    return this.exitHermoine(burnTxHash, TRANSFER_WITH_METADATA_EVENT_SIG, options)
   }
 
   async exitBatchERC721Hermoine(burnTxHash: string, options?: SendOptions) {
