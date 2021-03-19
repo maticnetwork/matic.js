@@ -199,6 +199,21 @@ export class MaticPOSClient extends SDKClient {
     }
   }
 
+  exitERC721WithMetadata(txHash: string, options?: SendOptions) {
+    if (!txHash) {
+      throw new Error(`txHash not provided`)
+    }
+    if (options && !options.from) {
+      throw new Error(`options.from is missing`)
+    }
+
+    if (options && options.legacyProof) {
+      return this.posRootChainManager.exitERC721WithMetadata(txHash, options)
+    } else {
+      return this.posRootChainManager.exitERC721WithMetadataHermoine(txHash, options)
+    }
+  }
+
   isERC721ExitProcessed(txHash: string) {
     if (!txHash) {
       throw new Error(`txHash not provided`)
