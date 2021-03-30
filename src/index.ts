@@ -1,4 +1,5 @@
 import BN from 'bn.js'
+import { isAddress, soliditySha3, toChecksumAddress } from 'web3-utils'
 import SDKClient from './common/SDKClient'
 import { Utils } from './common/Utils'
 import DepositManager from './root/DepositManager'
@@ -59,7 +60,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnERC20(childToken: address, amount: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+    if (!isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!amount) {
@@ -140,7 +141,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+    if (!isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!tokenId) {
@@ -154,7 +155,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnBatchERC721(childToken: address, tokenIds: (BN | string)[], options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+    if (!isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!tokenIds) {
@@ -264,7 +265,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnSingleERC1155(childToken: address, tokenId: BN | string, amount: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+    if (!isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!tokenId || !amount) {
@@ -277,7 +278,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   burnBatchERC1155(childToken: address, tokenIds: (BN | string)[], amounts: (BN | string)[], options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(childToken)) {
+    if (!isAddress(childToken)) {
       throw new Error(`${childToken} is not a valid token address`)
     }
     if (!tokenIds || !amounts) {
@@ -377,18 +378,16 @@ export default class Matic extends SDKClient {
       const maticWeth = await this.registry.registry.methods.getWethTokenAddress().call()
       return this.transferERC20Tokens(maticWeth, to, value, options)
     }
-    const web3Object = this.web3Client.getParentWeb3()
+    const eth = this.web3Client.getParentEth()
     if (!options.gas) {
-      options.gas = await web3Object.eth.estimateGas({
+      options.gas = await eth.estimateGas({
         from,
         value,
       })
     }
     Object.assign(options, { value, to })
     const _options = await this.web3Client.fillOptions(options /* txObject */, true /* onRootChain */, options)
-    return _options.encodeAbi
-      ? _options
-      : this.web3Client.wrapWeb3Promise(web3Object.eth.sendTransaction(_options), options)
+    return _options.encodeAbi ? _options : this.web3Client.wrapWeb3Promise(eth.sendTransaction(_options), options)
   }
 
   depositEther(amount: BN | string, options?: SendOptions) {
@@ -444,7 +443,7 @@ export default class Matic extends SDKClient {
       expiration: sellOrder.expiry,
     }
     const orderHash = this.utils.getOrderHash(orderObj)
-    let chainId = await this.web3Client.web3.eth.net.getId()
+    let chainId = await this.web3Client.eth.net.getId()
     const dataToSign = {
       token: sellOrder.token,
       tokenIdOrAmount: sellOrder.amount,
@@ -462,8 +461,7 @@ export default class Matic extends SDKClient {
     if (!options.from) {
       throw new Error('options.from is missing')
     }
-    let web3Util = this.web3Client.web3.utils
-    let data = web3Util.soliditySha3(
+    let data = soliditySha3(
       {
         t: 'bytes32',
         v: sellOrder.orderId,
@@ -556,7 +554,7 @@ export default class Matic extends SDKClient {
   }
 
   private _validateInputs(token: address, amountOrTokenId: BN | string, options?: SendOptions) {
-    if (!this.web3Client.web3.utils.isAddress(this.web3Client.web3.utils.toChecksumAddress(token))) {
+    if (!isAddress(toChecksumAddress(token))) {
       throw new Error(`${token} is not a valid token address`)
     }
     if (!amountOrTokenId) {

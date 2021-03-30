@@ -19,7 +19,7 @@ export default class RootChain extends ContractsBase {
 
   constructor(options: MaticClientInitializationOptions, web3Client: Web3Client) {
     super(web3Client, options.network)
-    this.rootChain = new this.web3Client.parentWeb3.eth.Contract(options.network.abi('RootChain'), options.rootChain)
+    this.rootChain = new this.web3Client.parentEth.Contract(options.network.abi('RootChain'), options.rootChain)
   }
 
   getLastChildBlock() {
@@ -29,7 +29,7 @@ export default class RootChain extends ContractsBase {
   async getCheckpointInclusion(burnTxHash) {
     // check checkpoint
     const lastChildBlock = await this.getLastChildBlock()
-    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
+    const burnTx = await this.web3Client.getMaticEth().getTransaction(burnTxHash)
 
     if (new BN(lastChildBlock).lt(new BN(burnTx.blockNumber))) {
       return 'Burn transaction has not been checkpointed as yet'

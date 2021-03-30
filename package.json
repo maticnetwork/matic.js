@@ -43,7 +43,6 @@
     "@maticnetwork/meta": "^2.4.6",
     "@types/bluebird": "^3.5.29",
     "@types/bn.js": "4.11.5",
-    "@types/web3": "1.0.19",
     "axios": "^0.21.1",
     "bluebird": "^3.7.1",
     "bn.js": "5.0.0",
@@ -54,7 +53,9 @@
     "ethereumjs-util": "^5.2.0",
     "merkle-patricia-tree": "2.3.2",
     "query-string": "6.8.1",
-    "web3": "^1.3.0"
+    "web3-eth": "^1.3.0",
+    "web3-eth-abi": "^1.3.0",
+    "web3-utils": "^1.3.0"
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",

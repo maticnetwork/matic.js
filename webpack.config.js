@@ -32,7 +32,9 @@ const clientConfig = {
     ],
   },
   externals: {
-    web3: 'web3',
+    'web3-eth': 'web3-eth',
+    'web3-eth-abi': 'web3-eth-abi',
+    'web3-utils': 'web3-utils',
     'ethereumjs-util': 'ethereumjs-util',
     'query-string': 'query-string',
   },

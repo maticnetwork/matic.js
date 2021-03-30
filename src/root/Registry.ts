@@ -9,6 +9,6 @@ export default class Registry extends ContractsBase {
 
   constructor(options: MaticClientInitializationOptions, web3Client: Web3Client) {
     super(web3Client, options.network)
-    this.registry = new this.web3Client.parentWeb3.eth.Contract(options.network.abi('Registry'), options.registry)
+    this.registry = new this.web3Client.parentEth.Contract(options.network.abi('Registry'), options.registry)
   }
 }

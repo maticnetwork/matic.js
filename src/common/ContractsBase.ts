@@ -28,31 +28,31 @@ export default class ContractsBase {
   }
 
   public getERC20TokenContract(token: address, parent: boolean = false) {
-    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(this.network.abi('ChildERC20'), token)
+    const eth = parent ? this.web3Client.parentEth : this.web3Client.eth
+    return new eth.Contract(this.network.abi('ChildERC20'), token)
   }
 
   public getERC721TokenContract(token: address, parent: boolean = false) {
-    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(this.network.abi('ChildERC721'), token)
+    const eth = parent ? this.web3Client.parentEth : this.web3Client.eth
+    return new eth.Contract(this.network.abi('ChildERC721'), token)
   }
 
   public getChildMaticContract() {
-    return new this.web3Client.web3.eth.Contract(this.network.abi('MRC20'), ContractsBase.MATIC_CHILD_TOKEN)
+    return new this.web3Client.eth.Contract(this.network.abi('MRC20'), ContractsBase.MATIC_CHILD_TOKEN)
   }
 
   public getPOSERC20TokenContract(token: address, parent: boolean = false) {
-    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(this.network.abi('ChildERC20', 'pos'), token)
+    const eth = parent ? this.web3Client.parentEth : this.web3Client.eth
+    return new eth.Contract(this.network.abi('ChildERC20', 'pos'), token)
   }
 
   public getPOSERC721TokenContract(token: address, parent: boolean = false) {
-    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(this.network.abi('ChildERC721', 'pos'), token)
+    const eth = parent ? this.web3Client.parentEth : this.web3Client.eth
+    return new eth.Contract(this.network.abi('ChildERC721', 'pos'), token)
   }
 
   public getPOSERC1155TokenContract(token: address, parent: boolean = false) {
-    const web3 = parent ? this.web3Client.parentWeb3 : this.web3Client.web3
-    return new web3.eth.Contract(this.network.abi('ChildERC1155', 'pos'), token)
+    const eth = parent ? this.web3Client.parentEth : this.web3Client.eth
+    return new eth.Contract(this.network.abi('ChildERC1155', 'pos'), token)
   }
 }

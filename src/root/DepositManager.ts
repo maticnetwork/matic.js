@@ -16,7 +16,7 @@ export default class DepositManager extends ContractsBase {
 
   constructor(options: MaticClientInitializationOptions, web3Client: Web3Client, registry: Registry) {
     super(web3Client, options.network)
-    this.depositManagerContract = new this.web3Client.parentWeb3.eth.Contract(
+    this.depositManagerContract = new this.web3Client.parentEth.Contract(
       options.network.abi('DepositManager'),
       options.depositManager
     )
@@ -25,12 +25,12 @@ export default class DepositManager extends ContractsBase {
 
   async initialize() {
     const childChainAddress = (await this.registry.registry.methods.getChildChainAndStateSender().call())[0]
-    this.childChainContract = new this.web3Client.web3.eth.Contract(this.network.abi('ChildChain'), childChainAddress)
+    this.childChainContract = new this.web3Client.eth.Contract(this.network.abi('ChildChain'), childChainAddress)
   }
 
   async depositStatusFromTxHash(txHash: string) {
     const deposits = []
-    const depositReceipt = await this.web3Client.parentWeb3.eth.getTransactionReceipt(txHash)
+    const depositReceipt = await this.web3Client.parentEth.getTransactionReceipt(txHash)
     if (!depositReceipt) {
       throw new Error('Transaction hash not found')
     }

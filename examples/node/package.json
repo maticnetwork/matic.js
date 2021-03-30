@@ -14,7 +14,6 @@
   "author": "Matic Network <info@matic.network>",
   "license": "MIT",
   "dependencies": {
-    "@maticnetwork/maticjs": "2.0.15",
-    "web3": "1.2.4"
+    "@maticnetwork/maticjs": "3.0.0"
   }
 }

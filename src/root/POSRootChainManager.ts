@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import Web3 from 'web3'
+import abi from 'web3-eth-abi'
 import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
 import ExitManager from '../common/ExitManager'
@@ -15,9 +15,7 @@ const ERC1155_TRANSFER_BATCH_EVENT_SIG = '0x4a39dc06d4c0dbc64b70af90fd698a233a51
 const MESSAGE_SENT_EVENT_SIG = '0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036'
 const TRANSFER_WITH_METADATA_EVENT_SIG = '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14'
 
-const web3 = new Web3()
-const abiCoder: Web3['eth']['abi'] = web3.eth.abi
-
+const abiCoder: any = abi
 export default class POSRootChainManager extends ContractsBase {
   public posRootChainManager: Contract
   private exitManager: ExitManager
@@ -30,7 +28,7 @@ export default class POSRootChainManager extends ContractsBase {
 
   constructor(options: MaticClientInitializationOptions, rootChain: RootChain, web3Client: Web3Client) {
     super(web3Client, options.network)
-    this.posRootChainManager = new this.web3Client.parentWeb3.eth.Contract(
+    this.posRootChainManager = new this.web3Client.parentEth.Contract(
       options.network.abi('RootChainManager', 'pos'),
       options.posRootChainManager || options.network.Main.POSContracts.RootChainManagerProxy
     )
@@ -109,7 +107,7 @@ export default class POSRootChainManager extends ContractsBase {
 
   async processReceivedMessage(contractAddress: address, txHash: string) {
     const payload = await this.exitManager.buildPayloadForExitHermoine(txHash, MESSAGE_SENT_EVENT_SIG)
-    let rootTunnelContract = new this.web3Client.parentWeb3.eth.Contract(this.rootTunnelContractAbi, contractAddress)
+    let rootTunnelContract = new this.web3Client.parentEth.Contract(this.rootTunnelContractAbi, contractAddress)
     let txObject = rootTunnelContract.methods.receiveMessage(payload)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */)
     if (web3Options.encodeAbi) {

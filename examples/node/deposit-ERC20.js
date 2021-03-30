@@ -25,15 +25,16 @@ async function execute() {
   return matic.depositERC20ForUser(token, from, amount, { from, gasPrice: '10000000000' })
 }
 
-async function executeRaw() { // eslint-disable-line
+async function executeRaw() {
+  // eslint-disable-line
   await matic.initialize()
   let txParams = await matic.approveERC20TokensForDeposit(token, amount, { from, encodeAbi: true })
   let serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)
-  await matic.web3Client.parentWeb3.eth.sendSignedTransaction(serializedTx)
+  await matic.web3Client.parentEth.sendSignedTransaction(serializedTx)
 
   txParams = await matic.depositERC20ForUser(token, from, amount, { from, encodeAbi: true })
   serializedTx = utils.buildRawTransaction(txParams, config.PRIVATE_KEY)
-  return matic.web3Client.parentWeb3.eth.sendSignedTransaction(serializedTx)
+  return matic.web3Client.parentEth.sendSignedTransaction(serializedTx)
 }
 
 execute().then(console.log) // eslint-disable-line

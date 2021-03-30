@@ -23,15 +23,15 @@ export default class ProofsUtil {
     return ethUtils.keccak256(Buffer.concat([n, ts, txRoot, receiptsRoot]))
   }
 
-  static async buildCheckpointRoot(web3, start, end) {
+  static async buildCheckpointRoot(eth, start, end) {
     logger.debug('buildCheckpointRoot...')
-    const tree = await ProofsUtil.buildBlockHeaderMerkle(web3, start, end)
+    const tree = await ProofsUtil.buildBlockHeaderMerkle(eth, start, end)
     return ethUtils.bufferToHex(tree.getRoot())
   }
 
-  static async buildBlockProof(web3, start, end, blockNumber) {
+  static async buildBlockProof(eth, start, end, blockNumber) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
-    const proof = await ProofsUtil.getFastMerkleProof(web3, blockNumber, start, end)
+    const proof = await ProofsUtil.getFastMerkleProof(eth, blockNumber, start, end)
     return ethUtils.bufferToHex(
       Buffer.concat(
         proof.map(p => {
@@ -41,31 +41,29 @@ export default class ProofsUtil {
     )
   }
 
-  static async buildBlockProofHermoine(web3, start, end, blockNumber, networkApiUrl) {
+  static async buildBlockProofHermoine(eth, start, end, blockNumber, networkApiUrl) {
     logger.debug('buildBlockProof...', start, end, blockNumber)
     const tree = await ProofsUtil.buildBlockHeaderMerkleHermoine(start, end, networkApiUrl)
-    const proof = tree.getProof(ProofsUtil.getBlockHeader(await web3.eth.getBlock(blockNumber)))
+    const proof = tree.getProof(ProofsUtil.getBlockHeader(await eth.getBlock(blockNumber)))
     return ethUtils.bufferToHex(Buffer.concat(proof))
   }
 
-  static async queryRootHash(web3: any, startBlock: number, endBlock: number) {
+  static async queryRootHash(eth: any, startBlock: number, endBlock: number) {
     try {
-      return ethUtils.toBuffer(`0x${await web3.bor.getRootHash(startBlock, endBlock)}`)
+      return ethUtils.toBuffer(`0x${await eth.bor.getRootHash(startBlock, endBlock)}`)
     } catch (err) {
       return null
     }
   }
 
-  static recursiveZeroHash(n: number, web3) {
+  static recursiveZeroHash(n: number, eth) {
     if (n === 0) return '0x0000000000000000000000000000000000000000000000000000000000000000'
-    const subHash = this.recursiveZeroHash(n - 1, web3)
-    return ethUtils.keccak256(
-      ethUtils.toBuffer(web3.eth.abi.encodeParameters(['bytes32', 'bytes32'], [subHash, subHash]))
-    )
+    const subHash = this.recursiveZeroHash(n - 1, eth)
+    return ethUtils.keccak256(ethUtils.toBuffer(eth.abi.encodeParameters(['bytes32', 'bytes32'], [subHash, subHash])))
   }
 
   static async getFastMerkleProof(
-    web3: any,
+    eth: any,
     blockNumber: number,
     startBlock: number,
     endBlock: number
@@ -90,7 +88,7 @@ export default class ProofsUtil {
         // Get the root hash to the merkle subtree to the left
         const newLeftBound = pivotLeaf + 1
         // eslint-disable-next-line no-await-in-loop
-        const subTreeMerkleRoot = await this.queryRootHash(web3, offset + leftBound, offset + pivotLeaf)
+        const subTreeMerkleRoot = await this.queryRootHash(eth, offset + leftBound, offset + pivotLeaf)
         reversedProof.push(subTreeMerkleRoot)
         leftBound = newLeftBound
       } else {
@@ -104,7 +102,7 @@ export default class ProofsUtil {
         const expectedHeight = merkleTreeDepth - (depth + 1)
         if (rightBound <= pivotLeaf) {
           // Tree is empty so we repeatedly hash zero to correct height
-          const subTreeMerkleRoot = this.recursiveZeroHash(expectedHeight, web3)
+          const subTreeMerkleRoot = this.recursiveZeroHash(expectedHeight, eth)
           reversedProof.push(subTreeMerkleRoot)
         } else {
           // Height of tree given by RPC node
@@ -118,10 +116,10 @@ export default class ProofsUtil {
 
           // The first leaf will hold the root hash as returned by the RPC
           // eslint-disable-next-line no-await-in-loop
-          const remainingNodesHash = await this.queryRootHash(web3, offset + pivotLeaf + 1, offset + rightBound)
+          const remainingNodesHash = await this.queryRootHash(eth, offset + pivotLeaf + 1, offset + rightBound)
 
           // The remaining leaves will hold the merkle root of a zero-filled tree of height subTreeHeight
-          const leafRoots = this.recursiveZeroHash(subTreeHeight, web3)
+          const leafRoots = this.recursiveZeroHash(subTreeHeight, eth)
 
           // Build a merkle tree of correct size for the subtree using these merkle roots
           const leaves = Array.from({ length: 2 ** heightDifference }, () => ethUtils.toBuffer(leafRoots))
@@ -147,14 +145,14 @@ export default class ProofsUtil {
     return new MerkleTree(headers)
   }
 
-  static async buildBlockHeaderMerkle(web3, start, end) {
+  static async buildBlockHeaderMerkle(eth, start, end) {
     const headers = new Array(end - start + 1)
     await bluebird.map(
       headers,
       // eslint-disable-next-line
       async (_, i) => {
         logger.debug('fetching block', i + start)
-        headers[i] = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i + start))
+        headers[i] = ProofsUtil.getBlockHeader(await eth.getBlock(i + start))
       },
       { concurrency: 20 }
     )
@@ -228,7 +226,7 @@ export default class ProofsUtil {
     return block.header
   }
 
-  static async getReceiptProof(receipt, block, web3, receipts?) {
+  static async getReceiptProof(receipt, block, eth, receipts?) {
     const stateSyncTxHash = ethUtils.bufferToHex(ProofsUtil.getStateSyncTxHash(block))
     const receiptsTrie = new Trie()
     const receiptPromises = []
@@ -238,7 +236,7 @@ export default class ProofsUtil {
           // ignore if tx hash is bor state-sync tx
           return
         }
-        receiptPromises.push(web3.eth.getTransactionReceipt(tx.hash))
+        receiptPromises.push(eth.getTransactionReceipt(tx.hash))
       })
       receipts = await Promise.all(receiptPromises)
     }

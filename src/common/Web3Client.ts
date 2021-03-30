@@ -1,4 +1,4 @@
-import Web3 from 'web3'
+import Eth, { Eth as EthType } from 'web3-eth'
 import { SendOptions } from '../types/Common'
 
 const logger = {
@@ -9,18 +9,20 @@ const logger = {
 const EXTRAGASFORPROXYCALL = 1000000
 
 export default class Web3Client {
-  public parentWeb3: Web3
-  public web3: Web3
+  public parentEth: EthType
+  public eth: EthType
   public parentDefaultOptions: SendOptions
   public maticDefaultOptions: SendOptions
   public events: any
 
   constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions) {
-    this.parentWeb3 = new Web3(parentProvider)
-    this.web3 = new Web3(maticProvider)
+    // @ts-expect-error: web3-eth broken typings
+    this.parentEth = new Eth(parentProvider)
+    // @ts-expect-error: web3-eth broken typings
+    this.eth = new Eth(maticProvider)
     this.parentDefaultOptions = parentDefaultOptions
     this.maticDefaultOptions = maticDefaultOptions
-    this.web3.extend({
+    this.eth.extend({
       property: 'bor',
       methods: [
         {
@@ -35,8 +37,8 @@ export default class Web3Client {
   }
 
   set wallet(_wallet) {
-    this.parentWeb3.eth.accounts.wallet.add(_wallet)
-    this.web3.eth.accounts.wallet.add(_wallet)
+    this.parentEth.accounts.wallet.add(_wallet)
+    this.eth.accounts.wallet.add(_wallet)
   }
 
   async call(method, options?: SendOptions) {
@@ -45,12 +47,12 @@ export default class Web3Client {
 
   async fillOptions(txObject: any, onRootChain: boolean, options?: SendOptions) {
     if (onRootChain) {
-      return this._fillOptions(txObject, this.parentWeb3, options || this.parentDefaultOptions)
+      return this._fillOptions(txObject, this.parentEth, options || this.parentDefaultOptions)
     }
-    return this._fillOptions(txObject, this.web3, options || this.maticDefaultOptions)
+    return this._fillOptions(txObject, this.eth, options || this.maticDefaultOptions)
   }
 
-  private async _fillOptions(txObject, web3, _options) {
+  private async _fillOptions(txObject, eth, _options) {
     if (!_options.from) throw new Error('from is not specified')
     const from = _options.from
     delete txObject.chainId
@@ -59,9 +61,9 @@ export default class Web3Client {
       !(_options.gasLimit || _options.gas)
         ? txObject.estimateGas({ from, value: _options.value })
         : _options.gasLimit || _options.gas,
-      !_options.gasPrice ? web3.eth.getGasPrice() : _options.gasPrice,
-      !_options.nonce ? web3.eth.getTransactionCount(from, 'pending') : _options.nonce,
-      !_options.chainId ? web3.eth.net.getId() : _options.chainId,
+      !_options.gasPrice ? eth.getGasPrice() : _options.gasPrice,
+      !_options.nonce ? eth.getTransactionCount(from, 'pending') : _options.nonce,
+      !_options.chainId ? eth.net.getId() : _options.chainId,
     ])
 
     return {
@@ -115,16 +117,16 @@ export default class Web3Client {
     return this.wrapWeb3Promise(txObject.send(_web3Options), callbacks)
   }
 
-  getParentWeb3() {
-    return this.parentWeb3
+  getParentEth() {
+    return this.parentEth
   }
 
-  getMaticWeb3() {
-    return this.web3
+  getMaticEth() {
+    return this.eth
   }
 
   getWallet() {
-    return this.web3.eth.accounts.wallet
+    return this.eth.accounts.wallet
   }
 
   setParentDefaultOptions(options: any) {
@@ -136,6 +138,7 @@ export default class Web3Client {
   }
 
   setParentProvider(provider) {
-    this.parentWeb3 = new Web3(provider)
+    // @ts-expect-error: web3-eth broken typings
+    this.parentEth = new Eth(provider)
   }
 }

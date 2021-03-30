@@ -32,7 +32,7 @@ export default class WithdrawManager extends ContractsBase {
     registry: Registry
   ) {
     super(web3Client, options.network)
-    this.withdrawManager = new this.web3Client.parentWeb3.eth.Contract(
+    this.withdrawManager = new this.web3Client.parentEth.Contract(
       this.network.abi('WithdrawManager'),
       options.withdrawManager
     )
@@ -44,11 +44,11 @@ export default class WithdrawManager extends ContractsBase {
   async initialize() {
     const erc20PredicateAddress = await this.registry.registry.methods.erc20Predicate().call()
     const erc721PredicateAddress = await this.registry.registry.methods.erc721Predicate().call()
-    this.erc20Predicate = new this.web3Client.parentWeb3.eth.Contract(
+    this.erc20Predicate = new this.web3Client.parentEth.Contract(
       this.network.abi('ERC20Predicate'),
       erc20PredicateAddress
     )
-    this.erc721Predicate = new this.web3Client.parentWeb3.eth.Contract(
+    this.erc721Predicate = new this.web3Client.parentEth.Contract(
       this.network.abi('ERC721Predicate'),
       erc721PredicateAddress
     )
@@ -145,8 +145,8 @@ export default class WithdrawManager extends ContractsBase {
 
   async getExitTime(burnTxHash, confirmTxHash) {
     const HALF_EXIT_PERIOD = parseInt(await this.web3Client.call(this.withdrawManager.methods.HALF_EXIT_PERIOD()))
-    let blockNumber = (await this.web3Client.getParentWeb3().eth.getTransaction(confirmTxHash)).blockNumber
-    let confirmTime = (await this.web3Client.getParentWeb3().eth.getBlock(blockNumber)).timestamp
+    let blockNumber = (await this.web3Client.getParentEth().getTransaction(confirmTxHash)).blockNumber
+    let confirmTime = (await this.web3Client.getParentEth().getBlock(blockNumber)).timestamp
     let checkPointTime = (await this.rootChain.getCheckpointInclusion(burnTxHash)).createdAt
     let exitTime = Math.max(parseInt(checkPointTime) + 2 * HALF_EXIT_PERIOD, +confirmTime + HALF_EXIT_PERIOD)
     return {
@@ -163,10 +163,7 @@ export default class WithdrawManager extends ContractsBase {
    */
   async startExitForMintableBurntToken(burnTxHash, predicate: address, options?) {
     const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
-    const _predicate = new this.web3Client.parentWeb3.eth.Contract(
-      this.network.abi('MintableERC721Predicate'),
-      predicate
-    )
+    const _predicate = new this.web3Client.parentEth.Contract(this.network.abi('MintableERC721Predicate'), predicate)
     const txObject = _predicate.methods.startExitForMintableBurntToken(payload, mint)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     return this.web3Client.send(txObject, web3Options, options)
@@ -180,10 +177,7 @@ export default class WithdrawManager extends ContractsBase {
    */
   async startExitForMetadataMintableBurntToken(burnTxHash, predicate: address, options?) {
     const { payload, mint } = await this._buildPayloadAndFindMintTransaction(burnTxHash)
-    const _predicate = new this.web3Client.parentWeb3.eth.Contract(
-      this.network.abi('MintableERC721Predicate'),
-      predicate
-    )
+    const _predicate = new this.web3Client.parentEth.Contract(this.network.abi('MintableERC721Predicate'), predicate)
     const txObject = _predicate.methods.startExitForMetadataMintableBurntToken(payload, mint)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     return this.web3Client.send(txObject, web3Options, options)
@@ -191,13 +185,13 @@ export default class WithdrawManager extends ContractsBase {
 
   private async _buildPayloadAndFindMintTransaction(burnTxHash) {
     const payload = await this.exitManager.buildPayloadForExit(burnTxHash, WithdrawManager.ERC721_WITHDRAW_EVENT_SIG)
-    const burnReceipt = await this.web3Client.web3.eth.getTransactionReceipt(burnTxHash)
+    const burnReceipt = await this.web3Client.eth.getTransactionReceipt(burnTxHash)
     const withdrawEvent = burnReceipt.logs.find(
       l => l.topics[0].toLowerCase() === WithdrawManager.ERC721_WITHDRAW_EVENT_SIG
     )
     const tokenId = withdrawEvent.data
     logger.debug({ burnTxHash, burnReceipt, withdrawEvent, tokenId })
-    const contract = new this.web3Client.web3.eth.Contract(this.network.abi('ChildERC721Mintable'), burnReceipt.to)
+    const contract = new this.web3Client.eth.Contract(this.network.abi('ChildERC721Mintable'), burnReceipt.to)
     const mintEvents = await contract.getPastEvents('Transfer', {
       filter: { tokenId },
       fromBlock: 0,
@@ -208,7 +202,7 @@ export default class WithdrawManager extends ContractsBase {
       throw new Error('Could not retrieve the mint event')
     }
     const mintTxHash = mintEvents.find(event => event.raw.topics[3] === tokenId).transactionHash
-    let mint: any = await this.web3Client.web3.eth.getTransaction(mintTxHash)
+    let mint: any = await this.web3Client.eth.getTransaction(mintTxHash)
     mint = ethUtils.bufferToHex(await Proofs.getTxBytes(mint))
     return { payload, mint }
   }
