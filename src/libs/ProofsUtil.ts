@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { mapPromise } from '../common/Mappromise'
+import { mapPromise } from '../common/MapPromise'
 const BN = require('bn.js')
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')

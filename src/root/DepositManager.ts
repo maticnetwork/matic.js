@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
-import { mapPromise } from '../common/Mappromise'
+import { mapPromise } from '../common/MapPromise'
 import Web3Client from '../common/Web3Client'
 import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Registry from './Registry'
