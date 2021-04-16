@@ -45,7 +45,6 @@
     "@types/bn.js": "4.11.5",
     "@types/web3": "1.0.19",
     "axios": "^0.21.1",
-    "bluebird": "^3.7.1",
     "bn.js": "5.0.0",
     "debug": "^4.1.1",
     "eth-sig-util": "^2.5.3",
