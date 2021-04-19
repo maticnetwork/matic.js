@@ -13,7 +13,7 @@ export function mapPromise(values: Array<any>, converter: Function, option: IMap
 
   let result = []
 
-  const limitPromiseRun = async () => {
+  const limitPromiseRun = async() => {
     const promises = values.splice(0, concurrency)
     const promiseResult = await runPromises(promises, converter)
     result = result.concat(promiseResult)
