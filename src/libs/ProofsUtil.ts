@@ -155,8 +155,8 @@ export default class ProofsUtil {
       async (_, i) => {
         logger.debug('fetching block', i + start)
         headers[i] = ProofsUtil.getBlockHeader(await web3.eth.getBlock(i + start))
-      }
-      // { concurrency: 20 }
+      },
+      { concurrency: 20 }
     )
     return new MerkleTree(headers)
   }
