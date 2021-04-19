@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "clean": "rimraf lib dist",
-    "build:webpack": "webpack",
+    "build:webpack": "npm run lint && webpack",
     "build:dev": "cross-env NODE_ENV=development npm run build:webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",
     "deploy": "npm run build:dev && npm run build:prod",
