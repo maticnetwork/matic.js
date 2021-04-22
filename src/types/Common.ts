@@ -37,4 +37,5 @@ export declare interface MaticClientInitializationOptions {
   posERC20Predicate?: string
   posERC721Predicate?: string
   posERC1155Predicate?: string
+  posMintableERC1155Predicate?: string
 }

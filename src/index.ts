@@ -235,6 +235,13 @@ export class MaticPOSClient extends SDKClient {
     return this.posRootChainManager.approveERC1155(rootToken, options)
   }
 
+  approveMintableERC1155ForDeposit(rootToken: address, options?: SendOptions) {
+    if (options && (!options.from || !rootToken)) {
+      throw new Error('options.from or rootToken is missing')
+    }
+    return this.posRootChainManager.approveMintableERC1155(rootToken, options)
+  }
+
   depositSingleERC1155ForUser(
     rootToken: address,
     user: address,

@@ -24,6 +24,7 @@ export default class POSRootChainManager extends ContractsBase {
   private erc20Predicate: address | null
   private erc721Predicate: address | null
   private erc1155Predicate: address | null
+  private erc1155MintablePredicate: address | null
   private rootTunnelContractAbi: any
 
   private formatUint256 = this.encode
@@ -39,6 +40,8 @@ export default class POSRootChainManager extends ContractsBase {
     this.erc20Predicate = options.posERC20Predicate || options.network.Main.POSContracts.ERC20PredicateProxy
     this.erc721Predicate = options.posERC721Predicate || options.network.Main.POSContracts.ERC721PredicateProxy
     this.erc1155Predicate = options.posERC1155Predicate || options.network.Main.POSContracts.ERC1155PredicateProxy
+    this.erc1155MintablePredicate =
+      options.posMintableERC1155Predicate || options.network.Main.POSContracts.MintableERC1155PredicateProxy
   }
 
   async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
@@ -316,6 +319,21 @@ export default class POSRootChainManager extends ContractsBase {
     }
     const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(
       this.erc1155Predicate,
+      true
+    )
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: rootToken })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async approveMintableERC1155(rootToken: address, options?: SendOptions) {
+    if (!this.erc1155Predicate) {
+      throw new Error('posERC1155Predicate address not found. Set it while constructing MaticPOSClient.')
+    }
+    const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(
+      this.erc1155MintablePredicate,
       true
     )
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
