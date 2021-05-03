@@ -45,11 +45,11 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async getPredicateAddress(rootToken: address) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
+    const tokenType = await this.posRootChainManager.methods.tokenToType(rootToken).call()
     if (!tokenType) {
       throw new Error('Invalid Token Type')
     }
-    const predicateAddress = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
+    const predicateAddress = await this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     return predicateAddress
   }
 
@@ -136,7 +136,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
-    const predicate = this.getPredicateAddress(rootToken)
+    const predicate = await this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       predicate,
       this.formatUint256(amount)
@@ -149,7 +149,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveMaxERC20(rootToken: address, options?: SendOptions) {
-    const predicate = this.getPredicateAddress(rootToken)
+    const predicate = await this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       predicate,
       '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
@@ -165,7 +165,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && (!token || !userAddress)) {
       throw new Error('token address or user address is missing')
     }
-    const predicate = this.getPredicateAddress(token)
+    const predicate = await this.getPredicateAddress(token)
     const allowance = await this.getPOSERC20TokenContract(token, true)
       .methods.allowance(userAddress, predicate)
       .call()
@@ -201,7 +201,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC721(rootToken: address, tokenId: BN | string, options?: SendOptions) {
-    const predicate = this.getPredicateAddress(rootToken)
+    const predicate = await this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.approve(
       predicate,
       this.formatUint256(tokenId)
@@ -217,7 +217,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && !token) {
       throw new Error('token address is missing')
     }
-    const predicate = this.getPredicateAddress(token)
+    const predicate = await this.getPredicateAddress(token)
     const approved = await this.getPOSERC721TokenContract(token, true)
       .methods.getApproved(tokenId)
       .call()
@@ -226,7 +226,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveAllERC721(rootToken: address, options?: SendOptions) {
-    const predicate = this.getPredicateAddress(rootToken)
+    const predicate = await this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.setApprovalForAll(predicate, true)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
@@ -239,7 +239,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && !token) {
       throw new Error('token address is missing')
     }
-    const predicate = this.getPredicateAddress(token)
+    const predicate = await this.getPredicateAddress(token)
     const approved = await this.getPOSERC721TokenContract(token, true)
       .methods.isApprovedForAll(userAddress, predicate)
       .call()
@@ -315,7 +315,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC1155(rootToken: address, options?: SendOptions) {
-    const predicate = this.getPredicateAddress(rootToken)
+    const predicate = await this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(predicate, true)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
