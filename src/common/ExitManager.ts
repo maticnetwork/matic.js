@@ -130,13 +130,18 @@ export default class ExitManager extends ContractsBase {
     const start = parseInt(headerBlock.start, 10)
     const end = parseInt(headerBlock.end, 10)
     const number = parseInt(receipt.blockNumber + '', 10)
+    let blockProof
+
     let blockProofResponse = await axios.get(
       `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
     )
-    const blockProof = blockProofResponse.data.proof
+
+    blockProof = blockProofResponse.data.proof
+    if (!blockProof) {
+      blockProof = await this.buildPayloadForExitFastMerkle(start, end, number)
+    }
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-
     let logIndex = -1
 
     switch (logEventSig) {
