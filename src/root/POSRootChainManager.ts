@@ -131,7 +131,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
     }
@@ -151,7 +151,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
     }
@@ -174,7 +174,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC20Predicate not found. Set it while mapping contract.')
     }
@@ -217,7 +217,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
     }
@@ -240,7 +240,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC20Predicate not found. Set it while mapping contract.')
     }
@@ -256,7 +256,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
     }
@@ -276,7 +276,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC20Predicate not found. Set it while mapping contract.')
     }
@@ -359,7 +359,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!tokenType) {
       throw new Error('tokenType not found. Set it while mapping contract.')
     }
-    const predicate = this.posRootChainManager.methods.tokenToType(tokenType).call()
+    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
     if (!predicate) {
       throw new Error('posERC1155Predicate address not found. Set it while constructing MaticPOSClient.')
     }
