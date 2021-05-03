@@ -44,6 +44,15 @@ export default class POSRootChainManager extends ContractsBase {
       options.posMintableERC1155Predicate || options.network.Main.POSContracts.MintableERC1155PredicateProxy
   }
 
+  async getPredicateAddress(rootToken: address) {
+    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
+    if (!tokenType) {
+      throw new Error('Invalid Token Type')
+    }
+    const predicateAddress = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
+    return predicateAddress
+  }
+
   async depositEtherForUser(amount: BN | string, user: address, options: SendOptions = {}) {
     const txObject = this.posRootChainManager.methods.depositEtherFor(user)
     const web3Options = await this.web3Client.fillOptions(
@@ -127,14 +136,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC20(rootToken: address, amount: BN | string, options?: SendOptions) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
-    }
+    const predicate = this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       predicate,
       this.formatUint256(amount)
@@ -147,14 +149,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveMaxERC20(rootToken: address, options?: SendOptions) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC20Predicate address not found. Set it while constructing MaticPOSClient.')
-    }
+    const predicate = this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC20TokenContract(rootToken, true).methods.approve(
       predicate,
       '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
@@ -170,14 +165,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && (!token || !userAddress)) {
       throw new Error('token address or user address is missing')
     }
-    const tokenType = this.posRootChainManager.methods.tokenToType(token).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC20Predicate not found. Set it while mapping contract.')
-    }
+    const predicate = this.getPredicateAddress(token)
     const allowance = await this.getPOSERC20TokenContract(token, true)
       .methods.allowance(userAddress, predicate)
       .call()
@@ -213,14 +201,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC721(rootToken: address, tokenId: BN | string, options?: SendOptions) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
-    }
+    const predicate = this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.approve(
       predicate,
       this.formatUint256(tokenId)
@@ -236,14 +217,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && !token) {
       throw new Error('token address is missing')
     }
-    const tokenType = this.posRootChainManager.methods.tokenToType(token).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC20Predicate not found. Set it while mapping contract.')
-    }
+    const predicate = this.getPredicateAddress(token)
     const approved = await this.getPOSERC721TokenContract(token, true)
       .methods.getApproved(tokenId)
       .call()
@@ -252,14 +226,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveAllERC721(rootToken: address, options?: SendOptions) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC721Predicate address not found. Set it while constructing MaticPOSClient.')
-    }
+    const predicate = this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC721TokenContract(rootToken, true).methods.setApprovalForAll(predicate, true)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
@@ -272,14 +239,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (options && !token) {
       throw new Error('token address is missing')
     }
-    const tokenType = this.posRootChainManager.methods.tokenToType(token).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC20Predicate not found. Set it while mapping contract.')
-    }
+    const predicate = this.getPredicateAddress(token)
     const approved = await this.getPOSERC721TokenContract(token, true)
       .methods.isApprovedForAll(userAddress, predicate)
       .call()
@@ -355,14 +315,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async approveERC1155(rootToken: address, options?: SendOptions) {
-    const tokenType = this.posRootChainManager.methods.tokenToType(rootToken).call()
-    if (!tokenType) {
-      throw new Error('tokenType not found. Set it while mapping contract.')
-    }
-    const predicate = this.posRootChainManager.methods.typeToPredicate(tokenType).call()
-    if (!predicate) {
-      throw new Error('posERC1155Predicate address not found. Set it while constructing MaticPOSClient.')
-    }
+    const predicate = this.getPredicateAddress(rootToken)
     const txObject = this.getPOSERC1155TokenContract(rootToken, true).methods.setApprovalForAll(predicate, true)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
