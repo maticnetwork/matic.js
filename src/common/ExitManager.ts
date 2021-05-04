@@ -114,7 +114,6 @@ export default class ExitManager extends ContractsBase {
   async buildPayloadForExitHermoine(burnTxHash, logEventSig) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
-    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
     const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
     const block: any = await this.web3Client
       .getMaticWeb3()
@@ -135,8 +134,7 @@ export default class ExitManager extends ContractsBase {
         throw Error('Network API Error')
       }
     } catch (err) {
-      console.log(err)
-      const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
+      const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(receipt.blockNumber)
       headerBlock = await this.web3Client.call(
         this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
       )
