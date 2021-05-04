@@ -114,6 +114,7 @@ export default class ExitManager extends ContractsBase {
   async buildPayloadForExitHermoine(burnTxHash, logEventSig) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
+    const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
     const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
     const block: any = await this.web3Client
       .getMaticWeb3()
@@ -123,8 +124,24 @@ export default class ExitManager extends ContractsBase {
       new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    let blockIncludedResponse = await axios.get(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
-    let headerBlock = blockIncludedResponse.data
+
+    let headerBlock
+
+    try {
+      let blockIncludedResponse = await axios.get(`${this.networkApiUrl}/block-included/${receipt.blockNumber}`)
+      headerBlock = blockIncludedResponse.data
+
+      if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
+        throw Error('Network API Error')
+      }
+    } catch (err) {
+      console.log(err)
+      const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(burnTx.blockNumber)
+      headerBlock = await this.web3Client.call(
+        this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
+      )
+    }
+
     // build block proof
 
     const start = parseInt(headerBlock.start, 10)
@@ -132,12 +149,15 @@ export default class ExitManager extends ContractsBase {
     const number = parseInt(receipt.blockNumber + '', 10)
     let blockProof
 
-    let blockProofResponse = await axios.get(
-      `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
-    )
-
-    blockProof = blockProofResponse.data.proof
-    if (!blockProof) {
+    try {
+      let blockProofResponse = await axios.get(
+        `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
+      )
+      blockProof = blockProofResponse.data.proof
+      if (!blockProof) {
+        throw Error('Network API Error')
+      }
+    } catch (err) {
       blockProof = await this.buildPayloadForExitFastMerkle(start, end, number)
     }
 
