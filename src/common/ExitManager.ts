@@ -131,13 +131,26 @@ export default class ExitManager extends ContractsBase {
       headerBlock = blockIncludedResponse.data
 
       if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
-        throw Error('Network API Error')
+        throw new Error('Network API Error - Header Block Not Found')
       }
     } catch (err) {
-      const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(receipt.blockNumber)
-      headerBlock = await this.web3Client.call(
-        this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
-      )
+      console.log('Block included check failed from Network API')
+      headerBlock = null
+    }
+
+    if (!headerBlock) {
+      try {
+        headerBlock = await this.web3Client.call(
+          this.rootChain.rootChain.methods.headerBlocks(this.encode(receipt.blockNumber))
+        )
+      } catch (err) {
+        headerBlock = null
+        console.log('Failed to check block included locally, Please try again after some time')
+      }
+    }
+
+    if (!headerBlock) {
+      throw new Error('Header Block Not Found, Please try again after some time')
     }
 
     // build block proof
@@ -153,10 +166,24 @@ export default class ExitManager extends ContractsBase {
       )
       blockProof = blockProofResponse.data.proof
       if (!blockProof) {
-        throw Error('Network API Error')
+        throw Error('Network API Error - Proof generation failed')
       }
     } catch (err) {
-      blockProof = await this.buildPayloadForExitFastMerkle(start, end, number)
+      console.log('Fast merkle proof failed from network API')
+      blockProof = null
+    }
+
+    if (!blockProof) {
+      try {
+        blockProof = await this.buildPayloadForExitFastMerkle(start, end, number)
+      } catch {
+        blockProof = null
+        console.log('Local proof generation failed. Please try again after sometime')
+      }
+    }
+
+    if (!blockProof) {
+      throw new Error('Failed to generate proof. Please try again after sometime')
     }
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
