@@ -123,20 +123,43 @@ export default class ExitManager extends ContractsBase {
       new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
       'Burn transaction has not been checkpointed as yet'
     )
-    let blockIncludedResponse = await axios.get(this.networkApiUrl + '/block-included/' + receipt.blockNumber)
-    let headerBlock = blockIncludedResponse.data
+
+    let headerBlock
+
+    try {
+      let blockIncludedResponse = await axios.get(`${this.networkApiUrl}/block-included/${receipt.blockNumber}`)
+      headerBlock = blockIncludedResponse.data
+
+      if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
+        throw Error('Network API Error')
+      }
+    } catch (err) {
+      const headerBlockNumber = await this.rootChain.findHeaderBlockNumber(receipt.blockNumber)
+      headerBlock = await this.web3Client.call(
+        this.rootChain.rootChain.methods.headerBlocks(this.encode(headerBlockNumber))
+      )
+    }
+
     // build block proof
 
     const start = parseInt(headerBlock.start, 10)
     const end = parseInt(headerBlock.end, 10)
     const number = parseInt(receipt.blockNumber + '', 10)
-    let blockProofResponse = await axios.get(
-      `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
-    )
-    const blockProof = blockProofResponse.data.proof
+    let blockProof
+
+    try {
+      let blockProofResponse = await axios.get(
+        `${this.networkApiUrl}/fast-merkle-proof?start=${start}&end=${end}&number=${number}`
+      )
+      blockProof = blockProofResponse.data.proof
+      if (!blockProof) {
+        throw Error('Network API Error')
+      }
+    } catch (err) {
+      blockProof = await this.buildPayloadForExitFastMerkle(start, end, number)
+    }
 
     const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
-
     let logIndex = -1
 
     switch (logEventSig) {
