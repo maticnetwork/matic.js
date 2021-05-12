@@ -13,3 +13,4 @@ bundle.js
 dist
 
 
+*.tgz

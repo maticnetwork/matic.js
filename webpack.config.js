@@ -1,14 +1,13 @@
 /* global __dirname, require, module */
 const path = require('path')
-const env = require('yargs').argv.env // use --env with webpack 2
+const copyPlugin = require('copy-webpack-plugin')
 
 const libraryName = 'matic'
 
-let mode = 'development'
+let mode = process.env.NODE_ENV
+const isProd = mode === 'production'
 
-if (env === 'build') {
-  mode = 'production'
-}
+console.log('build runing for mode', mode)
 
 const clientConfig = {
   mode,
@@ -16,7 +15,7 @@ const clientConfig = {
   target: 'web',
   output: {
     path: `${__dirname}/dist`,
-    filename: `${libraryName}.umd.js`,
+    filename: `${libraryName}.umd${isProd ? '.min' : ''}.js`,
     library: libraryName,
     libraryTarget: 'umd',
     libraryExport: 'default',
@@ -35,11 +34,24 @@ const clientConfig = {
     web3: 'web3',
     'ethereumjs-util': 'ethereumjs-util',
     'query-string': 'query-string',
+    'bn.js': 'bn.js',
+    axios: 'axios',
+    '@maticnetwork/meta/network': '@maticnetwork/meta/network',
+    'ethereumjs-tx': 'ethereumjs-tx',
+    'ethereumjs-util': 'ethereumjs-util',
+    'merkle-patricia-tree': 'merkle-patricia-tree',
+    'ethereumjs-block': 'ethereumjs-block',
+    'eth-sig-util': 'eth-sig-util',
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.json', '.js', '.ts', 'tsx'],
   },
+  plugins: [
+    new copyPlugin({
+      patterns: [{ from: path.resolve('build_helper', 'npm.export.js'), to: '' }],
+    }),
+  ],
 }
 
 const serverConfig = {
@@ -47,7 +59,7 @@ const serverConfig = {
   target: 'node',
   output: {
     path: `${__dirname}/dist`,
-    filename: `${libraryName}.node.js`,
+    filename: `${libraryName}.node${isProd ? '.min' : ''}.js`,
     // globalObject: 'this',
     libraryTarget: 'commonjs2',
   },
@@ -58,7 +70,7 @@ const standaloneConfig = {
   output: {
     ...clientConfig.output,
     library: 'Matic',
-    filename: `${libraryName}.js`,
+    filename: `${libraryName}${isProd ? '.min' : ''}.js`,
   },
   externals: {},
 }
