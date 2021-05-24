@@ -52,32 +52,30 @@ describe('Matic SDK', () => {
     assert.ok(matic)
   })
 
-  // it('plasma: deposit ether successfully', async() => {
+  it('plasma: deposit ether successfully', async () => {
+    let response = await matic.depositEther(amount, {
+      from,
+      gasPrice: '200000000000',
+    })
+    console.log(response)
+    assert.ok(response)
+  }).timeout(30000)
 
-  //   let response = await matic.depositEther(amount, {
-  //     from,
-  //     gasPrice: '200000000000',
-  //   })
-  //   console.log(response)
-  //   assert.ok(response)
+  it('plasma: deposit ERC20 successfully', async () => {
+    await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
+      from,
+      gasPrice: '200000000000',
+      gas: 2500000,
+    })
+    let response = matic.depositERC20ForUser(tokenERC20, from, amount, {
+      from,
+      gasPrice: '200000000000',
+      gas: 2500000,
+    })
+    assert.ok(response)
+  }).timeout(20000)
 
-  // }).timeout(30000)
-
-  // it('plasma: deposit ERC20 successfully', async() => {
-  //   await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
-  //     from,
-  //     gasPrice: '200000000000',
-  //     gas: 2500000,
-  //   })
-  //   let response = matic.depositERC20ForUser(tokenERC20, from, amount, {
-  //     from,
-  //     gasPrice: '200000000000',
-  //     gas: 2500000,
-  //   })
-  //   assert.ok(response)
-  // }).timeout(20000)
-
-  // it('deposit ERC721 successfully', async() => {
+  // it('plasma: deposit ERC721 successfully', async() => {
   //   let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721, {
   //     from,
   //     gasPrice: '10000000000',
@@ -85,52 +83,49 @@ describe('Matic SDK', () => {
   //   assert.ok(response)
   // }).timeout(20000)
 
-  // it('plasma: transfer ERC20 successfully', async() => {
-  //   let response = await matic.transferERC20Tokens(tokenERC20, recipient, amount, {
-  //     from,
-  //     gas: 100000
-  //     // parent: true
-  //   })
-  //   console.log(response)
-  //   assert.ok(response)
-  // }).timeout(30000)
+  it('plasma: transfer ERC20 successfully', async () => {
+    let response = await matic.transferERC20Tokens(tokenERC20, recipient, amount, {
+      from,
+      gas: 100000,
+      // parent: true
+    })
 
-  // it('plasma: withdraw: initate burn ERC20', async() => {
-  //   let response = await matic.startWithdraw(tokenERC20, amount, {
-  //       from,
-  //       gas: 100000
-  //   })
-  //   console.log(response)
-  //   assert.ok(response)
-  // }).timeout(30000)
+    assert.ok(response)
+  }).timeout(30000)
 
-  // it('withdraw: confirm burn ERC20', async() => {
-  //   let response = await matic
-  //   .withdraw('0x3e542388aa4d4e1f6bc2296a833aee62310c03617900af311843adbae37618d6', {
-  //     from,
-  //     gas: 100000
-  //   })
-  //   assert.ok(response)
-  // }).timeout(30000)
+  it('plasma: withdraw: initate burn ERC20', async () => {
+    let response = await matic.startWithdraw(tokenERC20, amount, {
+      from,
+      gas: 100000,
+    })
+    assert.ok(response)
+  }).timeout(30000)
 
-  // it('plasma: exit: ERC20', async() => {
-  //   let response = await matic.processExits(rootTokenAddressERC20, {
-  //     from,
-  //     gas: 100000
-  //   })
-  //   assert.ok(response)
-  // })
+  it('withdraw: confirm burn ERC20', async () => {
+    let response = await matic.withdraw('0x3e542388aa4d4e1f6bc2296a833aee62310c03617900af311843adbae37618d6', {
+      from,
+      gas: 100000,
+    })
+    assert.ok(response)
+  }).timeout(30000)
 
-  // it('pos: deposit: eth', async() => {
-  //   console.log('dep')
-  //   let tx = await maticPOSClient.depositEtherForUser(from, amount, {
-  //     from: configPos.user.address,
-  //     gasPrice: '900000000000',
-  //     gas: '250000',
-  //   })
-  //   console.log(tx)
-  //   assert.ok(tx)
-  // }).timeout(30000)
+  it('plasma: exit: ERC20', async () => {
+    let response = await matic.processExits(rootTokenAddressERC20, {
+      from,
+      gas: 100000,
+    })
+    assert.ok(response)
+  })
+
+  it('pos: deposit: eth', async () => {
+    let tx = await maticPOSClient.depositEtherForUser(from, amount, {
+      from: configPos.user.address,
+      gasPrice: '900000000000',
+      gas: '250000',
+    })
+    console.log(tx)
+    assert.ok(tx)
+  }).timeout(30000)
 
   it('pos: approve: ERC20', async () => {
     const tx = await maticPOSClient.approveERC20ForDeposit(configPos.root.DERC20, configPos.user.amount, {
@@ -139,33 +134,46 @@ describe('Matic SDK', () => {
       gas: '250000',
     })
 
-    console.log(tx)
     assert.ok(tx)
   }).timeout(40000)
 
-  // it('pos: deposit: ERC20', async() => {
-  //   const tx = await maticPOSClient.depositERC20ForUser(
-  //     configPos.root.DERC20,
-  //     configPos.user.address,
-  //     configPos.user.amount
-  //   )
-  //   assert.ok(tx)
-  // })
+  it('pos: deposit: ERC20', async () => {
+    const tx = await maticPOSClient.depositERC20ForUser(
+      configPos.root.DERC20,
+      configPos.user.address,
+      configPos.user.amount,
+      {
+        from: configPos.user.address,
+        gasPrice: '900000000000',
+        gas: '550000',
+      }
+    )
+    console.log(tx)
+    assert.ok(tx)
+  }).timeout(30000)
 
-  // it('pos: approve: ERC721', async() => {
-  //   const tx = await maticPOSClient.approveERC721ForDeposit(
-  //     configPos.root.DERC721,
-  //     configPos.user.tokenId
-  //   )
-  //   assert.ok(tx)
-  // })
+  it('pos: approve: ERC721', async () => {
+    const tx = await maticPOSClient.approveERC721ForDeposit(configPos.root.DERC721, configPos.user.tokenId, {
+      from: configPos.user.address,
+      gasPrice: '900000000000',
+      gas: '550000',
+    })
 
-  // it('pos: deposit: ERC721', async() => {
-  //   const tx = await maticPOSClient.depositERC721ForUser(
-  //     configPos.root.DERC721,
-  //     configPos.user.address,
-  //     configPos.user.tokenId
-  //   )
-  //   assert.ok(tx)
-  // })
+    assert.ok(tx)
+  }).timeout(30000)
+
+  it('pos: deposit: ERC721', async () => {
+    const tx = await maticPOSClient.depositERC721ForUser(
+      configPos.root.DERC721,
+      configPos.user.address,
+      configPos.user.tokenId,
+      {
+        from: configPos.user.address,
+        gasPrice: '900000000000',
+        gas: '550000',
+      }
+    )
+
+    assert.ok(tx)
+  }).timeout(30000)
 })
