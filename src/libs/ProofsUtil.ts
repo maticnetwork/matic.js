@@ -1,6 +1,6 @@
 import axios from 'axios'
+import { mapPromise } from '../common/MapPromise'
 const BN = require('bn.js')
-const bluebird = require('bluebird')
 const Trie = require('merkle-patricia-tree')
 const EthereumTx = require('ethereumjs-tx')
 const ethUtils = require('ethereumjs-util')
@@ -149,7 +149,7 @@ export default class ProofsUtil {
 
   static async buildBlockHeaderMerkle(web3, start, end) {
     const headers = new Array(end - start + 1)
-    await bluebird.map(
+    await mapPromise(
       headers,
       // eslint-disable-next-line
       async (_, i) => {

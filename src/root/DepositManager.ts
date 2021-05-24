@@ -1,7 +1,7 @@
-import bluebird from 'bluebird'
 import BN from 'bn.js'
 import { Contract } from 'web3-eth-contract'
 import ContractsBase from '../common/ContractsBase'
+import { mapPromise } from '../common/MapPromise'
 import Web3Client from '../common/Web3Client'
 import { address, MaticClientInitializationOptions, SendOptions } from '../types/Common'
 import Registry from './Registry'
@@ -38,7 +38,7 @@ export default class DepositManager extends ContractsBase {
       l => l.topics[0].toLowerCase() === DepositManager.NEW_DEPOSIT_EVENT_SIG
     )
     if (depositEvents.length > 0) {
-      await bluebird.map(depositEvents, async event => {
+      await mapPromise(depositEvents, async event => {
         const data = event.data
         const depositId = '0x' + data.substring(data.length - 64)
         deposits.push({
