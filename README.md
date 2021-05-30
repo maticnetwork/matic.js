@@ -191,11 +191,38 @@ await matic.withdrawNFT(
   options // transaction fields
 )
 
-await matic.processExits(
-  tokenAddress, // root `token` addres
+// Transder ether to an address
+await matic.transferEther(
+  to, // address to which ether is to be sent
+  amount, // amount of ether to be sent
   options // transaction fields
 )
 
+// Get deposit status from transaction hash
+await matic.depositStatusFromTxHash(
+  txHash
+)
+
+// approve ERC20 tokens for deposit
+await matic.approveERC20TokensForDeposit(
+  token, // token address
+  amount, // amount to be deposited
+  options // transaction fields
+)
+
+// approve all ERC20 tokens for deposit
+await matic.approveMaxERC20TokensForDeposit(
+  token, // token address
+  options // transaction fields
+
+)
+
+// get amount of tokens allowed by the user
+await matic.getERC20Allowance(
+  userAddress, // address of the user
+  token, // token address
+  options // transaction fields
+)
 
 // Import Matic sdk for POS Portal
 const MaticPOSClient = require('@maticnetwork/maticjs').MaticPOSClient
@@ -361,6 +388,115 @@ await maticPOSClient.exitSingleERC1155(
 await maticPOSClient.exitBatchERC1155(
   txHash, // Transaction hash generated from the 'burnBatchERC1155' method
   options // transaction fields, can be skipped if default options are set
+)
+
+await maticPOSClient.processExits(
+  tokenAddress, // root `token` address
+  options // transaction fields
+)
+
+// Approve all tokens for deposit
+await maticPOSClient.approveMaxERC20ForDeposit(
+  rootToken, // root `token` address
+  options // transaction fields
+)
+
+// Get number of tokens that has been allowed by a user
+await maticPOSClient.getERC20Allowance(
+  userAddress, // address of the user whose details to be fetched
+  token, // Token address
+  option // transaction fields
+)
+
+await maticPOSClient.isERC20ExitProcessed(
+  txHash // transaction hash of whose exit is to be checked
+)
+
+// Check if this ERC721 has been approved for deposit
+await maticPOSClient.isApprovedERC721ForDeposit(
+  rootToken, // root `token` address
+  tokenId, // token id to be checked
+  options // transaction fields
+)
+
+// Approve all ERC721 tokens for deposit
+await maticPOSClient.approveAllERC721ForDeposit(
+  rootToken, // root `token` address
+  options // transaction fields
+)
+
+// Approve Mintable ERC1155 for Deposit
+await maticPOSClient.approveMintableERC1155ForDeposit(
+  rootToken, // root `token` address
+  options // transaction fields
+)
+
+await maticPOSClient.isApprovedAllERC721ForDeposit(
+  rootToken, // root `token` address
+  userAddress, // address of the user whose details it to be checked
+  options // transaction fields
+)
+
+// Deposit tokens into Matic chain using POS Portal.
+await maticPOSClient.depositERC721ForUser(
+  rootToken,  // Token address
+  user,   // User address (in most cases, this will be sender's address),
+  tokenId,  // Token Id for deposit,
+  options // transaction fields
+)
+
+// Deposit multiple tokens into Matic chain using POS Portal.
+await maticPOSClient.depositBatchERC721ForUser(
+  rootToken, // Token address
+  user, // User address
+  tokenIds, // array of tokenIds for deposit
+  options // transaction fields
+)
+
+// Burn tokens from Matic Chain using POS portal
+await maticPOSClient.burnERC721(
+  childToken, // Token address on matic
+  tokenId, // token id for burn
+  options // transaction fields
+)
+
+// Burn multiple tokens from Matic Chain using POS portal
+await maticPOSClient.burnBatchERC721(
+  childToken, // Token address on matic
+  tokenId, // array of token ids for burn
+  options // transaction fields
+)
+
+// Check if ERC1155 exit has been done
+await maticPOSClient.isSingleERC1155ExitProcessed(
+  txHash // transaction hash for exit to be checked
+)
+
+// Check if ERC1155 batch exit has been done
+await maticPOSClient.isBatchERC1155ExitProcessed(
+  txHash // transaction hash for exit to be checked
+)
+
+// Exit ERC721 batch
+await maticPOSClient.exitBatchERC721(
+  txHash, // transaction hash for batch exit of ERC721 tokens
+  options // transaction fields
+)
+
+// Exit ERC721 with metadata using POS
+await maticPOSClient.exitERC721WithMetadata(
+  txHash, // transaction hash for exit
+  options // transaction fields
+)
+
+// Check if ERC721 exit has been processed or not
+await isERC721ExitProcessed(
+  txHash // check if this transaction hash exit been processed
+)
+
+// Check if ERC721 batch exit has been processed or not
+await isBatchERC721ExitProcessed(
+  txHash // check if this transaction hash exit been processed
 )
 
 ```
