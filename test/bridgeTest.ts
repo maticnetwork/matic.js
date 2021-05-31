@@ -75,13 +75,13 @@ describe('Matic SDK', () => {
     assert.ok(response)
   }).timeout(20000)
 
-  // it('plasma: deposit ERC721 successfully', async() => {
-  //   let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721, {
-  //     from,
-  //     gasPrice: '10000000000',
-  //   })
-  //   assert.ok(response)
-  // }).timeout(20000)
+  it('plasma: deposit ERC721 successfully', async () => {
+    let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721, {
+      from,
+      gasPrice: '10000000000',
+    })
+    assert.ok(response)
+  }).timeout(20000)
 
   it('plasma: transfer ERC20 successfully', async () => {
     let response = await matic.transferERC20Tokens(tokenERC20, recipient, amount, {
@@ -176,4 +176,35 @@ describe('Matic SDK', () => {
 
     assert.ok(tx)
   }).timeout(30000)
+
+  it('pos: approve: ERC1155', async () => {
+    const tx = await maticPOSClient.approveERC1155ForDeposit(configPos.root.DERC1155, {
+      from: configPos.user.address,
+      gasPrice: '900000000000',
+      gas: '550000',
+    })
+    console.log(tx)
+    assert.ok(tx)
+  }).timeout(30000)
+
+  it('pos: deposit: ERC1155', async () => {
+    try {
+      const tx = await maticPOSClient.depositSingleERC1155ForUser(
+        configPos.root.DERC1155,
+        configPos.user.address,
+        '123',
+        '1',
+        '',
+        {
+          from: configPos.user.address,
+          gasPrice: '900000000000',
+          gas: '550000',
+        }
+      )
+      console.log(tx)
+      assert.ok(tx)
+    } catch (e) {
+      console.log(e)
+    }
+  }).timeout(90000)
 })
