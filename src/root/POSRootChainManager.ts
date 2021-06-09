@@ -26,6 +26,7 @@ export default class POSRootChainManager extends ContractsBase {
   private erc1155Predicate: address | null
   private erc1155MintablePredicate: address | null
   private rootTunnelContractAbi: any
+  public requestConcurrency: number | null
 
   private formatUint256 = this.encode
 
@@ -42,6 +43,7 @@ export default class POSRootChainManager extends ContractsBase {
     this.erc1155Predicate = options.posERC1155Predicate || options.network.Main.POSContracts.ERC1155PredicateProxy
     this.erc1155MintablePredicate =
       options.posMintableERC1155Predicate || options.network.Main.POSContracts.MintableERC1155PredicateProxy
+    this.requestConcurrency = options.requestConcurrency
   }
 
   async getPredicateAddress(rootToken: address) {
@@ -82,7 +84,7 @@ export default class POSRootChainManager extends ContractsBase {
     if (!this.posRootChainManager.options.address) {
       throw new Error('posRootChainManager address not found. Set it while constructing MaticPOSClient.')
     }
-    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, logSignature)
+    const payload = await this.exitManager.buildPayloadForExit(burnTxHash, logSignature, this.requestConcurrency)
     const txObject = this.posRootChainManager.methods.exit(payload)
     const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
@@ -115,7 +117,7 @@ export default class POSRootChainManager extends ContractsBase {
   }
 
   async isExitProcessed(burnTxHash: string, logSignature: string) {
-    const exitHash = await this.exitManager.getExitHash(burnTxHash, logSignature)
+    const exitHash = await this.exitManager.getExitHash(burnTxHash, logSignature, this.requestConcurrency)
     return this.posRootChainManager.methods.processedExits(exitHash).call()
   }
 

@@ -228,7 +228,7 @@ export default class ProofsUtil {
     return block.header
   }
 
-  static async getReceiptProof(receipt, block, web3, receipts?) {
+  static async getReceiptProof(receipt, block, web3, requestConcurrency = Infinity, receipts?) {
     const stateSyncTxHash = ethUtils.bufferToHex(ProofsUtil.getStateSyncTxHash(block))
     const receiptsTrie = new Trie()
     const receiptPromises = []
@@ -240,7 +240,15 @@ export default class ProofsUtil {
         }
         receiptPromises.push(web3.eth.getTransactionReceipt(tx.hash))
       })
-      receipts = await Promise.all(receiptPromises)
+      receipts = await mapPromise(
+        receiptPromises,
+        val => {
+          return Promise.resolve(val)
+        },
+        {
+          concurrency: requestConcurrency,
+        }
+      )
     }
 
     for (let i = 0; i < receipts.length; i++) {
