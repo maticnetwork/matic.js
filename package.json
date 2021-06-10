@@ -19,7 +19,7 @@
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",
     "deploy": "npm run build:dev && npm run build:prod",
     "build": "tsc",
-    "prepublishOnly": "npm run lint && npm run clean && npm run build && npm run build:webpack",
+    "prepublishOnly": "npm run deploy",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
     "test": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/**/*.spec.js",
