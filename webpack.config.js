@@ -11,6 +11,7 @@ console.log('build runing for mode', mode)
 
 const clientConfig = {
   mode,
+  devtool: 'source-map',
   entry: `${__dirname}/src/index.ts`,
   target: 'web',
   output: {
