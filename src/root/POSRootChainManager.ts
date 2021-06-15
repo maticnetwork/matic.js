@@ -119,15 +119,15 @@ export default class POSRootChainManager extends ContractsBase {
     return this.posRootChainManager.methods.processedExits(exitHash).call()
   }
 
-  async processReceivedMessage(contractAddress: address, txHash: string) {
+  async processReceivedMessage(contractAddress: address, txHash: string, options?: SendOptions) {
     const payload = await this.exitManager.buildPayloadForExitHermoine(txHash, MESSAGE_SENT_EVENT_SIG)
     let rootTunnelContract = new this.web3Client.parentWeb3.eth.Contract(this.rootTunnelContractAbi, contractAddress)
     let txObject = rootTunnelContract.methods.receiveMessage(payload)
-    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
       return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, web3Options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async customPayload(txHash: string, eventSig: string) {
