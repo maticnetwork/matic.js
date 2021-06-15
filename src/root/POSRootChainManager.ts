@@ -121,15 +121,15 @@ export default class POSRootChainManager extends ContractsBase {
     return this.posRootChainManager.methods.processedExits(exitHash).call()
   }
 
-  async processReceivedMessage(contractAddress: address, txHash: string) {
+  async processReceivedMessage(contractAddress: address, txHash: string, options?: SendOptions) {
     const payload = await this.exitManager.buildPayloadForExitHermoine(txHash, MESSAGE_SENT_EVENT_SIG)
     let rootTunnelContract = new this.web3Client.parentWeb3.eth.Contract(this.rootTunnelContractAbi, contractAddress)
     let txObject = rootTunnelContract.methods.receiveMessage(payload)
-    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */)
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
     if (web3Options.encodeAbi) {
       return Object.assign(web3Options, { data: txObject.encodeABI(), to: this.posRootChainManager.options.address })
     }
-    return this.web3Client.send(txObject, web3Options)
+    return this.web3Client.send(txObject, web3Options, options)
   }
 
   async customPayload(txHash: string, eventSig: string) {
@@ -272,6 +272,16 @@ export default class POSRootChainManager extends ContractsBase {
     return this.web3Client.send(txObject, web3Options, options)
   }
 
+  async burnWithMetadataERC721(childToken: address, tokenId: BN | string, options?: SendOptions) {
+    const childTokenContract = this.getPOSERC721TokenContract(childToken)
+    const txObject = childTokenContract.methods.withdraw(this.formatUint256(tokenId))
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeAbi(), to: childToken })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
   async burnBatchERC721(childToken: address, tokenIds: (BN | string)[], options?: SendOptions) {
     let tokenIdArray = tokenIds.map(tokenId => {
       return this.formatUint256(tokenId)
@@ -312,6 +322,7 @@ export default class POSRootChainManager extends ContractsBase {
   async isERC721ExitProcessed(burnTxHash: string) {
     return this.isExitProcessed(burnTxHash, ERC721_TRANSFER_EVENT_SIG)
   }
+
   async isBatchERC721ExitProcessed(burnTxHash: string) {
     return this.isExitProcessed(burnTxHash, ERC721_WITHDRAW_BATCH_EVENT_SIG)
   }
@@ -421,5 +432,57 @@ export default class POSRootChainManager extends ContractsBase {
 
   async isBatchERC1155ExitProcessed(burnTxHash: string) {
     return this.isExitProcessed(burnTxHash, ERC1155_TRANSFER_BATCH_EVENT_SIG)
+  }
+
+  async mintERC721(childToken: address, userAddress: address, tokenId: BN | string, options?: SendOptions) {
+    const childTokenContract = this.getPOSERC721TokenContract(childToken)
+    const txObject = childTokenContract.methods.mint(userAddress, this.formatUint256(tokenId))
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeAbi(), to: childToken })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async mintERC1155(
+    childToken: address,
+    userAddress: address,
+    tokenId: BN | string,
+    amount: BN | string,
+    data?: string,
+    options?: SendOptions
+  ) {
+    const childTokenContract = this.getPOSERC1155TokenContract(childToken)
+    const depositData = abiCoder.encodeParameters(
+      ['uint256[]', 'uint256[]', 'bytes'],
+      [[this.formatUint256(tokenId)], [this.formatUint256(amount)], data || '0x0']
+    )
+    const txObject = childTokenContract.methods.mint(userAddress, tokenId, amount, depositData)
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
+  async mintBatchERC1155ForUser(
+    childToken: address,
+    tokenIds: (BN | string)[],
+    amounts: (BN | string)[],
+    userAddress: address,
+    data?: string,
+    options?: SendOptions
+  ) {
+    const childTokenContract = this.getPOSERC721TokenContract(childToken)
+    const depositData = abiCoder.encodeParameters(
+      ['uint256[]', 'uint256[]', 'bytes'],
+      [tokenIds.map(t => this.formatUint256(t)), amounts.map(a => this.formatUint256(a)), data || '0x0']
+    )
+    const txObject = childTokenContract.methods.mint(userAddress, tokenIds, amounts, depositData)
+    const web3Options = await this.web3Client.fillOptions(txObject, false /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: childToken })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
   }
 }
