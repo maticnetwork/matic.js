@@ -243,7 +243,7 @@ export default class ProofsUtil {
       receipts = await mapPromise(
         receiptPromises,
         val => {
-          return Promise.resolve(val)
+          return val
         },
         {
           concurrency: requestConcurrency,

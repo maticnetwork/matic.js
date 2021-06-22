@@ -193,7 +193,7 @@ await matic.withdrawNFT(
   options // transaction fields
 )
 
-// Transder ether to an address
+// Transfer ether to an address
 await matic.transferEther(
   to, // address to which ether is to be sent
   amount, // amount of ether to be sent
@@ -392,6 +392,7 @@ await maticPOSClient.exitBatchERC1155(
   options // transaction fields, can be skipped if default options are set
 )
 
+// Withdraw funds to your account on main chain after the challenge period is completed
 await maticPOSClient.processExits(
   tokenAddress, // root `token` address
   options // transaction fields
@@ -410,6 +411,7 @@ await maticPOSClient.getERC20Allowance(
   option // transaction fields
 )
 
+// Checks whether the transaction hash provided has completed its exit process or not
 await maticPOSClient.isERC20ExitProcessed(
   txHash // transaction hash of whose exit is to be checked
 )
@@ -433,6 +435,7 @@ await maticPOSClient.approveMintableERC1155ForDeposit(
   options // transaction fields
 )
 
+// Checks whether all the tokens have been approved for deposit
 await maticPOSClient.isApprovedAllERC721ForDeposit(
   rootToken, // root `token` address
   userAddress, // address of the user whose details it to be checked
