@@ -28,7 +28,7 @@ export default class ExitManager extends ContractsBase {
     this.networkApiUrl = options.network.Matic.NetworkAPI
   }
 
-  async buildPayloadForExit(burnTxHash, logEventSig) {
+  async buildPayloadForExit(burnTxHash, logEventSig, requestConcurrency?) {
     // check checkpoint
     const lastChildBlock = await this.rootChain.getLastChildBlock()
     const burnTx = await this.web3Client.getMaticWeb3().eth.getTransaction(burnTxHash)
@@ -56,7 +56,12 @@ export default class ExitManager extends ContractsBase {
       parseInt(burnTx.blockNumber + '', 10)
     )
 
-    const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
+    const receiptProof: any = await Proofs.getReceiptProof(
+      receipt,
+      block,
+      this.web3Client.getMaticWeb3(),
+      requestConcurrency
+    )
 
     let logIndex = -1
 
@@ -201,7 +206,7 @@ export default class ExitManager extends ContractsBase {
     )
   }
 
-  async getExitHash(burnTxHash, logEventSig) {
+  async getExitHash(burnTxHash, logEventSig, requestConcurrency?) {
     const lastChildBlock = await this.rootChain.getLastChildBlock()
     const receipt = await this.web3Client.getMaticWeb3().eth.getTransactionReceipt(burnTxHash)
     const block: any = await this.web3Client
@@ -213,7 +218,12 @@ export default class ExitManager extends ContractsBase {
       'Burn transaction has not been checkpointed as yet'
     )
 
-    const receiptProof: any = await Proofs.getReceiptProof(receipt, block, this.web3Client.getMaticWeb3())
+    const receiptProof: any = await Proofs.getReceiptProof(
+      receipt,
+      block,
+      this.web3Client.getMaticWeb3(),
+      requestConcurrency
+    )
 
     let logIndex = -1
 
