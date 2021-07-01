@@ -40,16 +40,16 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'abc',
-              to: '/',
+              label: 'Basic',
+              to: '/docs/basic/environment-setup',
             },
             {
-              label: 'abc',
-              to: '/',
+              label: 'Core API',
+              to: '/docs/api/new-matic',
             },
             {
-              label: 'adf',
-              to: '/',
+              label: 'POS Portal',
+              to: '/docs/pos/approveERC20ForDeposit',
             },
           ],
         },
