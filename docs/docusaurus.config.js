@@ -3,7 +3,7 @@ module.exports = {
   title: 'Matic.js Docs',
   tagline: 'Javascript developer library for interacting with Matic Network',
   url: 'https://docs.matic.network/',
-  baseUrl: '/',
+  baseUrl: '/matic.js/',
   favicon: 'img/favicon.ico',
   organizationName: 'maticnetwork',
   projectName: 'matic.js',
@@ -22,16 +22,16 @@ module.exports = {
           label: 'Docs',
         },
         {
-          label: "Discord",
-          href: "https://discord.gg/polygon",
-          position: "right",
+          label: 'Discord',
+          href: 'https://discord.gg/polygon',
+          position: 'right',
         },
         {
           href: 'https://github.com/maticnetwork/matic.js/',
           label: 'GitHub',
           position: 'right',
         },
-      ]
+      ],
     },
     footer: {
       style: 'dark',
@@ -95,4 +95,4 @@ module.exports = {
       },
     ],
   ],
-};
+}
