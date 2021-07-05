@@ -2,9 +2,13 @@
 sidebar_position: 4
 ---
 
-### matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
+# Token Of Owner By Index ERC721
 
-get ERC721 tokenId at `index` for `token` and for `address`.
+```js
+matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options);
+```
+
+Get ERC721 tokenId at `index` for `token` and for `address`.
 
 - `token` must be valid token address
 - `userAddress` must be valid user address

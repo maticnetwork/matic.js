@@ -1,8 +1,12 @@
 ---
-sidebar_position: 7
+sidebar_position: 3
 ---
 
-### matic.depositERC20ForUser(token, user, amount, options)
+# Deposit ERC20
+
+```js
+matic.depositERC20ForUser(token, user, amount, options);
+```
 
 Deposit given `amount` of `token` with user `user`.
 

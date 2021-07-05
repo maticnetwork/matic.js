@@ -1,8 +1,12 @@
 ---
-sidebar_position: 8
+sidebar_position: 3
 ---
 
-### matic.safeDepositERC721Tokens(token, tokenId, options)
+# Safe Deposit ERC721
+
+```js
+matic.safeDepositERC721Tokens(token, tokenId, options)
+```
 
 Deposit given `TokenID` of `token` with user `user`.
 

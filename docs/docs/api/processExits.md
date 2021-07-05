@@ -2,7 +2,11 @@
 sidebar_position: 17
 ---
 
-### matic.processExits(rootTokenAddress, options)
+# Process Exit
+
+```js
+matic.processExits(rootTokenAddress, options);
+```
 
 Call processExits after completion of challenge period, after that withdrawn funds get transfered to your account on mainchain
 
