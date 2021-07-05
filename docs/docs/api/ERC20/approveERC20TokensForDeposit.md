@@ -1,8 +1,12 @@
 ---
-sidebar_position: 6
+sidebar_position: 2
 ---
 
-### matic.approveERC20TokensForDeposit(token, amount, options)
+# Approve ERC20 Deposit
+
+```js
+matic.approveERC20TokensForDeposit(token, amount, options)
+```
 
 Approves given `amount` of `token` to `rootChainContract`.
 

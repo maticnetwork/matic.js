@@ -1,8 +1,12 @@
 ---
-sidebar_position: 5
+sidebar_position: 4
 ---
 
-### matic.depositEthers(amount, options)
+# Deposit Ethers
+
+```js
+matic.depositEthers(amount, options);
+```
 
 Deposit `options.value`
 

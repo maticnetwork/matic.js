@@ -22,6 +22,10 @@ module.exports = {
           label: 'Docs',
         },
         {
+          position: 'right',
+          label: 'v 2.0.43',
+        },
+        {
           label: 'Discord',
           href: 'https://discord.gg/polygon',
           position: 'right',

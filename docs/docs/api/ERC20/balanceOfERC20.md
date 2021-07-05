@@ -1,10 +1,14 @@
 ---
-sidebar_position: 3
+sidebar_position: 1
 ---
 
-### matic.balanceOfERC721(userAddress, token, options)
+# Balance of ERC20
 
-get balance of ERC721 `token` for `address`.
+```js
+matic.balanceOfERC20(userAddress, token, options);
+```
+
+Get balance of ERC20 `token` for `address`.
 
 - `token` must be valid token address
 - `userAddress` must be valid user address
@@ -17,7 +21,7 @@ Example:
 
 ```js
 matic
-  .balanceOfERC721("0xABc578455...", "0x5E9c4ccB05...", {
+  .balanceOfERC20("0xABc578455...", "0x5E9c4ccB05...", {
     from: "0xABc578455...",
   })
   .then((balance) => {

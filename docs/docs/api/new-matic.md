@@ -2,7 +2,11 @@
 sidebar_position: 1
 ---
 
-# new Matic(options)
+# Initialize Matic SDK
+
+```js
+new Matic(options);
+```
 
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
 
