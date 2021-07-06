@@ -9,6 +9,7 @@ new Matic(options);
 ```
 
 Creates Matic SDK instance with give options. It returns a MaticSDK object.
+Here we have created the default **plasma** instance.
 
 ```js
 import Matic from "maticjs";
