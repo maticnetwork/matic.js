@@ -48,12 +48,12 @@ module.exports = {
               to: '/docs/basic/environment-setup',
             },
             {
-              label: 'Core API',
-              to: '/docs/api/new-matic',
+              label: 'Plasma API',
+              to: '/docs/plasma/new-matic',
             },
             {
-              label: 'POS Portal',
-              to: '/docs/pos/approveERC20ForDeposit',
+              label: 'PoS API',
+              to: '/matic.js/docs/pos/new-matic',
             },
           ],
         },
