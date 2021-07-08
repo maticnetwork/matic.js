@@ -2,15 +2,15 @@
 sidebar_position: 1
 ---
 
-# Initialize POS client
+# Initialize Plasma client
 
 #### Node Syntax
 
 ```js
 const Matic = require('maticjs')
 
-const maticPoSClient = new Matic(options).MaticPOSClient
-maticPoSClient.initialize()
+const maticPlasmaClient = new Matic(options)
+maticPlasmaClient.initialize()
 ```
 
 #### Es6 Syntax
@@ -18,8 +18,8 @@ maticPoSClient.initialize()
 ```js
 import Matic from 'maticjs'
 
-const maticPoSClient = new Matic(options).MaticPOSClient
-maticPoSClient.initialize()
+const maticPlasmaClient = new Matic(options)
+maticPlasmaClient.initialize()
 ```
 
 ## Options
@@ -37,7 +37,7 @@ const options = {
     parentDefaultOptions: { from: account },
     maticDefaultOptions: { from: account },
 }
-const maticPoSClient = new Matic(options).MaticPOSClient
+const maticPlasmaClient = new Matic(options)
 ```
 
 Available options are :
