@@ -7,9 +7,9 @@ const execute = async () => {
     const tx = await maticPOSClient.depositSingleERC1155ForUser(
       config.root.DERC1155,
       config.user.address,
-      '123',
-      '1',
-      [],
+      '123', // token id
+      '1', // amount
+      [], // optional bytes
       {
         from: config.user.address,
         gasPrice: '900000000000',

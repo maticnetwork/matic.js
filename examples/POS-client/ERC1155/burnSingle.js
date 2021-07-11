@@ -4,8 +4,10 @@ const maticPOSClient = utils.getMaticPOSClient()
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.isSingleERC1155ExitProcessed(
-      '0xbfc70c164f6951d9c9f3f87f2d1361ff216eb3d6fe9571430bd3f0711847a782'
+    let tx = await maticPOSClient.burnSingleERC1155(
+      config.child.DERC1155, //token address
+      '123', // id to burn
+      '1' // amount of id token to burn
     )
 
     console.log(tx) // eslint-disable-line

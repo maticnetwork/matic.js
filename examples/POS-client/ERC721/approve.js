@@ -4,7 +4,7 @@ const maticPOSClient = utils.getMaticPOSClient()
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.approveERC20TokensForDeposit(config.root.DERC20, config.user.amount, {
+    const tx = await maticPOSClient.approveERC721TokensForDeposit(config.root.DERC721, config.user.tokenId, {
       from: config.user.address,
       gasPrice: '500000000000',
       gas: 2500000,
