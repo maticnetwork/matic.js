@@ -10,7 +10,7 @@ import { MaticPOSClient } from '../src'
 import 'mocha'
 import configPlasma from '../config.json'
 import assert from 'assert'
-import configPos from '../config'
+import configPos from '../config.json'
 import HDWalletProvider from '@truffle/hdwallet-provider'
 // set up chai
 // chai.should()
@@ -52,7 +52,7 @@ describe('Matic SDK', () => {
     assert.ok(matic)
   })
 
-  it('plasma: deposit ether successfully', async () => {
+  it('plasma: deposit ether', async () => {
     let response = await matic.depositEther(amount, {
       from,
       gasPrice: '200000000000',
@@ -61,13 +61,18 @@ describe('Matic SDK', () => {
     assert.ok(response)
   }).timeout(30000)
 
-  it('plasma: deposit ERC20 successfully', async () => {
-    await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
+  it('plasma : approve ERC20', async () => {
+    let response = await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
       from,
       gasPrice: '200000000000',
       gas: 2500000,
     })
-    let response = matic.depositERC20ForUser(tokenERC20, from, amount, {
+    console.log('approveERC20')
+    assert.ok(response)
+  })
+
+  it('plasma: deposit ERC20', async () => {
+    let response = await matic.depositERC20ForUser(tokenERC20, from, amount, {
       from,
       gasPrice: '200000000000',
       gas: 2500000,
@@ -76,7 +81,7 @@ describe('Matic SDK', () => {
   }).timeout(20000)
 
   it('plasma: deposit ERC721 successfully', async () => {
-    let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721, {
+    let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721 as any, {
       from,
       gasPrice: '10000000000',
     })

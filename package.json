@@ -25,7 +25,7 @@
     "test": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/**/*.spec.js",
     "test:promise": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/map_promise.spec.js",
     "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
-    "bridgetest": "mocha -r ts-node/register --exit ./test/bridgeTest.ts",
+    "bridgetest": "mocha --timeout 40000 -r ts-node/register --exit ./test/bridgeTest.ts",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
   "repository": {
