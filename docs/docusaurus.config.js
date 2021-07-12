@@ -49,11 +49,11 @@ module.exports = {
             },
             {
               label: 'Plasma API',
-              to: '/docs/plasma/new-matic',
+              to: '/docs/plasma/initialize',
             },
             {
               label: 'PoS API',
-              to: '/matic.js/docs/pos/new-matic',
+              to: '/matic.js/docs/pos/initialize',
             },
           ],
         },
