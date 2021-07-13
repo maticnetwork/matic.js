@@ -57,7 +57,7 @@ describe('Matic SDK', () => {
       from,
       gasPrice: '200000000000',
     })
-    console.log(response)
+    // console.log(response)
     assert.ok(response)
   }).timeout(30000)
 
@@ -67,7 +67,7 @@ describe('Matic SDK', () => {
       gasPrice: '200000000000',
       gas: 2500000,
     })
-    console.log('approveERC20')
+    // console.log('approveERC20')
     assert.ok(response)
   })
 
@@ -128,7 +128,7 @@ describe('Matic SDK', () => {
       gasPrice: '900000000000',
       gas: '250000',
     })
-    console.log(tx)
+    // console.log(tx)
     assert.ok(tx)
   }).timeout(30000)
 
@@ -153,7 +153,7 @@ describe('Matic SDK', () => {
         gas: '550000',
       }
     )
-    console.log(tx)
+    // console.log(tx)
     assert.ok(tx)
   }).timeout(30000)
 
@@ -188,28 +188,24 @@ describe('Matic SDK', () => {
       gasPrice: '900000000000',
       gas: '550000',
     })
-    console.log(tx)
+    // console.log(tx)
     assert.ok(tx)
   }).timeout(30000)
 
   it('pos: deposit: ERC1155', async () => {
-    try {
-      const tx = await maticPOSClient.depositSingleERC1155ForUser(
-        configPos.root.DERC1155,
-        configPos.user.address,
-        '123',
-        '1',
-        '',
-        {
-          from: configPos.user.address,
-          gasPrice: '900000000000',
-          gas: '550000',
-        }
-      )
-      console.log(tx)
-      assert.ok(tx)
-    } catch (e) {
-      console.log(e)
-    }
+    const tx = await maticPOSClient.depositSingleERC1155ForUser(
+      configPos.root.DERC1155,
+      configPos.user.address,
+      '123',
+      '1',
+      '',
+      {
+        from: configPos.user.address,
+        gasPrice: '900000000000',
+        gas: '550000',
+      }
+    )
+    // console.log(tx)
+    assert.ok(tx)
   }).timeout(90000)
 })
