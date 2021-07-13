@@ -1,5 +1,6 @@
 import Matic from '@maticnetwork/maticjs'
 import assert from 'assert'
+import { expect } from 'chai'
 
 const env = process.env
 const from = env.user1_address
@@ -26,7 +27,13 @@ describe('Plasma Bridge', () => {
     assert.ok(matic)
   })
 
-  it('plasma: deposit ether', async () => {
+  it('balanceOfERC20', async () => {
+    const balance = await matic.balanceOfERC20(from, tokenERC20)
+    console.log('balance', balance)
+    expect(balance).not.equal(null)
+  })
+
+  it('deposit ether', async () => {
     let response = await matic.depositEther(amount, {
       from,
       gasPrice: '200000000000',
@@ -35,7 +42,7 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   }).timeout(30000)
 
-  it('plasma : approve ERC20', async () => {
+  it('approve ERC20', async () => {
     let response = await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
       from,
       gasPrice: '200000000000',
@@ -45,7 +52,7 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   })
 
-  it('plasma: deposit ERC20', async () => {
+  it('deposit ERC20', async () => {
     let response = await matic.depositERC20ForUser(tokenERC20, from, amount, {
       from,
       gasPrice: '200000000000',
@@ -54,7 +61,13 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   }).timeout(20000)
 
-  it('plasma: deposit ERC721 successfully', async () => {
+  it('balanceOfERC721', async () => {
+    const balance = await matic.balanceOfERC721(from, tokenERC721)
+    console.log('balance', balance)
+    expect(balance).not.equal(null)
+  })
+
+  it('deposit ERC721 successfully', async () => {
     let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721 as any, {
       from,
       gasPrice: '10000000000',
@@ -62,7 +75,7 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   }).timeout(20000)
 
-  it('plasma: transfer ERC20 successfully', async () => {
+  it('transfer ERC20 successfully', async () => {
     let response = await matic.transferERC20Tokens(tokenERC20, recipient, amount, {
       from,
       gas: 100000,
@@ -72,7 +85,7 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   }).timeout(30000)
 
-  it('plasma: withdraw: initate burn ERC20', async () => {
+  it('withdraw: initate burn ERC20', async () => {
     let response = await matic.startWithdraw(tokenERC20, amount, {
       from,
       gas: 100000,
@@ -88,7 +101,7 @@ describe('Plasma Bridge', () => {
     assert.ok(response)
   }).timeout(30000)
 
-  it('plasma: exit: ERC20', async () => {
+  it('exit ERC20', async () => {
     let response = await matic.processExits(rootTokenAddressERC20, {
       from,
       gas: 100000,
