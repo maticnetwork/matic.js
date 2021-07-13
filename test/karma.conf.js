@@ -40,6 +40,6 @@ module.exports = function(config) {
     autoWatch: false,
     singleRun: true,
     concurrency: Infinity,
-    browserNoActivityTimeout: 20000,
+    browserNoActivityTimeout: 40000,
   })
 }
