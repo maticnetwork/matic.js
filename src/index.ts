@@ -7,6 +7,7 @@ import Registry from './root/Registry'
 import RootChain from './root/RootChain'
 import WithdrawManager from './root/WithdrawManager'
 import { address, MaticClientInitializationOptions, order, SendOptions } from './types/Common'
+import { mapPromise } from './common/MapPromise'
 
 export class MaticPOSClient extends SDKClient {
   private rootChain: RootChain
@@ -348,6 +349,7 @@ export default class Matic extends SDKClient {
   public registry: Registry
   public utils: Utils
   public static MaticPOSClient = MaticPOSClient // workaround for web compatibility
+  public static mapPromise = mapPromise // workaround for web compatibility
 
   constructor(options: MaticClientInitializationOptions = {}) {
     const network = SDKClient.initializeNetwork(options.network, options.version)

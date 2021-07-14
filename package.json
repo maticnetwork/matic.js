@@ -15,6 +15,7 @@
   "scripts": {
     "clean": "rimraf lib dist",
     "build:webpack": "npm run lint && webpack",
+    "build:pack": "npm run build:dev && npm pack",
     "build:dev": "cross-env NODE_ENV=development npm run build:webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",
     "deploy": "npm run build:dev && npm run build:prod",
@@ -22,10 +23,7 @@
     "prepublishOnly": "npm run deploy",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
-    "test": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/**/*.spec.js",
-    "test:promise": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/map_promise.spec.js",
-    "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
-    "bridgetest": "mocha -r ts-node/register --exit ./test/bridgeTest.ts",
+    "test": "npm run build:pack && cd test && npm run install:lib:test",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
   "repository": {
@@ -75,7 +73,7 @@
     "husky": "2.4.1",
     "lint-staged": "8.2.1",
     "mocha": "^8.2.1",
-    "mochapack": "^2.0.6",
+    "mochapack": "^2.1.2",
     "prettier": "^1.19.1",
     "rimraf": "2.6.3",
     "ts-loader": "^7.0.1",
@@ -96,7 +94,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsc && lint-staged"
+      "pre-commit": "tsc --p src/tsconfig.json && lint-staged"
     }
   }
 }

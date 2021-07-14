@@ -1,0 +1,30 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.spec.js",
+  "scripts": {
+    "install:lib": "node install_lib.js",
+    "install:lib:test": "npm run install:lib && npm run test",
+    "un:lib": "npm un @maticnetwork/maticjs",
+    "test": "cross-env-file -p ./config.json cross-env NODE_ENV=test karma start karma.conf.js",
+    "test:mocha": "cross-env-file -p ./config.json cross-env NODE_ENV=test mochapack --webpack-config ./webpack.config.test.js --colors ./specs/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env-file": "^1.0.0",
+    "karma": "^6.3.2",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^1.3.0",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-webpack": "^4.0.2",
+    "puppeteer": "^5.5.0"
+  },
+  "dependencies": {
+    "@maticnetwork/maticjs": "file:../maticnetwork-maticjs-2.0.43.tgz",
+    "mochapack": "^2.1.2"
+  }
+}

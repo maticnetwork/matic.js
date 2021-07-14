@@ -25,8 +25,8 @@ export default class SDKClient extends ContractsBase {
     this.web3Client.wallet = _wallet
   }
 
-  async balanceOfERC20(userAddress: address, token: address, options?: SendOptions) {
-    if (options && (!token || !userAddress)) {
+  async balanceOfERC20(userAddress: address, token: address, options: SendOptions = {}) {
+    if (!token || !userAddress) {
       throw new Error('token address or user address is missing')
     }
 
@@ -36,7 +36,7 @@ export default class SDKClient extends ContractsBase {
     return balance
   }
 
-  async balanceOfERC721(userAddress: address, token: address, options?: SendOptions) {
+  async balanceOfERC721(userAddress: address, token: address, options: SendOptions = {}) {
     if (options && (!token || !userAddress)) {
       throw new Error('token address or user address is missing')
     }
