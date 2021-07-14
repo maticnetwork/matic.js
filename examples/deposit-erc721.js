@@ -11,4 +11,10 @@ async function execute() {
   console.log(await matic.safeDepositERC721Tokens(token, tokenId, { from }))
 }
 
-execute().then(_ => process.exit(0))
+execute()
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
