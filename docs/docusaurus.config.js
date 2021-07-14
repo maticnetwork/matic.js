@@ -8,6 +8,14 @@ module.exports = {
   organizationName: 'maticnetwork',
   projectName: 'matic.js',
   themeConfig: {
+    hideOnScroll: true,
+    title: 'Developer',
+    algolia: {
+      apiKey: 'c3ad4eabc5af314ea3ed331efbe0a5c4',
+      indexName: 'matic_developer',
+      contextualSearch: true,
+      searchParameters: {},
+    },
     navbar: {
       title: 'Matic.js',
       logo: {
