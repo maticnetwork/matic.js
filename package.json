@@ -23,10 +23,7 @@
     "prepublishOnly": "npm run deploy",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
-    "test": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/**/*.spec.js",
-    "test:promise": "mochapack --webpack-config test/webpack.config.test.js --colors ./test/map_promise.spec.js",
-    "test:watch": "mocha --require @babel/register --colors -w ./test/**/*.spec.js",
-    "bridgetest": "mocha --timeout 40000 -r ts-node/register --exit ./test/bridgeTest.ts",
+    "test": "npm run build:pack && cd test && npm run install:lib:test",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
   "repository": {

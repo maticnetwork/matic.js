@@ -5,8 +5,10 @@
   "main": "index.spec.js",
   "scripts": {
     "install:lib": "node install_lib.js",
-    "test:browser": "cross-env-file -p ./config.json cross-env NODE_ENV=test karma start karma.conf.js",
-    "test": "cross-env-file -p ./config.json cross-env NODE_ENV=test mochapack --webpack-config ./webpack.config.test.js --colors ./specs/index.ts"
+    "install:lib:test": "npm run install:lib && npm run test",
+    "un:lib": "npm un @maticnetwork/maticjs",
+    "test": "cross-env-file -p ./config.json cross-env NODE_ENV=test karma start karma.conf.js",
+    "test:mocha": "cross-env-file -p ./config.json cross-env NODE_ENV=test mochapack --webpack-config ./webpack.config.test.js --colors ./specs/index.ts"
   },
   "author": "",
   "license": "ISC",

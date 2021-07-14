@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { mapPromise } from '../src/common/MapPromise'
+import { mapPromise } from '@maticnetwork/maticjs'
+
 describe('Map promise', () => {
   it('map promise without concurrent', async () => {
     const result = await mapPromise([1, 2, 3, 4, 5], val => {

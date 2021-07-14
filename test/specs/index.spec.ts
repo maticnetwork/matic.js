@@ -1,12 +1,5 @@
-/* global describe, it, beforeEach */
-
-import chai from 'chai'
-
-import Matic from '../src'
-
-// set up chai
-chai.should()
-const expect = chai.expect
+import Matic from '@maticnetwork/maticjs'
+import { expect } from 'chai'
 
 describe('Matic SDK', () => {
   it('should throw error for no required options', () => {
