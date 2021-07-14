@@ -7,8 +7,14 @@ const execute = async () => {
     const tx = await maticPOSClient.depositSingleERC1155ForUser(
       config.root.DERC1155,
       config.user.address,
-      config.user.tokenId,
-      config.user.amount
+      '123', // token id
+      '1', // amount
+      [], // optional bytes
+      {
+        from: config.user.address,
+        gasPrice: '900000000000',
+        gas: '550000',
+      }
     )
     console.log(tx.transactionHash) // eslint-disable-line
   } catch (e) {
