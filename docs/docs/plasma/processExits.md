@@ -1,11 +1,11 @@
 ---
-sidebar_position: 17
+sidebar_position: 7
 ---
 
 # Process Exit
 
 ```js
-matic.processExits(rootTokenAddress, options);
+matic.processExits(rootTokenAddress, options)
 ```
 
 Call processExits after completion of challenge period, after that withdrawn funds get transfered to your account on mainchain
@@ -19,9 +19,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.processExits("0xabcd...789", {
-  from: "0xABc578455...",
-});
+matic.processExits('0xabcd...789', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
