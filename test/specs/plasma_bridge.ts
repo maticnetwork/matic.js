@@ -5,19 +5,21 @@ import { expect } from 'chai'
 const env = process.env
 const from = env.user1_address
 const amount = '1000000000000000' // amount in wei
-const tokenERC20 = env.GOERLI_ERC20 // ERC20 token address
-const tokenERC721 = env.GOERLI_ERC721 // ERC721 token address
+const goerliTokenERC20 = env.PLASMA_GOERLI_ERC20 // ERC20 token address
+const mumbaiTokenERC20 = env.PLASMA_MUMBAI_ERC20 // ERC20 token address
+const goerliTokenERC721 = env.PLASMA_GOERLI_ERC721 // ERC721 token address
+const mumbaiTokenERC721 = env.PLASMA_MUMBAI_ERC721 // ERC721 token address
 const tokenId721 = '2' // amount in wei
 const recipient = env.user2_address
-const rootTokenAddressERC20 = env.GOERLI_ERC20 // Root ERC20 token address
+const rootTokenAddressERC20 = env.PLASMA_GOERLI_ERC20 // Root ERC20 token address
 
 const matic = new Matic({
   maticProvider: env.MATIC_PROVIDER,
   parentProvider: env.PARENT_PROVIDER,
-  rootChain: env.ROOTCHAIN_ADDRESS,
-  withdrawManager: env.WITHDRAWMANAGER_ADDRESS,
-  depositManager: env.DEPOSITMANAGER_ADDRESS,
-  registry: env.REGISTRY,
+  rootChain: env.PLASMA_ROOTCHAIN_ADDRESS,
+  withdrawManager: env.PLASMA_WITHDRAWMANAGER_ADDRESS,
+  depositManager: env.PLASMA_DEPOSITMANAGER_ADDRESS,
+  registry: env.PLASMA_REGISTRY,
 })
 
 describe('Plasma Bridge', () => {
@@ -28,7 +30,7 @@ describe('Plasma Bridge', () => {
   })
 
   it('balanceOfERC20', async () => {
-    const balance = await matic.balanceOfERC20(from, tokenERC20)
+    const balance = await matic.balanceOfERC20(from, mumbaiTokenERC20)
     console.log('balance', balance)
     expect(balance).not.equal(null)
   })
@@ -43,7 +45,7 @@ describe('Plasma Bridge', () => {
   }).timeout(30000)
 
   it('approve ERC20', async () => {
-    let response = await matic.approveERC20TokensForDeposit(tokenERC20, amount, {
+    let response = await matic.approveERC20TokensForDeposit(goerliTokenERC20, amount, {
       from,
       gasPrice: '200000000000',
       gas: 2500000,
@@ -53,7 +55,7 @@ describe('Plasma Bridge', () => {
   })
 
   it('deposit ERC20', async () => {
-    let response = await matic.depositERC20ForUser(tokenERC20, from, amount, {
+    let response = await matic.depositERC20ForUser(goerliTokenERC20, from, amount, {
       from,
       gasPrice: '200000000000',
       gas: 2500000,
@@ -62,13 +64,13 @@ describe('Plasma Bridge', () => {
   }).timeout(20000)
 
   it('balanceOfERC721', async () => {
-    const balance = await matic.balanceOfERC721(from, tokenERC721)
+    const balance = await matic.balanceOfERC721(from, mumbaiTokenERC721)
     console.log('balance', balance)
     expect(balance).not.equal(null)
   })
 
   it('deposit ERC721 successfully', async () => {
-    let response = await matic.safeDepositERC721Tokens(tokenERC721, tokenId721 as any, {
+    let response = await matic.safeDepositERC721Tokens(goerliTokenERC721, tokenId721 as any, {
       from,
       gasPrice: '10000000000',
     })
@@ -76,7 +78,7 @@ describe('Plasma Bridge', () => {
   }).timeout(20000)
 
   it('transfer ERC20 successfully', async () => {
-    let response = await matic.transferERC20Tokens(tokenERC20, recipient, amount, {
+    let response = await matic.transferERC20Tokens(goerliTokenERC20, recipient, amount, {
       from,
       gas: 100000,
       // parent: true
@@ -86,7 +88,7 @@ describe('Plasma Bridge', () => {
   }).timeout(30000)
 
   it('withdraw: initate burn ERC20', async () => {
-    let response = await matic.startWithdraw(tokenERC20, amount, {
+    let response = await matic.startWithdraw(goerliTokenERC20, amount, {
       from,
       gas: 100000,
     })
