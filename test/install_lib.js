@@ -9,7 +9,7 @@ const packageInfo = JSON.parse(content)
 if (packageInfo) {
   const version = packageInfo.version
   console.log('version', version)
-  execSync(`npm i ../maticnetwork-maticjs-${version}.tgz`)
+  execSync(`npm i ../maticnetwork-maticjs-${version}.tgz --no-save`)
 } else {
   throw 'no package found'
 }

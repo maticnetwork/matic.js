@@ -19,11 +19,12 @@
     "build:dev": "cross-env NODE_ENV=development npm run build:webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",
     "deploy": "npm run build:dev && npm run build:prod",
-    "build": "tsc",
+    "build": "npm run build:dev",
     "prepublishOnly": "npm run deploy",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
     "test": "npm run build:pack && cd test && npm run install:lib:test",
+    "debug": "npm run build:pack && cd test && npm run install:lib:debug",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
   },
   "repository": {
