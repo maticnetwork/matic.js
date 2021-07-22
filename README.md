@@ -35,7 +35,15 @@ Made with [contributors-img](https://contrib.rocks).
 **Setup**
 
 ```bash
-npm install
+npm ci
+```
+
+**How to debug**
+
+Write your code inside file `test/debug.js` and run below code
+
+```bash
+npm run debug
 ```
 
 **Lint**
@@ -49,16 +57,22 @@ npm run lint
 npm run lint:fix
 ```
 
-**Transpile typescript files**
+**Build code**
 
 ```bash
 npm run build
 ```
 
+**Run test**
+
+```bash
+npm run test
+```
+
 **Generate distribution files**
 
 ```bash
-npm run build:webpack
+npm run deploy
 ```
 
 **NPM publish**
