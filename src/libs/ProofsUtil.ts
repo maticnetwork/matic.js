@@ -290,13 +290,12 @@ export default class ProofsUtil {
   }
 
   static getReceiptBytes(receipt) {
-    return rlp.encode([
+    let encodedData = rlp.encode([
       ethUtils.toBuffer(
         receipt.status !== undefined && receipt.status != null ? (receipt.status ? '0x1' : '0x') : receipt.root
       ),
       ethUtils.toBuffer(receipt.cumulativeGasUsed),
       ethUtils.toBuffer(receipt.logsBloom),
-
       // encoded log array
       receipt.logs.map(l => {
         // [address, [topics array], data]
@@ -307,6 +306,10 @@ export default class ProofsUtil {
         ]
       }),
     ])
+    if (receipt.status !== undefined && receipt.status !== null && receipt.type !== '0x0' && receipt.type !== '0x') {
+      encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData])
+    }
+    return encodedData
   }
 
   // getStateSyncTxHash returns block's tx hash for state-sync receipt
