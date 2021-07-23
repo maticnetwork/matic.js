@@ -6,11 +6,10 @@ const MaticPlasmaClient = require('@maticnetwork/maticjs').default
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 
 const privateKey = config.user1.privateKey
-const fromAddress = config.user1.address
 
 async function getMaticPlasmaClient(network = 'testnet', version = 'mumbai') {
   const networkInstance = new Network(network, version)
-  const { from } = getAccount()
+  const from = config.user1.address
   const matic = new MaticPlasmaClient({
     network: network,
     version: version,
@@ -23,16 +22,12 @@ async function getMaticPlasmaClient(network = 'testnet', version = 'mumbai') {
   return { matic, network: networkInstance }
 }
 
-function getAccount() {
-  if (!privateKey || !fromAddress) {
-    throw new Error('Please set the PRIVATE_KEY/FROM in config.js')
-  }
-  return { privateKey: privateKey, from: fromAddress }
-}
-
 module.exports = {
   SCALING_FACTOR,
   getMaticPlasmaClient: getMaticPlasmaClient,
-  getAccount,
   child: config.child,
+  plasma: config.plasma,
+  from: config.user1.address,
+  privateKey: config.user1.privateKey,
+  to: config.user2.address,
 }
