@@ -1,6 +1,13 @@
 // Testnet V3 config
 module.exports = {
-  PLASMA: {
+  plasma: {
+    parent: {
+      erc20: '0x3f152B63Ec5CA5831061B2DccFb29a874C317502',
+    },
+    child: {
+      erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',
+      erc20: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
+    },
     REGISTRY_ADDRESS: '0x56B082d0a590A7ce5d170402D6f7f88B58F71988',
     ROOTCHAIN_ADDRESS: '0x82a72315E16cE224f28E1F1fB97856d3bF83f010', // The address for the main Plasma contract in  Ropsten testnet
     WITHDRAWMANAGER_ADDRESS: '0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4', // An address for the WithdrawManager contract on Ropsten testnet
@@ -11,8 +18,6 @@ module.exports = {
   },
   child: {
     rpc: 'https://rpc-mumbai.matic.today', // This is the MATIC testnet RPC
-    erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',
-    erc20: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
   },
   SYNCER_URL: 'https://testnetv3-syncer.api.matic.network/api/v1', // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
   WATCHER_URL: 'https://testnetv3-watcher.api.matic.network/api/v1', // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
@@ -28,5 +33,8 @@ module.exports = {
   user1: {
     privateKey: '<paste your private key here>', // A sample private key prefix with `0x`
     address: '<paste address belonging to private key here>', // Your address
+  },
+  user2: {
+    address: '<paste address here>', // Your address
   },
 }
