@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
-    "@maticnetwork/meta": "^2.4.13",
+    "@maticnetwork/meta": "^2.4.16",
     "axios": "^0.21.1",
     "bn.js": "5.0.0",
     "debug": "^4.1.1",
