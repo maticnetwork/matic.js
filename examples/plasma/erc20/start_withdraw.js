@@ -1,4 +1,4 @@
-const { getMaticPlasmaClient, from, plasma, to } = require('../utils')
+const { getMaticPlasmaClient, from, plasma } = require('../../utils')
 
 const amount = '1000000000000000' // amount in wei
 const token = plasma.child.erc20
