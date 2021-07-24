@@ -1,9 +1,9 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient } = require('../../utils')
 
 const execute = async () => {
   try {
+    const maticPOSClient = getMaticPOSClient()
+    maticPOSClient.transferERC20Tokens()
     const tx = await maticPOSClient.approveERC20ForDeposit(config.root.DERC20, config.user.amount, {
       from: config.user.address,
       gasPrice: '900000000000',
