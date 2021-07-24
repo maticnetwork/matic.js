@@ -3,6 +3,7 @@ module.exports = {
   plasma: {
     parent: {
       erc20: '0x3f152B63Ec5CA5831061B2DccFb29a874C317502',
+      erc721: '0x4f765cd1d33b2e9ae6dcba1f5852de93b285eb78',
     },
     child: {
       erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',

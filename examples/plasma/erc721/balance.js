@@ -1,8 +1,8 @@
-const { getMaticPlasmaClient, from, plasma } = require('../utils')
+const { getMaticPlasmaClient, from, plasma } = require('../../utils')
 
 const execute = async () => {
   const { matic } = await getMaticPlasmaClient()
-  const balance = await matic.balanceOfERC20(from, plasma.child.erc20, {})
+  const balance = await matic.balanceOfERC721(from, plasma.child.erc721, {})
   console.log('balance', balance)
 }
 
