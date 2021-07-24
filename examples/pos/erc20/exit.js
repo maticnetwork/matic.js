@@ -1,13 +1,11 @@
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
-const config = require('../config')
+const { getMaticPOSClient, from } = require('../../utils')
 
 const burnHash = '0xbadbf10a33ba5ae48cfa1660e011eb15bf927773610ace9466c71d14749d4132'
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.exitERC20(burnHash, {
-      from: config.user.address,
+    const tx = await getMaticPOSClient().exitERC20(burnHash, {
+      from: from,
       gasPrice: 900000000000,
       gas: 400000,
     })

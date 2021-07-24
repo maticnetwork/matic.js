@@ -1,18 +1,13 @@
-const { getMaticPOSClient } = require('../../utils')
+const { pos, from, getMaticPOSClient } = require('../../utils')
 
-const execute = async () => {
-  try {
-    const maticPOSClient = getMaticPOSClient()
-    maticPOSClient.transferERC20Tokens()
-    const tx = await maticPOSClient.approveERC20ForDeposit(config.root.DERC20, config.user.amount, {
-      from: config.user.address,
-      gasPrice: '900000000000',
-      gas: '250000',
-    })
-
-    console.log(tx) // eslint-disable-line
-  } catch (e) {
-    console.error(e) // eslint-disable-line
-  }
+const amount = '1000000000000000' // amount in wei
+const erc20TokenOnParent = pos.parent.erc20
+async function execute() {
+  const maticPOSClient = getMaticPOSClient()
+  const result = await maticPOSClient.approveERC20ForDeposit(erc20TokenOnParent, amount, { from })
+  console.log(result)
 }
-execute().then(() => process.exit(0))
+
+execute().then(_ => {
+  process.exit(0)
+})
