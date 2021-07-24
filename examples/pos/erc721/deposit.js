@@ -1,10 +1,11 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, pos, from } = require('../../utils')
+
+const token = pos.child.erc721
+const tokenId = '12'
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.depositERC721ForUser(config.root.DERC721, config.user.address, config.user.tokenId)
+    const tx = await getMaticPOSClient().depositERC721ForUser(token, from, tokenId)
     console.log(tx.transactionHash) // eslint-disable-line
   } catch (e) {
     console.error(e) // eslint-disable-line

@@ -1,10 +1,11 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, from, pos } = require('../../utils')
+
+const amount = '1000000000000000' // amount in wei
+const token = pos.parent.erc20
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.depositERC20ForUser(config.root.DERC20, config.user.address, config.user.amount)
+    const tx = await getMaticPOSClient().depositERC20ForUser(token, from, amount)
     console.log(tx.transactionHash) // eslint-disable-line
   } catch (e) {
     console.error(e) // eslint-disable-line

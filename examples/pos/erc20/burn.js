@@ -1,11 +1,12 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, pos, from } = require('../../utils')
+
+const amount = '1000000000000000' // amount in wei
+const token = pos.child.erc20
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.burnERC20(config.child.DERC20, config.user.amount, {
-      from: config.user.address,
+    const tx = await getMaticPOSClient().burnERC20(token, amount, {
+      from: from,
       gasPrice: 900000000000,
       gas: 300000,
     })

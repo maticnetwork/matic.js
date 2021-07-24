@@ -1,11 +1,12 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, pos, from } = require('../../utils')
+
+const token = pos.parent.erc721
+const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.approveERC721TokensForDeposit(config.root.DERC721, config.user.tokenId, {
-      from: config.user.address,
+    const tx = await getMaticPOSClient().approveERC721ForDeposit(token, tokenId, {
+      from: from,
       gasPrice: '500000000000',
       gas: 2500000,
     })
