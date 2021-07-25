@@ -1,17 +1,17 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, pos, from } = require('../../utils')
+
+const token = pos.parent.erc1155
 
 const execute = async () => {
   try {
-    const tx = await maticPOSClient.depositSingleERC1155ForUser(
-      config.root.DERC1155,
-      config.user.address,
+    const tx = await getMaticPOSClient().depositSingleERC1155ForUser(
+      token,
+      from,
       '123', // token id
       '1', // amount
       [], // optional bytes
       {
-        from: config.user.address,
+        from: from,
         gasPrice: '900000000000',
         gas: '550000',
       }
