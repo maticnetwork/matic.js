@@ -1,11 +1,11 @@
-const config = require('../config')
-const utils = require('../utils')
-const maticPOSClient = utils.getMaticPOSClient()
+const { getMaticPOSClient, pos, from } = require('../../utils')
+
+const token = pos.child.erc1155
 
 const execute = async () => {
   try {
-    let tx = await maticPOSClient.burnSingleERC1155(
-      config.child.DERC1155, //token address
+    let tx = await getMaticPOSClient().burnSingleERC1155(
+      token, //token address
       '123', // id to burn
       '1' // amount of id token to burn
     )
