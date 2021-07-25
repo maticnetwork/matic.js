@@ -46,6 +46,8 @@ Write your code inside file `test/debug.js` and run below code
 npm run debug
 ```
 
+Above command will build the source code & install the builded version into test folder, which will be used by `debug.js`.
+
 **Lint**
 
 ```bash
