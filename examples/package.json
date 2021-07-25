@@ -4,7 +4,8 @@
   "description": "## How to use",
   "main": "config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "link:lib":"npm link @maticnetwork/maticjs"
   },
   "author": "",
   "license": "ISC",
