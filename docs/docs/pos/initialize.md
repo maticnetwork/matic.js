@@ -10,7 +10,6 @@ sidebar_position: 1
 const Matic = require('maticjs')
 
 const maticPoSClient = new Matic(options).MaticPOSClient
-maticPoSClient.initialize()
 ```
 
 #### Es6 Syntax
@@ -19,7 +18,6 @@ maticPoSClient.initialize()
 import Matic from 'maticjs'
 
 const maticPoSClient = new Matic(options).MaticPOSClient
-maticPoSClient.initialize()
 ```
 
 ## Options
