@@ -1,10 +1,13 @@
+// const versions = require('./versions.json')
+// const latestVersion = versions[0]
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Matic.js Docs',
   tagline: 'Javascript developer library for interacting with Matic Network',
   url: 'https://docs.matic.network/',
   baseUrl: '/matic.js/',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   organizationName: 'maticnetwork',
   projectName: 'matic.js',
   themeConfig: {
@@ -30,8 +33,15 @@ module.exports = {
           label: 'Docs',
         },
         {
+          type: 'docsVersionDropdown',
           position: 'right',
-          label: 'v 2.0.43',
+          dropdownActiveClassDisabled: true,
+          dropdownItemsAfter: [
+            {
+              to: '/versions',
+              label: 'All versions',
+            },
+          ],
         },
         {
           label: 'Discord',
