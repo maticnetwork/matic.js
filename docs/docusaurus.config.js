@@ -1,6 +1,3 @@
-// const versions = require('./versions.json')
-// const latestVersion = versions[0]
-
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Matic.js Docs',
