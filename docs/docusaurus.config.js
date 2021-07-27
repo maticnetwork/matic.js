@@ -89,8 +89,12 @@ module.exports = {
           title: 'More',
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/maticnetwork/matic.js',
+              label: 'Discussions',
+              href: 'https://github.com/maticnetwork/matic.js/discussions',
+            },
+            {
+              label: 'Issues',
+              href: 'https://github.com/maticnetwork/matic.js/issues',
             },
           ],
         },

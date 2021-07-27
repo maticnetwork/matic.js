@@ -1,11 +1,11 @@
 ---
-sidebar_position: 5
+sidebar_position: 4
 ---
 
 # Exit ERC20
 
 ```js
-maticPOSClient.exitERC20(burnTxHash, options);
+maticPOSClient.exitERC20(burnTxHash, options)
 ```
 
 Exit tokens from POS Portal. This can be called after checkpoint has been submitted for the block containing burn tx.
@@ -18,9 +18,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-maticPOSClient.exitERC20("0xabcd...789", {
-  from: "0xABc578455...",
-});
+maticPOSClient.exitERC20('0xabcd...789', {
+  from: '0xABc578455...',
+})
 ```
 
 ---

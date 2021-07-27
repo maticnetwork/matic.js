@@ -5,7 +5,7 @@ sidebar_position: 6
 # Withdraw ERC721
 
 ```js
-matic.withdrawNFT(txId, options);
+matic.withdrawNFT(txId, options)
 ```
 
 Withdraw tokens on mainchain using `txId` from `startWithdraw` method after header has been submitted to mainchain.
@@ -19,9 +19,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.withdrawNFT("0xabcd...789", {
-  from: "0xABc578455...",
-});
+matic.withdrawNFT('0xabcd...789', {
+  from: '0xABc578455...',
+})
 ```
 
 ---

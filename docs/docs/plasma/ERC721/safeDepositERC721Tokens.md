@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 # Safe Deposit ERC721
@@ -19,9 +19,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.safeDepositERC721Tokens("0x718Ca123...", "70000000000", {
-  from: "0xABc578455...",
-});
+matic.safeDepositERC721Tokens('0x718Ca123...', '70000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---

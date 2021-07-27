@@ -5,7 +5,7 @@ sidebar_position: 4
 # Token Of Owner By Index ERC721
 
 ```js
-matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options);
+matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
 ```
 
 Get ERC721 tokenId at `index` for `token` and for `address`.
@@ -20,12 +20,12 @@ Example:
 
 ```js
 matic
-  .tokenOfOwnerByIndexERC721("0xfeb14b...", "21", 0, {
-    from: "0xABc578455...",
+  .tokenOfOwnerByIndexERC721('0xfeb14b...', '21', 0, {
+    from: '0xABc578455...',
   })
-  .then((tokenID) => {
-    console.log("Token ID", tokenID);
-  });
+  .then(tokenID => {
+    console.log('Token ID', tokenID)
+  })
 ```
 
 ---
