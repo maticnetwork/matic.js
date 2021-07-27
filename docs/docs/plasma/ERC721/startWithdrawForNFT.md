@@ -20,9 +20,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-matic.startWithdrawForNFT("0x718Ca123...", "1000000000000000000", {
-  from: "0xABc578455...",
-});
+matic.startWithdrawForNFT('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---

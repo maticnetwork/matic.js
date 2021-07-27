@@ -1,11 +1,11 @@
 ---
-sidebar_position: 10
+sidebar_position: 7
 ---
 
 # Transfer ERC721
 
 ```js
-matic.transferERC721Tokens(token, user, tokenId, options);
+matic.transferERC721Tokens(token, user, tokenId, options)
 ```
 
 Transfer given `tokenId` of `token` to `user`.

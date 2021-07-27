@@ -5,7 +5,7 @@ sidebar_position: 1
 # Approve ERC20 Deposit
 
 ```js
-maticPOSClient.approveERC20ForDeposit(rootToken, amount, options);
+maticPOSClient.approveERC20ForDeposit(rootToken, amount, options)
 ```
 
 Approves given `amount` of `rootToken` to POS Portal contract.
@@ -20,9 +20,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-maticPOSClient.approveERC20ForDeposit("0x718Ca123...", "1000000000000000000", {
-  from: "0xABc578455...",
-});
+maticPOSClient.approveERC20ForDeposit('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---

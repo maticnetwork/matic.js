@@ -1,11 +1,11 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
-# Deposit Ether
+# Deposit Ethers
 
 ```js
-maticPOSClient.depositEtherForUser(rootToken, user, amount, options);
+maticPOSClient.depositEtherForUser(rootToken, user, amount, options)
 ```
 
 Deposit given `amount` of `rootToken` for `user` via POS Portal.

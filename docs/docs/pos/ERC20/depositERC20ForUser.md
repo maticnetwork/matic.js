@@ -5,7 +5,7 @@ sidebar_position: 2
 # Deposit ERC20
 
 ```js
-maticPOSClient.depositERC20ForUser(rootToken, user, amount, options);
+maticPOSClient.depositERC20ForUser(rootToken, user, amount, options)
 ```
 
 Deposit given `amount` of `rootToken` for `user` via POS Portal.

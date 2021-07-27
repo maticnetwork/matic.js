@@ -1,11 +1,11 @@
 ---
-sidebar_position: 4
+sidebar_position: 3
 ---
 
 # Burn ERC20
 
 ```js
-maticPOSClient.burnERC20(childToken, amount, options);
+maticPOSClient.burnERC20(childToken, amount, options)
 ```
 
 Burn given `amount` of `childToken` to be exited from POS Portal.
@@ -20,9 +20,9 @@ This returns `Promise` object, which will be fulfilled when transaction gets con
 Example:
 
 ```js
-maticPOSClient.burnERC20("0x718Ca123...", "1000000000000000000", {
-  from: "0xABc578455...",
-});
+maticPOSClient.burnERC20('0x718Ca123...', '1000000000000000000', {
+  from: '0xABc578455...',
+})
 ```
 
 ---
