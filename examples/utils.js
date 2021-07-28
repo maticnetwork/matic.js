@@ -33,6 +33,12 @@ const getMaticPOSClient = () => {
     parentDefaultOptions: { from: userAddress },
     maticDefaultOptions: { from: userAddress },
     posRootChainManager: config.pos.parent.chainManagerAddress,
+    // optional, required only if working with ERC20 tokens
+    posERC20Predicate: config.pos.parent.erc20Predicate,
+    // optional, required only if working with ERC721 tokens
+    posERC721Predicate: config.pos.parent.erc721Predicate,
+    // optional, required only if working with ERC71155 tokens
+    posERC1155Predicate: config.pos.parent.erc1155Predicate,
   })
 }
 

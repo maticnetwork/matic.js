@@ -26,6 +26,10 @@ module.exports = {
       erc721: '0x5a08d01e07714146747950CE07BB0f741445D1b8',
       erc1155: '0x2e3Ef7931F2d0e4a7da3dea950FF3F19269d9063',
       chainManagerAddress: '0x86B4EC021875d0123ED209A333B29D67F9AC6540', // Address of RootChainManager for POS Portal
+      erc20Predicate: '0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34',
+      erc721Predicate: '0x74D83801586E9D3C4dc45FfCD30B54eA9C88cf9b',
+      erc1155Predicate: '0xB19a86ba1b50f0A395BfdC3557608789ee184dC8',
+      etherPredicate: '0xe2B01f3978c03D6DdA5aE36b2f3Ac0d66C54a6D5',
     },
     child: {
       erc721: '0xEC8CB8bBb069470bC358ffB0e3710c64830da383',
