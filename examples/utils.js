@@ -32,6 +32,7 @@ const getMaticPOSClient = () => {
     maticProvider: new HDWalletProvider(privateKey, config.child.rpc),
     parentDefaultOptions: { from: userAddress },
     maticDefaultOptions: { from: userAddress },
+    posRootChainManager: config.pos.parent.chainManagerAddress,
   })
 }
 
