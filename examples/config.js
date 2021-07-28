@@ -4,10 +4,12 @@ module.exports = {
     parent: {
       erc20: '0x3f152B63Ec5CA5831061B2DccFb29a874C317502',
       erc721: '0x4f765cd1d33b2e9ae6dcba1f5852de93b285eb78',
+      weth: '0x60D4dB9b534EF9260a88b0BED6c486fe13E604Fc',
     },
     child: {
       erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',
       erc20: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
+      weth: '0x4DfAe612aaCB5b448C12A591cD0879bFa2e51d62',
     },
     registryAddress: '0x56B082d0a590A7ce5d170402D6f7f88B58F71988',
     rootChainAddress: '0x82a72315E16cE224f28E1F1fB97856d3bF83f010', // The address for the main Plasma contract in  Ropsten testnet
@@ -15,7 +17,7 @@ module.exports = {
     depositManagerAddress: '0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989', // An address for a DepositManager contract in Ropsten testnet
   },
   parent: {
-    rpc: '<goerli RPC>',
+    rpc: '<goerli RPC url>',
   },
   child: {
     rpc: 'https://rpc-mumbai.matic.today', // This is the MATIC testnet RPC
