@@ -19,6 +19,11 @@ async function getMaticPlasmaClient(network = 'testnet', version = 'mumbai') {
     maticProvider: new HDWalletProvider(privateKey, config.child.rpc),
     parentDefaultOptions: { from: userAddress },
     maticDefaultOptions: { from: userAddress },
+    rootChain: config.plasma.rootChainAddress,
+    registry: config.plasma.registryAddress,
+    depositManager: config.plasma.depositManagerAddress,
+    withdrawManager: config.plasma.withdrawManagerAddress,
+    childChain: config.plasma.childChainAddress,
   })
   await matic.initialize()
   return { matic, network: networkInstance }

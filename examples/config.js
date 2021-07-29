@@ -9,6 +9,7 @@ module.exports = {
       erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',
       erc20: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
     },
+    childChainAddress: '0xa2EF03edfA084ac9e5Bf110e409Ed5483BAe4101', // This is child chain contract address
     registryAddress: '0x56B082d0a590A7ce5d170402D6f7f88B58F71988',
     rootChainAddress: '0x82a72315E16cE224f28E1F1fB97856d3bF83f010', // The address for the main Plasma contract in  Ropsten testnet
     withdrawManagerAddress: '0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4', // An address for the WithdrawManager contract on Ropsten testnet
