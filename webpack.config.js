@@ -47,6 +47,9 @@ const clientConfig = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.json', '.js', '.ts', 'tsx'],
+    alias: {
+      "@": path.resolve(__dirname, "./src")
+    },
   },
   plugins: [
     new copyPlugin({
