@@ -19,6 +19,12 @@ async function getMaticPlasmaClient(network = 'testnet', version = 'mumbai') {
     maticProvider: new HDWalletProvider(privateKey, config.child.rpc),
     parentDefaultOptions: { from: userAddress },
     maticDefaultOptions: { from: userAddress },
+
+    // rootChain: config.plasma.rootChainAddress,
+    // registry: config.plasma.registryAddress,
+    // depositManager: config.plasma.depositManagerAddress,
+    // withdrawManager: config.plasma.withdrawManagerAddress,
+    // childChain: config.plasma.childChainAddress,
   })
   await matic.initialize()
   return { matic, network: networkInstance }
@@ -33,6 +39,13 @@ const getMaticPOSClient = () => {
     parentDefaultOptions: { from: userAddress },
     maticDefaultOptions: { from: userAddress },
     posRootChainManager: config.pos.parent.chainManagerAddress,
+
+    // optional, required only if working with ERC20 tokens
+    // posERC20Predicate: config.pos.parent.erc20Predicate,
+    // // optional, required only if working with ERC721 tokens
+    // posERC721Predicate: config.pos.parent.erc721Predicate,
+    // // optional, required only if working with ERC71155 tokens
+    // posERC1155Predicate: config.pos.parent.erc1155Predicate,
   })
 }
 
