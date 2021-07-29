@@ -1,6 +1,6 @@
 import { ERC20 } from "./erc20";
 import { Web3SideChainClient } from "@/model";
-import { IClientOption } from "@/interfaces";
+import { IClientOption } from "../interfaces";
 
 export class PlasmaClient {
 

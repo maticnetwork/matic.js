@@ -13,7 +13,8 @@ class Web3JsContract extends BaseContract {
     }
 
     call<T>(methodName: string, ...args): Promise<T> {
-        return (this.contract.methods[methodName] as any).call(...args);
+        console.log("args", args);
+        return this.contract.methods[methodName](...args).call();
     }
 }
 

@@ -1,9 +1,24 @@
-const { plasma } = require('../examples/config')
-const { getMaticPlasmaClient, from } = require('../examples/utils')
+const { use, Web3Plugin, PlasmaClient } = require("@maticnetwork/maticjs");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+
+use(Web3Plugin);
+const env = process.env;
+const from = env.user1_address
 
 const execute = async () => {
-  const { matic } = await getMaticPlasmaClient()
-  const balance = await matic.balanceOfERC20(from, plasma.child.erc20)
+  const privateKey = process.env.user1_privateKey;
+  const matic = new PlasmaClient({
+    network: 'testnet',
+    version: 'mumbai',
+    parent: {
+      provider: new HDWalletProvider(privateKey, env.PARENT_PROVIDER),
+    },
+    child: {
+      provider: new HDWalletProvider(privateKey, env.MATIC_PROVIDER),
+    }
+  });
+
+  const balance = await matic.erc20.getBalance(from, env.PLASMA_MUMBAI_ERC20)
   console.log('balance', balance)
 }
 
