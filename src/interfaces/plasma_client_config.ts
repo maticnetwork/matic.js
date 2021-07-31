@@ -3,9 +3,15 @@ export interface IPlasmaClientConfig {
     version: string;
     parent: {
         provider: any;
+        defaultConfig: {
+            from: string;
+        }
     };
     child: {
         provider: any;
+        defaultConfig: {
+            from: string;
+        }
     };
     depositManager?: string;
 }

@@ -12,7 +12,8 @@ export class Web3Contract extends BaseContract {
     }
 
     read<T>(methodName: string, tx: ITransactionConfig, ...args): Promise<T> {
-        return this.contract.methods[methodName](...args).call(tx as any);
+        console.log("args", arguments);
+        return this.contract.methods[methodName](...args).call();
     }
 
     write(methodName: string, tx: ITransactionConfig, ...args) {

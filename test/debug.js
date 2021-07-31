@@ -12,13 +12,19 @@ const execute = async () => {
     version: 'mumbai',
     parent: {
       provider: new HDWalletProvider(privateKey, env.PARENT_PROVIDER),
+      defaultConfig: {
+        from
+      }
     },
     child: {
       provider: new HDWalletProvider(privateKey, env.MATIC_PROVIDER),
+      defaultConfig: {
+        from
+      }
     }
   });
 
-  const balance = await matic.erc20.getBalance(from, env.PLASMA_MUMBAI_ERC20)
+  const balance = await matic.erc20.getBalance(env.PLASMA_MUMBAI_ERC20, from)
   console.log('balance', balance)
 }
 

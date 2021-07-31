@@ -14,4 +14,12 @@ export class BaseToken {
         return client.getContract(address, this.abi);
     }
 
+    get parentDefaultConfig() {
+        return this.client.config.parent.defaultConfig;
+    }
+
+    get childDefaultConfig() {
+        return this.client.config.child.defaultConfig;
+    }
+
 }

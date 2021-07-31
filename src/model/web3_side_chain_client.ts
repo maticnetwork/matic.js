@@ -8,13 +8,19 @@ export class Web3SideChainClient {
     child: SideChainClientOption;
 
     metaNetwork: MetaNetwork;
+    config: IPlasmaClientConfig;
 
-    constructor(option: IPlasmaClientConfig) {
+    constructor(config: IPlasmaClientConfig) {
+        config = config || {} as any;
+        config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
+        config.child.defaultConfig = config.child.defaultConfig || {} as any;
+        this.config = config;
+
         if (!Web3Client) {
             throw new Error("Web3Client is not set");
         }
-        const network = option.network;
-        const version = option.version;
+        const network = config.network;
+        const version = config.version;
         const metaNetwork = new MetaNetwork(network, version);
         if (!metaNetwork) {
             throw new Error(`network ${network} - ${version} is not supported`);
@@ -22,13 +28,13 @@ export class Web3SideChainClient {
         this.metaNetwork = metaNetwork;
 
         this.parent = {
-            client: new Web3Client(option.parent.provider),
+            client: new Web3Client(config.parent.provider),
             option: {
 
             }
         };
         this.child = {
-            client: new Web3Client(option.child.provider),
+            client: new Web3Client(config.child.provider),
             option: {
 
             }
