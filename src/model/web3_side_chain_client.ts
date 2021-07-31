@@ -1,7 +1,6 @@
 import { SideChainClientOption } from "@/types";
-import { BaseWeb3Client } from "./web3_client";
 import { Web3Client } from "@/constant";
-import { IClientOption } from "@/interfaces";
+import { IPlasmaClientConfig } from "@/interfaces";
 import MetaNetwork from '@maticnetwork/meta/network';
 
 export class Web3SideChainClient {
@@ -10,7 +9,7 @@ export class Web3SideChainClient {
 
     metaNetwork: MetaNetwork;
 
-    constructor(option: IClientOption) {
+    constructor(option: IPlasmaClientConfig) {
         if (!Web3Client) {
             throw new Error("Web3Client is not set");
         }
@@ -45,6 +44,14 @@ export class Web3SideChainClient {
         //         outputFormatter: String,
         //     }
         // ])
+    }
+
+    getABI(name: string) {
+        return this.metaNetwork.abi(name);
+    }
+
+    get mainContracts() {
+        return this.metaNetwork.Main.Contracts;
     }
 }
 

@@ -1,4 +1,4 @@
-export interface IClientOption {
+export interface IPlasmaClientConfig {
     network: string;
     version: string;
     parent: {
@@ -7,4 +7,5 @@ export interface IClientOption {
     child: {
         provider: any;
     };
+    depositManager?: string;
 }
