@@ -25,13 +25,21 @@ const execute = async () => {
     }
   });
 
-  const balance = await matic.erc20.getBalance(env.PLASMA_MUMBAI_ERC20, from)
-  console.log('balance', balance)
+  // const balance = await matic.erc20.getBalance(env.PLASMA_MUMBAI_ERC20, from)
+  // console.log('balance', balance)
 
-  // const result = await matic.erc20.approve(erc20TokenAddress, '1000000000000000');
+  const result = matic.erc20.approve(erc20TokenAddress, '1000000000000000');
+  console.log("result", result, result.on);
 
+  await result;
   // result.onError = function () {
   //   console.log("error args", arguments);
+  // }
+  // result.onTransactionHash = function () {
+  //   console.log("transaction hash args", arguments);
+  // }
+  // result.onReceipt = function(){
+  //   console.log("onReceipt hash args", arguments);
   // }
 }
 

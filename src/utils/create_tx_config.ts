@@ -12,7 +12,7 @@ interface ITransactionConfigParam {
 
 export const createTransactionConfig = async ({ txConfig, defaultTxConfig, method, client, isWrite }: ITransactionConfigParam) => {
     txConfig = Object.assign(defaultTxConfig, txConfig || {});
-
+    console.log("txConfig", txConfig);
     if (isWrite) {
         const [gas, gasPrice, nonce, chainId] = await Promise.all([
             !(txConfig.gas)

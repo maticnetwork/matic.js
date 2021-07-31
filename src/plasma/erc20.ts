@@ -1,7 +1,7 @@
 import { BaseToken, Web3SideChainClient } from "@/model";
 import BN from "bn.js";
 import { ITransactionConfig } from "@/interfaces";
-import { formatAmount } from "@/utils";
+import { formatAmount, IEventBusPromise, eventBusPromise } from "../utils";
 import { createTransactionConfig } from "@/utils/create_tx_config";
 import { DepositManager } from "./deposit_manager";
 
@@ -36,18 +36,38 @@ export class ERC20 extends BaseToken {
             this.depositManager.contract.address,
             formatAmount(amount)
         );
-        return createTransactionConfig(
-            {
-                txConfig,
-                defaultTxConfig: this.parentDefaultConfig,
-                client: this.client.parent.client,
-                isWrite: true,
-                method
-            }).then(config => {
-                return method.write(
-                    config,
-                );
-            });
+        console.log("arguments approve", arguments);
+        const result = eventBusPromise((res, rej) => {
+            // tslint:disable-next-line
+            createTransactionConfig(
+                {
+                    txConfig,
+                    defaultTxConfig: this.parentDefaultConfig,
+                    client: this.client.parent.client,
+                    isWrite: true,
+                    method
+                }).then(config => {
+                    console.log("config", config);
+                    const methodResult = method.write(
+                        config,
+                    );
+                    methodResult.onTransactionHash = (txHash) => {
+                        result.emit("txHash", txHash);
+                    };
+                    methodResult.onError = (err, receipt) => {
+                        rej({
+                            error: err,
+                            receipt
+                        });
+                    };
+                    methodResult.onReceipt = (receipt) => {
+                        result.emit("receipt", receipt);
+                        res(receipt);
+                    };
+                }) as IEventBusPromise<any>;
+        });
+        return result;
+
     }
 
 }
