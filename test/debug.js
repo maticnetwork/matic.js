@@ -7,6 +7,7 @@ const from = env.user1_address
 
 const execute = async () => {
   const privateKey = process.env.user1_privateKey;
+  const erc20TokenAddress = env.PLASMA_MUMBAI_ERC20;
   const matic = new PlasmaClient({
     network: 'testnet',
     version: 'mumbai',
@@ -26,6 +27,12 @@ const execute = async () => {
 
   const balance = await matic.erc20.getBalance(env.PLASMA_MUMBAI_ERC20, from)
   console.log('balance', balance)
+
+  // const result = await matic.erc20.approve(erc20TokenAddress, '1000000000000000');
+
+  // result.onError = function () {
+  //   console.log("error args", arguments);
+  // }
 }
 
 execute().then(_ => {

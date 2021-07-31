@@ -14,32 +14,38 @@ export class ERC20 extends BaseToken {
 
     getBalance(tokenAddress: string, userAddress: string, isParent?: boolean) {
         const contract = this.getContract(tokenAddress, isParent);
+        const method = contract.method(
+            "balanceOf",
+            userAddress
+        );
         return createTransactionConfig(
             {
                 txConfig: {},
                 defaultTxConfig: this.parentDefaultConfig,
             }).then(config => {
                 console.log("config", config);
-                return contract.read<string>("balanceOf", config, userAddress);
+                return method.read<string>(config);
             });
     }
 
-    approve(tokenAddress: string, amount: BN | string | number, txConfig?: ITransactionConfig) {
+    approve(tokenAddress: string, amount: BN | string | number, txConfig: ITransactionConfig = {}) {
         const contract = this.getContract(tokenAddress, true);
         const methodName = "approve";
+        const method = contract.method(
+            methodName,
+            this.depositManager.contract.address,
+            formatAmount(amount)
+        );
         return createTransactionConfig(
             {
                 txConfig,
                 defaultTxConfig: this.parentDefaultConfig,
-                txResult: contract.createTransaction(methodName),
                 client: this.client.parent.client,
-                isWrite: true
+                isWrite: true,
+                method
             }).then(config => {
-                return contract.write(
-                    "approve",
+                return method.write(
                     config,
-                    this.depositManager.contract.address,
-                    formatAmount(amount)
                 );
             });
     }

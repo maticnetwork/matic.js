@@ -1,4 +1,5 @@
 import { ITransactionConfig, ISendResult, ITransactionResult } from "../interfaces";
+import { BaseContractMethod } from "@/abstracts";
 
 export abstract class BaseContract {
 
@@ -6,7 +7,5 @@ export abstract class BaseContract {
 
     }
 
-    abstract read<T>(methodName: string, tx: ITransactionConfig, ...args): Promise<T>;
-    abstract write(methodName: string, tx: ITransactionConfig, ...args): ISendResult;
-    abstract createTransaction(methodName: string, tx?: ITransactionConfig, ...args): ITransactionResult;
+    abstract method(methodName: string, ...args): BaseContractMethod;
 }

@@ -1,7 +1,6 @@
 import { BaseContract } from "@/model";
 import Contract from "web3/eth/contract";
-import { ITransactionConfig, ITransactionResult } from "@/interfaces";
-import { doNothing } from "@/helpers";
+import { EthMethod } from "./eth_method";
 
 export class Web3Contract extends BaseContract {
     contract: Contract;
@@ -11,28 +10,10 @@ export class Web3Contract extends BaseContract {
         this.contract = contract;
     }
 
-    read<T>(methodName: string, tx: ITransactionConfig, ...args): Promise<T> {
-        console.log("args", arguments);
-        return this.contract.methods[methodName](...args).call();
-    }
-
-    write(methodName: string, tx: ITransactionConfig, ...args) {
-        const result = {
-            onTransactionHash: (doNothing as any),
-            onReceipt: doNothing,
-            onError: doNothing
-        };
-        const method = this.contract.methods[methodName](...args);
-        setTimeout(() => {
-            method.send(tx as any).
-                once("transactionHash", result.onTransactionHash).
-                once("receipt", result.onTransactionHash).
-                once("error", result.onError);
-        }, 0);
-        return result;
-    }
-
-    createTransaction(methodName: string, tx: ITransactionConfig, ...args) {
-        return this.contract.methods[methodName](...args) as ITransactionResult;
+    method(methodName: string, ...args) {
+        console.log("args method", arguments);
+        return new EthMethod(
+            this.contract.methods[methodName](...args)
+        );
     }
 }
