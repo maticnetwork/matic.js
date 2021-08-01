@@ -1,6 +1,6 @@
-import { ITransactionResult, ITransactionConfig } from "@/interfaces";
-import { BaseWeb3Client } from "@/model";
-import { BaseContractMethod } from "@/abstracts";
+import { ITransactionResult, ITransactionConfig } from "../interfaces";
+import { BaseWeb3Client } from "../model";
+import { BaseContractMethod } from "../abstracts";
 
 interface ITransactionConfigParam {
     txConfig: ITransactionConfig;

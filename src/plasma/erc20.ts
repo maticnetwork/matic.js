@@ -1,8 +1,8 @@
-import { BaseToken, Web3SideChainClient } from "@/model";
+import { BaseToken, Web3SideChainClient } from "../model";
 import BN from "bn.js";
-import { ITransactionConfig, ITransactionOption } from "@/interfaces";
+import { ITransactionConfig, ITransactionOption } from "../interfaces";
 import { formatAmount, IEventBusPromise, eventBusPromise } from "../utils";
-import { createTransactionConfig } from "@/utils/create_tx_config";
+import { createTransactionConfig } from "../utils/create_tx_config";
 import { DepositManager } from "./deposit_manager";
 
 export class ERC20 extends BaseToken {

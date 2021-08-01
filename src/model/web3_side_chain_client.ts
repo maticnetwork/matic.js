@@ -1,6 +1,6 @@
-import { SideChainClientOption } from "@/types";
-import { Web3Client } from "@/constant";
-import { IPlasmaClientConfig } from "@/interfaces";
+import { SideChainClientOption } from "../types";
+import { Web3Client } from "../constant";
+import { IPlasmaClientConfig } from "../interfaces";
 import MetaNetwork from '@maticnetwork/meta/network';
 
 export class Web3SideChainClient {

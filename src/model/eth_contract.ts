@@ -1,5 +1,5 @@
 import { ITransactionConfig, ISendResult, ITransactionResult } from "../interfaces";
-import { BaseContractMethod } from "@/abstracts";
+import { BaseContractMethod } from "../abstracts";
 
 export abstract class BaseContract {
 

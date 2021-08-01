@@ -1,5 +1,5 @@
 import { ERC20 } from "./erc20";
-import { Web3SideChainClient } from "@/model";
+import { Web3SideChainClient } from "../model";
 import { IPlasmaClientConfig } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 

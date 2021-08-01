@@ -20,9 +20,6 @@
             "ES6"
         ],
         "moduleResolution": "node",
-        "paths": {
-            "@/*": ["./src/*"]
-        },
         "allowSyntheticDefaultImports": true
     },
     "include": [

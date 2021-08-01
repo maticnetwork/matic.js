@@ -1,8 +1,8 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionConfig, ITransactionOption, IContractInitParam } from "@/interfaces";
-import { BaseContractMethod } from "@/abstracts";
+import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
+import { BaseContractMethod } from "../abstracts";
 import { BaseWeb3Client } from "./web3_client";
-import { EXTRA_GAS_FOR_PROXY_CALL } from "@/constant";
+import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { BaseContract } from "./eth_contract";
 
 interface ITransactionConfigParam {

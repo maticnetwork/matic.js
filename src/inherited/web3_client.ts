@@ -1,7 +1,7 @@
-import { BaseContract, BaseWeb3Client } from "@/model";
+import { BaseContract, BaseWeb3Client } from "../model";
 import { Web3Contract } from "./eth_contract";
 import Web3 from "web3";
-import { ITransactionConfig } from "@/interfaces";
+import { ITransactionConfig } from "../interfaces";
 
 export class MaticWeb3Client extends BaseWeb3Client {
     private web3_: Web3;

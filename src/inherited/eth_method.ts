@@ -1,7 +1,7 @@
-import { BaseContractMethod } from "@/abstracts";
-import { ITransactionConfig } from "@/interfaces";
+import { BaseContractMethod } from "../abstracts";
+import { ITransactionConfig } from "../interfaces";
 import { TransactionObject } from "web3/eth/types";
-import { doNothing } from "@/helpers";
+import { doNothing } from "../helpers";
 
 export class EthMethod extends BaseContractMethod {
 

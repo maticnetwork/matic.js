@@ -1,5 +1,5 @@
-import { BaseContract } from "@/model";
-import { IMethod, ITransactionConfig } from "@/interfaces";
+import { BaseContract } from "../model";
+import { IMethod, ITransactionConfig } from "../interfaces";
 
 export abstract class BaseWeb3Client {
 
