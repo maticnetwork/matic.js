@@ -21,10 +21,25 @@ export class EthMethod extends BaseContractMethod {
             onError: doNothing
         };
         setTimeout(() => {
-            this.method.send(tx as any).
-                once("transactionHash", result.onTransactionHash).
-                once("receipt", result.onTransactionHash).
-                once("error", result.onError);
+            console.log("sending tx", tx);
+            // {
+            //     chainId: tx.chainId,
+            //     data: tx.data,
+            //     from: tx.from.toString(),
+            //     gas: tx.gas,
+            //     gasPrice: tx.gasPrice.toString(),
+            //     nonce: tx.nonce,
+            //     to: tx.to,
+            //     value: tx.value?.toString()
+            // }
+            try {
+                this.method.send(tx as any).
+                    once("transactionHash", result.onTransactionHash).
+                    once("receipt", result.onTransactionHash).
+                    once("error", result.onError);
+            } catch (error) {
+
+            }
         }, 0);
         return result;
     }

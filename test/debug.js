@@ -7,7 +7,8 @@ const from = env.user1_address
 
 const execute = async () => {
   const privateKey = process.env.user1_privateKey;
-  const erc20TokenAddress = env.PLASMA_MUMBAI_ERC20;
+  const erc20TokenMumbaiAddress = env.PLASMA_MUMBAI_ERC20;
+  const goerliTokenERC20 = env.PLASMA_GOERLI_ERC20
   const matic = new PlasmaClient({
     network: 'testnet',
     version: 'mumbai',
@@ -25,13 +26,18 @@ const execute = async () => {
     }
   });
 
-  // const balance = await matic.erc20.getBalance(env.PLASMA_MUMBAI_ERC20, from)
+  const childErc20 = matic.erc20(erc20TokenMumbaiAddress);
+
+  const balance = await childErc20.getBalance(from);
+  console.log('balance', balance);
+
+  // const balance = await matic.erc20.getBalance(erc20TokenMumbaiAddress, from)
   // console.log('balance', balance)
 
-  const result = matic.erc20.approve(erc20TokenAddress, '1000000000000000');
-  console.log("result", result, result.on);
+  // const result = matic.erc20.approve(goerliTokenERC20, '1000000000000000');
+  // console.log("result", result, result.on);
 
-  await result;
+  // await result;
   // result.onError = function () {
   //   console.log("error args", arguments);
   // }

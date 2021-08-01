@@ -5,13 +5,21 @@ import { DepositManager } from "./deposit_manager";
 
 export class PlasmaClient {
 
-    erc20: ERC20;
+
 
     private client_: Web3SideChainClient;
 
     withdrawManager;
 
     depositManager: DepositManager;
+
+    erc20(tokenAddress: string) {
+        return new ERC20(
+            tokenAddress,
+            this.client_,
+            this.depositManager
+        );
+    }
 
     constructor(config: IPlasmaClientConfig) {
         this.client_ = new Web3SideChainClient(config);
@@ -31,12 +39,6 @@ export class PlasmaClient {
             this.client_.parent.client,
             config.depositManager,
             this.client_.getABI("DepositManager")
-        );
-
-        this.erc20 = new ERC20(
-            this.client_,
-            this.client_.getABI('ChildERC20'),
-            this.depositManager
         );
     }
 
