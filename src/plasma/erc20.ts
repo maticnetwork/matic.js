@@ -1,7 +1,7 @@
 import { BaseToken, Web3SideChainClient } from "../model";
 import BN from "bn.js";
 import { ITransactionConfig, ITransactionOption } from "../interfaces";
-import { formatAmount, IEventBusPromise, eventBusPromise } from "../utils";
+import { formatAmount, IEventBusPromise, eventBusPromise, merge } from "../utils";
 import { createTransactionConfig } from "../utils/create_tx_config";
 import { DepositManager } from "./deposit_manager";
 
@@ -50,6 +50,14 @@ export class ERC20 extends BaseToken {
                     method,
                     isParent: true
                 }).then(config => {
+                    if (option.returnTransaction) {
+                        return res(
+                            merge(config, {
+                                data: method.encodeABI(),
+                                to: this.contract.address
+                            } as ITransactionConfig)
+                        );
+                    }
                     const methodResult = method.write(
                         config,
                     );
@@ -65,10 +73,20 @@ export class ERC20 extends BaseToken {
                     methodResult.onReceipt = (receipt) => {
                         result.emit("receipt", receipt);
                         res(receipt);
+                        result.destroy();
                     };
                 }) as IEventBusPromise<any>;
         });
         return result;
     }
+
+    approveMax(option: ITransactionOption = {}) {
+        return this.approve(
+            '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            , option
+        );
+    }
+
+
 
 }

@@ -50,4 +50,8 @@ export class EthMethod extends BaseContractMethod {
         return this.method.estimateGas(tx as any);
     }
 
+    encodeABI() {
+        return this.encodeABI();
+    }
+
 }
