@@ -14,4 +14,5 @@ export interface IPlasmaClientConfig {
         }
     };
     depositManager?: string;
+    log?: boolean;
 }

@@ -30,7 +30,6 @@ export class ERC20 extends BaseToken {
                 txConfig: {},
                 defaultTxConfig: this.childDefaultConfig,
             }).then(config => {
-                console.log("config", config);
                 return method.read<string>(config);
             });
     }
@@ -42,7 +41,6 @@ export class ERC20 extends BaseToken {
             this.depositManager.contract.address,
             formatAmount(amount)
         );
-        console.log("arguments approve", arguments);
         const result = eventBusPromise((res, rej) => {
             // tslint:disable-next-line
             this.createTransactionConfig(
@@ -52,7 +50,6 @@ export class ERC20 extends BaseToken {
                     method,
                     isParent: true
                 }).then(config => {
-                    console.log("config", config);
                     const methodResult = method.write(
                         config,
                     );
@@ -72,7 +69,6 @@ export class ERC20 extends BaseToken {
                 }) as IEventBusPromise<any>;
         });
         return result;
-
     }
 
 }

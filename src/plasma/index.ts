@@ -2,6 +2,7 @@ import { ERC20 } from "./erc20";
 import { Web3SideChainClient } from "../model";
 import { IPlasmaClientConfig } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
+import { LOGGER } from "../constant";
 
 export class PlasmaClient {
 
@@ -39,6 +40,8 @@ export class PlasmaClient {
             config.depositManager,
             this.client_.getABI("DepositManager")
         );
+
+        LOGGER.enableLog(config.log);
     }
 
 }

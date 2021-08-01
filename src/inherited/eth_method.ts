@@ -2,16 +2,16 @@ import { BaseContractMethod } from "../abstracts";
 import { ITransactionConfig } from "../interfaces";
 import { TransactionObject } from "web3/eth/types";
 import { doNothing } from "../helpers";
+import { LOGGER } from "../constant";
 
 export class EthMethod extends BaseContractMethod {
 
     constructor(private method: TransactionObject<any>) {
         super();
-        console.log("method args", method.arguments);
     }
 
     read<T>(tx: ITransactionConfig): Promise<T> {
-        console.log("args", arguments);
+        LOGGER.log("sending tx with config", tx);
         return this.method.call(tx as any);
     }
 
@@ -22,7 +22,8 @@ export class EthMethod extends BaseContractMethod {
             onError: doNothing
         };
         setTimeout(() => {
-            console.log("sending tx", tx);
+            LOGGER.log("sending tx with config", tx);
+
             // {
             //     chainId: tx.chainId,
             //     data: tx.data,
@@ -46,7 +47,6 @@ export class EthMethod extends BaseContractMethod {
     }
 
     estimateGas(tx: ITransactionConfig): Promise<number> {
-        console.log("args", arguments);
         return this.method.estimateGas(tx as any);
     }
 
