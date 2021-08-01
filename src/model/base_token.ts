@@ -1,5 +1,5 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionConfig, ITransactionOption } from "@/interfaces";
+import { ITransactionConfig, ITransactionOption, IContractInitParam } from "@/interfaces";
 import { BaseContractMethod } from "@/abstracts";
 import { BaseWeb3Client } from "./web3_client";
 import { EXTRA_GAS_FOR_PROXY_CALL } from "@/constant";
@@ -16,19 +16,19 @@ interface ITransactionConfigParam {
 
 export class BaseToken {
 
+    contract: BaseContract;
 
     constructor(
-        private tokenAddress: string,
+        private contractParam: IContractInitParam,
         public client: Web3SideChainClient,
-        public abi
     ) {
-
+        this.contract = this.getContract(contractParam);
     }
 
-    getContract({ isParent }: ITransactionOption) {
+    getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
         const client = isParent ? this.client.parent.client :
             this.client.child.client;
-        return client.getContract(this.tokenAddress, this.abi);
+        return client.getContract(tokenAddress, abi);
     }
 
     get parentDefaultConfig() {

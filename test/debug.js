@@ -31,13 +31,13 @@ const execute = async () => {
   const balance = await childErc20.getBalance(from);
   console.log('balance', balance);
 
-  // const balance = await matic.erc20.getBalance(erc20TokenMumbaiAddress, from)
-  // console.log('balance', balance)
-
-  // const result = matic.erc20.approve(goerliTokenERC20, '1000000000000000');
+  // const rootTokenErc20 = matic.erc20(goerliTokenERC20);
+  // const result = await rootTokenErc20.approve(
+  //   '1000000000000000'
+  // );
+  // console.log("approve result", result);
   // console.log("result", result, result.on);
 
-  // await result;
   // result.onError = function () {
   //   console.log("error args", arguments);
   // }

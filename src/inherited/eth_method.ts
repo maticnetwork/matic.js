@@ -7,6 +7,7 @@ export class EthMethod extends BaseContractMethod {
 
     constructor(private method: TransactionObject<any>) {
         super();
+        console.log("method args", method.arguments);
     }
 
     read<T>(tx: ITransactionConfig): Promise<T> {
@@ -35,7 +36,7 @@ export class EthMethod extends BaseContractMethod {
             try {
                 this.method.send(tx as any).
                     once("transactionHash", result.onTransactionHash).
-                    once("receipt", result.onTransactionHash).
+                    once("receipt", result.onReceipt).
                     once("error", result.onError);
             } catch (error) {
 

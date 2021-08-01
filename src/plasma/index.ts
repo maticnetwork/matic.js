@@ -5,17 +5,16 @@ import { DepositManager } from "./deposit_manager";
 
 export class PlasmaClient {
 
-
-
     private client_: Web3SideChainClient;
 
     withdrawManager;
 
     depositManager: DepositManager;
 
-    erc20(tokenAddress: string) {
+    erc20(tokenAddress: string, isParent?: boolean) {
         return new ERC20(
             tokenAddress,
+            isParent,
             this.client_,
             this.depositManager
         );

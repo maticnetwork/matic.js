@@ -9,13 +9,18 @@ export class ERC20 extends BaseToken {
 
     constructor(
         tokenAddress: string,
+        isParent: boolean,
         client: Web3SideChainClient,
         public depositManager: DepositManager) {
-        super(tokenAddress, client, client.getABI('ChildERC20'));
+        super({
+            isParent,
+            tokenAddress,
+            abi: client.getABI('ChildERC20')
+        }, client);
     }
 
     getBalance(userAddress: string, option: ITransactionOption = {}) {
-        const contract = this.getContract(option);
+        const contract = this.contract;
         const method = contract.method(
             "balanceOf",
             userAddress
@@ -31,8 +36,7 @@ export class ERC20 extends BaseToken {
     }
 
     approve(amount: BN | string | number, option: ITransactionOption = {}) {
-        option.isParent = true;
-        const contract = this.getContract(option);
+        const contract = this.contract;
         const method = contract.method(
             "approve",
             this.depositManager.contract.address,
