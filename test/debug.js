@@ -31,22 +31,16 @@ const execute = async () => {
   const balance = await childErc20.getBalance(from);
   console.log('balance', balance);
 
-  // const rootTokenErc20 = matic.erc20(goerliTokenERC20);
-  // const result = await rootTokenErc20.approve(
+  // const rootTokenErc20 = matic.erc20(goerliTokenERC20, true);
+  // const promise = rootTokenErc20.approve(
   //   '1000000000000000'
-  // );
+  // )
+  // promise.on("txHash", (txHash) => {
+  //   console.log("transaction hash args", txHash);
+  // });
+  // console.log("promise result", promise);
+  // const result = await promise;
   // console.log("approve result", result);
-  // console.log("result", result, result.on);
-
-  // result.onError = function () {
-  //   console.log("error args", arguments);
-  // }
-  // result.onTransactionHash = function () {
-  //   console.log("transaction hash args", arguments);
-  // }
-  // result.onReceipt = function(){
-  //   console.log("onReceipt hash args", arguments);
-  // }
 }
 
 execute().then(_ => {

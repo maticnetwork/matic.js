@@ -41,43 +41,7 @@ export class ERC20 extends BaseToken {
             this.depositManager.contract.address,
             formatAmount(amount)
         );
-        const result = eventBusPromise((res, rej) => {
-            // tslint:disable-next-line
-            this.createTransactionConfig(
-                {
-                    txConfig: option,
-                    isWrite: true,
-                    method,
-                    isParent: true
-                }).then(config => {
-                    if (option.returnTransaction) {
-                        return res(
-                            merge(config, {
-                                data: method.encodeABI(),
-                                to: this.contract.address
-                            } as ITransactionConfig)
-                        );
-                    }
-                    const methodResult = method.write(
-                        config,
-                    );
-                    methodResult.onTransactionHash = (txHash) => {
-                        result.emit("txHash", txHash);
-                    };
-                    methodResult.onError = (err, receipt) => {
-                        rej({
-                            error: err,
-                            receipt
-                        });
-                    };
-                    methodResult.onReceipt = (receipt) => {
-                        result.emit("receipt", receipt);
-                        res(receipt);
-                        result.destroy();
-                    };
-                }) as IEventBusPromise<any>;
-        });
-        return result;
+        return this.processWrite(method, option);
     }
 
     approveMax(option: ITransactionOption = {}) {

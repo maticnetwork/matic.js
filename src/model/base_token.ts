@@ -1,9 +1,9 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
 import { BaseContractMethod } from "../abstracts";
-import { BaseWeb3Client } from "./web3_client";
-import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { BaseContract } from "./eth_contract";
+import { eventBusPromise, merge, IEventBusPromise } from "../utils";
+import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 
 interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -11,8 +11,6 @@ interface ITransactionConfigParam {
     isWrite?: boolean;
     isParent?: boolean;
 }
-
-
 
 export class BaseToken {
 
@@ -23,6 +21,46 @@ export class BaseToken {
         public client: Web3SideChainClient,
     ) {
         this.contract = this.getContract(contractParam);
+    }
+
+    protected processWrite(method: BaseContractMethod, option: ITransactionOption) {
+        const result = eventBusPromise((res, rej) => {
+            // tslint:disable-next-line
+            this.createTransactionConfig(
+                {
+                    txConfig: option,
+                    isWrite: true,
+                    method,
+                    isParent: true
+                }).then(config => {
+                    if (option.returnTransaction) {
+                        return res(
+                            merge(config, {
+                                data: method.encodeABI(),
+                                to: this.contract.address
+                            } as ITransactionConfig)
+                        );
+                    }
+                    const methodResult = method.write(
+                        config,
+                    );
+                    methodResult.onTransactionHash = (txHash) => {
+                        result.emit("txHash", txHash);
+                    };
+                    methodResult.onError = (err, receipt) => {
+                        rej({
+                            error: err,
+                            receipt
+                        });
+                    };
+                    methodResult.onReceipt = (receipt) => {
+                        result.emit("receipt", receipt);
+                        res(receipt);
+                        result.destroy();
+                    };
+                }) as IEventBusPromise<any>;
+        });
+        return result;
     }
 
     getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
@@ -54,7 +92,7 @@ export class BaseToken {
                 !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
 
-            // txConfig.gas = isParent ? Number(gas) + EXTRA_GAS_FOR_PROXY_CALL : gas;
+            txConfig.gas = isParent ? Number(gas) + EXTRA_GAS_FOR_PROXY_CALL : gas;
             txConfig.gasPrice = gasPrice;
             txConfig.nonce = nonce;
             txConfig.chainId = chainId;
