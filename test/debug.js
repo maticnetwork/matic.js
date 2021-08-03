@@ -1,25 +1,25 @@
 const { use, Web3Plugin, PlasmaClient } = require("@maticnetwork/maticjs");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+const { user1, plasma, rpc } = require("./config");
 
 use(Web3Plugin);
-const env = process.env;
-const from = env.user1_address
+const from = user1.address;
 
 const execute = async () => {
-  const privateKey = process.env.user1_privateKey;
-  const erc20TokenMumbaiAddress = env.PLASMA_MUMBAI_ERC20;
-  const goerliTokenERC20 = env.PLASMA_GOERLI_ERC20
+  const privateKey = user1.privateKey;
+  const erc20TokenMumbaiAddress = plasma.child.erc20;
+  const goerliTokenERC20 = plasma.parent.erc20;
   const matic = new PlasmaClient({
     network: 'testnet',
     version: 'mumbai',
     parent: {
-      provider: new HDWalletProvider(privateKey, env.PARENT_PROVIDER),
+      provider: new HDWalletProvider(privateKey, rpc.parent),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, env.MATIC_PROVIDER),
+      provider: new HDWalletProvider(privateKey, rpc.child),
       defaultConfig: {
         from
       }
