@@ -1,10 +1,10 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
 # Deposit Status From TxHash
 
-After user safe-deposit the ERC721 tokens, they can get the status of the transaction by calling this function using the txHash. 
+After user safe-deposit the ERC721 tokens, they can get the status of the transaction by calling this function using the txHash.
 
 ```js
 matic.depositStatusFromTxHash(txHash)
@@ -14,7 +14,7 @@ Deposit status using `txHash`.
 
 - `txHash` must be valid
 
-This will return a `Promise` object, which will be fulfilled if txHash is valid.
+This returns `Promise` object, which resolves to a tx deposit receipt object, if txHash is valid.
 
 Example:
 

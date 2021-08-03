@@ -111,6 +111,7 @@ module.exports = {
           editUrl: 'https://github.com/maticnetwork/matic.js/edit/master/docs/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          includeCurrentVersion: false,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
