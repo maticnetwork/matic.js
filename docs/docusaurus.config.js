@@ -4,7 +4,7 @@ module.exports = {
   tagline: 'Javascript developer library for interacting with Matic Network',
   url: 'https://docs.matic.network/',
   baseUrl: '/matic.js/',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   organizationName: 'maticnetwork',
   projectName: 'matic.js',
   themeConfig: {
@@ -30,8 +30,15 @@ module.exports = {
           label: 'Docs',
         },
         {
+          type: 'docsVersionDropdown',
           position: 'right',
-          label: 'v 2.0.43',
+          dropdownActiveClassDisabled: true,
+          dropdownItemsAfter: [
+            {
+              to: '/versions',
+              label: 'All versions',
+            },
+          ],
         },
         {
           label: 'Discord',
@@ -82,8 +89,12 @@ module.exports = {
           title: 'More',
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/maticnetwork/matic.js',
+              label: 'Discussions',
+              href: 'https://github.com/maticnetwork/matic.js/discussions',
+            },
+            {
+              label: 'Issues',
+              href: 'https://github.com/maticnetwork/matic.js/issues',
             },
           ],
         },
@@ -100,6 +111,7 @@ module.exports = {
           editUrl: 'https://github.com/maticnetwork/matic.js/edit/master/docs/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          includeCurrentVersion: false,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
