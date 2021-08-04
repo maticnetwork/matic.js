@@ -4,6 +4,7 @@ import { BaseContractMethod } from "../abstracts";
 import { BaseContract } from "./eth_contract";
 import { eventBusPromise, merge, IEventBusPromise } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
+import { ITransactionReceipt } from "../interfaces";
 
 interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -24,7 +25,7 @@ export class BaseToken {
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption) {
-        const result = eventBusPromise((res, rej) => {
+        const result = eventBusPromise<ITransactionReceipt>((res, rej) => {
             // tslint:disable-next-line
             this.createTransactionConfig(
                 {
