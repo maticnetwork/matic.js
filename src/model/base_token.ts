@@ -5,6 +5,7 @@ import { BaseContract } from "./eth_contract";
 import { eventBusPromise, merge, IEventBusPromise } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { ITransactionReceipt } from "../interfaces";
+import { ContractWriteResult } from "./contract_write_result";
 
 interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -18,50 +19,32 @@ export class BaseToken {
     contract: BaseContract;
 
     constructor(
-        private contractParam: IContractInitParam,
+        public contractParam: IContractInitParam,
         public client: Web3SideChainClient,
     ) {
         this.contract = this.getContract(contractParam);
     }
 
-    protected processWrite(method: BaseContractMethod, option: ITransactionOption) {
-        const result = eventBusPromise<ITransactionReceipt>((res, rej) => {
-            // tslint:disable-next-line
-            this.createTransactionConfig(
-                {
-                    txConfig: option,
-                    isWrite: true,
-                    method,
-                    isParent: true
-                }).then(config => {
-                    if (option.returnTransaction) {
-                        return res(
-                            merge(config, {
-                                data: method.encodeABI(),
-                                to: this.contract.address
-                            } as ITransactionConfig)
-                        );
-                    }
-                    const methodResult = method.write(
-                        config,
-                    );
-                    methodResult.onTransactionHash = (txHash) => {
-                        result.emit("txHash", txHash);
-                    };
-                    methodResult.onError = (err, receipt) => {
-                        rej({
-                            error: err,
-                            receipt
-                        });
-                    };
-                    methodResult.onReceipt = (receipt) => {
-                        result.emit("receipt", receipt);
-                        res(receipt);
-                        result.destroy();
-                    };
-                }) as IEventBusPromise<any>;
-        });
-        return result;
+    protected processWrite(method: BaseContractMethod, option: ITransactionOption): Promise<ContractWriteResult> {
+        return this.createTransactionConfig(
+            {
+                txConfig: option,
+                isWrite: true,
+                method,
+                isParent: true
+            }).then(config => {
+                if (option.returnTransaction) {
+                    return merge(config, {
+                        data: method.encodeABI(),
+                        to: this.contract.address
+                    } as ITransactionConfig);
+                }
+                const methodResult = method.write(
+                    config,
+                );
+                return new ContractWriteResult(methodResult);
+
+            });
     }
 
     getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
@@ -80,7 +63,6 @@ export class BaseToken {
 
     createTransactionConfig = async ({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) => {
         txConfig = Object.assign(this.parentDefaultConfig, txConfig || {});
-        console.log("txConfig", txConfig);
         const client = isParent ? this.client.parent.client :
             this.client.child.client;
         if (isWrite) {

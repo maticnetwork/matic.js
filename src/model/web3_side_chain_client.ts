@@ -52,8 +52,8 @@ export class Web3SideChainClient {
         // ])
     }
 
-    getABI(name: string) {
-        return this.metaNetwork.abi(name);
+    getABI(name: string, type?: string) {
+        return this.metaNetwork.abi(name, type);
     }
 
     get mainContracts() {

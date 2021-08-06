@@ -26,12 +26,17 @@ const execute = async () => {
     }
   });
 
-  const childErc20 = matic.erc20(erc20TokenMumbaiAddress);
+  // const childErc20 = matic.erc20(erc20TokenMumbaiAddress);
 
-  const balance = await childErc20.getBalance(from);
-  console.log('balance', balance);
+  // const balance = await childErc20.getBalance(from);
+  // console.log('balance', balance);
 
-  // const rootTokenErc20 = matic.erc20(goerliTokenERC20, true);
+  const rootTokenErc20 = matic.erc20(goerliTokenERC20, true);
+  const approveResult = await rootTokenErc20.approve('1000000000000000');
+  const txHash = await approveResult.getTransactionHash();
+  console.log("txHash", txHash);
+  const txReceipt = await approveResult.getReceipt();
+  console.log("txReceipt", txReceipt);
   // const promise = rootTokenErc20.approve(
   //   '1000000000000000'
   // )
