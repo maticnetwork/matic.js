@@ -1,13 +1,16 @@
 import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
 import { Web3SideChainClient } from "../model";
-import { IPlasmaClientConfig, IPOSClientConfig } from "../interfaces";
+import { IPOSClientConfig } from "../interfaces";
 import { LOGGER } from "../constant";
+import { ExitManager } from "./exit_manager";
 
 export class POSClient {
 
     rootChainManager: RootChainManager;
     private client_: Web3SideChainClient;
+
+    exitManager: ExitManager;
 
 
     constructor(config: IPOSClientConfig) {
@@ -28,6 +31,11 @@ export class POSClient {
             this.client_.parent.client,
             config.rootChainManager,
             this.client_.getABI('RootChainManager', 'pos')
+        );
+
+        this.exitManager = new ExitManager(
+            this.client_.child.client,
+            this.rootChainManager
         );
 
         LOGGER.enableLog(config.log);

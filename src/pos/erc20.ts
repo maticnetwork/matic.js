@@ -1,10 +1,10 @@
-import { BaseToken, Web3SideChainClient } from "../model";
+import { Web3SideChainClient } from "../model";
 import { ITransactionOption } from "../interfaces";
 import { createTransactionConfig } from "../utils/create_tx_config";
 import { RootChainManager } from "./root_chain_manager";
-import BN from "bn.js";
 import { formatAmount } from "../utils";
 import { POSToken } from "./pos_token";
+import { TYPE_AMOUNT } from "../types";
 
 export class ERC20 extends POSToken {
 
@@ -24,7 +24,7 @@ export class ERC20 extends POSToken {
 
 
 
-    getBalance(userAddress: string, option: ITransactionOption = {}) {
+    getBalance(userAddress: string, option?: ITransactionOption) {
         const contract = this.contract;
         const method = contract.method(
             "balanceOf",
@@ -32,29 +32,50 @@ export class ERC20 extends POSToken {
         );
         return createTransactionConfig(
             {
-                txConfig: {},
+                txConfig: option,
                 defaultTxConfig: this.childDefaultConfig,
             }).then(config => {
                 return method.read<string>(config);
             });
     }
 
-    approve(amount: BN | string | number, option: ITransactionOption = {}) {
+    approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
         const contract = this.contract;
         return this.getPredicateAddress().then(predicateAddress => {
             const method = contract.method(
                 "approve",
-                this.predicateAddress,
+                predicateAddress,
                 formatAmount(amount)
             );
             return this.processWrite(method, option);
         });
     }
 
-    approveMax(option: ITransactionOption = {}) {
+    approveMax(option?: ITransactionOption) {
         return this.approve(
             '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
             , option
         );
+    }
+
+    /**
+     * initiate withdraw by burning provided amount
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        const contract = this.contract;
+        const method = contract.method(
+            "withdraw",
+            formatAmount(amount)
+        );
+        return this.processWrite(method, option);
+    }
+
+    withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+        
     }
 }

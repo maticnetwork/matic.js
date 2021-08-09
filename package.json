@@ -46,6 +46,7 @@
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
     "@maticnetwork/meta": "^2.4.16",
+    "assert": "^2.0.0",
     "bn.js": "5.0.0",
     "eth-sig-util": "^2.5.3",
     "ethereumjs-block": "2.2.0",
@@ -56,8 +57,7 @@
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",
     "@types/bn.js": "4.11.5",
-    "@types/chai": "^4.2.21",
-    "@types/mocha": "^8.2.3",
+    "@types/ethereumjs-util": "^6.1.0",
     "@types/web3": "1.0.19",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",

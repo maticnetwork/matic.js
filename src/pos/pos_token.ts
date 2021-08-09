@@ -26,6 +26,7 @@ export class POSToken extends BaseToken {
             (
                 "typeToPredicate", tokenType
             ).read<string>();
+        this.predicateAddress = predicateAddress;
         return predicateAddress;
     }
 }

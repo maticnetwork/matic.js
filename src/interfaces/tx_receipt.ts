@@ -13,6 +13,9 @@ export interface ITransactionReceipt {
         [eventName: string]: IEventLog;
     };
     status: boolean;
+    logsBloom: string;
+    root: string;
+    type: string;
 }
 
 export interface ILog {
