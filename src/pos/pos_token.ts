@@ -1,6 +1,7 @@
 import { BaseToken, Web3SideChainClient } from "../model";
 import { ITransactionOption, IContractInitParam } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
+import { ExitManager } from "./exit_manager";
 
 export class POSToken extends BaseToken {
 
@@ -9,7 +10,8 @@ export class POSToken extends BaseToken {
     constructor(
         contractParam: IContractInitParam,
         client: Web3SideChainClient,
-        public rootChainManager: RootChainManager
+        protected rootChainManager: RootChainManager,
+        protected exitManager: ExitManager
     ) {
         super(contractParam, client);
     }

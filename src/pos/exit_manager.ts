@@ -1,19 +1,37 @@
 import { BaseContract, BaseWeb3Client } from "../model";
 import { RootChainManager } from "./root_chain_manager";
-import { Logger, formatAmount ,ProofUtil} from "../utils";
+import { Logger, formatAmount, ProofUtil } from "../utils";
 import { LOGGER } from "../constant";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
+import { ITransactionOption } from "src/interfaces";
 
 export class ExitManager {
     private maticClient_: BaseWeb3Client;
 
     rootChainManager: RootChainManager;
 
-    constructor(childClient: BaseWeb3Client, rootChainManager: RootChainManager) {
-        this.maticClient_ = childClient;
+    requestConcurrency: number;
+
+    constructor(maticClient: BaseWeb3Client, rootChainManager: RootChainManager, requestConcurrency: number) {
+        this.maticClient_ = maticClient;
         this.rootChainManager = rootChainManager;
+        this.requestConcurrency = requestConcurrency;
+    }
+
+    async exit(burnTxHash: string, logSignature: string, option: ITransactionOption) {
+        const payload = await this.buildPayloadForExit(
+            burnTxHash,
+            logSignature,
+            this.requestConcurrency
+        );
+        const method = this.rootChainManager.method("exit", payload);
+
+        return this.rootChainManager['processWrite'](
+            method,
+            option
+        );
     }
 
     async buildPayloadForExit(burnTxHash: string, logEventSig: string, requestConcurrency?) {

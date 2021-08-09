@@ -1,17 +1,16 @@
-import { BaseContract, BaseWeb3Client } from "../model";
+import { BaseContract, BaseWeb3Client, BaseToken, Web3SideChainClient } from "../model";
 import { TYPE_AMOUNT } from "../types";
 import BN from "bn.js";
 import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO, LOGGER } from "../constant";
 
-export class RootChainManager {
+export class RootChainManager extends BaseToken {
 
-    contract: BaseContract;
-
-    constructor(private client_: BaseWeb3Client, address: string, abi) {
-        this.contract = this.client_.getContract(
-            address,
-            abi
-        );
+    constructor(client_: Web3SideChainClient, address: string) {
+        super({
+            tokenAddress: address,
+            abi: client_.getABI('RootChainManager', 'pos'),
+            isParent: true
+        }, client_);
     }
 
     method(methodName: string, ...args) {

@@ -5,6 +5,8 @@ import { RootChainManager } from "./root_chain_manager";
 import { formatAmount } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
+import { ExitManager } from "./exit_manager";
+import { Log_Event_Signature } from "../enums";
 
 export class ERC20 extends POSToken {
 
@@ -13,16 +15,15 @@ export class ERC20 extends POSToken {
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient,
-        rootChainManager: RootChainManager
+        rootChainManager: RootChainManager,
+        exitManager: ExitManager
     ) {
         super({
             isParent,
             tokenAddress,
             abi: client.getABI('ChildERC20', 'pos')
-        }, client, rootChainManager);
+        }, client, rootChainManager, exitManager);
     }
-
-
 
     getBalance(userAddress: string, option?: ITransactionOption) {
         const contract = this.contract;
@@ -75,7 +76,23 @@ export class ERC20 extends POSToken {
         return this.processWrite(method, option);
     }
 
+    /**
+     * complete withdraw process after checkpoint has been submitted for the block containing burn tx.
+     *
+     * @param {string} burnTransactionHash
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
-        
+        return this.exitManager.exit(
+            burnTransactionHash,
+            Log_Event_Signature.Erc20Transfer,
+            option
+        );
+    }
+
+    withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
+        // this.exitManager.
     }
 }

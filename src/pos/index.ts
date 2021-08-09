@@ -28,14 +28,14 @@ export class POSClient {
         );
 
         this.rootChainManager = new RootChainManager(
-            this.client_.parent.client,
+            this.client_,
             config.rootChainManager,
-            this.client_.getABI('RootChainManager', 'pos')
         );
 
         this.exitManager = new ExitManager(
             this.client_.child.client,
-            this.rootChainManager
+            this.rootChainManager,
+            null
         );
 
         LOGGER.enableLog(config.log);
@@ -46,7 +46,8 @@ export class POSClient {
             tokenAddress,
             isParent,
             this.client_,
-            this.rootChainManager
+            this.rootChainManager,
+            this.exitManager
         );
     }
 }

@@ -19,8 +19,8 @@ export class BaseToken {
     contract: BaseContract;
 
     constructor(
-        public contractParam: IContractInitParam,
-        public client: Web3SideChainClient,
+        protected contractParam: IContractInitParam,
+        protected client: Web3SideChainClient,
     ) {
         this.contract = this.getContract(contractParam);
     }
@@ -31,7 +31,7 @@ export class BaseToken {
                 txConfig: option,
                 isWrite: true,
                 method,
-                isParent: true
+                isParent: this.contractParam.isParent
             }).then(config => {
                 if (option.returnTransaction) {
                     return merge(config, {
@@ -47,21 +47,21 @@ export class BaseToken {
             });
     }
 
-    getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
+    protected getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
         const client = isParent ? this.client.parent.client :
             this.client.child.client;
         return client.getContract(tokenAddress, abi);
     }
 
-    get parentDefaultConfig() {
+    protected get parentDefaultConfig() {
         return this.client.config.parent.defaultConfig;
     }
 
-    get childDefaultConfig() {
+    protected get childDefaultConfig() {
         return this.client.config.child.defaultConfig;
     }
 
-    createTransactionConfig = async ({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) => {
+    protected createTransactionConfig = async ({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) => {
         txConfig = Object.assign(this.parentDefaultConfig, txConfig || {});
         const client = isParent ? this.client.parent.client :
             this.client.child.client;
