@@ -92,7 +92,21 @@ export class ERC20 extends POSToken {
         );
     }
 
+    /**
+     * complete withdraw process after checkpoint has been submitted for the block containing burn tx.
+     *
+     *  Note:- It create the proof in api call for fast exit.
+     * 
+     * @param {string} burnTransactionHash
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
-        // this.exitManager.
+        return this.exitManager.exitFast(
+            burnTransactionHash,
+            Log_Event_Signature.Erc20Transfer,
+            option
+        );
     }
 }

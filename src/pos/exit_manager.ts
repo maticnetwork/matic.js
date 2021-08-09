@@ -5,7 +5,8 @@ import { LOGGER } from "../constant";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
-import { ITransactionOption } from "src/interfaces";
+import { ITransactionOption, ITransactionReceipt } from "src/interfaces";
+import { NetworkService } from "../services";
 
 export class ExitManager {
     private maticClient_: BaseWeb3Client;
@@ -34,43 +35,96 @@ export class ExitManager {
         );
     }
 
-    async buildPayloadForExit(burnTxHash: string, logEventSig: string, requestConcurrency?) {
+    async exitFast(burnTxHash: string, logSignature: string, option: ITransactionOption) {
+        const payload = await this.buildPayloadForFastExit(
+            burnTxHash,
+            logSignature,
+        );
+        const method = this.rootChainManager.method("exit", payload);
+
+        return this.rootChainManager['processWrite'](
+            method,
+            option
+        );
+    }
+
+    private buildPayloadForExitFastMerkle_(start, end, blockNumber) {
+        // build block proof
+        return ProofUtil.buildBlockProof(
+            this.maticClient_,
+            parseInt(start, 10),
+            parseInt(end, 10),
+            parseInt(blockNumber + '', 10)
+        );
+    }
+
+    async buildPayloadForFastExit(burnTxHash, logEventSig) {
         // check checkpoint
-        const [lastChildBlock, burnTx, receipt] = await Promise.all([
-            this.rootChainManager.getLastChildBlock(),
-            this.maticClient_.getTransaction(burnTxHash),
-            this.maticClient_.getTransactionReceipt(burnTxHash)
-        ]);
-
-        const block = await this.maticClient_.getBlockWithTransaction(burnTx.blockNumber);
-
-        LOGGER.log({ 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock });
+        const lastChildBlock = await this.rootChainManager.getLastChildBlock();
+        const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
+        const block: any = await this.maticClient_.getBlock(receipt.blockNumber);
 
         assert.ok(
-            new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
+            new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
             'Burn transaction has not been checkpointed as yet'
         );
-        const rootBlockNumber = await this.rootChainManager.findRootBlockFromChild(burnTx.blockNumber);
 
-        const blockLimit = await this.rootChainManager.method(
-            "headerBlocks", formatAmount(rootBlockNumber)
-        ).read<{ start: string, end: string }>();
+        let headerBlock;
+        const service = new NetworkService(
+            this.rootChainManager['client'].metaNetwork.Matic.NetworkAPI
+        );
+        try {
+            headerBlock = await service.getBlockIncluded(receipt.blockNumber as any);
+            if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
+                throw Error('Network API Error');
+            }
+        } catch (err) {
+            const rootBlockNumber = await this.rootChainManager.findRootBlockFromChild(receipt.blockNumber);
+            headerBlock = await this.rootChainManager.method(
+                "headerBlocks", formatAmount(rootBlockNumber)
+            ).read<{ start: string, end: string }>();
+        }
 
         // build block proof
-        const blockProof = await ProofUtil.buildBlockProof(
-            this.maticClient_,
-            parseInt(blockLimit.start, 10),
-            parseInt(blockLimit.end, 10),
-            parseInt(burnTx.blockNumber + '', 10)
-        );
+
+        const start = parseInt(headerBlock.start, 10);
+        const end = parseInt(headerBlock.end, 10);
+        const receiptBlockNumber = parseInt(receipt.blockNumber + '', 10);
+        let blockProof;
+
+        try {
+            blockProof = await service.getProof(
+                start, end, receiptBlockNumber
+            );
+            if (!blockProof) {
+                throw Error('Network API Error');
+            }
+        } catch (err) {
+            blockProof = await this.buildPayloadForExitFastMerkle_(start, end, receiptBlockNumber);
+        }
 
         const receiptProof: any = await ProofUtil.getReceiptProof(
-            receipt,
-            block,
-            this.maticClient_,
-            requestConcurrency
+            receipt, block, this.maticClient_
+        );
+        const logIndex = this.getLogIndex_(
+            logEventSig, receipt
         );
 
+        return this._encodePayload(
+            headerBlock.headerBlockNumber,
+            blockProof,
+            receipt.blockNumber,
+            block.timestamp,
+            Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+            Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+            ProofUtil.getReceiptBytes(receipt), // rlp encoded
+            receiptProof.parentNodes,
+            receiptProof.path,
+            logIndex
+        );
+    }
+
+    private getLogIndex_(logEventSig: string, receipt: ITransactionReceipt) {
         let logIndex = -1;
 
         switch (logEventSig) {
@@ -97,6 +151,49 @@ export class ExitManager {
         }
 
         assert.ok(logIndex > -1, 'Log not found in receipt');
+        return logIndex;
+    }
+
+    async buildPayloadForExit(burnTxHash: string, logEventSig: string, requestConcurrency?) {
+        // check checkpoint
+        const [lastChildBlock, burnTx, receipt] = await Promise.all([
+            this.rootChainManager.getLastChildBlock(),
+            this.maticClient_.getTransaction(burnTxHash),
+            this.maticClient_.getTransactionReceipt(burnTxHash)
+        ]);
+
+        const block = await this.maticClient_.getBlockWithTransaction(burnTx.blockNumber);
+
+        LOGGER.log({ 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock });
+
+        assert.ok(
+            new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
+            'Burn transaction has not been checkpointed as yet'
+        );
+        const rootBlockNumber = await this.rootChainManager.findRootBlockFromChild(burnTx.blockNumber);
+
+        const rootBlockInfo = await this.rootChainManager.method(
+            "headerBlocks", formatAmount(rootBlockNumber)
+        ).read<{ start: string, end: string }>();
+
+        // build block proof
+        const blockProof = await ProofUtil.buildBlockProof(
+            this.maticClient_,
+            parseInt(rootBlockInfo.start, 10),
+            parseInt(rootBlockInfo.end, 10),
+            parseInt(burnTx.blockNumber + '', 10)
+        );
+
+        const receiptProof: any = await ProofUtil.getReceiptProof(
+            receipt,
+            block,
+            this.maticClient_,
+            requestConcurrency
+        );
+
+        const logIndex = this.getLogIndex_(
+            logEventSig, receipt
+        );
 
         return this._encodePayload(
             rootBlockNumber,
