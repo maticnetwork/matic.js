@@ -109,4 +109,20 @@ export class ERC20 extends POSToken {
             option
         );
     }
+
+    /**
+     * check if exit has been completed for a transaction hash
+     *
+     * @param {string} txHash
+     * @returns
+     * @memberof ERC20
+     */
+    isExited(txHash: string) {
+        if (!txHash) {
+            throw new Error(`txHash not provided`);
+        }
+        return this.exitManager.isExitProcessed(
+            txHash, Log_Event_Signature.Erc20Transfer
+        );
+    }
 }

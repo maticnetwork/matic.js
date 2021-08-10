@@ -164,8 +164,6 @@ export class ExitManager {
 
         const block = await this.maticClient_.getBlockWithTransaction(burnTx.blockNumber);
 
-        LOGGER.log({ 'burnTx.blockNumber': burnTx.blockNumber, lastCheckPointedBlockNumber: lastChildBlock });
-
         assert.ok(
             new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
             'Burn transaction has not been checkpointed as yet'
@@ -235,5 +233,43 @@ export class ExitManager {
                 logIndex,
             ])
         );
+    }
+
+    async getExitHash(burnTxHash, logEventSig, requestConcurrency?) {
+        const lastChildBlock = await this.rootChainManager.getLastChildBlock();
+        const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
+        const block = await this.maticClient_.getBlockWithTransaction(receipt.blockNumber);
+
+        assert.ok(
+            new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
+            'Burn transaction has not been checkpointed as yet'
+        );
+
+        const receiptProof: any = await ProofUtil.getReceiptProof(
+            receipt,
+            block,
+            this.maticClient_,
+            requestConcurrency
+        );
+
+        const logIndex = this.getLogIndex_(logEventSig, receipt);
+        const nibbleArr = [];
+        receiptProof.path.forEach(byte => {
+            nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'));
+            nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'));
+        });
+
+        return this.maticClient_.etheriumSha3(
+            receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex
+        );
+    }
+
+    isExitProcessed(burnTxHash: string, logSignature: string) {
+        const exitHash = this.getExitHash(
+            burnTxHash, logSignature, this.requestConcurrency
+        );
+        return this.rootChainManager.method(
+            "processedExits", exitHash
+        ).read<boolean>();
     }
 }

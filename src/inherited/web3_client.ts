@@ -98,4 +98,8 @@ export class MaticWeb3Client extends BaseWeb3Client {
     encodeParameters(params: any[], types: any[]) {
         return this.web3_.eth.abi.encodeParameters(types, params);
     }
+
+    etheriumSha3(...value) {
+        return Web3.utils.soliditySha3(...value);
+    }
 }

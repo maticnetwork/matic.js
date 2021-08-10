@@ -60,4 +60,6 @@ export class RootChainManager extends BaseToken {
         }
         return ans.mul(CHECKPOINT_INTERVAL);
     }
+
+    
 }
