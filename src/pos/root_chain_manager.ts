@@ -2,6 +2,8 @@ import { BaseContract, BaseWeb3Client, BaseToken, Web3SideChainClient } from "..
 import { TYPE_AMOUNT } from "../types";
 import BN from "bn.js";
 import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO, LOGGER } from "../constant";
+import { ITransactionOption } from "../interfaces";
+import { formatAmount } from "../utils";
 
 export class RootChainManager extends BaseToken {
 
@@ -61,5 +63,15 @@ export class RootChainManager extends BaseToken {
         return ans.mul(CHECKPOINT_INTERVAL);
     }
 
-    
+    deposit(userAddress: string, tokenAddress: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        const method = this.method(
+            "depositFor",
+            userAddress,
+            tokenAddress,
+            formatAmount(amount)
+        );
+
+        return this.processWrite(method, option);
+    }
+
 }

@@ -1,23 +1,25 @@
 import { ISendResult, ITransactionReceipt } from "../interfaces";
 
 export class ContractWriteResult {
-    private result_: ISendResult;
+    private txHashPromise: Promise<string>;
+    private receiptPromise: Promise<string>;
 
-    constructor(result_: ISendResult) {
-        this.result_ = result_;
+    constructor(result: ISendResult) {
+        this.txHashPromise = new Promise((res, rej) => {
+            result.onTransactionHash = res;
+            result.onError = rej;
+        });
+        this.receiptPromise = new Promise((res, rej) => {
+            result.onReceipt = res;
+            result.onError = rej;
+        });
     }
 
     getReceipt() {
-        return new Promise<ITransactionReceipt>((res, rej) => {
-            this.result_.onReceipt = res;
-            this.result_.onError = rej;
-        });
+        return this.receiptPromise;
     }
 
     getTransactionHash() {
-        return new Promise<string>((res, rej) => {
-            this.result_.onTransactionHash = res;
-            this.result_.onError = rej;
-        });
+        return this.txHashPromise;
     }
 }

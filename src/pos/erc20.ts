@@ -60,6 +60,24 @@ export class ERC20 extends POSToken {
     }
 
     /**
+     * Deposit given amount of token for user
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {string} userAddress
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
+        return this.rootChainManager.deposit(
+            userAddress,
+            this.contractParam.tokenAddress,
+            amount,
+            option
+        );
+    }
+
+    /**
      * initiate withdraw by burning provided amount
      *
      * @param {TYPE_AMOUNT} amount
@@ -125,4 +143,6 @@ export class ERC20 extends POSToken {
             txHash, Log_Event_Signature.Erc20Transfer
         );
     }
+
+
 }

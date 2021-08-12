@@ -1,7 +1,6 @@
-import { BaseContract, BaseWeb3Client } from "../model";
+import { BaseWeb3Client } from "../model";
 import { RootChainManager } from "./root_chain_manager";
-import { Logger, formatAmount, ProofUtil } from "../utils";
-import { LOGGER } from "../constant";
+import { formatAmount, ProofUtil } from "../utils";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";

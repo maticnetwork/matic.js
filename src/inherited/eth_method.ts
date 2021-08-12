@@ -34,14 +34,14 @@ export class EthMethod extends BaseContractMethod {
             //     to: tx.to,
             //     value: tx.value?.toString()
             // }
-            try {
-                this.method.send(tx as any).
-                    once("transactionHash", result.onTransactionHash).
-                    once("receipt", result.onReceipt).
-                    once("error", result.onError);
-            } catch (error) {
+            // try {
+            this.method.send(tx as any).
+                once("transactionHash", result.onTransactionHash).
+                once("receipt", result.onReceipt).
+                once("error", result.onError);
+            // } catch (error) {
 
-            }
+            // }
         }, 0);
         return result;
     }
