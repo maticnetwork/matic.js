@@ -1,4 +1,5 @@
 import { ERC20 } from "./erc20";
+import { ERC721 } from "./erc721";
 import { Web3SideChainClient } from "../model";
 import { IPlasmaClientConfig } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
@@ -14,6 +15,15 @@ export class PlasmaClient {
 
     erc20(tokenAddress: string, isParent?: boolean) {
         return new ERC20(
+            tokenAddress,
+            isParent,
+            this.client_,
+            this.depositManager
+        );
+    }
+
+    erc721(tokenAddress: string, isParent?: boolean) {
+        return new ERC721(
             tokenAddress,
             isParent,
             this.client_,
