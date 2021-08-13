@@ -17,12 +17,11 @@ export class POSClient {
         this.client_ = new Web3SideChainClient(config);
 
 
-        const mainContracts = this.client_.mainContracts;
-
+        const mainContracts = this.client_.mainPOSContracts;
         config = Object.assign(
             {
 
-                rootChainManager: mainContracts.POSContracts.RootChainManagerProxy
+                rootChainManager: mainContracts.RootChainManagerProxy
             } as IPOSClientConfig,
             config
         );

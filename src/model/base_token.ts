@@ -16,7 +16,7 @@ interface ITransactionConfigParam {
 
 export class BaseToken {
 
-    contract: BaseContract;
+    protected contract: BaseContract;
 
     constructor(
         protected contractParam: IContractInitParam,
@@ -25,7 +25,8 @@ export class BaseToken {
         this.contract = this.getContract(contractParam);
     }
 
-    protected processWrite(method: BaseContractMethod, option: ITransactionOption): Promise<ContractWriteResult> {
+    protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
+
         return this.createTransactionConfig(
             {
                 txConfig: option,

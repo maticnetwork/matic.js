@@ -6,7 +6,6 @@
         "removeComments": false,
         "sourceMap": true,
         "inlineSources": true,
-        // "out": "output/jsstore.js",
         "target": "es5",
         "preserveConstEnums": true,
         "declaration": true,
