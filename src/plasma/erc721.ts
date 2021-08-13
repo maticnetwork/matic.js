@@ -43,4 +43,28 @@ export class ERC721 extends BaseToken {
             });
     }
 
+    /**
+     * READ
+     * returns token's id on that index
+     * 
+     * @param userAddress 
+     * @param index starting from zero, if no token found on that it will return error
+     * @param option 
+     */
+    tokenOfOwnerByIndexERC721(userAddress: string, index: number, option: ITransactionOption = {}) {
+        const contract = this.contract;
+        const method = contract.method(
+            "tokenOfOwnerByIndex",
+            userAddress,
+            index
+        );
+
+        return createTransactionConfig(
+            {
+                txConfig: {},
+                defaultTxConfig: this.childDefaultConfig,
+            }).then(config => {
+                return method.read<string>(config);
+            });
+    }
 }
