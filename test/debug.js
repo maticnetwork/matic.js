@@ -57,7 +57,7 @@ const execute = async () => {
   // const balance = await parentErc20.getBalance(from);
   // console.log('balance', balance);
 
-  const approveResult = await parentErc20.approve('1000000000000000');
+  const approveResult = await parentErc20.deposit('1000000000000000', from);
   console.log('txHash', await approveResult.getTransactionHash());
   console.log('receipt', await approveResult.getReceipt());
 
@@ -81,4 +81,7 @@ const execute = async () => {
 
 execute().then(_ => {
   process.exit(0)
+}).catch(err => {
+  console.error(err);
+  process.exit(0);
 })

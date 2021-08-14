@@ -63,12 +63,12 @@ export class RootChainManager extends BaseToken {
         return ans.mul(CHECKPOINT_INTERVAL);
     }
 
-    deposit(userAddress: string, tokenAddress: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    deposit(userAddress: string, tokenAddress: string, depositData: string, option?: ITransactionOption) {
         const method = this.method(
             "depositFor",
             userAddress,
             tokenAddress,
-            formatAmount(amount)
+            depositData
         );
 
         return this.processWrite(method, option);

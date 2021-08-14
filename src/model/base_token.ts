@@ -3,7 +3,7 @@ import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../i
 import { BaseContractMethod } from "../abstracts";
 import { BaseContract } from "./eth_contract";
 import { eventBusPromise, merge, IEventBusPromise } from "../utils";
-import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
+import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
 import { ITransactionReceipt } from "../interfaces";
 import { ContractWriteResult } from "./contract_write_result";
 
@@ -26,7 +26,7 @@ export class BaseToken {
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
-
+        LOGGER.log("process write");
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -34,6 +34,7 @@ export class BaseToken {
                 method,
                 isParent: this.contractParam.isParent
             }).then(config => {
+                LOGGER.log("process write config");
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
@@ -62,8 +63,9 @@ export class BaseToken {
         return this.client.config.child.defaultConfig;
     }
 
-    protected createTransactionConfig = async ({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) => {
-        txConfig = Object.assign(this.parentDefaultConfig, txConfig || {});
+    protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
+        txConfig = Object.assign(isParent ? this.parentDefaultConfig : this.childDefaultConfig, txConfig || {});
+        console.log("txConfig", txConfig, isParent, isWrite);
         const client = isParent ? this.client.parent.client :
             this.client.child.client;
         if (isWrite) {
@@ -75,13 +77,13 @@ export class BaseToken {
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
                 !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
-
+            console.log("calculated");
             txConfig.gas = isParent ? Number(gas) + EXTRA_GAS_FOR_PROXY_CALL : gas;
             txConfig.gasPrice = gasPrice;
             txConfig.nonce = nonce;
             txConfig.chainId = chainId;
         }
         return txConfig;
-    };
+    }
 
 }
