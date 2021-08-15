@@ -1,5 +1,5 @@
 import { BaseWeb3Client } from "../model";
-import { RootChainManager } from "./root_chain_manager";
+import { RootChain } from "./root_chain";
 import { formatAmount, ProofUtil } from "../utils";
 import assert from "assert";
 import BN from "bn.js";
@@ -10,13 +10,13 @@ import { NetworkService } from "../services";
 export class ExitManager {
     private maticClient_: BaseWeb3Client;
 
-    rootChainManager: RootChainManager;
+    rootChain: RootChain;
 
     requestConcurrency: number;
 
-    constructor(maticClient: BaseWeb3Client, rootChainManager: RootChainManager, requestConcurrency: number) {
+    constructor(maticClient: BaseWeb3Client, rootChainManager: RootChain, requestConcurrency: number) {
         this.maticClient_ = maticClient;
-        this.rootChainManager = rootChainManager;
+        this.rootChain = rootChainManager;
         this.requestConcurrency = requestConcurrency;
     }
 
@@ -26,9 +26,9 @@ export class ExitManager {
             logSignature,
             this.requestConcurrency
         );
-        const method = this.rootChainManager.method("exit", payload);
+        const method = this.rootChain.method("exit", payload);
 
-        return this.rootChainManager['processWrite'](
+        return this.rootChain['processWrite'](
             method,
             option
         );
@@ -39,9 +39,9 @@ export class ExitManager {
             burnTxHash,
             logSignature,
         );
-        const method = this.rootChainManager.method("exit", payload);
+        const method = this.rootChain.method("exit", payload);
 
-        return this.rootChainManager['processWrite'](
+        return this.rootChain['processWrite'](
             method,
             option
         );
@@ -59,7 +59,7 @@ export class ExitManager {
 
     async buildPayloadForFastExit(burnTxHash, logEventSig) {
         // check checkpoint
-        const lastChildBlock = await this.rootChainManager.getLastChildBlock();
+        const lastChildBlock = await this.rootChain.getLastChildBlock();
         const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
         const block: any = await this.maticClient_.getBlock(receipt.blockNumber);
 
@@ -70,7 +70,7 @@ export class ExitManager {
 
         let headerBlock;
         const service = new NetworkService(
-            this.rootChainManager['client'].metaNetwork.Matic.NetworkAPI
+            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
         );
         try {
             headerBlock = await service.getBlockIncluded(receipt.blockNumber as any);
@@ -78,8 +78,8 @@ export class ExitManager {
                 throw Error('Network API Error');
             }
         } catch (err) {
-            const rootBlockNumber = await this.rootChainManager.findRootBlockFromChild(receipt.blockNumber);
-            headerBlock = await this.rootChainManager.method(
+            const rootBlockNumber = await this.rootChain.findRootBlockFromChild(receipt.blockNumber);
+            headerBlock = await this.rootChain.method(
                 "headerBlocks", formatAmount(rootBlockNumber)
             ).read<{ start: string, end: string }>();
         }
@@ -156,7 +156,7 @@ export class ExitManager {
     async buildPayloadForExit(burnTxHash: string, logEventSig: string, requestConcurrency?) {
         // check checkpoint
         const [lastChildBlock, burnTx, receipt] = await Promise.all([
-            this.rootChainManager.getLastChildBlock(),
+            this.rootChain.getLastChildBlock(),
             this.maticClient_.getTransaction(burnTxHash),
             this.maticClient_.getTransactionReceipt(burnTxHash)
         ]);
@@ -167,9 +167,9 @@ export class ExitManager {
             new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
             'Burn transaction has not been checkpointed as yet'
         );
-        const rootBlockNumber = await this.rootChainManager.findRootBlockFromChild(burnTx.blockNumber);
+        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(burnTx.blockNumber);
 
-        const rootBlockInfo = await this.rootChainManager.method(
+        const rootBlockInfo = await this.rootChain.method(
             "headerBlocks", formatAmount(rootBlockNumber)
         ).read<{ start: string, end: string }>();
 
@@ -235,7 +235,7 @@ export class ExitManager {
     }
 
     async getExitHash(burnTxHash, logEventSig, requestConcurrency?) {
-        const lastChildBlock = await this.rootChainManager.getLastChildBlock();
+        const lastChildBlock = await this.rootChain.getLastChildBlock();
         const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
         const block = await this.maticClient_.getBlockWithTransaction(receipt.blockNumber);
 
@@ -267,7 +267,7 @@ export class ExitManager {
         const exitHash = this.getExitHash(
             burnTxHash, logSignature, this.requestConcurrency
         );
-        return this.rootChainManager.method(
+        return this.rootChain.method(
             "processedExits", exitHash
         ).read<boolean>();
     }

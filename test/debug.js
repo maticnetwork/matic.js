@@ -47,17 +47,21 @@ const execute = async () => {
     }
   });
 
-  // const childErc20 = maticPOS.erc20(erc20POSTokenMumbai);
+  const childErc20 = maticPOS.erc20(erc20POSTokenMumbai);
 
   // const balance = await childErc20.getBalance(from);
   // console.log('balance', balance);
 
-  const parentErc20 = maticPOS.erc20(erc20POSTokenGoerli, true);
+  // const parentErc20 = maticPOS.erc20(erc20POSTokenGoerli, true);
 
   // const balance = await parentErc20.getBalance(from);
   // console.log('balance', balance);
 
-  const approveResult = await parentErc20.deposit('1000000000000000', from);
+  // const approveResult = await parentErc20.deposit('1000000000000000', from);
+  // console.log('txHash', await approveResult.getTransactionHash());
+  // console.log('receipt', await approveResult.getReceipt());
+
+  const approveResult = await childErc20.withdrawExit('0xe078925f8bbe43f99bb325cef6e895946f4086fbc05cf4686766b0a172fae396');
   console.log('txHash', await approveResult.getTransactionHash());
   console.log('receipt', await approveResult.getReceipt());
 

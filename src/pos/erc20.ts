@@ -150,5 +150,9 @@ export class ERC20 extends POSToken {
         );
     }
 
+    isCheckPointed(txHash: string) {
+        
+    }
+
 
 }
