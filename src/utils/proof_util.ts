@@ -96,12 +96,9 @@ export class ProofUtil {
 
     static async queryRootHash(client: BaseWeb3Client, startBlock: number, endBlock: number) {
         try {
-            console.log("rootHash1");
             const rootHash = await client.getRootHash(startBlock, endBlock);
-            console.log("rootHash", rootHash);
             return ethUtils.toBuffer(`0x${rootHash}`);
         } catch (err) {
-            console.error("err", err);
             return null;
         }
     }

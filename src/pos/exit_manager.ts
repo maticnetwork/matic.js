@@ -25,19 +25,6 @@ export class ExitManager {
         this.requestConcurrency = requestConcurrency;
     }
 
-    async exit(burnTxHash: string, logSignature: string, option: ITransactionOption) {
-        const payload = await this.buildPayloadForExit(
-            burnTxHash,
-            logSignature,
-        );
-        const method = this.rootChain.method("exit", payload);
-
-        return this.rootChain['processWrite'](
-            method,
-            option
-        );
-    }
-
     async exitFast(burnTxHash: string, logSignature: string, option: ITransactionOption) {
         const payload = await this.buildPayloadForFastExit(
             burnTxHash,
@@ -276,7 +263,7 @@ export class ExitManager {
         );
     }
 
-    async getExitHash(burnTxHash, logEventSig, requestConcurrency?) {
+    async getExitHash(burnTxHash, logEventSig) {
         const lastChildBlock = await this.rootChain.getLastChildBlock();
         const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
         const block = await this.maticClient_.getBlockWithTransaction(receipt.blockNumber);
@@ -290,7 +277,7 @@ export class ExitManager {
             receipt,
             block,
             this.maticClient_,
-            requestConcurrency
+            this.requestConcurrency
         );
 
         const logIndex = this.getLogIndex_(logEventSig, receipt);
@@ -305,12 +292,4 @@ export class ExitManager {
         );
     }
 
-    isExitProcessed(burnTxHash: string, logSignature: string) {
-        const exitHash = this.getExitHash(
-            burnTxHash, logSignature, this.requestConcurrency
-        );
-        return this.rootChain.method(
-            "processedExits", exitHash
-        ).read<boolean>();
-    }
 }

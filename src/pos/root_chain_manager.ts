@@ -30,12 +30,18 @@ export class RootChainManager extends BaseToken {
         return this.processWrite(method, option);
     }
 
-    async exit(payload: string, option: ITransactionOption) {
-        const method = this.method("exit", payload);
+    async exit(exitPayload: string, option: ITransactionOption) {
+        const method = this.method("exit", exitPayload);
         return this.processWrite(
             method,
             option
         );
+    }
+
+    isExitProcessed(exitHash: string) {
+        return this.method(
+            "processedExits", exitHash
+        ).read<boolean>();
     }
 
 }

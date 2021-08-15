@@ -148,9 +148,13 @@ export class ERC20 extends POSToken {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
-        return this.exitManager.isExitProcessed(
+        return this.exitManager.getExitHash(
             txHash, Log_Event_Signature.Erc20Transfer
-        );
+        ).then(exitHash => {
+            return this.rootChainManager.isExitProcessed(
+                exitHash
+            );
+        });
     }
 
 }
