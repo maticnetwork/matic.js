@@ -109,11 +109,14 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
-        return this.exitManager.exit(
+        return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc20Transfer,
-            option
-        );
+        ).then(payload => {
+            return this.rootChainManager.exit(
+                payload, option
+            );
+        });
     }
 
     /**
@@ -149,10 +152,5 @@ export class ERC20 extends POSToken {
             txHash, Log_Event_Signature.Erc20Transfer
         );
     }
-
-    isCheckPointed(txHash: string) {
-        
-    }
-
 
 }

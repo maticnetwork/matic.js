@@ -57,4 +57,29 @@ export class POSClient {
             this.exitManager
         );
     }
+
+    /**
+     * check whether a txHash is checkPointed 
+     *
+     * @param {string} txHash
+     * @returns
+     * @memberof POSClient
+     */
+    isCheckPointed(txHash: string) {
+        return this.exitManager.isCheckPointed(
+            txHash
+        );
+    }
+
+    getBalanceUsingRPC() {
+        return this.client_.child.client.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_getBalance',
+            params: [
+                '0x0ef2e86a73c7be7f767d7abe53b1d4cbfbccbf3a',
+                'latest'
+            ],
+            id: new Date().getTime()
+        });
+    }
 }

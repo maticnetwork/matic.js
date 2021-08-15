@@ -7,6 +7,11 @@ import ethUtils from "ethereumjs-util";
 import { ITransactionOption, ITransactionReceipt } from "src/interfaces";
 import { NetworkService } from "../services";
 
+interface IChainBlockInfo {
+    lastChildBlock: string;
+    txBlockNumber: number;
+}
+
 export class ExitManager {
     private maticClient_: BaseWeb3Client;
 
@@ -14,9 +19,9 @@ export class ExitManager {
 
     requestConcurrency: number;
 
-    constructor(maticClient: BaseWeb3Client, rootChainManager: RootChain, requestConcurrency: number) {
+    constructor(maticClient: BaseWeb3Client, rootChain: RootChain, requestConcurrency: number) {
         this.maticClient_ = maticClient;
-        this.rootChain = rootChainManager;
+        this.rootChain = rootChain;
         this.requestConcurrency = requestConcurrency;
     }
 
@@ -24,7 +29,6 @@ export class ExitManager {
         const payload = await this.buildPayloadForExit(
             burnTxHash,
             logSignature,
-            this.requestConcurrency
         );
         const method = this.rootChain.method("exit", payload);
 
@@ -153,21 +157,59 @@ export class ExitManager {
         return logIndex;
     }
 
-    async buildPayloadForExit(burnTxHash: string, logEventSig: string, requestConcurrency?) {
-        // check checkpoint
-        const [lastChildBlock, burnTx, receipt] = await Promise.all([
+    getChainBlockInfo(burnTxHash: string) {
+        return Promise.all([
             this.rootChain.getLastChildBlock(),
             this.maticClient_.getTransaction(burnTxHash),
-            this.maticClient_.getTransactionReceipt(burnTxHash)
+        ]).then(result => {
+            return {
+                lastChildBlock: result[0],
+                txBlockNumber: result[1].blockNumber
+            } as IChainBlockInfo;
+        });
+    }
+
+    private isCheckPointed_(data: IChainBlockInfo) {
+        // lastchild block is greater equal to transacton block number; 
+        return new BN(data.lastChildBlock).gte(new BN(data.txBlockNumber));
+    }
+
+    async isCheckPointed(burnTxHash: string) {
+        return this.getChainBlockInfo(
+            burnTxHash
+        ).then(result => {
+            return this.isCheckPointed_(
+                result
+            );
+        });
+    }
+
+    async buildPayloadForExit(burnTxHash: string, logEventSig: string) {
+
+        const blockInfo = await this.getChainBlockInfo(
+            burnTxHash
+        );
+
+        if (!this.isCheckPointed_(blockInfo)) {
+            throw new Error(
+                'Burn transaction has not been checkpointed as yet'
+            );
+        }
+
+        const { lastChildBlock, txBlockNumber } = blockInfo;
+
+        // check checkpoint
+        const [receipt, block] = await Promise.all([
+            this.maticClient_.getTransactionReceipt(burnTxHash),
+            this.maticClient_.getBlockWithTransaction(txBlockNumber)
         ]);
 
-        const block = await this.maticClient_.getBlockWithTransaction(burnTx.blockNumber);
-
         assert.ok(
-            new BN(lastChildBlock).gte(new BN(burnTx.blockNumber)),
+            new BN(lastChildBlock).gte(new BN(txBlockNumber)),
             'Burn transaction has not been checkpointed as yet'
         );
-        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(burnTx.blockNumber);
+
+        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(txBlockNumber);
 
         const rootBlockInfo = await this.rootChain.method(
             "headerBlocks", formatAmount(rootBlockNumber)
@@ -178,14 +220,14 @@ export class ExitManager {
             this.maticClient_,
             parseInt(rootBlockInfo.start, 10),
             parseInt(rootBlockInfo.end, 10),
-            parseInt(burnTx.blockNumber + '', 10)
+            parseInt(txBlockNumber + '', 10)
         );
 
         const receiptProof: any = await ProofUtil.getReceiptProof(
             receipt,
             block,
             this.maticClient_,
-            requestConcurrency
+            this.requestConcurrency
         );
 
         const logIndex = this.getLogIndex_(
@@ -195,7 +237,7 @@ export class ExitManager {
         return this._encodePayload(
             rootBlockNumber,
             blockProof,
-            burnTx.blockNumber,
+            txBlockNumber,
             block.timestamp,
             Buffer.from(block.transactionsRoot.slice(2), 'hex'),
             Buffer.from(block.receiptsRoot.slice(2), 'hex'),

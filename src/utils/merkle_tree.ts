@@ -18,7 +18,14 @@ export class MerkleTree {
             throw new Error('Depth must be 20 or less');
         }
 
-        this.leaves = leaves.concat(Array.from([Math.pow(2, depth) - leaves.length], () => utils.zeros(32)));
+        this.leaves = leaves.concat(
+            Array.from(
+                // tslint:disable-next-line
+                Array(Math.pow(2, depth) - leaves.length),
+                () => utils.zeros(32)
+            )
+        );
+        console.log("this.leaves", this.leaves, "leaves", leaves);
         this.layers = [this.leaves];
         this.createHashes(this.leaves);
     }
@@ -28,10 +35,14 @@ export class MerkleTree {
             return false;
         }
 
+        console.log("nodes", nodes);
+
         const treeLevel = [];
         for (let i = 0; i < nodes.length; i += 2) {
             const left = nodes[i];
             const right = nodes[i + 1];
+            console.log("left", left, "right", right);
+
             const data = SafeBuffer.concat([left, right]);
             treeLevel.push(sha3(data));
         }
