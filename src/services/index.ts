@@ -1,4 +1,5 @@
 import { HttpRequest } from "../utils";
+import BN from "bn.js";
 
 export class NetworkService {
     httpRequest: HttpRequest;
@@ -7,13 +8,17 @@ export class NetworkService {
         this.httpRequest = new HttpRequest(baseUrl);
     }
 
-    getBlockIncluded(blockNumber: string) {
+    getBlockIncluded(blockNumber: number) {
         const url = `block-included/${blockNumber}`;
         return this.httpRequest.get<{
             start: string;
             end: string;
             headerBlockNumber: string;
-        }>(url);
+            blockNumber: BN
+        }>(url).then(result => {
+            result['blockNumber'] = result.headerBlockNumber as any;
+            return result;
+        });
     }
 
     getProof(start, end, blockNumber) {

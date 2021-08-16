@@ -12,6 +12,12 @@ interface IChainBlockInfo {
     txBlockNumber: number;
 }
 
+interface IRootBlockInfo {
+    start: string;
+    end: string;
+    blockNumber: BN;
+}
+
 export class ExitManager {
     private maticClient_: BaseWeb3Client;
 
@@ -23,95 +29,6 @@ export class ExitManager {
         this.maticClient_ = maticClient;
         this.rootChain = rootChain;
         this.requestConcurrency = requestConcurrency;
-    }
-
-    async exitFast(burnTxHash: string, logSignature: string, option: ITransactionOption) {
-        const payload = await this.buildPayloadForFastExit(
-            burnTxHash,
-            logSignature,
-        );
-        const method = this.rootChain.method("exit", payload);
-
-        return this.rootChain['processWrite'](
-            method,
-            option
-        );
-    }
-
-    private buildPayloadForExitFastMerkle_(start, end, blockNumber) {
-        // build block proof
-        return ProofUtil.buildBlockProof(
-            this.maticClient_,
-            parseInt(start, 10),
-            parseInt(end, 10),
-            parseInt(blockNumber + '', 10)
-        );
-    }
-
-    async buildPayloadForFastExit(burnTxHash, logEventSig) {
-        // check checkpoint
-        const lastChildBlock = await this.rootChain.getLastChildBlock();
-        const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
-        const block: any = await this.maticClient_.getBlock(receipt.blockNumber);
-
-        assert.ok(
-            new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
-            'Burn transaction has not been checkpointed as yet'
-        );
-
-        let headerBlock;
-        const service = new NetworkService(
-            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
-        );
-        try {
-            headerBlock = await service.getBlockIncluded(receipt.blockNumber as any);
-            if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
-                throw Error('Network API Error');
-            }
-        } catch (err) {
-            const rootBlockNumber = await this.rootChain.findRootBlockFromChild(receipt.blockNumber);
-            headerBlock = await this.rootChain.method(
-                "headerBlocks", formatAmount(rootBlockNumber)
-            ).read<{ start: string, end: string }>();
-        }
-
-        // build block proof
-
-        const start = parseInt(headerBlock.start, 10);
-        const end = parseInt(headerBlock.end, 10);
-        const receiptBlockNumber = parseInt(receipt.blockNumber + '', 10);
-        let blockProof;
-
-        try {
-            blockProof = await service.getProof(
-                start, end, receiptBlockNumber
-            );
-            if (!blockProof) {
-                throw Error('Network API Error');
-            }
-        } catch (err) {
-            blockProof = await this.buildPayloadForExitFastMerkle_(start, end, receiptBlockNumber);
-        }
-
-        const receiptProof: any = await ProofUtil.getReceiptProof(
-            receipt, block, this.maticClient_
-        );
-        const logIndex = this.getLogIndex_(
-            logEventSig, receipt
-        );
-
-        return this._encodePayload(
-            headerBlock.headerBlockNumber,
-            blockProof,
-            receipt.blockNumber,
-            block.timestamp,
-            Buffer.from(block.transactionsRoot.slice(2), 'hex'),
-            Buffer.from(block.receiptsRoot.slice(2), 'hex'),
-            ProofUtil.getReceiptBytes(receipt), // rlp encoded
-            receiptProof.parentNodes,
-            receiptProof.path,
-            logIndex
-        );
     }
 
     private getLogIndex_(logEventSig: string, receipt: ITransactionReceipt) {
@@ -171,7 +88,62 @@ export class ExitManager {
         });
     }
 
-    async buildPayloadForExit(burnTxHash: string, logEventSig: string) {
+    private async getRootBlockInfo(txBlockNumber: number) {
+        // find in which block child was included in parent
+        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(
+            txBlockNumber
+        );
+
+        const rootBlockInfo = await this.rootChain.method(
+            "headerBlocks", formatAmount(rootBlockNumber)
+        ).read<IRootBlockInfo>();
+        rootBlockInfo.blockNumber = rootBlockNumber;
+        return rootBlockInfo;
+    }
+
+    private async getRootBlockInfoFromAPI(txBlockNumber: number) {
+        const service = new NetworkService(
+            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
+        );
+        try {
+            const headerBlock = await service.getBlockIncluded(txBlockNumber);
+            if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
+                throw Error('Network API Error');
+            }
+            return headerBlock;
+        } catch (err) {
+            return this.getRootBlockInfo(txBlockNumber);
+        }
+    }
+
+    private async getBlockProof(txBlockNumber: number, rootBlockInfo: { start, end }) {
+        return ProofUtil.buildBlockProof(
+            this.maticClient_,
+            parseInt(rootBlockInfo.start, 10),
+            parseInt(rootBlockInfo.end, 10),
+            parseInt(txBlockNumber + '', 10)
+        );
+    }
+
+    private async getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
+        const service = new NetworkService(
+            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
+        );
+        try {
+            const blockProof = await service.getProof(
+                rootBlockInfo.start, rootBlockInfo.end,
+                txBlockNumber
+            );
+            if (!blockProof) {
+                throw Error('Network API Error');
+            }
+            return blockProof;
+        } catch (err) {
+            return this.getBlockProof(txBlockNumber, rootBlockInfo);
+        }
+    }
+
+    async buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
 
         const blockInfo = await this.getChainBlockInfo(
             burnTxHash
@@ -183,31 +155,22 @@ export class ExitManager {
             );
         }
 
-        const { lastChildBlock, txBlockNumber } = blockInfo;
+        const { txBlockNumber } = blockInfo;
 
-        // check checkpoint
         const [receipt, block] = await Promise.all([
             this.maticClient_.getTransactionReceipt(burnTxHash),
             this.maticClient_.getBlockWithTransaction(txBlockNumber)
         ]);
 
-        assert.ok(
-            new BN(lastChildBlock).gte(new BN(txBlockNumber)),
-            'Burn transaction has not been checkpointed as yet'
+        const rootBlockInfo = await (
+            isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
+                this.getRootBlockInfo(txBlockNumber)
         );
 
-        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(txBlockNumber);
-
-        const rootBlockInfo = await this.rootChain.method(
-            "headerBlocks", formatAmount(rootBlockNumber)
-        ).read<{ start: string, end: string }>();
-
         // build block proof
-        const blockProof = await ProofUtil.buildBlockProof(
-            this.maticClient_,
-            parseInt(rootBlockInfo.start, 10),
-            parseInt(rootBlockInfo.end, 10),
-            parseInt(txBlockNumber + '', 10)
+        const blockProof = await (
+            isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
+                this.getBlockProof(txBlockNumber, rootBlockInfo)
         );
 
         const receiptProof: any = await ProofUtil.getReceiptProof(
@@ -222,7 +185,7 @@ export class ExitManager {
         );
 
         return this._encodePayload(
-            rootBlockNumber,
+            rootBlockInfo.blockNumber,
             blockProof,
             txBlockNumber,
             block.timestamp,
