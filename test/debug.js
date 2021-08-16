@@ -52,7 +52,7 @@ const execute = async () => {
   // const balance = await childErc20.getBalance(from);
   // console.log('balance', balance);
 
-  // const parentErc20 = maticPOS.erc20(erc20POSTokenGoerli, true);
+  const parentErc20 = maticPOS.erc20(erc20POSTokenGoerli, true);
 
   // const balance = await parentErc20.getBalance(from);
   // console.log('balance', balance);
@@ -60,13 +60,19 @@ const execute = async () => {
   // const approveResult = await parentErc20.deposit('1000000000000000', from);
   // console.log('txHash', await approveResult.getTransactionHash());
   // console.log('receipt', await approveResult.getReceipt());
-
-  // const isCheckPointed = await maticPOS.isCheckPointed('0xbadbf10a33ba5ae48cfa1660e011eb15bf927773610ace9466c71d14749d4132');
+  const exitHashes = [
+    '0x5cf63fd0c153f6ac39f0346437f6bf8b77c718b65fc4ddb9f461763525855634',
+    '0xbb7670ba7bf40f0f2909b544e78bbf9dca8b666e28f74ffdf9beda6726e164bd',
+    '0xa712bfe19bc53825da425f50276a84f72f85c9f660c28c88f3a4d7a2b03a3415',
+  ]
+  const exitHash = exitHashes[0];
+  // const isCheckPointed = await maticPOS.isCheckPointed(exitHash);
+  // const isCheckPointed = await parentErc20.isCheckPointed(exitHash);
   // return console.log("isCheckPointed", isCheckPointed);
-  const exitResult = await childErc20.isExited('0xe078925f8bbe43f99bb325cef6e895946f4086fbc05cf4686766b0a172fae396');
-  console.log("isExited", exitResult);
-  // console.log('txHash', await exitResult.getTransactionHash());
-  // console.log('receipt', await exitResult.getReceipt());
+  const exitResult = await parentErc20.withdrawExit(exitHash);
+  // console.log("isExited", exitResult)
+  console.log('txHash', await exitResult.getTransactionHash());
+  console.log('receipt', await exitResult.getReceipt());
 
 
 
