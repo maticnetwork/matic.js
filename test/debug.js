@@ -7,8 +7,8 @@ const from = user1.address;
 
 const execute = async () => {
   const privateKey = user1.privateKey;
-  const erc20TokenMumbaiAddress = plasma.child.erc20;
-  const goerliTokenERC20 = plasma.parent.erc20;
+  const mumbaiERC721 = plasma.child.erc721;
+  const goerliERC721 = plasma.parent.erc721;
   const matic = new PlasmaClient({
     network: 'testnet',
     version: 'mumbai',
@@ -26,26 +26,47 @@ const execute = async () => {
     }
   });
 
-  // const childErc20 = matic.erc20(erc20TokenMumbaiAddress);
+  // console.log(matic.withdrawManager);
 
-  // const balance = await childErc20.getBalance(from);
-  // console.log('balance', balance);
+  /**
+   * getBalance
+   */
+  const rootTokenErc721 = matic.erc721(goerliERC721, true);
+  // const balanceRoot = await rootTokenErc721.getBalance(user1.address)
+  // console.log('root bal start', balanceRoot, 'root bal end');
 
-  const rootTokenErc20 = matic.erc20(goerliTokenERC20, true);
-  const approveResult = await rootTokenErc20.approve('1000000000000000');
-  const txHash = await approveResult.getTransactionHash();
+  const childTokenErc721 = matic.erc721(mumbaiERC721);
+  // const balanceChild = await childTokenErc721.getBalance(user1.address)
+  // console.log('child bal start', balanceChild, 'child bal end');
+
+  /**
+   * ownerByIndex
+   */
+  // const ownerByIndex = await rootTokenErc721.tokenOfOwnerByIndexERC721(user1.address, 0)
+  // console.log('ownerofindex start', ownerByIndex, 'ownerofindex end');
+
+  /**
+   * deposit
+   */
+  // const safeDepositResult = await rootTokenErc721.safeDepositERC721(1981, { from: user1.address })
+  // console.log('safeDeposit starts', safeDepositResult, 'safeDeposit ends');
+
+  // const txHash = await safeDepositResult.getTransactionHash();
+  // console.log("txHash", txHash);
+
+  // const txReceipt = await safeDepositResult.getReceipt();
+  // console.log("txReceipt", txReceipt);
+
+  /**
+   * withdraw
+   */
+  const startWithdrawForNFT = await childTokenErc721.startWithdrawForNFT(21)
+  const txHash = await startWithdrawForNFT.getTransactionHash();
   console.log("txHash", txHash);
-  const txReceipt = await approveResult.getReceipt();
+
+  const txReceipt = await startWithdrawForNFT.getReceipt();
   console.log("txReceipt", txReceipt);
-  // const promise = rootTokenErc20.approve(
-  //   '1000000000000000'
-  // )
-  // promise.on("txHash", (txHash) => {
-  //   console.log("transaction hash args", txHash);
-  // });
-  // console.log("promise result", promise);
-  // const result = await promise;
-  // console.log("approve result", result);
+
 }
 
 execute().then(_ => {

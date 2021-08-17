@@ -68,6 +68,13 @@ export class ERC721 extends BaseToken {
             });
     }
 
+    /**
+     * WRITE
+     * deposit ERC721 from parent to child
+     * 
+     * @param tokenId 
+     * @param options 
+     */
     safeDepositERC721(tokenId: number, options: ITransactionOption = {}) {
         if (!options.from) {
             throw new Error('missing param - options.from');
@@ -81,6 +88,23 @@ export class ERC721 extends BaseToken {
             tokenId,
         );
 
+        return this.processWrite(method, options);
+    }
+
+    /**
+     * WRITE
+     * returns burn hash
+     * 
+     * @param tokenId 
+     * @param options 
+     */
+    startWithdrawForNFT(tokenId: number, options: ITransactionOption = {}) {
+        // validate all values here
+        const contract = this.contract;
+        const method = contract.method(
+            "withdraw",
+            tokenId,
+        );
         return this.processWrite(method, options);
     }
 }
