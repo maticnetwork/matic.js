@@ -5,6 +5,7 @@ import { IPOSClientConfig } from "../interfaces";
 import { LOGGER } from "../constant";
 import { ExitManager } from "./exit_manager";
 import { RootChain } from "./root_chain";
+import { initService } from "../services";
 
 export class POSClient {
 
@@ -20,6 +21,7 @@ export class POSClient {
 
 
         const mainPOSContracts = this.client_.mainPOSContracts;
+        initService(this.client_.metaNetwork.Matic.NetworkAPI);
         config = Object.assign(
             {
 

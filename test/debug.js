@@ -65,11 +65,11 @@ const execute = async () => {
     '0xbb7670ba7bf40f0f2909b544e78bbf9dca8b666e28f74ffdf9beda6726e164bd',
     '0xa712bfe19bc53825da425f50276a84f72f85c9f660c28c88f3a4d7a2b03a3415',
   ]
-  const exitHash = exitHashes[1];
+  const exitHash = exitHashes[2];
   // const isCheckPointed = await maticPOS.isCheckPointed(exitHash);
   // const isCheckPointed = await parentErc20.isCheckPointed(exitHash);
   // return console.log("isCheckPointed", isCheckPointed);
-  const exitResult = await parentErc20.withdrawExit(exitHash);
+  const exitResult = await parentErc20.withdrawExitFaster(exitHash);
   // console.log("isExited", exitResult)
   console.log('txHash', await exitResult.getTransactionHash());
   console.log('receipt', await exitResult.getReceipt());

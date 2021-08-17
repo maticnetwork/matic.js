@@ -1,7 +1,7 @@
 import { HttpRequest } from "../utils";
 import BN from "bn.js";
 
-export class NetworkService {
+class NetworkService {
     httpRequest: HttpRequest;
 
     constructor(baseUrl: string) {
@@ -9,7 +9,7 @@ export class NetworkService {
     }
 
     getBlockIncluded(blockNumber: number) {
-        const url = `block-included/${blockNumber}`;
+        const url = `/block-included/${blockNumber}`;
         return this.httpRequest.get<{
             start: string;
             end: string;
@@ -22,11 +22,17 @@ export class NetworkService {
     }
 
     getProof(start, end, blockNumber) {
-        const url = `fast-merkle-proof?start=${start}&end=${end}&number=${blockNumber}`;
+        const url = `/fast-merkle-proof?start=${start}&end=${end}&number=${blockNumber}`;
         return this.httpRequest.get<any>(url).then(result => {
             return result.proof;
         });
     }
 }
+
+export let service: NetworkService;
+
+export const initService = (url: string) => {
+    service = new NetworkService(url);
+};
 
 

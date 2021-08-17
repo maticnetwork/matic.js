@@ -5,7 +5,7 @@ import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
 import { ITransactionOption, ITransactionReceipt } from "src/interfaces";
-import { NetworkService } from "../services";
+import { service } from "../services";
 
 interface IChainBlockInfo {
     lastChildBlock: string;
@@ -56,8 +56,9 @@ export class ExitManager {
             default:
                 logIndex = receipt.logs.findIndex(log => log.topics[0].toLowerCase() === logEventSig.toLowerCase());
         }
-
-        assert.ok(logIndex > -1, 'Log not found in receipt');
+        if (logIndex < 0) {
+            throw new Error("Log not found in receipt");
+        }
         return logIndex;
     }
 
@@ -102,16 +103,16 @@ export class ExitManager {
     }
 
     private async getRootBlockInfoFromAPI(txBlockNumber: number) {
-        const service = new NetworkService(
-            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
-        );
         try {
+            console.log("block info from API 1");
             const headerBlock = await service.getBlockIncluded(txBlockNumber);
+            console.log("block info from API 2", headerBlock);
             if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
                 throw Error('Network API Error');
             }
             return headerBlock;
         } catch (err) {
+            console.log("block info from API", err);
             return this.getRootBlockInfo(txBlockNumber);
         }
     }
@@ -126,9 +127,7 @@ export class ExitManager {
     }
 
     private async getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
-        const service = new NetworkService(
-            this.rootChain['client'].metaNetwork.Matic.NetworkAPI
-        );
+
         try {
             const blockProof = await service.getProof(
                 rootBlockInfo.start, rootBlockInfo.end,
@@ -137,6 +136,7 @@ export class ExitManager {
             if (!blockProof) {
                 throw Error('Network API Error');
             }
+            console.log("block proof from API 1");
             return blockProof;
         } catch (err) {
             return this.getBlockProof(txBlockNumber, rootBlockInfo);
