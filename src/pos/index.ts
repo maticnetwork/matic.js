@@ -6,6 +6,7 @@ import { LOGGER } from "../constant";
 import { ExitManager } from "./exit_manager";
 import { RootChain } from "./root_chain";
 import { initService } from "../services";
+import { ERC721 } from "./erc721";
 
 export class POSClient {
 
@@ -60,6 +61,16 @@ export class POSClient {
         );
     }
 
+    erc721(tokenAddress, isParent?: boolean) {
+        return new ERC721(
+            tokenAddress,
+            isParent,
+            this.client_,
+            this.rootChainManager,
+            this.exitManager
+        );
+    }
+
     /**
      * check whether a txHash is checkPointed 
      *
@@ -73,15 +84,15 @@ export class POSClient {
         );
     }
 
-    getBalanceUsingRPC() {
-        return this.client_.child.client.sendRPCRequest({
-            jsonrpc: '2.0',
-            method: 'eth_getBalance',
-            params: [
-                '0x0ef2e86a73c7be7f767d7abe53b1d4cbfbccbf3a',
-                'latest'
-            ],
-            id: new Date().getTime()
-        });
-    }
+    // getBalanceUsingRPC() {
+    //     return this.client_.child.client.sendRPCRequest({
+    //         jsonrpc: '2.0',
+    //         method: 'eth_getBalance',
+    //         params: [
+    //             '0x0ef2e86a73c7be7f767d7abe53b1d4cbfbccbf3a',
+    //             'latest'
+    //         ],
+    //         id: new Date().getTime()
+    //     });
+    // }
 }

@@ -49,6 +49,28 @@ export class BaseToken {
             });
     }
 
+    protected processRead<T>(method: BaseContractMethod, option: ITransactionOption = {}): Promise<T> {
+        LOGGER.log("process read");
+        return this.createTransactionConfig(
+            {
+                txConfig: option,
+                isWrite: false,
+                method,
+                isParent: this.contractParam.isParent
+            }).then(config => {
+                LOGGER.log("process read config");
+                if (option.returnTransaction) {
+                    return merge(config, {
+                        data: method.encodeABI(),
+                        to: this.contract.address
+                    } as ITransactionConfig);
+                }
+                return method.read(
+                    config,
+                );
+            });
+    }
+
     protected getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
         const client = isParent ? this.client.parent.client :
             this.client.child.client;

@@ -1,6 +1,5 @@
 import { Web3SideChainClient } from "../model";
 import { ITransactionOption } from "../interfaces";
-import { createTransactionConfig } from "../utils/create_tx_config";
 import { RootChainManager } from "./root_chain_manager";
 import { formatAmount } from "../utils";
 import { POSToken } from "./pos_token";
@@ -31,13 +30,7 @@ export class ERC20 extends POSToken {
             "balanceOf",
             userAddress
         );
-        return createTransactionConfig(
-            {
-                txConfig: option,
-                defaultTxConfig: this.childDefaultConfig,
-            }).then(config => {
-                return method.read<string>(config);
-            });
+        return this.processRead<string>(method, option);
     }
 
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
@@ -69,12 +62,10 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        console.log("this.rootChainManager", this.rootChainManager['contract'].address);
         const amountInABI = this.client.parent.client.encodeParameters(
             [formatAmount(amount)],
             ['uint256'],
         );
-        console.log("amountInByte", amountInABI);
         return this.rootChainManager.deposit(
             userAddress,
             this.contractParam.tokenAddress,
