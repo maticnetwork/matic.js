@@ -47,7 +47,7 @@ export class POSClient {
         );
 
         this.exitManager = new ExitManager(
-            this.client_.child.client,
+            this.client_.child,
             this.rootChain,
             config.requestConcurrency
         );

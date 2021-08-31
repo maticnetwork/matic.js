@@ -62,7 +62,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        const amountInABI = this.client.parent.client.encodeParameters(
+        const amountInABI = this.client.parent.encodeParameters(
             [formatAmount(amount)],
             ['uint256'],
         );

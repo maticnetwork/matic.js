@@ -1,4 +1,4 @@
-import { BaseWeb3Client, BaseContract } from "../model";
+import { BaseWeb3Client, BaseContract } from "../abstracts";
 
 export class DepositManager {
     contract: BaseContract;

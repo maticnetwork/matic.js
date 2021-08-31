@@ -1,11 +1,11 @@
-import { SideChainClientOption } from "../types";
 import { Web3Client, LOGGER } from "../constant";
 import { IPlasmaClientConfig } from "../interfaces";
 import MetaNetwork from '@maticnetwork/meta/network';
+import { BaseWeb3Client } from "../abstracts";
 
 export class Web3SideChainClient {
-    parent: SideChainClientOption;
-    child: SideChainClientOption;
+    parent: BaseWeb3Client;
+    child: BaseWeb3Client;
 
     metaNetwork: MetaNetwork;
     config: IPlasmaClientConfig;
@@ -27,18 +27,8 @@ export class Web3SideChainClient {
         }
         this.metaNetwork = metaNetwork;
 
-        this.parent = {
-            client: new Web3Client(config.parent.provider),
-            option: {
-
-            }
-        };
-        this.child = {
-            client: new Web3Client(config.child.provider),
-            option: {
-
-            }
-        };
+        this.parent = new Web3Client(config.parent.provider);
+        this.child = new Web3Client(config.child.provider);
 
         // this.child.client.extend('bor', [
         //     {

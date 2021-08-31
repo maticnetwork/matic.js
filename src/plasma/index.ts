@@ -46,7 +46,7 @@ export class PlasmaClient {
         );
 
         this.depositManager = new DepositManager(
-            this.client_.parent.client,
+            this.client_.parent,
             config.depositManager,
             this.client_.getABI("DepositManager")
         );

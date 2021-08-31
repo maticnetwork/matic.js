@@ -1,11 +1,11 @@
-import { BaseWeb3Client } from "../model";
 import { RootChain } from "./root_chain";
 import { formatAmount, ProofUtil } from "../utils";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
-import { ITransactionOption, ITransactionReceipt } from "src/interfaces";
+import { ITransactionReceipt } from "src/interfaces";
 import { service } from "../services";
+import { BaseWeb3Client } from "../abstracts";
 
 interface IChainBlockInfo {
     lastChildBlock: string;

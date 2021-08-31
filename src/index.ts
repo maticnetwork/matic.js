@@ -7,6 +7,7 @@ export * from "./interfaces";
 export * from "./types";
 export * from "./model";
 export * from "./constant";
+export * from "./abstracts";
 export * from "./plugins/plasma_web3_client";
 
 

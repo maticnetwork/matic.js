@@ -1,7 +1,7 @@
-import { BaseWeb3Client } from "../model";
+// import { BaseWeb3Client } from "../model";
 
-export type SideChainClientOption = {
-    client: BaseWeb3Client;
-    option: {
-    };
-};
+// export type SideChainClientOption = {
+//     client: BaseWeb3Client;
+//     option: {
+//     };
+// };

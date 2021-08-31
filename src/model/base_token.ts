@@ -1,7 +1,6 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
-import { BaseContractMethod } from "../abstracts";
-import { BaseContract } from "./eth_contract";
+import { BaseContractMethod, BaseContract } from "../abstracts";
 import { eventBusPromise, merge, IEventBusPromise } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
 import { ITransactionReceipt } from "../interfaces";
@@ -72,8 +71,8 @@ export class BaseToken {
     }
 
     protected getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
-        const client = isParent ? this.client.parent.client :
-            this.client.child.client;
+        const client = isParent ? this.client.parent :
+            this.client.child;
         return client.getContract(tokenAddress, abi);
     }
 
@@ -88,8 +87,8 @@ export class BaseToken {
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
         txConfig = Object.assign(isParent ? this.parentDefaultConfig : this.childDefaultConfig, txConfig || {});
         console.log("txConfig", txConfig, isParent, isWrite);
-        const client = isParent ? this.client.parent.client :
-            this.client.child.client;
+        const client = isParent ? this.client.parent :
+            this.client.child;
         if (isWrite) {
             const [gas, gasPrice, nonce, chainId] = await Promise.all([
                 !(txConfig.gas)

@@ -1,4 +1,4 @@
-import { BaseContract } from "../model";
+import { BaseContract } from "../abstracts";
 import Contract from "web3/eth/contract";
 import { EthMethod } from "./eth_method";
 

@@ -1,4 +1,4 @@
-import { BaseContract } from "../model";
+import { BaseContract } from "../abstracts";
 import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse } from "../interfaces";
 
 export abstract class BaseWeb3Client {

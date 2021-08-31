@@ -1,4 +1,4 @@
-import { BaseWeb3Client } from "src/model";
+import { BaseWeb3Client } from "../abstracts";
 import { MerkleTree } from "./merkle_tree";
 import ethUtils from "ethereumjs-util";
 import { ITransactionReceipt, IBlock, IBlockWithTransaction } from "src/interfaces";

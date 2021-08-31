@@ -87,7 +87,7 @@ export class ERC721 extends POSToken {
 
 
     deposit(tokenId: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        const amountInABI = this.client.parent.client.encodeParameters(
+        const amountInABI = this.client.parent.encodeParameters(
             [formatAmount(tokenId)],
             ['uint256'],
         );
@@ -102,7 +102,7 @@ export class ERC721 extends POSToken {
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
         const tokensInUint256 = this.validateMany_(tokenIds);
 
-        const amountInABI = this.client.parent.client.encodeParameters(
+        const amountInABI = this.client.parent.encodeParameters(
             tokensInUint256,
             ['uint256[]'],
         );

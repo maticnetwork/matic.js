@@ -1,9 +1,9 @@
-import { BaseContract, BaseWeb3Client } from "../model";
 import { Web3Contract } from "./eth_contract";
 import Web3 from "web3";
 import { ITransactionConfig, ITransactionData, ITransactionReceipt, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse } from "../interfaces";
 import { Transaction } from "web3/eth/types";
 import { AbstractProvider } from "web3-core";
+import { BaseWeb3Client } from "../abstracts";
 
 export class MaticWeb3Client extends BaseWeb3Client {
     private web3_: Web3;
