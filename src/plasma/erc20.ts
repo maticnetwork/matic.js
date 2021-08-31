@@ -2,7 +2,6 @@ import { BaseToken, Web3SideChainClient } from "../model";
 import BN from "bn.js";
 import { ITransactionConfig, ITransactionOption } from "../interfaces";
 import { formatAmount, IEventBusPromise, eventBusPromise, merge } from "../utils";
-import { createTransactionConfig } from "../utils/create_tx_config";
 import { DepositManager } from "./deposit_manager";
 
 export class ERC20 extends BaseToken {
@@ -25,13 +24,7 @@ export class ERC20 extends BaseToken {
             "balanceOf",
             userAddress
         );
-        return createTransactionConfig(
-            {
-                txConfig: {},
-                defaultTxConfig: this.childDefaultConfig,
-            }).then(config => {
-                return method.read<string>(config);
-            });
+        return this.processRead<string>(method, option);
     }
 
     approve(amount: BN | string | number, option: ITransactionOption = {}) {
@@ -51,6 +44,23 @@ export class ERC20 extends BaseToken {
         );
     }
 
-
+    depositERC20(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
+        const contract = this.depositManager.contract;
+        const method = contract.method(
+            "depositERC20ForUser",
+            this.contract.address,
+            userAddress,
+            formatAmount(amount)
+        );
+        return this.processWrite(method, option);
+    }
+    
+    depositEth(amount: BN | string | number, option: ITransactionOption = {}) {
+        const contract = this.depositManager.contract;
+        const method = contract.method(
+            "depositEther",
+        );
+        return this.processWrite(method, option);
+    }
 
 }

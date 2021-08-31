@@ -5,7 +5,7 @@ import { ExitManager } from "./exit_manager";
 
 export class POSToken extends BaseToken {
 
-    predicateAddress: string;
+    private predicateAddress: string;
 
     constructor(
         contractParam: IContractInitParam,

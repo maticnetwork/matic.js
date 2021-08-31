@@ -1,6 +1,14 @@
+const fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response> =
+    (() => {
+        if (process.env.BUILD_ENV === "node") {
+            return require('node-fetch').default;
+        }
+        return window.fetch;
+    })();
+
+
 export class HttpRequest {
     baseUrl = "";
-    private fetch_: (input: RequestInfo, init?: RequestInit) => Promise<Response> = window ? window.fetch : require('node-fetch');
 
     constructor(option: { baseUrl: string } | string = {} as any) {
         option = typeof option === "string" ? {
@@ -16,7 +24,7 @@ export class HttpRequest {
         url = this.baseUrl + url + Object.keys(query).
             map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&');
 
-        return this.fetch_(url, {
+        return fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +38,7 @@ export class HttpRequest {
     post(url = "", body) {
         url = this.baseUrl + url;
 
-        return this.fetch_(url, {
+        return fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

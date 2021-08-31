@@ -9,7 +9,7 @@ const isProd = mode === 'production'
 
 console.log('build runing for mode', mode)
 
-const clientConfig = {
+const baseConfig = {
   mode,
   devtool: 'source-map',
   entry: `${__dirname}/src/index.ts`,
@@ -56,10 +56,18 @@ const clientConfig = {
       patterns: [{ from: path.resolve('build_helper', 'npm.export.js'), to: '' }],
     }),
   ],
-}
+};
+
+const libraryTarget = [{
+  type: "umd",
+  name: `${libraryName}.umd${isProd ? '.min' : ''}.js`
+}, {
+  type: "commonjs2",
+  name: `${libraryName}.node${isProd ? '.min' : ''}.js`
+}];
 
 const serverConfig = {
-  ...clientConfig,
+  ...baseConfig,
   target: 'node',
   output: {
     path: `${__dirname}/dist`,
@@ -70,13 +78,13 @@ const serverConfig = {
 }
 
 const standaloneConfig = {
-  ...clientConfig,
+  ...baseConfig,
   output: {
-    ...clientConfig.output,
+    ...baseConfig.output,
     library: 'Matic',
     filename: `${libraryName}${isProd ? '.min' : ''}.js`,
   },
   externals: {},
 }
 
-module.exports = [clientConfig, serverConfig, standaloneConfig]
+module.exports = [baseConfig, serverConfig, standaloneConfig]

@@ -14,5 +14,7 @@ export interface IPOSClientConfig {
         }
     };
     rootChainManager?: string;
+    rootChain?: string;
     log?: boolean;
+    requestConcurrency?: number;
 }

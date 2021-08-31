@@ -72,7 +72,7 @@ export class ProofUtil {
                     // Build a merkle tree of correct size for the subtree using these merkle roots
                     const leaves = Array.from({ length: 2 ** heightDifference }, () => ethUtils.toBuffer(leafRoots));
                     leaves[0] = remainingNodesHash;
-
+                    console.log("leaves", leaves);
                     const subTreeMerkleRoot = new MerkleTree(leaves).getRoot();
                     reversedProof.push(subTreeMerkleRoot);
                 }
@@ -94,19 +94,20 @@ export class ProofUtil {
         );
     }
 
-    static async queryRootHash(web3: BaseWeb3Client, startBlock: number, endBlock: number) {
+    static async queryRootHash(client: BaseWeb3Client, startBlock: number, endBlock: number) {
         try {
-            return ethUtils.toBuffer(`0x${await web3.getRootHash(startBlock, endBlock)}`);
+            const rootHash = await client.getRootHash(startBlock, endBlock);
+            return ethUtils.toBuffer(`0x${rootHash}`);
         } catch (err) {
             return null;
         }
     }
 
-    static recursiveZeroHash(n: number, web3: BaseWeb3Client) {
+    static recursiveZeroHash(n: number, client: BaseWeb3Client) {
         if (n === 0) return '0x0000000000000000000000000000000000000000000000000000000000000000';
-        const subHash = this.recursiveZeroHash(n - 1, web3);
+        const subHash = this.recursiveZeroHash(n - 1, client);
         return ethUtils.keccak256(
-            ethUtils.toBuffer(web3.encodeParameters([subHash, subHash], ['bytes32', 'bytes32'],))
+            ethUtils.toBuffer(client.encodeParameters([subHash, subHash], ['bytes32', 'bytes32'],))
         );
     }
 

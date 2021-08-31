@@ -1,6 +1,6 @@
-const { use, Web3Plugin, PlasmaClient } = require("@maticnetwork/maticjs");
+const { use, Web3Plugin, PlasmaClient, POSClient } = require("@maticnetwork/maticjs");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const { user1, plasma, rpc } = require("./config");
+const { user1, plasma, rpc, pos } = require("./config");
 
 use(Web3Plugin);
 const from = user1.address;
@@ -27,6 +27,7 @@ const execute = async () => {
   });
 
   // console.log(matic.withdrawManager);
+
 
   /**
    * getBalance
@@ -71,4 +72,7 @@ const execute = async () => {
 
 execute().then(_ => {
   process.exit(0)
+}).catch(err => {
+  console.error(err);
+  process.exit(0);
 })

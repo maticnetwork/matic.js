@@ -35,7 +35,7 @@ export class PlasmaClient {
         this.client_ = new Web3SideChainClient(config);
 
 
-        const mainContracts = this.client_.mainContracts;
+        const mainContracts = this.client_.mainPlasmaContracts;
 
         config = Object.assign(
             {

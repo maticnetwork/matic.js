@@ -56,8 +56,12 @@ export class Web3SideChainClient {
         return this.metaNetwork.abi(name, type);
     }
 
-    get mainContracts() {
+    get mainPlasmaContracts() {
         return this.metaNetwork.Main.Contracts;
+    }
+
+    get mainPOSContracts() {
+        return this.metaNetwork.Main.POSContracts;
     }
 }
 
