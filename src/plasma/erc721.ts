@@ -1,8 +1,5 @@
 import { BaseToken, Web3SideChainClient } from "../model";
-import BN from "bn.js";
-import { ITransactionConfig, ITransactionOption } from "../interfaces";
-import { formatAmount, IEventBusPromise, eventBusPromise, merge } from "../utils";
-import { createTransactionConfig } from "../utils/create_tx_config";
+import { ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 
 export class ERC721 extends BaseToken {
@@ -34,13 +31,7 @@ export class ERC721 extends BaseToken {
             userAddress
         );
 
-        return createTransactionConfig(
-            {
-                txConfig: {},
-                defaultTxConfig: this.childDefaultConfig,
-            }).then(config => {
-                return method.read<string>(config);
-            });
+        return this.processRead<number>(method, options);
     }
 
     /**
@@ -59,13 +50,7 @@ export class ERC721 extends BaseToken {
             index
         );
 
-        return createTransactionConfig(
-            {
-                txConfig: {},
-                defaultTxConfig: this.childDefaultConfig,
-            }).then(config => {
-                return method.read<string>(config);
-            });
+        return this.processRead(method, options);
     }
 
     /**
