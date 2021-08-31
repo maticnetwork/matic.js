@@ -44,6 +44,23 @@ export class ERC20 extends BaseToken {
         );
     }
 
-
+    depositERC20(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
+        const contract = this.depositManager.contract;
+        const method = contract.method(
+            "depositERC20ForUser",
+            this.contract.address,
+            userAddress,
+            formatAmount(amount)
+        );
+        return this.processWrite(method, option);
+    }
+    
+    depositEth(amount: BN | string | number, option: ITransactionOption = {}) {
+        const contract = this.depositManager.contract;
+        const method = contract.method(
+            "depositEther",
+        );
+        return this.processWrite(method, option);
+    }
 
 }
