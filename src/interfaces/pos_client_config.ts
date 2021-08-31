@@ -1,20 +1,6 @@
-export interface IPOSClientConfig {
-    network: string;
-    version: string;
-    parent: {
-        provider: any;
-        defaultConfig: {
-            from: string;
-        }
-    };
-    child: {
-        provider: any;
-        defaultConfig: {
-            from: string;
-        }
-    };
+import { IBaseClientConfig } from "./base_client_config";
+
+export interface IPOSClientConfig extends IBaseClientConfig {
     rootChainManager?: string;
     rootChain?: string;
-    log?: boolean;
-    requestConcurrency?: number;
 }

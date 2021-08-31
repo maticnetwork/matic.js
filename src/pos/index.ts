@@ -8,6 +8,10 @@ import { RootChain } from "./root_chain";
 import { initService } from "../services";
 import { ERC721 } from "./erc721";
 
+export * from "./exit_manager";
+export * from "./root_chain_manager";
+export * from "./root_chain";
+
 export class POSClient {
 
     rootChainManager: RootChainManager;

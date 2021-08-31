@@ -1,18 +1,6 @@
-export interface IPlasmaClientConfig {
-    network: string;
-    version: string;
-    parent: {
-        provider: any;
-        defaultConfig: {
-            from: string;
-        }
-    };
-    child: {
-        provider: any;
-        defaultConfig: {
-            from: string;
-        }
-    };
+import { IBaseClientConfig } from "./base_client_config";
+
+export interface IPlasmaClientConfig extends IBaseClientConfig {
+
     depositManager?: string;
-    log?: boolean;
 }

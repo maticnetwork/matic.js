@@ -1,5 +1,5 @@
 import { SideChainClientOption } from "../types";
-import { Web3Client } from "../constant";
+import { Web3Client, LOGGER } from "../constant";
 import { IPlasmaClientConfig } from "../interfaces";
 import MetaNetwork from '@maticnetwork/meta/network';
 
@@ -62,6 +62,10 @@ export class Web3SideChainClient {
 
     get mainPOSContracts() {
         return this.metaNetwork.Main.POSContracts;
+    }
+
+    get logger() {
+        return LOGGER;
     }
 }
 

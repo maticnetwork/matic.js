@@ -8,7 +8,4 @@ export * from "./merge";
 export * from "./map_promise";
 export * from "./proof_util";
 export * from "./http_request";
-
-export const util = {
-    proof: ProofUtil
-};
+export * from "./converter";

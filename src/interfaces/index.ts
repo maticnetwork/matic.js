@@ -14,3 +14,4 @@ export * from "./block_with_transaction";
 export * from "./rpc_request_payload";
 export * from "./rpc_response_payload";
 export * from "./map_promise_option";
+export * from "./base_client_config";
