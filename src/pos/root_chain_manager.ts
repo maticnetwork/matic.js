@@ -1,4 +1,4 @@
-import { BaseToken, Web3SideChainClient } from "../model";
+import { BaseToken, Web3SideChainClient } from "../utils";
 import { ITransactionOption } from "../interfaces";
 
 export class RootChainManager extends BaseToken {

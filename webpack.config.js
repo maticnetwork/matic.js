@@ -34,9 +34,7 @@ const baseConfig = {
   externals: {
     web3: 'web3',
     'ethereumjs-util': 'ethereumjs-util',
-    'query-string': 'query-string',
     'bn.js': 'bn.js',
-    axios: 'axios',
     '@maticnetwork/meta/network': '@maticnetwork/meta/network',
     'ethereumjs-tx': 'ethereumjs-tx',
     'ethereumjs-util': 'ethereumjs-util',

@@ -2,7 +2,7 @@ import { MaticWeb3Client } from "./inherited";
 import { Logger } from "./utils";
 import BN from "bn.js";
 
-export let Web3Client: typeof MaticWeb3Client;
+export let Web3Client: typeof MaticWeb3Client = MaticWeb3Client;
 
 export const setWeb3Client = (web3Client) => {
     Web3Client = web3Client;

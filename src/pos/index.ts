@@ -1,6 +1,6 @@
 import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
-import { Web3SideChainClient } from "../model";
+import { Web3SideChainClient } from "../utils";
 import { IPOSClientConfig } from "../interfaces";
 import { LOGGER } from "../constant";
 import { ExitManager } from "./exit_manager";

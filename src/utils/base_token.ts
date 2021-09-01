@@ -1,12 +1,11 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
 import { BaseContractMethod, BaseContract } from "../abstracts";
-import { eventBusPromise, merge, IEventBusPromise } from "../utils";
+import { merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
-import { ITransactionReceipt } from "../interfaces";
-import { ContractWriteResult } from "./contract_write_result";
+import { ContractWriteResult } from "../helpers";
 
-interface ITransactionConfigParam {
+export interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
     method?: BaseContractMethod;
     isWrite?: boolean;

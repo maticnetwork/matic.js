@@ -1,4 +1,4 @@
-import { BaseToken, Web3SideChainClient } from "../model";
+import { BaseToken, Web3SideChainClient } from "../utils";
 import { TYPE_AMOUNT } from "../types";
 import BN from "bn.js";
 import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO, LOGGER } from "../constant";

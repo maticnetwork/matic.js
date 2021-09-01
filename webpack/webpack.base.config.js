@@ -18,7 +18,7 @@ exports.default = {
         filename: `${libraryName}.umd${isProd ? '.min' : ''}.js`,
         library: libraryName,
         libraryTarget: 'umd',
-        libraryExport: 'default',
+        // libraryExport: 'default',
         umdNamedDefine: true,
     },
     module: {

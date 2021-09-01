@@ -1,7 +1,6 @@
-import { Web3SideChainClient } from "../model";
 import { ITransactionOption } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
-import { formatAmount } from "../utils";
+import { formatAmount, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitManager } from "./exit_manager";

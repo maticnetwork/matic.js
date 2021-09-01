@@ -1,4 +1,4 @@
-import { BaseToken, Web3SideChainClient } from "../model";
+import { BaseToken, Web3SideChainClient } from "../utils";
 import { ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 

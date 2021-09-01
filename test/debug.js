@@ -1,15 +1,17 @@
-const { use, Web3Plugin, PlasmaClient, POSClient } = require("@maticnetwork/maticjs");
+const { use, Web3Plugin, PlasmaClient, POSClient, ProofUtil } = require("@maticnetwork/maticjs");
+// return console.log("BaseToken", ProofUtil, use);
+
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { user1, plasma, rpc, pos } = require("./config");
 
-use(Web3Plugin);
+// use(Web3Plugin);
 const from = user1.address;
 
 const execute = async () => {
   const privateKey = user1.privateKey;
-  const mumbaiERC721 = plasma.child.erc721;
-  const goerliERC721 = plasma.parent.erc721;
-  const matic = new PlasmaClient({
+  const mumbaiERC721 = pos.child.erc20;
+  const goerliERC721 = pos.parent.erc20;
+  const matic = new POSClient({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -26,48 +28,16 @@ const execute = async () => {
     }
   });
 
-  // console.log(matic.withdrawManager);
-
-
-  /**
-   * getBalance
-   */
-  const rootTokenErc721 = matic.erc721(goerliERC721, true);
-  // const balanceRoot = await rootTokenErc721.getBalance(user1.address)
-  // console.log('root bal start', balanceRoot, 'root bal end');
-
-  const childTokenErc721 = matic.erc721(mumbaiERC721);
-  // const balanceChild = await childTokenErc721.getBalance(user1.address)
-  // console.log('child bal start', balanceChild, 'child bal end');
-
-  /**
-   * ownerByIndex
-   */
-  // const ownerByIndex = await rootTokenErc721.tokenOfOwnerByIndexERC721(user1.address, 0)
-  // console.log('ownerofindex start', ownerByIndex, 'ownerofindex end');
-
-  /**
-   * deposit
-   */
-  // const safeDepositResult = await rootTokenErc721.safeDepositERC721(1981, { from: user1.address })
-  // console.log('safeDeposit starts', safeDepositResult, 'safeDeposit ends');
-
-  // const txHash = await safeDepositResult.getTransactionHash();
-  // console.log("txHash", txHash);
-
-  // const txReceipt = await safeDepositResult.getReceipt();
-  // console.log("txReceipt", txReceipt);
-
-  /**
-   * withdraw
-   */
-  const startWithdrawForNFT = await childTokenErc721.startWithdrawForNFT(21)
-  const txHash = await startWithdrawForNFT.getTransactionHash();
-  console.log("txHash", txHash);
-
-  const txReceipt = await startWithdrawForNFT.getReceipt();
-  console.log("txReceipt", txReceipt);
-
+  const tx = await matic.erc20(mumbaiERC721).withdrawStart(
+    10,
+    {
+      nonce: 1974,
+      // gasPrice: '1000',
+      // gas: 100
+    }
+  );
+  console.log("txHash", await tx.getTransactionHash());
+  console.log("txReceipt", await tx.getReceipt());
 }
 
 execute().then(_ => {

@@ -1,5 +1,5 @@
-import { BaseToken, Web3SideChainClient } from "../model";
-import { ITransactionOption, IContractInitParam } from "../interfaces";
+import { BaseToken, Web3SideChainClient } from "../utils";
+import { IContractInitParam } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { ExitManager } from "./exit_manager";
 

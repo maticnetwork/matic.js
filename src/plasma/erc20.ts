@@ -1,7 +1,6 @@
-import { BaseToken, Web3SideChainClient } from "../model";
 import BN from "bn.js";
-import { ITransactionConfig, ITransactionOption } from "../interfaces";
-import { formatAmount, IEventBusPromise, eventBusPromise, merge } from "../utils";
+import { ITransactionOption } from "../interfaces";
+import { formatAmount, BaseToken, Web3SideChainClient } from "../utils";
 import { DepositManager } from "./deposit_manager";
 
 export class ERC20 extends BaseToken {
@@ -54,7 +53,7 @@ export class ERC20 extends BaseToken {
         );
         return this.processWrite(method, option);
     }
-    
+
     depositEth(amount: BN | string | number, option: ITransactionOption = {}) {
         const contract = this.depositManager.contract;
         const method = contract.method(
