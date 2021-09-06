@@ -19,7 +19,8 @@ export class EthMethod extends BaseContractMethod {
         const result = {
             onTransactionHash: (doNothing as any),
             onReceipt: doNothing,
-            onError: doNothing
+            onReceiptError: doNothing,
+            onTxError: doNothing
         };
         setTimeout(() => {
             LOGGER.log("sending tx with config", tx);
@@ -38,7 +39,8 @@ export class EthMethod extends BaseContractMethod {
             this.method.send(tx as any).
                 once("transactionHash", result.onTransactionHash).
                 once("receipt", result.onReceipt).
-                once("error", result.onError);
+                on("error", result.onTxError).
+                on("error", result.onReceiptError);
             // } catch (error) {
 
             // }
@@ -51,7 +53,7 @@ export class EthMethod extends BaseContractMethod {
     }
 
     encodeABI() {
-        return this.encodeABI();
+        return this.method.encodeABI();
     }
 
 }

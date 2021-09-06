@@ -84,7 +84,8 @@ export class BaseToken {
     }
 
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
-        txConfig = Object.assign(isParent ? this.parentDefaultConfig : this.childDefaultConfig, txConfig || {});
+        const defaultConfig = isParent ? this.parentDefaultConfig : this.childDefaultConfig;
+        txConfig = Object.assign(defaultConfig, (txConfig || {}));
         console.log("txConfig", txConfig, isParent, isWrite);
         const client = isParent ? this.client.parent :
             this.client.child;

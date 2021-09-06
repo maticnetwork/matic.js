@@ -7,11 +7,11 @@ export class ContractWriteResult {
     constructor(result: ISendResult) {
         this.txHashPromise = new Promise((res, rej) => {
             result.onTransactionHash = res;
-            result.onError = rej;
+            result.onTxError = rej;
         });
         this.receiptPromise = new Promise((res, rej) => {
             result.onReceipt = res;
-            result.onError = rej;
+            result.onReceiptError = rej;
         });
     }
 

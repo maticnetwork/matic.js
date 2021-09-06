@@ -1,3 +1,6 @@
+import { ERROR_TYPE } from "../enums";
+import { ErrorHelper } from "./error_helper";
+
 export class Logger {
 
     private isEnabled: boolean;
@@ -10,5 +13,9 @@ export class Logger {
         if (this.isEnabled) {
             console.log(...message);
         }
+    }
+
+    error(type: ERROR_TYPE, info?) {
+        return new ErrorHelper(type, info);
     }
 }
