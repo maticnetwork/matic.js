@@ -24,7 +24,7 @@ export class MaticPOSClient extends SDKClient {
   }
 
   generateL2TxProof(txHash: string, eventSig: string) {
-    return this.posRootChainManager.customPayload(txHash, eventSig);
+    return this.posRootChainManager.customPayload(txHash, eventSig)
   }
 
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
