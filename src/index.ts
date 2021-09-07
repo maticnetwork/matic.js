@@ -23,6 +23,10 @@ export class MaticPOSClient extends SDKClient {
     this.posRootChainManager = new POSRootChainManager(options, this.rootChain, this.web3Client)
   }
 
+  generateL2TxProof(txHash: string, eventSig: string) {
+    return this.posRootChainManager.customPayload(txHash, eventSig);
+  }
+
   approveERC20ForDeposit(rootToken: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !rootToken)) {
       throw new Error('options.from, rootToken or amount is missing')
