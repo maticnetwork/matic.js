@@ -1,4 +1,4 @@
-import { MaticWeb3Client } from "./inherited";
+import { MaticWeb3Client } from "./web3js";
 import { Logger } from "./utils";
 import BN from "bn.js";
 
