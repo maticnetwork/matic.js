@@ -9,12 +9,21 @@ export class ContractMethod extends BaseContractMethod {
         super(logger);
     }
 
+    private toConfig_(config: ITransactionConfig = {}) {
+        return {
+            gasPrice: config.gasPrice,
+            gasLimit: config.gasLimit,
+            value: config.value,
+            nonce: config.nonce
+        };
+    }
+
     encodeABI() {
         return this.contract.interface.functions.encode[this.methodName](...this.args);
     }
 
-    estimateGas(tx: ITransactionConfig) {
-        return this.contract.estimateGas[this.methodName](...this.args, tx).then(result => {
+    estimateGas(config: ITransactionConfig = {}) {
+        return this.contract.estimateGas[this.methodName](...this.args, this.toConfig_(config)).then(result => {
             return result.toNumber();
         });
     }
@@ -28,8 +37,8 @@ export class ContractMethod extends BaseContractMethod {
         });
     }
 
-    private getMethod_(config: ITransactionConfig) {
-        return this.contract[this.methodName](...this.args, config);
+    private getMethod_(config: ITransactionConfig = {}) {
+        return this.contract[this.methodName](...this.args, this.toConfig_(config));
     }
 
     write(config: ITransactionConfig) {
@@ -39,14 +48,13 @@ export class ContractMethod extends BaseContractMethod {
             onReceiptError: doNothing,
             onTxError: doNothing
         } as ISendResult;
-        this.getMethod_(config).then(tx => {
-            result.onTransactionHash(tx.transactionHash);
-            // wait for 10 sec for confirmation
-            // TODO - get the time from user
-            return tx.wait(10000);
+        this.getMethod_(config).then(response => {
+            result.onTransactionHash(response.hash);
+            return response.wait();
         }).then(receipt => {
             result.onReceipt(receipt);
         }).catch(err => {
+            console.log("error", err);
             result.onTxError(err);
             result.onReceiptError(err);
         });

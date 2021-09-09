@@ -11,7 +11,7 @@ const from = user1.address;
 const execute = async () => {
   const privateKey = user1.privateKey;
   const mumbaiERC720 = pos.child.erc20;
-  const goerliERC721 = pos.parent.erc20;
+  const goerliERC720 = pos.parent.erc20;
   // const matic = new POSClient({
   //   network: 'testnet',
   //   version: 'mumbai',
@@ -49,20 +49,24 @@ const execute = async () => {
     }
   });
 
-  const mumbaiERC720Token = matic.erc20(mumbaiERC720);
+  // const mumbaiERC720Token = matic.erc20(mumbaiERC720);
+  const goerliERC720Token = matic.erc20(goerliERC720, true);
   // return console.log("balance", await mumbaiERC720Token.getBalance(from));
 
-
-  const tx = await mumbaiERC720Token.withdrawStart(
-    10,
-    {
-      nonce: 1974,
-      // gasPrice: '1000',
-      // gas: 100
-    }
-  );
+  const tx = await goerliERC720Token.approve(100);
   console.log("txHash", await tx.getTransactionHash());
   console.log("txReceipt", await tx.getReceipt());
+
+  // const tx = await mumbaiERC720Token.withdrawStart(
+  //   10,
+  //   {
+  //     // nonce: 1974,
+  //     // gasPrice: '1000',
+  //     // gas: 100
+  //   }
+  // );
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
 }
 
 execute().then(_ => {

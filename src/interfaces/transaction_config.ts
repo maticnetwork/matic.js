@@ -4,7 +4,7 @@ export interface ITransactionConfig {
     from?: string | number;
     to?: string;
     value?: number | string | BN;
-    gas?: number | string;
+    gasLimit?: number | string;
     gasPrice?: number | string | BN;
     data?: string;
     nonce?: number;

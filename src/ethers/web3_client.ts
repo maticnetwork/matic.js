@@ -81,7 +81,7 @@ export class EtherWeb3Client extends BaseWeb3Client {
             chainId: config.chainId,
             data: config.data,
             from: config.from as any,
-            gasLimit: config.gas,
+            gasLimit: config.gasLimit,
             gasPrice: config.gasPrice as any,
             nonce: config.nonce,
             to: config.to,

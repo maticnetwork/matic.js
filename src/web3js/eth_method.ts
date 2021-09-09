@@ -1,6 +1,6 @@
 import { BaseContractMethod } from "../abstracts";
 import { ITransactionConfig } from "../interfaces";
-import { TransactionObject } from "web3/eth/types";
+import { TransactionObject, Tx } from "web3/eth/types";
 import { doNothing } from "../helpers";
 import { Logger } from "../utils";
 
@@ -10,9 +10,24 @@ export class EthMethod extends BaseContractMethod {
         super(logger);
     }
 
+    private toConfig_(config: ITransactionConfig = {}) {
+        return {
+            chainId: config.chainId,
+            data: config.data,
+            from: config.from,
+            gas: config.gasLimit,
+            gasPrice: config.gasPrice,
+            nonce: config.nonce,
+            to: config.to,
+            value: config.value
+        } as Tx;
+    }
+
     read<T>(tx: ITransactionConfig): Promise<T> {
         this.logger.log("sending tx with config", tx);
-        return this.method.call(tx as any);
+        return this.method.call(
+            this.toConfig_(tx)
+        );
     }
 
     write(tx: ITransactionConfig) {
@@ -24,8 +39,9 @@ export class EthMethod extends BaseContractMethod {
         };
         setTimeout(() => {
             this.logger.log("sending tx with config", tx);
-            this.method.send(tx as any).
-                once("transactionHash", result.onTransactionHash).
+            this.method.send(
+                this.toConfig_(tx)
+            ).once("transactionHash", result.onTransactionHash).
                 once("receipt", result.onReceipt).
                 on("error", result.onTxError).
                 on("error", result.onReceiptError);

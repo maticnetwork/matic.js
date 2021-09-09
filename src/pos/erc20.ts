@@ -4,7 +4,7 @@ import { formatAmount, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitManager } from "./exit_manager";
-import { Log_Event_Signature } from "../enums";
+import { Log_Event_Signature, ERROR_TYPE } from "../enums";
 
 export class ERC20 extends POSToken {
 
@@ -33,6 +33,10 @@ export class ERC20 extends POSToken {
     }
 
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "approve").throw();
+        }
+        
         const contract = this.contract;
         return this.getPredicateAddress().then(predicateAddress => {
             const method = contract.method(
@@ -61,6 +65,10 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "deposit").throw();
+        }
+
         const amountInABI = this.client.parent.encodeParameters(
             [formatAmount(amount)],
             ['uint256'],
@@ -82,6 +90,10 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        if (this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnChild, "withdrawStart").throw();
+        }
+
         const contract = this.contract;
         const method = contract.method(
             "withdraw",
@@ -99,6 +111,10 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "withdrawExit").throw();
+        }
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc20Transfer,
@@ -121,6 +137,10 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "withdrawExitFaster").throw();
+        }
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc20Transfer,
@@ -139,7 +159,7 @@ export class ERC20 extends POSToken {
      * @returns
      * @memberof ERC20
      */
-    isExited(txHash: string) {
+    isWithdrawExited(txHash: string) {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }

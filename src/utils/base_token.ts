@@ -90,16 +90,16 @@ export class BaseToken {
         const client = isParent ? this.client.parent :
             this.client.child;
         if (isWrite) {
-            const [gas, gasPrice, nonce, chainId] = await Promise.all([
-                !(txConfig.gas)
+            const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
+                !(txConfig.gasLimit)
                     ? method.estimateGas({ from: txConfig.from, value: txConfig.value })
-                    : txConfig.gas,
+                    : txConfig.gasLimit,
                 !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
                 !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
             console.log("calculated");
-            txConfig.gas = isParent ? Number(gas) + EXTRA_GAS_FOR_PROXY_CALL : gas;
+            txConfig.gasLimit = isParent ? Number(gasLimit) + EXTRA_GAS_FOR_PROXY_CALL : gasLimit;
             txConfig.gasPrice = gasPrice;
             txConfig.nonce = nonce;
             txConfig.chainId = chainId;
