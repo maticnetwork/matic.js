@@ -1,8 +1,9 @@
 import { BaseContract } from "../abstracts";
-import Contract from "web3/eth/contract";
-import { EthMethod } from "./eth_method";
+import { Contract } from "ethers";
+import { ContractMethod } from "./ethjs_method";
 
-export class Web3Contract extends BaseContract {
+export class EthJsContract extends BaseContract {
+
     contract: Contract;
 
     constructor(address: string, contract: Contract, logger) {
@@ -12,8 +13,8 @@ export class Web3Contract extends BaseContract {
 
     method(methodName: string, ...args) {
         this.logger.log("args method", arguments);
-        return new EthMethod(
-            this.logger, this.contract.methods[methodName](...args)
+        return new ContractMethod(
+            this.logger, this.contract, methodName, args
         );
     }
 }

@@ -3,11 +3,12 @@ import { ITransactionConfig } from "../interfaces";
 import { TransactionObject } from "web3/eth/types";
 import { doNothing } from "../helpers";
 import { LOGGER } from "../constant";
+import { Logger } from "../utils";
 
 export class EthMethod extends BaseContractMethod {
 
-    constructor(private method: TransactionObject<any>) {
-        super();
+    constructor(logger: Logger, private method: TransactionObject<any>) {
+        super(logger);
     }
 
     read<T>(tx: ITransactionConfig): Promise<T> {
@@ -23,27 +24,12 @@ export class EthMethod extends BaseContractMethod {
             onTxError: doNothing
         };
         setTimeout(() => {
-            LOGGER.log("sending tx with config", tx);
-
-            // {
-            //     chainId: tx.chainId,
-            //     data: tx.data,
-            //     from: tx.from.toString(),
-            //     gas: tx.gas,
-            //     gasPrice: tx.gasPrice.toString(),
-            //     nonce: tx.nonce,
-            //     to: tx.to,
-            //     value: tx.value?.toString()
-            // }
-            // try {
+            this.logger.log("sending tx with config", tx);
             this.method.send(tx as any).
                 once("transactionHash", result.onTransactionHash).
                 once("receipt", result.onReceipt).
                 on("error", result.onTxError).
                 on("error", result.onReceiptError);
-            // } catch (error) {
-
-            // }
         }, 0);
         return result;
     }

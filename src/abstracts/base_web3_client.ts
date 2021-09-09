@@ -1,9 +1,12 @@
 import { BaseContract } from "../abstracts";
 import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse } from "../interfaces";
+import { Logger } from "../utils";
 
 export abstract class BaseWeb3Client {
 
-    constructor(public provider: any) { }
+    constructor(public logger: Logger) {
+
+    }
 
     abstract getContract(address: string, abi: any): BaseContract;
 

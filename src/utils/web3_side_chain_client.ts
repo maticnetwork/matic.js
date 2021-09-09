@@ -27,8 +27,8 @@ export class Web3SideChainClient {
         }
         this.metaNetwork = metaNetwork;
 
-        this.parent = new Web3Client(config.parent.provider);
-        this.child = new Web3Client(config.child.provider);
+        this.parent = new Web3Client(config.parent.provider, this.logger);
+        this.child = new Web3Client(config.child.provider, this.logger);
 
         // this.child.client.extend('bor', [
         //     {

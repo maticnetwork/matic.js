@@ -65,6 +65,7 @@
     "@typescript-eslint/parser": "^2.16.0",
     "copy-webpack-plugin": "^6.1.1",
     "cross-env": "^7.0.3",
+    "ethers": "^5.4.6",
     "ganache-cli": "^6.12.1",
     "husky": "2.4.1",
     "lint-staged": "8.2.1",

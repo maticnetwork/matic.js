@@ -8,6 +8,7 @@ export * from "./interfaces";
 export * from "./types";
 export * from "./constant";
 export * from "./abstracts";
+export * from "./ethers";
 export { initService } from "./services";
 
 export default defaultExport;

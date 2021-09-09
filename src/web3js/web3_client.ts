@@ -4,12 +4,13 @@ import { ITransactionConfig, ITransactionData, ITransactionReceipt, IBlockWithTr
 import { Transaction } from "web3/eth/types";
 import { AbstractProvider } from "web3-core";
 import { BaseWeb3Client } from "../abstracts";
+import { Logger } from "../utils";
 
 export class MaticWeb3Client extends BaseWeb3Client {
     private web3_: Web3;
 
-    constructor(provider: any) {
-        super(provider);
+    constructor(provider: any, logger: Logger) {
+        super(logger);
         this.web3_ = new Web3(provider);
     }
 
@@ -23,7 +24,7 @@ export class MaticWeb3Client extends BaseWeb3Client {
 
     getContract(address: string, abi: any) {
         const cont = new this.web3_.eth.Contract(abi, address);
-        return new Web3Contract(address, cont as any);
+        return new Web3Contract(address, cont as any, this.logger);
     }
 
     getGasPrice() {
