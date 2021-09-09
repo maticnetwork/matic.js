@@ -1,34 +1,59 @@
-const { use, Web3Plugin, PlasmaClient, POSClient, ProofUtil } = require("@maticnetwork/maticjs");
+const { use, EthersPlugin, PlasmaClient, POSClient, ProofUtil } = require("@maticnetwork/maticjs");
 // return console.log("BaseToken", ProofUtil, use);
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { user1, plasma, rpc, pos } = require("./config");
+const { providers, Wallet } = require("ethers");
 
-// use(Web3Plugin);
+use(EthersPlugin);
 const from = user1.address;
 
 const execute = async () => {
   const privateKey = user1.privateKey;
-  const mumbaiERC721 = pos.child.erc20;
+  const mumbaiERC720 = pos.child.erc20;
   const goerliERC721 = pos.parent.erc20;
+  // const matic = new POSClient({
+  //   network: 'testnet',
+  //   version: 'mumbai',
+  //   parent: {
+  //     provider: new HDWalletProvider(privateKey, rpc.parent),
+  //     defaultConfig: {
+  //       from
+  //     }
+  //   },
+  //   child: {
+  //     provider: new HDWalletProvider(privateKey, rpc.child),
+  //     defaultConfig: {
+  //       from
+  //     }
+  //   }
+  // });
+  const parentPrivder = new providers.JsonRpcProvider(rpc.parent);
+  const childProvider = new providers.JsonRpcProvider(rpc.child);
+
+
   const matic = new POSClient({
     network: 'testnet',
     version: 'mumbai',
     parent: {
-      provider: new HDWalletProvider(privateKey, rpc.parent),
+      provider: new Wallet(privateKey, parentPrivder),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, rpc.child),
+      provider: new Wallet(privateKey, childProvider),
       defaultConfig: {
         from
       }
     }
   });
 
-  const tx = await matic.erc20(mumbaiERC721).withdrawStart(
+  const mumbaiERC720Token = matic.erc20(mumbaiERC720);
+  // return console.log("balance", await mumbaiERC720Token.getBalance(from));
+
+
+  const tx = await mumbaiERC720Token.withdrawStart(
     10,
     {
       nonce: 1974,

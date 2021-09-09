@@ -20,7 +20,12 @@ export class ContractMethod extends BaseContractMethod {
     }
 
     read(config: ITransactionConfig) {
-        return this.getMethod_(config);
+        return this.getMethod_(config).then(result => {
+            if (result._isBigNumber) {
+                result = result.toString();
+            }
+            return result;
+        });
     }
 
     private getMethod_(config: ITransactionConfig) {

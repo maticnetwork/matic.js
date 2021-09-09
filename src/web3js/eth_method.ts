@@ -2,7 +2,6 @@ import { BaseContractMethod } from "../abstracts";
 import { ITransactionConfig } from "../interfaces";
 import { TransactionObject } from "web3/eth/types";
 import { doNothing } from "../helpers";
-import { LOGGER } from "../constant";
 import { Logger } from "../utils";
 
 export class EthMethod extends BaseContractMethod {
@@ -12,7 +11,7 @@ export class EthMethod extends BaseContractMethod {
     }
 
     read<T>(tx: ITransactionConfig): Promise<T> {
-        LOGGER.log("sending tx with config", tx);
+        this.logger.log("sending tx with config", tx);
         return this.method.call(tx as any);
     }
 
