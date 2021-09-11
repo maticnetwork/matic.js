@@ -1,5 +1,4 @@
-import MetaNetwork from '@maticnetwork/meta/network';
 
 export const config = {
-    networkApiUrl: MetaNetwork
+    abiStoreUrl: 'https://static.matic.network/network/'
 }

@@ -105,7 +105,7 @@ export class ExitManager {
     private async getRootBlockInfoFromAPI(txBlockNumber: number) {
         try {
             console.log("block info from API 1");
-            const headerBlock = await service.getBlockIncluded(txBlockNumber);
+            const headerBlock = await service.network.getBlockIncluded(txBlockNumber);
             console.log("block info from API 2", headerBlock);
             if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
                 throw Error('Network API Error');
@@ -129,7 +129,7 @@ export class ExitManager {
     private async getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
 
         try {
-            const blockProof = await service.getProof(
+            const blockProof = await service.network.getProof(
                 rootBlockInfo.start, rootBlockInfo.end,
                 txBlockNumber
             );
