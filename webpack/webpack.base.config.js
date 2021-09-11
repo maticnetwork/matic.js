@@ -32,6 +32,7 @@ exports.default = {
     },
     externals: {
         web3: 'web3',
+        ethers: 'ethers',
         'ethereumjs-util': 'ethereumjs-util',
         'query-string': 'query-string',
         'bn.js': 'bn.js',

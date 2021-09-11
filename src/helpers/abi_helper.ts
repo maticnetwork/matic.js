@@ -44,9 +44,12 @@ export class ABIHelper {
     getABI(contractName: string, bridgeType = 'plasma'): Promise<any> {
         let targetBridgeABICache = cache[this.networkName][this.version].
             abi[bridgeType];
-        const abiForContract = targetBridgeABICache[contractName];
-        if (targetBridgeABICache && abiForContract) {
-            return promiseResolve<any>(abiForContract);
+
+        if (targetBridgeABICache) {
+            const abiForContract = targetBridgeABICache[contractName];
+            if (abiForContract) {
+                return promiseResolve<any>(abiForContract);
+            }
         }
         return service.abi.getABI(
             this.networkName,

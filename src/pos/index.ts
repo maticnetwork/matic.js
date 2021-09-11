@@ -24,33 +24,43 @@ export class POSClient {
         this.client_ = new Web3SideChainClient(config);
 
 
-        const mainPOSContracts = this.client_.mainPOSContracts;
-        config = Object.assign(
-            {
 
-                rootChainManager: mainPOSContracts.RootChainManagerProxy,
-                rootChain: this.client_.mainPlasmaContracts.RootChainProxy
-            } as IPOSClientConfig,
-            config
-        );
+    }
 
-        this.rootChainManager = new RootChainManager(
-            this.client_,
-            config.rootChainManager,
-        );
+    init() {
+        console.log("init method called");
+        const client = this.client_;
+        let config: IPOSClientConfig = client.config;
+        return client.init().then(_ => {
+            const mainPOSContracts = this.client_.mainPOSContracts;
+            config = Object.assign(
+                {
 
-        this.rootChain = new RootChain(
-            this.client_,
-            config.rootChain,
-        );
+                    rootChainManager: mainPOSContracts.RootChainManagerProxy,
+                    rootChain: this.client_.mainPlasmaContracts.RootChainProxy
+                } as IPOSClientConfig,
+                config
+            );
 
-        this.exitManager = new ExitManager(
-            this.client_.child,
-            this.rootChain,
-            config.requestConcurrency
-        );
+            this.rootChainManager = new RootChainManager(
+                this.client_,
+                config.rootChainManager,
+            );
 
-        LOGGER.enableLog(config.log);
+            this.rootChain = new RootChain(
+                this.client_,
+                config.rootChain,
+            );
+
+            this.exitManager = new ExitManager(
+                this.client_.child,
+                this.rootChain,
+                config.requestConcurrency
+            );
+
+            LOGGER.enableLog(config.log);
+            return this;
+        });
     }
 
     erc20(tokenAddress, isParent?: boolean) {

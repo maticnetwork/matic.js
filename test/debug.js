@@ -32,7 +32,7 @@ const execute = async () => {
   const childProvider = new providers.JsonRpcProvider(rpc.child);
 
 
-  const matic = new POSClient({
+  const posClient = new POSClient({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -49,9 +49,12 @@ const execute = async () => {
     }
   });
 
+  await posClient.init();
+  console.log("init called");
+
   // const mumbaiERC720Token = matic.erc20(mumbaiERC720);
-  const goerliERC720Token = matic.erc20(goerliERC720, true);
-  // return console.log("balance", await mumbaiERC720Token.getBalance(from));
+  const goerliERC720Token = posClient.erc20(goerliERC720, true);
+  return console.log("balance", await goerliERC720Token.getBalance(from));
 
   const tx = await goerliERC720Token.approve(100);
   console.log("txHash", await tx.getTransactionHash());

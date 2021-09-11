@@ -51,12 +51,14 @@ export class PlasmaClient {
 
     init() {
         const client = this.client_;
-        return this.client_.getABI("DepositManager").then(abi => {
-            this.depositManager = new DepositManager(
-                client.parent,
-                client.config.depositManager,
-                abi
-            );
+        return client.init().then(_ => {
+            return this.client_.getABI("DepositManager").then(abi => {
+                this.depositManager = new DepositManager(
+                    client.parent,
+                    client.config.depositManager,
+                    abi
+                );
+            });
         });
     }
 
