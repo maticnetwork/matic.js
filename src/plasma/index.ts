@@ -45,13 +45,19 @@ export class PlasmaClient {
             config
         );
 
-        this.depositManager = new DepositManager(
-            this.client_.parent,
-            config.depositManager,
-            this.client_.getABI("DepositManager")
-        );
 
         LOGGER.enableLog(config.log);
+    }
+
+    init() {
+        const client = this.client_;
+        return this.client_.getABI("DepositManager").then(abi => {
+            this.depositManager = new DepositManager(
+                client.parent,
+                client.config.depositManager,
+                abi
+            );
+        });
     }
 
 }

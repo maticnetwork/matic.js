@@ -1,14 +1,15 @@
 import { Web3Client, LOGGER } from "../constant";
 import { IPlasmaClientConfig } from "../interfaces";
-import MetaNetwork from '@maticnetwork/meta/network';
 import { BaseWeb3Client } from "../abstracts";
+import { ABIHelper } from "../helpers";
 
 export class Web3SideChainClient {
     parent: BaseWeb3Client;
     child: BaseWeb3Client;
 
-    metaNetwork: MetaNetwork;
     config: IPlasmaClientConfig;
+
+    abiHelper: ABIHelper;
 
     constructor(config: IPlasmaClientConfig) {
         config = config || {} as any;
@@ -19,39 +20,32 @@ export class Web3SideChainClient {
         if (!Web3Client) {
             throw new Error("Web3Client is not set");
         }
-        const network = config.network;
-        const version = config.version;
-        const metaNetwork = new MetaNetwork(network, version);
-        if (!metaNetwork) {
-            throw new Error(`network ${network} - ${version} is not supported`);
-        }
-        this.metaNetwork = metaNetwork;
 
         this.parent = new Web3Client(config.parent.provider, this.logger);
         this.child = new Web3Client(config.child.provider, this.logger);
 
-        // this.child.client.extend('bor', [
-        //     {
+    }
 
-        //         name: 'getRootHash',
-        //         call: 'eth_getRootHash',
-        //         params: 2,
-        //         inputFormatter: [Number, Number],
-        //         outputFormatter: String,
-        //     }
-        // ])
+    init() {
+        const config = this.config;
+        const network = config.network;
+        const version = config.version;
+        const abiHelper = this.abiHelper = new ABIHelper(network, version);
+        return abiHelper.init().catch(err => {
+            throw new Error(`network ${network} - ${version} is not supported`);
+        });
     }
 
     getABI(name: string, type?: string) {
-        return this.metaNetwork.abi(name, type);
+        return this.abiHelper.getABI(name, type);
     }
 
     get mainPlasmaContracts() {
-        return this.metaNetwork.Main.Contracts;
+        return this.abiHelper.getAddress("Main.Contracts");
     }
 
     get mainPOSContracts() {
-        return this.metaNetwork.Main.POSContracts;
+        return this.abiHelper.getAddress("Main.POSContracts");
     }
 
     get logger() {

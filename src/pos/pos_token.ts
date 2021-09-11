@@ -1,4 +1,4 @@
-import { BaseToken, Web3SideChainClient } from "../utils";
+import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
 import { IContractInitParam } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { ExitManager } from "./exit_manager";
@@ -18,16 +18,18 @@ export class POSToken extends BaseToken {
 
     async getPredicateAddress() {
         if (this.predicateAddress) {
-            return this.predicateAddress;
+            return promiseResolve(this.predicateAddress);
         }
-        const tokenType = await this.rootChainManager.method("tokenToType", this.contractParam.tokenAddress).read();
+        const method = await this.rootChainManager.method("tokenToType", this.contractParam.tokenAddress);
+        const tokenType = await method.read();
         if (!tokenType) {
             throw new Error('Invalid Token Type');
         }
-        const predicateAddress = await this.rootChainManager.method
+        const typeToPredicateMethod = await this.rootChainManager.method
             (
                 "typeToPredicate", tokenType
-            ).read<string>();
+            );
+        const predicateAddress = await typeToPredicateMethod.read<string>();
         this.predicateAddress = predicateAddress;
         return predicateAddress;
     }

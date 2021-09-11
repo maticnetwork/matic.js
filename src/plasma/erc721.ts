@@ -13,25 +13,24 @@ export class ERC721 extends BaseToken {
         super({
             isParent,
             tokenAddress,
-            abi: client.getABI('ChildERC721')
+            tokenContractName: 'ChildERC721'
         }, client);
     }
 
     /**
-     * READ
      * how many ERC721s are owned by this user
      * 
      * @param userAddress 
      * @param options 
      */
     getBalance(userAddress: string, options: ITransactionOption = {}) {
-        const contract = this.contract;
-        const method = contract.method(
-            "balanceOf",
-            userAddress
-        );
-
-        return this.processRead<number>(method, options);
+        this.getContract().then(contract => {
+            const method = contract.method(
+                "balanceOf",
+                userAddress
+            );
+            return this.processRead<number>(method, options);
+        });
     }
 
     /**
@@ -42,15 +41,16 @@ export class ERC721 extends BaseToken {
      * @param index starting from zero, if no token found on that it will return error
      * @param options 
      */
-    tokenOfOwnerByIndexERC721(userAddress: string, index: number, options: ITransactionOption = {}) {
-        const contract = this.contract;
-        const method = contract.method(
-            "tokenOfOwnerByIndex",
-            userAddress,
-            index
-        );
+    getOwnerByIndex(userAddress: string, index: number, options?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "tokenOfOwnerByIndex",
+                userAddress,
+                index
+            );
 
-        return this.processRead(method, options);
+            return this.processRead(method, options);
+        });
     }
 
     /**
@@ -60,20 +60,17 @@ export class ERC721 extends BaseToken {
      * @param tokenId 
      * @param options 
      */
-    safeDepositERC721(tokenId: number, options: ITransactionOption = {}) {
-        if (!options.from) {
-            throw new Error('missing param - options.from');
-        }
+    safeDepositERC721(tokenId: number, options?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "safeTransferFrom",
+                options.from,
+                this.depositManager.contract.address,
+                tokenId,
+            );
 
-        const contract = this.contract;
-        const method = contract.method(
-            "safeTransferFrom",
-            options.from,
-            this.depositManager.contract.address,
-            tokenId,
-        );
-
-        return this.processWrite(method, options);
+            return this.processWrite(method, options);
+        });
     }
 
     /**
@@ -84,12 +81,12 @@ export class ERC721 extends BaseToken {
      * @param options 
      */
     startWithdrawForNFT(tokenId: number, options: ITransactionOption = {}) {
-        // validate all values here
-        const contract = this.contract;
-        const method = contract.method(
-            "withdraw",
-            tokenId,
-        );
-        return this.processWrite(method, options);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "withdraw",
+                tokenId,
+            );
+            return this.processWrite(method, options);
+        });
     }
 }

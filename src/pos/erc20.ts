@@ -19,26 +19,27 @@ export class ERC20 extends POSToken {
         super({
             isParent,
             tokenAddress,
-            abi: client.getABI('ChildERC20', 'pos')
+            tokenContractName: 'ChildERC20',
+            bridgeType: 'pos'
         }, client, rootChainManager, exitManager);
     }
 
     getBalance(userAddress: string, option?: ITransactionOption) {
-        const contract = this.contract;
-        const method = contract.method(
-            "balanceOf",
-            userAddress
-        );
-        return this.processRead<string>(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "balanceOf",
+                userAddress
+            );
+            return this.processRead<string>(method, option);
+        });
     }
 
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
         if (!this.contractParam.isParent) {
             this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "approve").throw();
         }
-        
-        const contract = this.contract;
-        return this.getPredicateAddress().then(predicateAddress => {
+        return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
+            const [predicateAddress, contract] = result;
             const method = contract.method(
                 "approve",
                 predicateAddress,
@@ -94,12 +95,13 @@ export class ERC20 extends POSToken {
             this.client.logger.error(ERROR_TYPE.AllowedOnChild, "withdrawStart").throw();
         }
 
-        const contract = this.contract;
-        const method = contract.method(
-            "withdraw",
-            formatAmount(amount)
-        );
-        return this.processWrite(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "withdraw",
+                formatAmount(amount)
+            );
+            return this.processWrite(method, option);
+        });
     }
 
     /**

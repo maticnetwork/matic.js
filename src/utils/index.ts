@@ -12,3 +12,4 @@ export * from "./web3_side_chain_client";
 export * from "./base_token";
 export * from "./set_proof_api_url";
 export * from "./resolve";
+export * from "./promise_resolve";

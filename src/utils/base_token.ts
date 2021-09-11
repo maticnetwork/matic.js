@@ -4,6 +4,7 @@ import { BaseContractMethod, BaseContract } from "../abstracts";
 import { merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
 import { ContractWriteResult } from "../helpers";
+import { promiseResolve } from "./promise_resolve";
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -14,13 +15,30 @@ export interface ITransactionConfigParam {
 
 export class BaseToken {
 
-    protected contract: BaseContract;
+    private contract_: BaseContract;
 
     constructor(
         protected contractParam: IContractInitParam,
         protected client: Web3SideChainClient,
     ) {
-        this.contract = this.getContract(contractParam);
+    }
+
+    getContract(): Promise<BaseContract> {
+        if (this.contract_) {
+            return promiseResolve<BaseContract>(this.contract_ as any);
+        }
+        const contractParam = this.contractParam;
+        return this.client.getABI(
+            contractParam.tokenContractName,
+            contractParam.bridgeType,
+        ).then(abi => {
+            this.contract_ = this.getContract_({
+                abi,
+                isParent: contractParam.isParent,
+                tokenAddress: contractParam.tokenAddress
+            });
+            return this.contract_;
+        });
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
@@ -36,7 +54,7 @@ export class BaseToken {
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
-                        to: this.contract.address
+                        to: this.contract_.address
                     } as ITransactionConfig);
                 }
                 const methodResult = method.write(
@@ -60,7 +78,7 @@ export class BaseToken {
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
-                        to: this.contract.address
+                        to: this.contract_.address
                     } as ITransactionConfig);
                 }
                 return method.read(
@@ -69,7 +87,7 @@ export class BaseToken {
             });
     }
 
-    protected getContract({ isParent, tokenAddress, abi }: IContractInitParam) {
+    private getContract_({ isParent, tokenAddress, abi }) {
         const client = isParent ? this.client.parent :
             this.client.child;
         return client.getContract(tokenAddress, abi);

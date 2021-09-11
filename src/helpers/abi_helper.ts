@@ -1,5 +1,5 @@
 import { service } from "../services";
-import { resolve } from "../utils";
+import { resolve, promiseResolve } from "../utils";
 
 type T_ABI_CACHE = {
     [networkName: string]: {
@@ -46,7 +46,7 @@ export class ABIHelper {
             abi[bridgeType];
         const abiForContract = targetBridgeABICache[contractName];
         if (targetBridgeABICache && abiForContract) {
-            return abiForContract;
+            return promiseResolve<any>(abiForContract);
         }
         return service.abi.getABI(
             this.networkName,

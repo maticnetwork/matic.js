@@ -9,17 +9,21 @@ export class RootChain extends BaseToken {
     constructor(client_: Web3SideChainClient, address: string) {
         super({
             tokenAddress: address,
-            abi: client_.getABI('RootChain'),
+            tokenContractName: 'RootChain',
             isParent: true
         }, client_);
     }
 
     method(methodName: string, ...args) {
-        return this.contract.method(methodName, ...args);
+        return this.getContract().then(contract => {
+            return contract.method(methodName, ...args);
+        });
     }
 
     getLastChildBlock() {
-        return this.method("getLastChildBlock").read<string>();
+        return this.method("getLastChildBlock").then(method => {
+            return method.read<string>();
+        });
     }
 
     async findRootBlockFromChild(childBlockNumber: TYPE_AMOUNT): Promise<BN> {
@@ -28,7 +32,8 @@ export class RootChain extends BaseToken {
         let start = BIG_ONE;
 
         // last checkpoint id = end * 10000
-        const currentHeaderBlock = await this.method("currentHeaderBlock").read<string>();
+        const method = await this.method("currentHeaderBlock");
+        const currentHeaderBlock = await method.read<string>();
         let end = new BN(currentHeaderBlock).div(
             CHECKPOINT_INTERVAL
         );
@@ -41,8 +46,11 @@ export class RootChain extends BaseToken {
                 break;
             }
             const mid = start.add(end).div(BIG_TWO);
-
-            const headerBlock = await this.method("headerBlocks", mid.mul(CHECKPOINT_INTERVAL).toString()).read<{ start: number, end: number }>();
+            const headerBlocksMethod = await this.method(
+                "headerBlocks",
+                mid.mul(CHECKPOINT_INTERVAL).toString()
+            );
+            const headerBlock = await headerBlocksMethod.read<{ start: number, end: number }>();
 
             const headerStart = new BN(headerBlock.start);
             const headerEnd = new BN(headerBlock.end);
@@ -63,14 +71,14 @@ export class RootChain extends BaseToken {
     }
 
     deposit(userAddress: string, tokenAddress: string, depositData: string, option?: ITransactionOption) {
-        const method = this.method(
+        return this.method(
             "depositFor",
             userAddress,
             tokenAddress,
             depositData
-        );
-
-        return this.processWrite(method, option);
+        ).then(method => {
+            return this.processWrite(method, option);
+        });
     }
 
 }

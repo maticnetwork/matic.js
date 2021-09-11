@@ -19,7 +19,8 @@ export class ERC721 extends POSToken {
         super({
             isParent,
             tokenAddress,
-            abi: client.getABI('ChildERC721', 'pos')
+            tokenContractName: 'ChildERC721',
+            bridgeType: 'pos'
         }, client, rootChainManager, exitManager);
     }
 
@@ -33,23 +34,23 @@ export class ERC721 extends POSToken {
     }
 
     isApproved(tokenId: string, option?: ITransactionOption) {
-        const contract = this.contract;
-        const method = contract.method(
-            "getApproved",
-            tokenId
-        );
-        return Promise.all([
-            this.processRead<string>(method, option),
-            this.getPredicateAddress()
-        ]).then(result => {
-            return result[0] === result[1];
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "getApproved",
+                tokenId
+            );
+            return Promise.all([
+                this.processRead<string>(method, option),
+                this.getPredicateAddress()
+            ]).then(result => {
+                return result[0] === result[1];
+            });
         });
     }
 
     isApprovedAll(userAddress: string, option?: ITransactionOption) {
-        const contract = this.contract;
-
-        return this.getPredicateAddress().then(predicateAddress => {
+        return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
+            const [contract, predicateAddress] = result;
             const method = contract.method(
                 "isApprovedForAll",
                 userAddress,
@@ -61,8 +62,8 @@ export class ERC721 extends POSToken {
     }
 
     approve(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
-        const contract = this.contract;
-        return this.getPredicateAddress().then(predicateAddress => {
+        return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
+            const [contract, predicateAddress] = result;
             const method = contract.method(
                 "approve",
                 predicateAddress,
@@ -73,8 +74,8 @@ export class ERC721 extends POSToken {
     }
 
     approveAll(option?: ITransactionOption) {
-        const contract = this.contract;
-        return this.getPredicateAddress().then(predicateAddress => {
+        return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
+            const [contract, predicateAddress] = result;
             const method = contract.method(
                 "setApprovalForAll",
                 predicateAddress,
@@ -114,22 +115,24 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStart(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
-        const contract = this.contract;
-        const method = contract.method(
-            "withdraw",
-            formatAmount(tokenId)
-        );
-        return this.processWrite(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "withdraw",
+                formatAmount(tokenId)
+            );
+            return this.processWrite(method, option);
+        });
     }
 
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
         const tokensInUint256 = this.validateMany_(tokenIds);
-        const contract = this.contract;
-        const method = contract.method(
-            "withdrawBatch",
-            tokensInUint256
-        );
-        return this.processWrite(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "withdrawBatch",
+                tokensInUint256
+            );
+            return this.processWrite(method, option);
+        });
     }
 
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {

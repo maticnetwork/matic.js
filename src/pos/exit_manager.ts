@@ -94,10 +94,10 @@ export class ExitManager {
         const rootBlockNumber = await this.rootChain.findRootBlockFromChild(
             txBlockNumber
         );
-
-        const rootBlockInfo = await this.rootChain.method(
+        const method = await this.rootChain.method(
             "headerBlocks", formatAmount(rootBlockNumber)
-        ).read<IRootBlockInfo>();
+        );
+        const rootBlockInfo = await method.read<IRootBlockInfo>();
         rootBlockInfo.blockNumber = rootBlockNumber;
         return rootBlockInfo;
     }

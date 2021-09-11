@@ -13,27 +13,30 @@ export class ERC20 extends BaseToken {
         super({
             isParent,
             tokenAddress,
-            abi: client.getABI('ChildERC20')
+            tokenContractName: 'ChildERC20'
         }, client);
     }
 
     getBalance(userAddress: string, option: ITransactionOption = {}) {
-        const contract = this.contract;
-        const method = contract.method(
-            "balanceOf",
-            userAddress
-        );
-        return this.processRead<string>(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "balanceOf",
+                userAddress
+            );
+            return this.processRead<string>(method, option);
+        });
     }
 
     approve(amount: BN | string | number, option: ITransactionOption = {}) {
-        const contract = this.contract;
-        const method = contract.method(
-            "approve",
-            this.depositManager.contract.address,
-            formatAmount(amount)
-        );
-        return this.processWrite(method, option);
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "approve",
+                this.depositManager.contract.address,
+                formatAmount(amount)
+            );
+            return this.processWrite(method, option);
+        });
+
     }
 
     approveMax(option: ITransactionOption = {}) {
@@ -44,14 +47,17 @@ export class ERC20 extends BaseToken {
     }
 
     depositERC20(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
-        const contract = this.depositManager.contract;
-        const method = contract.method(
-            "depositERC20ForUser",
-            this.contract.address,
-            userAddress,
-            formatAmount(amount)
-        );
-        return this.processWrite(method, option);
+        return this.getContract().then(tokenContract => {
+            const contract = this.depositManager.contract;
+            const method = contract.method(
+                "depositERC20ForUser",
+                tokenContract.address,
+                userAddress,
+                formatAmount(amount)
+            );
+            return this.processWrite(method, option);
+        });
+
     }
 
     depositEth(amount: BN | string | number, option: ITransactionOption = {}) {
