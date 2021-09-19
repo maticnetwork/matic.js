@@ -5,6 +5,8 @@ export declare interface SendOptions {
   value?: string | number
   gas?: string | number
   gasPrice?: string | number
+  maxPriorityFeePerGas?: string | number
+  maxFeePerGas?: string | number
   encodeAbi?: boolean
   parent?: boolean
   to?: string
