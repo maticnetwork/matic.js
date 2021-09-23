@@ -13,13 +13,24 @@ export default class Web3Client {
   public web3: Web3
   public parentDefaultOptions: SendOptions
   public maticDefaultOptions: SendOptions
+  public parentSupportsEip1559: boolean
+  public childSupportsEip1559: boolean
   public events: any
 
-  constructor(parentProvider, maticProvider, parentDefaultOptions, maticDefaultOptions) {
+  constructor(
+    parentProvider,
+    maticProvider,
+    parentDefaultOptions,
+    maticDefaultOptions,
+    parentSupportsEip1559,
+    childSupportsEip1559
+  ) {
     this.parentWeb3 = new Web3(parentProvider)
     this.web3 = new Web3(maticProvider)
     this.parentDefaultOptions = parentDefaultOptions
     this.maticDefaultOptions = maticDefaultOptions
+    this.parentSupportsEip1559 = parentSupportsEip1559
+    this.childSupportsEip1559 = childSupportsEip1559
     this.web3.extend({
       property: 'bor',
       methods: [
@@ -45,36 +56,64 @@ export default class Web3Client {
 
   async fillOptions(txObject: any, onRootChain: boolean, options?: SendOptions) {
     if (onRootChain) {
-      return this._fillOptions(txObject, this.parentWeb3, options || this.parentDefaultOptions)
+      if (!this.parentSupportsEip1559 && (options.maxFeePerGas || options.maxPriorityFeePerGas)) {
+        throw new Error(`Root chain doesn't support eip-1559`)
+      }
+      return this._fillOptions(
+        txObject,
+        this.parentWeb3,
+        options || this.parentDefaultOptions,
+        this.parentSupportsEip1559
+      )
     }
-    return this._fillOptions(txObject, this.web3, options || this.maticDefaultOptions)
+    if (!this.childSupportsEip1559 && (options.maxFeePerGas || options.maxPriorityFeePerGas)) {
+      throw new Error(`Child chain doesn't support eip-1559`)
+    }
+    return this._fillOptions(txObject, this.web3, options || this.maticDefaultOptions, this.childSupportsEip1559)
   }
 
-  private async _fillOptions(txObject, web3, _options) {
+  private async _fillOptions(txObject, web3, _options, supportsEip1559) {
     if (!_options.from) throw new Error('from is not specified')
     const from = _options.from
+    const maxPriorityFeePerGas = !_options.maxPriorityFeePerGas ? 1000000000 : _options.maxPriorityFeePerGas
     delete txObject.chainId
 
-    const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
+    const [gasLimit, maxFeePerGas, gasPrice, nonce, chainId] = await Promise.all([
       !(_options.gasLimit || _options.gas)
         ? txObject.estimateGas({ from, value: _options.value })
         : _options.gasLimit || _options.gas,
+      !_options.maxFeePerGas ? undefined : _options.maxFeePerGas,
       !_options.gasPrice ? web3.eth.getGasPrice() : _options.gasPrice,
       !_options.nonce ? web3.eth.getTransactionCount(from, 'pending') : _options.nonce,
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
-
-    return {
-      from,
-      gas: gasLimit,
-      gasLimit: gasLimit,
-      gasPrice,
-      nonce,
-      chainId,
-      value: _options.value || 0,
-      to: _options.to || null,
-      data: _options.data,
-      encodeAbi: _options.encodeAbi || false,
+    if (supportsEip1559) {
+      return {
+        from,
+        gas: gasLimit,
+        gasLimit: gasLimit,
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        nonce,
+        chainId,
+        value: _options.value || 0,
+        to: _options.to || null,
+        data: _options.data,
+        encodeAbi: _options.encodeAbi || false,
+      }
+    } else {
+      return {
+        from,
+        gas: gasLimit,
+        gasLimit: gasLimit,
+        gasPrice,
+        nonce,
+        chainId,
+        value: _options.value || 0,
+        to: _options.to || null,
+        data: _options.data,
+        encodeAbi: _options.encodeAbi || false,
+      }
     }
   }
 
@@ -106,10 +145,8 @@ export default class Web3Client {
 
     if (web3Options.parent) {
       _web3Options.gas = (_web3Options.gas || this.parentDefaultOptions.gas) + EXTRAGASFORPROXYCALL
-      _web3Options.gasPrice = _web3Options.gasPrice || this.parentDefaultOptions.gasPrice
     } else {
       _web3Options.gas = _web3Options.gas || this.maticDefaultOptions.gas
-      _web3Options.gasPrice = _web3Options.gasPrice || this.maticDefaultOptions.gasPrice
     }
     logger.debug('sending tx with', { _web3Options })
     return this.wrapWeb3Promise(txObject.send(_web3Options), callbacks)
