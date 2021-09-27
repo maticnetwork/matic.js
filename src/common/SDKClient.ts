@@ -17,8 +17,8 @@ export default class SDKClient extends ContractsBase {
       options.maticProvider || options.network.Matic.RPC,
       options.parentDefaultOptions || {},
       options.maticDefaultOptions || {},
-      options.network.Main.SupportsEIP1559 ? options.network.Main.SupportsEIP1559 : true,
-      options.network.Matic.SupportsEIP1559 ? options.network.Matic.SupportsEIP1559 : false
+      options.network.Main.SupportsEIP1559,
+      options.network.Matic.SupportsEIP1559
     )
     super(web3Client, options.network)
   }
