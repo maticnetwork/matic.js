@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.spec.js",
   "scripts": {
-    "link:lib":"npm link @maticnetwork/maticjs",
+    "link:lib": "npm link @maticnetwork/maticjs",
     "debug": "cross-env-file -p ./config.json node debug.js",
     "install:lib": "node install_lib.js",
     "install:lib:test": "npm run install:lib && npm run test",
