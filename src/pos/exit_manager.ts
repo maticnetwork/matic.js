@@ -1,5 +1,5 @@
 import { RootChain } from "./root_chain";
-import { formatAmount, ProofUtil } from "../utils";
+import { Converter, ProofUtil } from "../utils";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
@@ -95,7 +95,7 @@ export class ExitManager {
             txBlockNumber
         );
         const method = await this.rootChain.method(
-            "headerBlocks", formatAmount(rootBlockNumber)
+            "headerBlocks", Converter.toHex(rootBlockNumber)
         );
         const rootBlockInfo = await method.read<IRootBlockInfo>();
         rootBlockInfo.blockNumber = rootBlockNumber;

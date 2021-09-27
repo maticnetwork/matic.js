@@ -1,6 +1,6 @@
 import { BaseContractMethod } from "../abstracts";
 import { ContractFunction, Contract } from "ethers";
-import { ITransactionConfig, ISendResult } from "../interfaces";
+import { ITransactionConfig, ITransactionWriteResult } from "../interfaces";
 import { doNothing } from "../helpers";
 import { Logger } from "../utils";
 
@@ -47,7 +47,7 @@ export class ContractMethod extends BaseContractMethod {
             onReceipt: doNothing,
             onReceiptError: doNothing,
             onTxError: doNothing
-        } as ISendResult;
+        } as ITransactionWriteResult;
         this.getMethod_(config).then(response => {
             result.onTransactionHash(response.hash);
             return response.wait();

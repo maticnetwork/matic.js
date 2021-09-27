@@ -1,10 +1,10 @@
-import { ISendResult, ITransactionReceipt } from "../interfaces";
+import { ITransactionWriteResult, ITransactionReceipt } from "../interfaces";
 
 export class ContractWriteResult {
     private txHashPromise: Promise<string>;
     private receiptPromise: Promise<string>;
 
-    constructor(result: ISendResult) {
+    constructor(result: ITransactionWriteResult) {
         this.txHashPromise = new Promise((res, rej) => {
             result.onTransactionHash = res;
             result.onTxError = rej;

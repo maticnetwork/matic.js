@@ -5,6 +5,7 @@ import { Transaction } from "web3/eth/types";
 import { AbstractProvider } from "web3-core";
 import { BaseWeb3Client } from "../abstracts";
 import { Logger } from "../utils";
+import { doNothing } from "../helpers";
 
 export class MaticWeb3Client extends BaseWeb3Client {
     private web3_: Web3;
@@ -19,7 +20,31 @@ export class MaticWeb3Client extends BaseWeb3Client {
     }
 
     write(config: ITransactionConfig) {
-        return this.web3_.eth.sendTransaction(config);
+        const result = {
+            onTransactionHash: (doNothing as any),
+            onReceipt: doNothing,
+            onReceiptError: doNothing,
+            onTxError: doNothing
+        };
+        setTimeout(() => {
+            this.logger.log("sending tx with config", config);
+            this.web3_.eth.sendTransaction(
+                {
+                    chainId: config.chainId,
+                    data: config.data,
+                    from: config.from,
+                    gas: config.gasLimit,
+                    gasPrice: config.gasPrice,
+                    nonce: config.nonce,
+                    to: config.to,
+                    value: config.value
+                }
+            ).once("transactionHash", result.onTransactionHash).
+                once("receipt", result.onReceipt).
+                on("error", result.onTxError).
+                on("error", result.onReceiptError);
+        }, 0);
+        return result;
     }
 
     getContract(address: string, abi: any) {
@@ -29,6 +54,12 @@ export class MaticWeb3Client extends BaseWeb3Client {
 
     getGasPrice() {
         return this.web3_.eth.getGasPrice();
+    }
+
+    estimateGas(config: ITransactionConfig) {
+        return this.web3_.eth.estimateGas(
+            config
+        );
     }
 
     getTransactionCount(address: string, blockNumber: any) {

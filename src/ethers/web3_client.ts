@@ -1,7 +1,8 @@
 import { BaseWeb3Client } from "../abstracts";
 import { providers, Wallet, utils, Contract } from "ethers";
-import { IJsonRpcRequestPayload, ITransactionConfig } from "../interfaces";
+import { IJsonRpcRequestPayload, ITransactionConfig, ITransactionWriteResult } from "../interfaces";
 import { EthJsContract } from "./ethjs_contract";
+import { doNothing } from "../helpers";
 
 type ETHER_PROVIDER = providers.JsonRpcProvider;
 type ETHER_SIGNER = providers.JsonRpcSigner;
@@ -64,6 +65,14 @@ export class EtherWeb3Client extends BaseWeb3Client {
         });
     }
 
+    estimateGas(config) {
+        return this.provider.estimateGas(
+            this.toTransactionRequest_(config)
+        ).then(value => {
+            return value.toNumber();
+        });
+    }
+
     encodeParameters(params: any[], types: any[]) {
         return utils.defaultAbiCoder.encode(types, params);
     }
@@ -90,9 +99,25 @@ export class EtherWeb3Client extends BaseWeb3Client {
     }
 
     write(config: ITransactionConfig) {
-        return this.signer.sendTransaction(
+        const result = {
+            onTransactionHash: (doNothing as any),
+            onReceipt: doNothing,
+            onReceiptError: doNothing,
+            onTxError: doNothing
+        } as ITransactionWriteResult;
+        this.signer.sendTransaction(
             this.toTransactionRequest_(config)
-        );
+        ).then(response => {
+            result.onTransactionHash(response.hash);
+            return response.wait();
+        }).then(receipt => {
+            result.onReceipt(receipt);
+        }).catch(err => {
+            console.log("error", err);
+            result.onTxError(err);
+            result.onReceiptError(err);
+        });
+        return result;
     }
 
     read(config: ITransactionConfig) {

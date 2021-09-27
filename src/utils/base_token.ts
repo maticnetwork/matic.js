@@ -1,6 +1,6 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
-import { BaseContractMethod, BaseContract } from "../abstracts";
+import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
 import { ContractWriteResult } from "../helpers";
@@ -65,6 +65,50 @@ export class BaseToken {
             });
     }
 
+    protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+        LOGGER.log("process write");
+        const isParent = this.contractParam.isParent;
+        const client = this.getClient_(isParent);
+        return this.createTransactionConfig(
+            {
+                txConfig: option,
+                isWrite: true,
+                method: null as any,
+                isParent: this.contractParam.isParent
+            }).then(config => {
+                LOGGER.log("process write config");
+                if (option.returnTransaction) {
+                    return config as any;
+                }
+                const methodResult = client.write(
+                    config,
+                );
+                return new ContractWriteResult(methodResult);
+
+            });
+    }
+
+    protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+        LOGGER.log("process read");
+        const isParent = this.contractParam.isParent;
+        const client = this.getClient_(isParent);
+        return this.createTransactionConfig(
+            {
+                txConfig: option,
+                isWrite: true,
+                method: null as any,
+                isParent: this.contractParam.isParent
+            }).then(config => {
+                LOGGER.log("process read config");
+                if (option.returnTransaction) {
+                    return config as any;
+                }
+                return client.read(
+                    config,
+                );
+            });
+    }
+
     protected processRead<T>(method: BaseContractMethod, option: ITransactionOption = {}): Promise<T> {
         LOGGER.log("process read");
         return this.createTransactionConfig(
@@ -87,9 +131,13 @@ export class BaseToken {
             });
     }
 
-    private getContract_({ isParent, tokenAddress, abi }) {
-        const client = isParent ? this.client.parent :
+    protected getClient_(isParent) {
+        return isParent ? this.client.parent :
             this.client.child;
+    }
+
+    private getContract_({ isParent, tokenAddress, abi }) {
+        const client = this.getClient_(isParent);
         return client.getContract(tokenAddress, abi);
     }
 
@@ -107,10 +155,14 @@ export class BaseToken {
         console.log("txConfig", txConfig, isParent, isWrite);
         const client = isParent ? this.client.parent :
             this.client.child;
+        const estimateGas = (config: ITransactionConfig) => {
+            return method ? method.estimateGas(config) :
+                client.estimateGas(config);
+        };
         if (isWrite) {
             const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
                 !(txConfig.gasLimit)
-                    ? method.estimateGas({ from: txConfig.from, value: txConfig.value })
+                    ? estimateGas({ from: txConfig.from, value: txConfig.value })
                     : txConfig.gasLimit,
                 !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,

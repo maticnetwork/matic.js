@@ -1,6 +1,6 @@
 import { ITransactionOption } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
-import { formatAmount, Web3SideChainClient } from "../utils";
+import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitManager } from "./exit_manager";
@@ -29,7 +29,7 @@ export class ERC721 extends POSToken {
             throw new Error('can not process more than 20 tokens');
         }
         return tokenIds.map(tokenId => {
-            return formatAmount(tokenId);
+            return Converter.toHex(tokenId);
         });
     }
 
@@ -67,7 +67,7 @@ export class ERC721 extends POSToken {
             const method = contract.method(
                 "approve",
                 predicateAddress,
-                formatAmount(tokenId)
+                Converter.toHex(tokenId)
             );
             return this.processWrite(method, option);
         });
@@ -88,7 +88,7 @@ export class ERC721 extends POSToken {
 
     deposit(tokenId: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
         const amountInABI = this.client.parent.encodeParameters(
-            [formatAmount(tokenId)],
+            [Converter.toHex(tokenId)],
             ['uint256'],
         );
         return this.rootChainManager.deposit(
@@ -118,7 +118,7 @@ export class ERC721 extends POSToken {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdraw",
-                formatAmount(tokenId)
+                Converter.toHex(tokenId)
             );
             return this.processWrite(method, option);
         });

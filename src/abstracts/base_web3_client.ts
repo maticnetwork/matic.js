@@ -1,5 +1,5 @@
 import { BaseContract } from "../abstracts";
-import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse } from "../interfaces";
+import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse, ITransactionWriteResult } from "../interfaces";
 import { Logger } from "../utils";
 
 export abstract class BaseWeb3Client {
@@ -12,8 +12,9 @@ export abstract class BaseWeb3Client {
 
     abstract read(config: ITransactionConfig): Promise<string>;
 
-    abstract write(config: ITransactionConfig): Promise<any>;
+    abstract write(config: ITransactionConfig): ITransactionWriteResult;
     abstract getGasPrice(): Promise<string>;
+    abstract estimateGas(config: ITransactionConfig): Promise<number>;
     abstract getChainId(): Promise<number>;
     abstract getTransactionCount(address: string, blockNumber: any): Promise<number>;
 

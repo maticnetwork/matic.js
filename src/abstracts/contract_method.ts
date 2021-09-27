@@ -1,4 +1,4 @@
-import { ITransactionConfig, ISendResult } from "../interfaces";
+import { ITransactionConfig, ITransactionWriteResult } from "../interfaces";
 import { Logger } from "../utils";
 
 export abstract class BaseContractMethod {
@@ -6,7 +6,7 @@ export abstract class BaseContractMethod {
 
     }
     abstract read<T>(tx?: ITransactionConfig,): Promise<T>;
-    abstract write(tx: ITransactionConfig,): ISendResult;
+    abstract write(tx: ITransactionConfig,): ITransactionWriteResult;
     abstract estimateGas(tx: ITransactionConfig,): Promise<number>;
     abstract encodeABI(): any;
 }

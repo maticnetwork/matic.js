@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { ITransactionOption } from "../interfaces";
-import { formatAmount, BaseToken, Web3SideChainClient } from "../utils";
+import { BaseToken, Converter, Web3SideChainClient } from "../utils";
 import { DepositManager } from "./deposit_manager";
 
 export class ERC20 extends BaseToken {
@@ -32,7 +32,7 @@ export class ERC20 extends BaseToken {
             const method = contract.method(
                 "approve",
                 this.depositManager.contract.address,
-                formatAmount(amount)
+                Converter.toHex(amount)
             );
             return this.processWrite(method, option);
         });
@@ -46,26 +46,16 @@ export class ERC20 extends BaseToken {
         );
     }
 
-    depositERC20(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
+    deposit(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
         return this.getContract().then(tokenContract => {
             const contract = this.depositManager.contract;
             const method = contract.method(
                 "depositERC20ForUser",
                 tokenContract.address,
                 userAddress,
-                formatAmount(amount)
+                Converter.toHex(amount)
             );
             return this.processWrite(method, option);
         });
-
     }
-
-    depositEth(amount: BN | string | number, option: ITransactionOption = {}) {
-        const contract = this.depositManager.contract;
-        const method = contract.method(
-            "depositEther",
-        );
-        return this.processWrite(method, option);
-    }
-
 }

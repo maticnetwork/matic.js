@@ -22,24 +22,22 @@ export class POSClient {
 
     constructor(config: IPOSClientConfig) {
         this.client_ = new Web3SideChainClient(config);
-
-
-
     }
 
     init() {
-        console.log("init method called");
         const client = this.client_;
         let config: IPOSClientConfig = client.config;
+        LOGGER.enableLog(config.log);
+
         return client.init().then(_ => {
             const mainPOSContracts = this.client_.mainPOSContracts;
             config = Object.assign(
+                config,
                 {
 
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
                     rootChain: this.client_.mainPlasmaContracts.RootChainProxy
                 } as IPOSClientConfig,
-                config
             );
 
             this.rootChainManager = new RootChainManager(
@@ -58,7 +56,6 @@ export class POSClient {
                 config.requestConcurrency
             );
 
-            LOGGER.enableLog(config.log);
             return this;
         });
     }

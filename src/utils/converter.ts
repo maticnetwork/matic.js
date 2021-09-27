@@ -1,7 +1,7 @@
 import BN from "bn.js";
 
 export class Converter {
-    static toUint256(amount: BN | string | number) {
+    static toHex(amount: BN | string | number) {
         const dataType = typeof amount;
         if (dataType === 'number') {
             amount = new BN(amount);
@@ -15,7 +15,7 @@ export class Converter {
             return '0x' + amount.toString(16);
         }
         else {
-            throw new Error(`Invalid value ${amount}. Can not be converted to uint256`);
+            throw new Error(`Invalid value ${amount}, value is not a number.`);
         }
     }
 }

@@ -1,6 +1,6 @@
 import { ITransactionOption } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
-import { formatAmount, Web3SideChainClient } from "../utils";
+import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitManager } from "./exit_manager";
@@ -43,7 +43,7 @@ export class ERC20 extends POSToken {
             const method = contract.method(
                 "approve",
                 predicateAddress,
-                formatAmount(amount)
+                Converter.toHex(amount)
             );
             return this.processWrite(method, option);
         });
@@ -71,7 +71,7 @@ export class ERC20 extends POSToken {
         }
 
         const amountInABI = this.client.parent.encodeParameters(
-            [formatAmount(amount)],
+            [Converter.toHex(amount)],
             ['uint256'],
         );
         return this.rootChainManager.deposit(
@@ -98,7 +98,7 @@ export class ERC20 extends POSToken {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdraw",
-                formatAmount(amount)
+                Converter.toHex(amount)
             );
             return this.processWrite(method, option);
         });
