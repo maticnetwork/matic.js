@@ -18,8 +18,8 @@ export class ERC20 extends POSToken {
     ) {
         super({
             isParent,
-            tokenAddress,
-            tokenContractName: 'ChildERC20',
+            address: tokenAddress,
+            name: 'ChildERC20',
             bridgeType: 'pos'
         }, client, rootChainManager, exitManager);
     }
@@ -76,7 +76,7 @@ export class ERC20 extends POSToken {
         );
         return this.rootChainManager.deposit(
             userAddress,
-            this.contractParam.tokenAddress,
+            this.contractParam.address,
             amountInABI,
             option
         );

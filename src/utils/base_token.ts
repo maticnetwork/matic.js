@@ -30,13 +30,13 @@ export class BaseToken {
         }
         const contractParam = this.contractParam;
         return this.client.getABI(
-            contractParam.tokenContractName,
+            contractParam.name,
             contractParam.bridgeType,
         ).then(abi => {
             this.contract_ = this.getContract_({
                 abi,
                 isParent: contractParam.isParent,
-                tokenAddress: contractParam.tokenAddress
+                tokenAddress: contractParam.address
             });
             return this.contract_;
         });

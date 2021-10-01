@@ -5,8 +5,8 @@ export class RootChainManager extends BaseToken {
 
     constructor(client_: Web3SideChainClient, address: string) {
         super({
-            tokenAddress: address,
-            tokenContractName: 'RootChainManager',
+            address: address,
+            name: 'RootChainManager',
             bridgeType: 'pos',
             isParent: true
         }, client_);

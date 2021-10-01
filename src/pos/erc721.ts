@@ -18,8 +18,8 @@ export class ERC721 extends POSToken {
     ) {
         super({
             isParent,
-            tokenAddress,
-            tokenContractName: 'ChildERC721',
+            address: tokenAddress,
+            name: 'ChildERC721',
             bridgeType: 'pos'
         }, client, rootChainManager, exitManager);
     }
@@ -93,7 +93,7 @@ export class ERC721 extends POSToken {
         );
         return this.rootChainManager.deposit(
             userAddress,
-            this.contractParam.tokenAddress,
+            this.contractParam.address,
             amountInABI,
             option
         );
@@ -108,7 +108,7 @@ export class ERC721 extends POSToken {
         );
         return this.rootChainManager.deposit(
             userAddress,
-            this.contractParam.tokenAddress,
+            this.contractParam.address,
             amountInABI,
             option
         );

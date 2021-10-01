@@ -12,8 +12,8 @@ export class ERC721 extends BaseToken {
     ) {
         super({
             isParent,
-            tokenAddress,
-            tokenContractName: 'ChildERC721'
+            address: tokenAddress,
+            name: 'ChildERC721'
         }, client);
     }
 

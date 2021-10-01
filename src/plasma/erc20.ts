@@ -21,8 +21,8 @@ export class ERC20 extends BaseToken {
     ) {
         super({
             isParent,
-            tokenAddress,
-            tokenContractName: 'ChildERC20'
+            address: tokenAddress,
+            name: 'ChildERC20'
         }, client);
     }
 
@@ -76,7 +76,7 @@ export class ERC20 extends BaseToken {
         return this.contracts_.depositManager.getContract().then(contract => {
             const method = contract.method(
                 "depositERC20ForUser",
-                this.contractParam.tokenAddress,
+                this.contractParam.address,
                 userAddress,
                 Converter.toHex(amount)
             );

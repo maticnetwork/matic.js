@@ -18,8 +18,8 @@ export class Ether extends BaseToken {
 
         super({
             isParent: true,
-            tokenAddress: null as any,
-            tokenContractName: null as any,
+            address: null as any,
+            name: null as any,
             bridgeType: null
         }, client);
     }

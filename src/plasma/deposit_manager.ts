@@ -6,15 +6,15 @@ export class DepositManager extends BaseToken {
         super(
             {
                 isParent: true,
-                tokenAddress: address,
-                tokenContractName: "DepositManager"
+                address: address,
+                name: "DepositManager"
             },
             client
         );
     }
 
     get address() {
-        return this.contractParam.tokenAddress;
+        return this.contractParam.address;
     }
 
 }

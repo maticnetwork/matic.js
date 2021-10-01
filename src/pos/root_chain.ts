@@ -8,8 +8,8 @@ export class RootChain extends BaseToken {
 
     constructor(client_: Web3SideChainClient, address: string) {
         super({
-            tokenAddress: address,
-            tokenContractName: 'RootChain',
+            address: address,
+            name: 'RootChain',
             isParent: true
         }, client_);
     }

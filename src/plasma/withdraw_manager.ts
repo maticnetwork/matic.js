@@ -8,8 +8,8 @@ export class WithdrawManager extends BaseToken {
         super(
             {
                 isParent: true,
-                tokenAddress: address,
-                tokenContractName: "WithdrawManager"
+                address: address,
+                name: "WithdrawManager"
             },
             client
         );

@@ -1,6 +1,6 @@
 export interface IContractInitParam {
-    tokenAddress: string;
+    address: string;
     isParent: boolean;
-    tokenContractName: string;
+    name: string;
     bridgeType?: string;
 }

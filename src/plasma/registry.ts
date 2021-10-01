@@ -6,8 +6,8 @@ export class RegistryContract extends BaseToken {
         super(
             {
                 isParent: true,
-                tokenAddress: address,
-                tokenContractName: "Registry"
+                address: address,
+                name: "Registry"
             },
             client
         );

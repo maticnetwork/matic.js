@@ -6,8 +6,8 @@ export class Erc20Predicate extends BaseToken {
         super(
             {
                 isParent: true,
-                tokenAddress: address,
-                tokenContractName: "ERC20Predicate"
+                address: address,
+                name: "ERC20Predicate"
             },
             client
         );

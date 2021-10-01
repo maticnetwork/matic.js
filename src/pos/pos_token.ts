@@ -20,7 +20,7 @@ export class POSToken extends BaseToken {
         if (this.predicateAddress) {
             return promiseResolve(this.predicateAddress);
         }
-        const method = await this.rootChainManager.method("tokenToType", this.contractParam.tokenAddress);
+        const method = await this.rootChainManager.method("tokenToType", this.contractParam.address);
         const tokenType = await method.read();
         if (!tokenType) {
             throw new Error('Invalid Token Type');
