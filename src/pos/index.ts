@@ -31,13 +31,13 @@ export class POSClient {
 
         return client.init().then(_ => {
             const mainPOSContracts = this.client_.mainPOSContracts;
-            config = Object.assign(
-                config,
+            client.config = config = Object.assign(
                 {
 
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
                     rootChain: this.client_.mainPlasmaContracts.RootChainProxy
                 } as IPOSClientConfig,
+                config
             );
 
             this.rootChainManager = new RootChainManager(

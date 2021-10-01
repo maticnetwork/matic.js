@@ -1,20 +1,43 @@
-import BN from "bn.js";
-import { ITransactionOption } from "../interfaces";
-import { BaseToken, Converter, Web3SideChainClient } from "../utils";
-import { DepositManager } from "./deposit_manager";
+import { TYPE_AMOUNT } from "../types";
+import { Log_Event_Signature } from "../enums";
+import { BaseContract } from "../abstracts";
+import { IPlasmaContracts, ITransactionOption } from "../interfaces";
+import { BaseToken, Converter, promiseResolve, Web3SideChainClient } from "../utils";
+import { Erc20Predicate } from "./erc20_predicate";
+
+
+
 
 export class ERC20 extends BaseToken {
+
+    private predicate_: BaseContract;
+
 
     constructor(
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient,
-        public depositManager: DepositManager) {
+        private contracts_: IPlasmaContracts
+    ) {
         super({
             isParent,
             tokenAddress,
             tokenContractName: 'ChildERC20'
         }, client);
+    }
+
+    getPredicate(): Promise<BaseContract> {
+        if (this.predicate_) {
+            return promiseResolve(this.predicate_);
+        }
+        return this.contracts_.registry.getContract().then(contract => {
+            return contract.method("erc20Predicate").read<string>();
+        }).then(predicateAddress => {
+            return new Erc20Predicate(this.client, predicateAddress).getContract();
+        }).then(contract => {
+            this.predicate_ = contract;
+            return contract;
+        });
     }
 
     getBalance(userAddress: string, option: ITransactionOption = {}) {
@@ -27,11 +50,11 @@ export class ERC20 extends BaseToken {
         });
     }
 
-    approve(amount: BN | string | number, option: ITransactionOption = {}) {
+    approve(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "approve",
-                this.depositManager.contract.address,
+                this.contracts_.depositManager.contract.address,
                 Converter.toHex(amount)
             );
             return this.processWrite(method, option);
@@ -46,9 +69,9 @@ export class ERC20 extends BaseToken {
         );
     }
 
-    deposit(amount: BN | string | number, userAddress: string, option: ITransactionOption = {}) {
+    deposit(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption = {}) {
         return this.getContract().then(tokenContract => {
-            const contract = this.depositManager.contract;
+            const contract = this.contracts_.depositManager.contract;
             const method = contract.method(
                 "depositERC20ForUser",
                 tokenContract.address,
@@ -58,4 +81,34 @@ export class ERC20 extends BaseToken {
             return this.processWrite(method, option);
         });
     }
+
+    withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        return this.getContract().then(tokenContract => {
+            const method = tokenContract.method(
+                "withdraw",
+                Converter.toHex(amount)
+            );
+            return this.processWrite(method, option);
+        });
+    }
+
+    withdrawChallenge(burnTxHash: string, option?: ITransactionOption) {
+        return Promise.all([
+            this.getPredicate(),
+            this.contracts_.exitManager.buildPayloadForExit(burnTxHash, Log_Event_Signature.PlasmaErc20WithdrawEventSig, false)
+        ]).then(result => {
+            const [predicate, payload] = result;
+            const method = predicate.method(
+                "startExitWithBurntTokens",
+                payload
+            );
+            return this.processWrite(method, option);
+        });
+    }
+
+    withdrawExit(tokens: string | string[], option?: ITransactionOption) {
+        return this.contracts_.withdrawManager.withdrawExit(tokens, option);
+    }
+
+
 }

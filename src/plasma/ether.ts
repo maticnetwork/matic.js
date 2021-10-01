@@ -1,10 +1,11 @@
-import BN from "bn.js";
-import { TYPE_AMOUNT } from "src";
-import { ITransactionOption } from "../interfaces";
+import { TYPE_AMOUNT } from "../types";
+import { IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { Web3SideChainClient, Converter, BaseToken } from "../utils";
 import { DepositManager } from "./deposit_manager";
 import { ERC20 } from "./erc20";
 import { RegistryContract } from "./registry";
+import { ExitManager } from "../pos";
+import { WithdrawManager } from "./withdraw_manager";
 
 export class Ether extends BaseToken {
 
@@ -12,9 +13,7 @@ export class Ether extends BaseToken {
     constructor(
         isParent: boolean,
         client: Web3SideChainClient,
-        public depositManager: DepositManager,
-        public registry: RegistryContract,
-
+        private contracts_: IPlasmaContracts
     ) {
 
         super({
@@ -31,7 +30,7 @@ export class Ether extends BaseToken {
     }
 
     deposit(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
-        const contract = this.depositManager.contract;
+        const contract = this.contracts_.depositManager.contract;
         option.value = Converter.toHex(amount);
         const method = contract.method(
             "depositEther",
@@ -46,8 +45,15 @@ export class Ether extends BaseToken {
             option.value = Converter.toHex(amount);
             return this.sendTransaction(option);
         }
-        return this.registry.contract.method("getWethTokenAddress").read<string>().then(ethAddress => {
-            const erc20 = new ERC20(ethAddress, false, this.client, this.depositManager);
+        return this.contracts_.registry.getContract().then(contract => {
+            return contract.method("getWethTokenAddress").read<string>();
+        }).then(ethAddress => {
+            const erc20 = new ERC20(
+                ethAddress,
+                false,
+                this.client,
+                this.contracts_
+            );
             return erc20['getContract']();
         }).then(contract => {
             const method = contract.method(

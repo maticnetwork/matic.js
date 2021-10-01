@@ -1,7 +1,7 @@
 import { BaseWeb3Client } from "../abstracts";
 import { MerkleTree } from "./merkle_tree";
 import ethUtils from "ethereumjs-util";
-import { ITransactionReceipt, IBlock, IBlockWithTransaction } from "src/interfaces";
+import { ITransactionReceipt, IBlock, IBlockWithTransaction } from "../interfaces";
 import { mapPromise } from "./map_promise";
 const TRIE = require('merkle-patricia-tree');
 const rlp = ethUtils.rlp;

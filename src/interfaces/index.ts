@@ -16,3 +16,4 @@ export * from "./rpc_response_payload";
 export * from "./map_promise_option";
 export * from "./base_client_config";
 export * from "./error";
+export * from "./plasma_helper_contract";

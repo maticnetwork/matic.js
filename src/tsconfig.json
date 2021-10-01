@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "../",
         "noImplicitAny": false,
         "noEmitOnError": false,
         "removeComments": false,

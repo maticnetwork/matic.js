@@ -1,26 +1,40 @@
 import { ERC20 } from "./erc20";
 import { ERC721 } from "./erc721";
 import { Web3SideChainClient } from "../utils";
-import { IPlasmaClientConfig } from "../interfaces";
+import { IPlasmaClientConfig, IPlasmaContracts } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 import { LOGGER } from "../constant";
 import { RegistryContract } from "./registry";
+import { Ether } from "./ether";
+import { ExitManager, RootChain } from "../pos";
+import { WithdrawManager } from "./withdraw_manager";
 
 export class PlasmaClient {
 
     private client_: Web3SideChainClient;
 
-    withdrawManager;
+    withdrawManager: WithdrawManager;
+    exitManager: ExitManager;
 
     depositManager: DepositManager;
     registry: RegistryContract;
+    rootChain: RootChain;
+
+    private getContracts_() {
+        return {
+            depositManager: this.depositManager,
+            exitManager: this.exitManager,
+            registry: this.registry,
+            withdrawManager: this.withdrawManager
+        } as IPlasmaContracts;
+    }
 
     erc20(tokenAddress: string, isParent?: boolean) {
         return new ERC20(
             tokenAddress,
             isParent,
             this.client_,
-            this.depositManager
+            this.getContracts_()
         );
     }
 
@@ -34,43 +48,49 @@ export class PlasmaClient {
     }
 
     constructor(config: IPlasmaClientConfig) {
-        this.client_ = new Web3SideChainClient(config);
+        const client = this.client_ = new Web3SideChainClient(config);
         LOGGER.enableLog(config.log);
     }
 
     init() {
         const client = this.client_;
         let config: IPlasmaClientConfig = client.config;
-        const mainContracts = this.client_.mainPlasmaContracts;
-
-        config = Object.assign(
-            config,
-            {
-                registry: mainContracts.Registry,
-                depositManager: mainContracts.DepositManagerProxy,
-                withdrawManager: mainContracts.WithdrawManagerProxy,
-            },
-        );
-
 
         return client.init().then(_ => {
-            return Promise.all([
-                this.client_.getABI("DepositManager").then(abi => {
-                    this.depositManager = new DepositManager(
-                        client.parent,
-                        client.config.depositManager,
-                        abi
-                    );
-                }),
-                this.client_.getABI("Registry").then(abi => {
-                    this.registry = new RegistryContract(
-                        client.parent,
-                        client.config.registry,
-                        abi
-                    );
-                })
-            ]);
+            const mainContracts = client.mainPlasmaContracts;
+            client.config = config = Object.assign(
+                {
+                    rootChain: mainContracts.RootChainProxy,
+                    registry: mainContracts.Registry,
+                    depositManager: mainContracts.DepositManagerProxy,
+                    withdrawManager: mainContracts.WithdrawManagerProxy,
+                },
+                config
+            );
+
+            this.rootChain = new RootChain(
+                client,
+                config.rootChain
+            );
+
+            this.registry = new RegistryContract(
+                client,
+                client.config.registry,
+            );
+
+            return this.client_.getABI("DepositManager").then(abi => {
+                this.depositManager = new DepositManager(
+                    client.parent,
+                    client.config.depositManager,
+                    abi
+                );
+                return this;
+            });
         });
+    }
+
+    ether(isParent?) {
+        return new Ether(isParent, this.client_, this.getContracts_());
     }
 
 }

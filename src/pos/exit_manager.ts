@@ -3,7 +3,7 @@ import { Converter, ProofUtil } from "../utils";
 import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
-import { ITransactionReceipt } from "src/interfaces";
+import { ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseWeb3Client } from "../abstracts";
 
