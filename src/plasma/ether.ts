@@ -30,12 +30,13 @@ export class Ether extends BaseToken {
     }
 
     deposit(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
-        const contract = this.contracts_.depositManager.contract;
-        option.value = Converter.toHex(amount);
-        const method = contract.method(
-            "depositEther",
-        );
-        return this.processWrite(method, option);
+        return this.contracts_.depositManager.getContract().then(contract => {
+            option.value = Converter.toHex(amount);
+            const method = contract.method(
+                "depositEther",
+            );
+            return this.processWrite(method, option);
+        });
     }
 
     transfer(amount: TYPE_AMOUNT, to: string, option: ITransactionOption = {}) {

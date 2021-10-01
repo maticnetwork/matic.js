@@ -51,10 +51,11 @@ export class ERC20 extends BaseToken {
     }
 
     approve(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+        this.checkForParent("approve");
         return this.getContract().then(contract => {
             const method = contract.method(
                 "approve",
-                this.contracts_.depositManager.contract.address,
+                this.contracts_.depositManager.address,
                 Converter.toHex(amount)
             );
             return this.processWrite(method, option);
@@ -70,11 +71,12 @@ export class ERC20 extends BaseToken {
     }
 
     deposit(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption = {}) {
-        return this.getContract().then(tokenContract => {
-            const contract = this.contracts_.depositManager.contract;
+        this.checkForParent("deposit");
+
+        return this.contracts_.depositManager.getContract().then(contract => {
             const method = contract.method(
                 "depositERC20ForUser",
-                tokenContract.address,
+                this.contractParam.tokenAddress,
                 userAddress,
                 Converter.toHex(amount)
             );
@@ -83,6 +85,9 @@ export class ERC20 extends BaseToken {
     }
 
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        this.checkForChild("withdrawStart");
+
+
         return this.getContract().then(tokenContract => {
             const method = tokenContract.method(
                 "withdraw",

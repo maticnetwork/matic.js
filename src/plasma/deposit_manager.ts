@@ -1,13 +1,20 @@
-import { BaseWeb3Client, BaseContract } from "../abstracts";
+import { BaseToken, Web3SideChainClient } from "../utils";
 
-export class DepositManager {
-    contract: BaseContract;
+export class DepositManager extends BaseToken {
 
-    constructor(private client_: BaseWeb3Client, address: string, abi) {
-        this.contract = this.client_.getContract(
-            address,
-            abi
+    constructor(client: Web3SideChainClient, address: string) {
+        super(
+            {
+                isParent: true,
+                tokenAddress: address,
+                tokenContractName: "DepositManager"
+            },
+            client
         );
+    }
+
+    get address() {
+        return this.contractParam.tokenAddress;
     }
 
 }

@@ -48,7 +48,7 @@ export class PlasmaClient {
     }
 
     constructor(config: IPlasmaClientConfig) {
-        const client = this.client_ = new Web3SideChainClient(config);
+        this.client_ = new Web3SideChainClient(config);
         LOGGER.enableLog(config.log);
     }
 
@@ -78,14 +78,12 @@ export class PlasmaClient {
                 client.config.registry,
             );
 
-            return this.client_.getABI("DepositManager").then(abi => {
-                this.depositManager = new DepositManager(
-                    client.parent,
-                    client.config.depositManager,
-                    abi
-                );
-                return this;
-            });
+            this.depositManager = new DepositManager(
+                client,
+                client.config.depositManager
+            );
+
+            return this;
         });
     }
 

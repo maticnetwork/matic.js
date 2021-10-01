@@ -5,6 +5,7 @@ import { merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
 import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
+import { ERROR_TYPE } from "../enums";
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -175,6 +176,20 @@ export class BaseToken {
             txConfig.chainId = chainId;
         }
         return txConfig;
+    }
+
+    protected checkForParent(methodName) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(
+                ERROR_TYPE.AllowedOnRoot, methodName
+            ).throw();
+        }
+    }
+
+    protected checkForChild(methodName) {
+        if (this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnChild, methodName).throw();
+        }
     }
 
 }

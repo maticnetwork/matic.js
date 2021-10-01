@@ -60,18 +60,18 @@ export class ERC721 extends BaseToken {
      * @param tokenId 
      * @param options 
      */
-    safeDepositERC721(tokenId: number, options?: ITransactionOption) {
-        return this.getContract().then(contract => {
-            const method = contract.method(
-                "safeTransferFrom",
-                options.from,
-                this.depositManager.contract.address,
-                tokenId,
-            );
+    // safeDepositERC721(tokenId: number, options?: ITransactionOption) {
+    //     return this.getContract().then(contract => {
+    //         const method = contract.method(
+    //             "safeTransferFrom",
+    //             options.from,
+    //             this.depositManager.contract.address,
+    //             tokenId,
+    //         );
 
-            return this.processWrite(method, options);
-        });
-    }
+    //         return this.processWrite(method, options);
+    //     });
+    // }
 
     /**
      * WRITE
