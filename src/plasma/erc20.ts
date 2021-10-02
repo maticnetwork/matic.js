@@ -97,10 +97,14 @@ export class ERC20 extends BaseToken {
         });
     }
 
-    withdrawChallenge(burnTxHash: string, option?: ITransactionOption) {
+    private withdrawChallenge_(burnTxHash: string, isFast: boolean, option: ITransactionOption) {
         return Promise.all([
             this.getPredicate(),
-            this.contracts_.exitManager.buildPayloadForExit(burnTxHash, Log_Event_Signature.PlasmaErc20WithdrawEventSig, false)
+            this.contracts_.exitManager.buildPayloadForExit(
+                burnTxHash,
+                Log_Event_Signature.PlasmaErc20WithdrawEventSig,
+                isFast
+            )
         ]).then(result => {
             const [predicate, payload] = result;
             const method = predicate.method(
@@ -111,9 +115,18 @@ export class ERC20 extends BaseToken {
         });
     }
 
-    withdrawExit(tokens: string | string[], option?: ITransactionOption) {
-        return this.contracts_.withdrawManager.withdrawExit(tokens, option);
+    withdrawChallenge(burnTxHash: string, option?: ITransactionOption) {
+        return this.withdrawChallenge_(burnTxHash, false, option);
     }
 
+    withdrawChallengeFaster(burnTxHash: string, option?: ITransactionOption) {
+        return this.withdrawChallenge_(burnTxHash, true, option);
+    }
+
+    withdrawExit(option?: ITransactionOption) {
+        return this.contracts_.withdrawManager.withdrawExit(
+            this.contractParam.address, option
+        );
+    }
 
 }

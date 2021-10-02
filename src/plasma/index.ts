@@ -1,7 +1,7 @@
 import { ERC20 } from "./erc20";
 import { ERC721 } from "./erc721";
 import { Web3SideChainClient } from "../utils";
-import { IPlasmaClientConfig, IPlasmaContracts } from "../interfaces";
+import { IPlasmaClientConfig, IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 import { LOGGER } from "../constant";
 import { RegistryContract } from "./registry";
@@ -83,12 +83,29 @@ export class PlasmaClient {
                 client.config.depositManager
             );
 
+            this.exitManager = new ExitManager(
+                client.child,
+                this.rootChain,
+                config.requestConcurrency
+            );
+
+            this.withdrawManager = new WithdrawManager(
+                client,
+                client.config.withdrawManager,
+            );
+
             return this;
         });
     }
 
     ether(isParent?) {
         return new Ether(isParent, this.client_, this.getContracts_());
+    }
+
+    withdrawExit(tokens: string | string[], option?: ITransactionOption) {
+        return this.withdrawManager.withdrawExit(
+            tokens, option
+        );
     }
 
 }

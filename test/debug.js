@@ -38,11 +38,13 @@ const execute = async () => {
   // const balance = await mumbaiERC720Token.getBalance(from);
   // return console.log("balance", balance);
 
-  const tx = await goerliERC720Token.approve(10, from);
-  // // const tx = await goerliERC720Token.withdrawExit('0x454f159823351b24ce0e675e7b308cc8c7ba39e175059a4d2b8f9507c17b5133');
-  console.log("txHash", await tx.getTransactionHash());
-  console.log("txReceipt", await tx.getReceipt());
+  // const tx = await goerliERC720Token.approve(10, from);
+  // const tx = await goerliERC720Token.withdrawChallenge('0x454f159823351b24ce0e675e7b308cc8c7ba39e175059a4d2b8f9507c17b5133');
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
 
+  //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
+  const tx = await goerliERC720Token.withdrawExit()
   // const tx = await mumbaiERC720Token.withdrawStart(
   //   10,
   //   {
@@ -51,8 +53,8 @@ const execute = async () => {
   //     // gas: 100
   //   }
   // );
-  // console.log("txHash", await tx.getTransactionHash());
-  // console.log("txReceipt", await tx.getReceipt());
+  console.log("txHash", await tx.getTransactionHash());
+  console.log("txReceipt", await tx.getReceipt());
 }
 
 execute().then(_ => {
