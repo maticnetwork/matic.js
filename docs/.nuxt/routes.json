@@ -1,0 +1,380 @@
+[
+  {
+    "name": "footer",
+    "path": "/footer",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/footer.vue",
+    "chunkName": "pages/footer",
+    "_name": "_0b071178"
+  },
+  {
+    "name": "menu",
+    "path": "/menu",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/menu.vue",
+    "chunkName": "pages/menu",
+    "_name": "_2c914548"
+  },
+  {
+    "name": "docs-adv-sql-example",
+    "path": "/docs/adv-sql-example",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/adv-sql-example.vue",
+    "chunkName": "pages/docs/adv-sql-example",
+    "_name": "_1f1ad166"
+  },
+  {
+    "name": "docs-aggregate",
+    "path": "/docs/aggregate",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/aggregate.vue",
+    "chunkName": "pages/docs/aggregate",
+    "_name": "_7cabe0d8"
+  },
+  {
+    "name": "docs-between",
+    "path": "/docs/between",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/between.vue",
+    "chunkName": "pages/docs/between",
+    "_name": "_404486c6"
+  },
+  {
+    "name": "docs-case",
+    "path": "/docs/case",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/case.vue",
+    "chunkName": "pages/docs/case",
+    "_name": "_954e862a"
+  },
+  {
+    "name": "docs-change-table-design",
+    "path": "/docs/change-table-design",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/change-table-design.vue",
+    "chunkName": "pages/docs/change-table-design",
+    "_name": "_ac3940a2"
+  },
+  {
+    "name": "docs-clear",
+    "path": "/docs/clear",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/clear.vue",
+    "chunkName": "pages/docs/clear",
+    "_name": "_f6c290bc"
+  },
+  {
+    "name": "docs-column",
+    "path": "/docs/column",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/column.vue",
+    "chunkName": "pages/docs/column",
+    "_name": "_7ff1555e"
+  },
+  {
+    "name": "docs-connection",
+    "path": "/docs/connection",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/connection.vue",
+    "chunkName": "pages/docs/connection",
+    "_name": "_7e2bd94e"
+  },
+  {
+    "name": "docs-count",
+    "path": "/docs/count",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/count.vue",
+    "chunkName": "pages/docs/count",
+    "_name": "_20f12164"
+  },
+  {
+    "name": "docs-data-type",
+    "path": "/docs/data-type",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/data-type.vue",
+    "chunkName": "pages/docs/data-type",
+    "_name": "_7bfefe52"
+  },
+  {
+    "name": "docs-database",
+    "path": "/docs/database",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/database.vue",
+    "chunkName": "pages/docs/database",
+    "_name": "_19faec36"
+  },
+  {
+    "name": "docs-distinct",
+    "path": "/docs/distinct",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/distinct.vue",
+    "chunkName": "pages/docs/distinct",
+    "_name": "_3a4a6137"
+  },
+  {
+    "name": "docs-drop-db",
+    "path": "/docs/drop-db",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/drop-db.vue",
+    "chunkName": "pages/docs/drop-db",
+    "_name": "_202892b1"
+  },
+  {
+    "name": "docs-enums",
+    "path": "/docs/enums",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/enums.vue",
+    "chunkName": "pages/docs/enums",
+    "_name": "_40543b32"
+  },
+  {
+    "name": "docs-event",
+    "path": "/docs/event",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/event.vue",
+    "chunkName": "pages/docs/event",
+    "_name": "_5b82f522"
+  },
+  {
+    "name": "docs-flatten",
+    "path": "/docs/flatten",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/flatten.vue",
+    "chunkName": "pages/docs/flatten",
+    "_name": "_7b8f56ce"
+  },
+  {
+    "name": "docs-get-started",
+    "path": "/docs/get-started",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/get-started.vue",
+    "chunkName": "pages/docs/get-started",
+    "_name": "_d97093c2"
+  },
+  {
+    "name": "docs-helpers",
+    "path": "/docs/helpers",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/helpers.vue",
+    "chunkName": "pages/docs/helpers",
+    "_name": "_0b389ecc"
+  },
+  {
+    "name": "docs-idbstudio",
+    "path": "/docs/idbstudio",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/idbstudio.vue",
+    "chunkName": "pages/docs/idbstudio",
+    "_name": "_154c8a12"
+  },
+  {
+    "name": "docs-ignore-case",
+    "path": "/docs/ignore-case",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/ignore-case.vue",
+    "chunkName": "pages/docs/ignore-case",
+    "_name": "_fdf4ba40"
+  },
+  {
+    "name": "docs-import-scripts",
+    "path": "/docs/import-scripts",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/import-scripts.vue",
+    "chunkName": "pages/docs/import-scripts",
+    "_name": "_1ce4764a"
+  },
+  {
+    "name": "docs-in",
+    "path": "/docs/in",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/in.vue",
+    "chunkName": "pages/docs/in",
+    "_name": "_c8a88dc0"
+  },
+  {
+    "name": "docs-initiate-database",
+    "path": "/docs/initiate-database",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/initiate-database.vue",
+    "chunkName": "pages/docs/initiate-database",
+    "_name": "_08f32b04"
+  },
+  {
+    "name": "docs-insert",
+    "path": "/docs/insert",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/insert.vue",
+    "chunkName": "pages/docs/insert",
+    "_name": "_771cdb34"
+  },
+  {
+    "name": "docs-installation",
+    "path": "/docs/installation",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/installation.vue",
+    "chunkName": "pages/docs/installation",
+    "_name": "_64bf37f5"
+  },
+  {
+    "name": "docs-intersect",
+    "path": "/docs/intersect",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/intersect.vue",
+    "chunkName": "pages/docs/intersect",
+    "_name": "_9e1c7218"
+  },
+  {
+    "name": "docs-keypath",
+    "path": "/docs/keypath",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/keypath.vue",
+    "chunkName": "pages/docs/keypath",
+    "_name": "_6fc12d99"
+  },
+  {
+    "name": "docs-like",
+    "path": "/docs/like",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/like.vue",
+    "chunkName": "pages/docs/like",
+    "_name": "_1463345c"
+  },
+  {
+    "name": "docs-middleware",
+    "path": "/docs/middleware",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/middleware.vue",
+    "chunkName": "pages/docs/middleware",
+    "_name": "_4a3eb40d"
+  },
+  {
+    "name": "docs-multi-entry",
+    "path": "/docs/multi-entry",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/multi-entry.vue",
+    "chunkName": "pages/docs/multi-entry",
+    "_name": "_9be7dc1a"
+  },
+  {
+    "name": "docs-operators",
+    "path": "/docs/operators",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/operators.vue",
+    "chunkName": "pages/docs/operators",
+    "_name": "_80cb93b8"
+  },
+  {
+    "name": "docs-optimization",
+    "path": "/docs/optimization",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/optimization.vue",
+    "chunkName": "pages/docs/optimization",
+    "_name": "_0470ccb0"
+  },
+  {
+    "name": "docs-or",
+    "path": "/docs/or",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/or.vue",
+    "chunkName": "pages/docs/or",
+    "_name": "_b3bdaa44"
+  },
+  {
+    "name": "docs-plugin",
+    "path": "/docs/plugin",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plugin.vue",
+    "chunkName": "pages/docs/plugin",
+    "_name": "_2674baae"
+  },
+  {
+    "name": "docs-regex",
+    "path": "/docs/regex",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/regex.vue",
+    "chunkName": "pages/docs/regex",
+    "_name": "_632536c8"
+  },
+  {
+    "name": "docs-remove",
+    "path": "/docs/remove",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/remove.vue",
+    "chunkName": "pages/docs/remove",
+    "_name": "_7f01337f"
+  },
+  {
+    "name": "docs-select",
+    "path": "/docs/select",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/index.vue",
+    "chunkName": "pages/docs/select/index",
+    "_name": "_7fdfe53a"
+  },
+  {
+    "name": "docs-sqlweb",
+    "path": "/docs/sqlweb",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/sqlweb.vue",
+    "chunkName": "pages/docs/sqlweb",
+    "_name": "_eeb8467e"
+  },
+  {
+    "name": "docs-table",
+    "path": "/docs/table",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/table.vue",
+    "chunkName": "pages/docs/table",
+    "_name": "_59d894a3"
+  },
+  {
+    "name": "docs-terminate",
+    "path": "/docs/terminate",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/terminate.vue",
+    "chunkName": "pages/docs/terminate",
+    "_name": "_2e9eaf36"
+  },
+  {
+    "name": "docs-transaction",
+    "path": "/docs/transaction",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/transaction.vue",
+    "chunkName": "pages/docs/transaction",
+    "_name": "_7ea181f3"
+  },
+  {
+    "name": "docs-union",
+    "path": "/docs/union",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/union.vue",
+    "chunkName": "pages/docs/union",
+    "_name": "_a71571b8"
+  },
+  {
+    "name": "docs-update",
+    "path": "/docs/update",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/update.vue",
+    "chunkName": "pages/docs/update",
+    "_name": "_2be2c944"
+  },
+  {
+    "name": "docs-update-with-operators",
+    "path": "/docs/update-with-operators",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/update-with-operators.vue",
+    "chunkName": "pages/docs/update-with-operators",
+    "_name": "_acbacd3e"
+  },
+  {
+    "name": "docs-v2-to-v3",
+    "path": "/docs/v2-to-v3",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/v2-to-v3.vue",
+    "chunkName": "pages/docs/v2-to-v3",
+    "_name": "_193ac9b9"
+  },
+  {
+    "name": "docs-where",
+    "path": "/docs/where",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/where.vue",
+    "chunkName": "pages/docs/where",
+    "_name": "_d2843d88"
+  },
+  {
+    "name": "docs-select-group-by",
+    "path": "/docs/select/group-by",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/group-by.vue",
+    "chunkName": "pages/docs/select/group-by",
+    "_name": "_59a33dad"
+  },
+  {
+    "name": "docs-select-join",
+    "path": "/docs/select/join",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/join.vue",
+    "chunkName": "pages/docs/select/join",
+    "_name": "_fef8e41c"
+  },
+  {
+    "name": "docs-select-limit",
+    "path": "/docs/select/limit",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/limit.vue",
+    "chunkName": "pages/docs/select/limit",
+    "_name": "_17fa6ba3"
+  },
+  {
+    "name": "docs-select-order-by",
+    "path": "/docs/select/order-by",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/order-by.vue",
+    "chunkName": "pages/docs/select/order-by",
+    "_name": "_b8f81404"
+  },
+  {
+    "name": "docs-select-skip",
+    "path": "/docs/select/skip",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/skip.vue",
+    "chunkName": "pages/docs/select/skip",
+    "_name": "_53f163c7"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_d9d3108e"
+  }
+]
