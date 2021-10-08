@@ -13,7 +13,7 @@
 //results will be array of objects.
 console.log(results);
 </code></pre>
-<p>Option order has following properties -  </p>
+<p>Option order has following properties -</p>
 <ul>
 <li><p>by: string; // sorting column name</p></li>
 <li><p>type: string; // sorting type - asc/desc, default is asc</p></li>
@@ -43,8 +43,8 @@ console.log(results);
 </p>
 <h2 id="orderbywhenusingjoin">Order by when using join</h2>
 <p><br>
-Unlike query without join, order here is little different. You need to provide query along with table name in the form of [tablename].[columnName] </p>
-<p>e.g - </p>
+Unlike query without join, order here is little different. You need to provide query along with table name in the form of [tablename].[columnName]</p>
+<p>e.g -</p>
 <pre><code>select({
     from: "Student",
     join: {

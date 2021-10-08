@@ -3,7 +3,7 @@
 <li><strong>DATA_TYPE -</strong> String, Object, Number, Boolean, Array, DateTime</li>
 </ul>
 <p><strong>Note :-</strong> enums are javascript object, so you can use <strong>" . "</strong> symbol to get values.</p>
-<p>e.g. - To access datatype 'string' using jsstore "DATA_TYPE" use - "JsStore.DATA_TYPE.String"</p>
+<p>e.g. - To access datatype 'string' using jsstore "DATA<em>TYPE" use - "JsStore.DATA</em>TYPE.String"</p>
 <p class="margin-top-40px center-align">
     <button class="btn info btnNext">Next</button>
 </p></Layout></template>

@@ -10,7 +10,7 @@ and
     column4=some_another_value;
 </code></pre>
 <h4 id="jsstore">JsStore</h4>
-<pre><code>var noOfRowsUpdated = await connection.update({ 
+<pre><code>var noOfRowsUpdated = await connection.update({
       in: "Table_Name",
     set: {
         column1: value1,

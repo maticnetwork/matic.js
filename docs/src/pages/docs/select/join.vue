@@ -35,9 +35,9 @@ console.log(results);
 <ul>
 <li><p>with : string // name of table to join</p></li>
 <li><p>on : string // join condition eg - table1.property = table2.property</p></li>
-<li><p>as : object // rename some column name in order to avoid the column match with other tables </p></li>
+<li><p>as : object // rename some column name in order to avoid the column match with other tables</p></li>
 </ul>
-<p>e.g - if a column customerId is present in both table, then a column match error will be thrown &amp; in this situation you can use <code>as</code> to resolve the error. </p>
+<p>e.g - if a column customerId is present in both table, then a column match error will be thrown &amp; in this situation you can use <code>as</code> to resolve the error.</p>
 <pre><code>connection.select({
     from: table1 name,
     join: {
@@ -45,15 +45,15 @@ console.log(results);
         on: "table1.common_field=table2.common_field",
         as: {
             customerId: table2_customerId
-        } 
+        }
     }
 });
 </code></pre>
 <ul>
-<li><p>where // to filter </p></li>
-<li><p>order // for ordering data - but unlike query without join, order here is little different. You need to provide query along with table name in the form of [tablename].[columnName] </p></li>
+<li><p>where // to filter</p></li>
+<li><p>order // for ordering data - but unlike query without join, order here is little different. You need to provide query along with table name in the form of [tablename].[columnName]</p></li>
 <li><p>groupBy // for grouping</p></li>
-<li><p>aggregate // aggregation of data </p></li>
+<li><p>aggregate // aggregation of data</p></li>
 </ul>
 <div class="margin-top-30px top-border margin-bottom-20px"></div>
 <h4 id="sqlinnerjoinbetweenthreetables">Sql (inner join between three tables)</h4>

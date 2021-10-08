@@ -23,11 +23,11 @@ You can get Db version by using below code.</p>
 <p>or you can also find your current db version in indexedDb section of development tools.</p>
 <h2 id="whatistheneedofdbversion">What is the need of db version</h2>
 <p><br>
-IndexedDb is a database technology for browser which means if you do some changes in your web application , any one who use your web app should get latest changes including database changes. </p>
+IndexedDb is a database technology for browser which means if you do some changes in your web application , any one who use your web app should get latest changes including database changes.</p>
 <p>Browser decides to change db schema when indexedb is initiated with db version greater than current db version.</p>
 <h2 id="whathappenstodatawhenschemaischanged">What happens to data when schema is changed</h2>
 <p><br>
-All table is recreated when there is database schema change but JsStore deletes only those tables which version is changed. </p>
+All table is recreated when there is database schema change but JsStore deletes only those tables which version is changed.</p>
 <div class="highlight">
 So table which does not have schema changes will have no effect but table which have schema changes - means table will be recreated and all data inside it will be lost.
 </div>
@@ -35,7 +35,7 @@ So table which does not have schema changes will have no effect but table which 
 <h3 id="howdoipreservemydatafortablewhichhasschemachanges">How do i preserve my data for table which has schema changes</h3>
 <p><br>
 Before calling <code>initDb</code> api with new db schema changes, select all data from a table and then insert it after the connection is initiated.</p>
-<p>e.g - </p>
+<p>e.g -</p>
 <pre><code>async function changeDbSchema() {
     var allData = await connection.select({
         from:`{tableName}`

@@ -7,7 +7,7 @@ flatten is a option in select query which will flatten array data into primitive
     hobbies:["travelling", "motorcycling"]
 }
 </code></pre>
-<p>In the above example - hobbies column is array. </p>
+<p>In the above example - hobbies column is array.</p>
 <p>After flattening data will become</p>
 <pre><code>[
     {

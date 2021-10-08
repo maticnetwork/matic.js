@@ -5,7 +5,7 @@
 <li><strong>" &gt;= " :</strong> Finds value greater than or equal to supplied value.</li>
 <li><strong>" &lt;= " :</strong> Finds value less than or equal to supplied value.</li>
 <li><strong>" - " :</strong> Finds value between two supplied value. Read <a href="/tutorial/between">between doc</a> for more info.</li>
-<li><strong>" != " :</strong> Finds value not equal to supplied value. </li>
+<li><strong>" != " :</strong> Finds value not equal to supplied value.</li>
 </ul>
 <h4 id="sql">Sql</h4>
 <pre><code>Select * From Table_Name;

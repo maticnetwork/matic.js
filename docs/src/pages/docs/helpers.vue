@@ -36,7 +36,7 @@ connection.set("user_info", userInfo).then(function() {
 <h4 id="get">get</h4>
 <p>Get data from special table.</p>
 <pre><code>connection.get("user_info").then(function(userInfo) {
-    console.log(userInfo); 
+    console.log(userInfo);
 });
 </code></pre></Layout></template>
         <script>import Layout from '/home/warrior/projects/opensource/matic.js/docs/layouts/docs.vue'

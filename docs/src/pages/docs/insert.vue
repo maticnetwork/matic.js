@@ -48,7 +48,7 @@ var noOfRowsInserted = await connection.insert({
     values: [newData], //you can insert multiple values at a time
 });
 </code></pre>
-<p>Points to note :- </p>
+<p>Points to note :-</p>
 <ul>
 <li><p>While using upsert - primary key should be same as old records otherwise new record will be created. IndexedDb uses primary key to identify existing record.</p></li>
 <li><p>In a case where you want to update particular column, you should use <a href="/tutorial/update">update</a> api. <code>upsert</code> replace the old record completely except primary key and add a new record.</p></li>
@@ -60,7 +60,7 @@ var noOfRowsInserted = await connection.insert({
 <li><p>values: Array // values to insert</p></li>
 <li><p>return?: Boolean // Return the inserted record. Default value is false.This is useful in case - you want the autoincrement column value.</p></li>
 <li><p>skipDataCheck?: Boolean // Whether to check or not supplied data. Default value is false. If supplied true, this will directly insert data without checking any thing like datatype, auto increment etc. This is useful in case - where you want to insert huge record at a time.</p></li>
-<li><p>upsert?: boolean; // Update data if exist otherwise insert </p></li>
+<li><p>upsert?: boolean; // Update data if exist otherwise insert</p></li>
 </ul>
 <p class="margin-top-40px center-align">
     <a class="btn info" target="_blank" href="https://ujjwalguptaofficial.github.io/idbstudio/?db=Demo&query=insert(%7B%0A%20%20%20%20into%3A%20%22Customers%22%2C%0A%20%20%20%20values%3A%20%5B%7B%0A%20%20%20%20%20%20%20%20customerName%3A%20'ujjwal%20gupta'%2C%0A%20%20%20%20%20%20%20%20contactName%3A%20'ujjwal'%2C%0A%20%20%20%20%20%20%20%20address%3A%20'bhubaneswar%20odisha'%2C%0A%20%20%20%20%20%20%20%20city%3A%20'bhubaneswar'%2C%0A%20%20%20%20%20%20%20%20postalCode%3A%20'12345'%2C%0A%20%20%20%20%20%20%20%20country%3A%20'India'%0A%20%20%20%20%7D%5D%0A%7D)%3B%0A">Example</a>
