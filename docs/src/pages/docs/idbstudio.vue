@@ -8,7 +8,7 @@
 <li>You want to inspect database - tables, columns etc.</li>
 </ul>
 <p><br>
-With all of these situations - you end up creating an application &amp; executing queries through console or taking help of browser debugging tools. </p>
+With all of these situations - you end up creating an application &amp; executing queries through console or taking help of browser debugging tools.</p>
 <p>IDBStudio helps you with these situations and let you speed up your development.</p>
 <p>Here is the github repo link - <a href="https://github.com/ujjwalguptaofficial/idbstudio">https://github.com/ujjwalguptaofficial/idbstudio</a></p></Layout></template>
         <script>import Layout from '/home/warrior/projects/opensource/matic.js/docs/layouts/docs.vue'

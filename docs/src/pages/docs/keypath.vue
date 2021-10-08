@@ -9,7 +9,7 @@
     }
 }
 </code></pre>
-<p>We want to query on pincodes &amp; name so a select query will be like this - </p>
+<p>We want to query on pincodes &amp; name so a select query will be like this -</p>
 <pre><code>connection.select({
     from: 'cities',
     where: {
@@ -18,7 +18,7 @@
     }
 })
 </code></pre>
-<p>Now lets define the table using keyPath </p>
+<p>Now lets define the table using keyPath</p>
 <pre><code>var table = {
     name: 'cities',
     columns: {
@@ -28,7 +28,7 @@
     }
 }
 </code></pre>
-<p>and now new query can be written as - </p>
+<p>and now new query can be written as -</p>
 <pre><code>connection.select({
     from: 'cities',
     where: {

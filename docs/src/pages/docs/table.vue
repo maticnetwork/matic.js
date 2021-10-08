@@ -14,7 +14,7 @@
 <pre><code>var tblProduct = {
     name: 'Product',
     columns: {
-        // Here "Id" is name of column 
+        // Here "Id" is name of column
         Id:{ primaryKey: true, autoIncrement: true },
         ItemName:  { notNull: true, dataType: "string" },
         Price:  { notNull: true, dataType: "number" },

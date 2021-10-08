@@ -7,14 +7,14 @@
     {
         name: "Scott",
         tags: ["beer"]
-    }, 
+    },
     {
         name: "Marc",
         tags: ["mongo", "jenkins","jsstore"]
     }
 ];
 </code></pre>
-<p>now you want to fetch records whose tags is 'mongo'. So a simple select query will be - </p>
+<p>now you want to fetch records whose tags is 'mongo'. So a simple select query will be -</p>
 <pre><code>const results = await connection.select({
     from: 'people',
     where: {

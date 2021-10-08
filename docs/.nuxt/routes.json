@@ -196,6 +196,13 @@
     "_name": "_9e1c7218"
   },
   {
+    "name": "docs-introduction",
+    "path": "/docs/introduction",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/introduction.vue",
+    "chunkName": "pages/docs/introduction",
+    "_name": "_25737c56"
+  },
+  {
     "name": "docs-keypath",
     "path": "/docs/keypath",
     "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/keypath.vue",
@@ -336,6 +343,34 @@
     "_name": "_d2843d88"
   },
   {
+    "name": "docs-basics-how_to_use",
+    "path": "/docs/basics/how_to_use",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/basics/how_to_use.vue",
+    "chunkName": "pages/docs/basics/how_to_use",
+    "_name": "_541ef59e"
+  },
+  {
+    "name": "docs-basics-how-it-works",
+    "path": "/docs/basics/how-it-works",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/basics/how-it-works.vue",
+    "chunkName": "pages/docs/basics/how-it-works",
+    "_name": "_044c8e9c"
+  },
+  {
+    "name": "docs-basics-how-to-use",
+    "path": "/docs/basics/how-to-use",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/basics/how-to-use.vue",
+    "chunkName": "pages/docs/basics/how-to-use",
+    "_name": "_774ad7f1"
+  },
+  {
+    "name": "docs-basics-installation",
+    "path": "/docs/basics/installation",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/basics/installation.vue",
+    "chunkName": "pages/docs/basics/installation",
+    "_name": "_4f8825ce"
+  },
+  {
     "name": "docs-select-group-by",
     "path": "/docs/select/group-by",
     "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/group-by.vue",
@@ -369,6 +404,139 @@
     "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/skip.vue",
     "chunkName": "pages/docs/select/skip",
     "_name": "_53f163c7"
+  },
+  {
+    "name": "docs-plasma-erc20-approveERC20TokensForDeposit",
+    "path": "/docs/plasma/erc20/approveERC20TokensForDeposit",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/approveERC20TokensForDeposit.vue",
+    "chunkName": "pages/docs/plasma/erc20/approveERC20TokensForDeposit",
+    "_name": "_6df9e813"
+  },
+  {
+    "name": "docs-plasma-erc20-balance-of-erc20",
+    "path": "/docs/plasma/erc20/balance-of-erc20",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/balance-of-erc20.vue",
+    "chunkName": "pages/docs/plasma/erc20/balance-of-erc20",
+    "_name": "_b6fe3468"
+  },
+  {
+    "name": "docs-plasma-erc20-balanceOfERC20",
+    "path": "/docs/plasma/erc20/balanceOfERC20",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/balanceOfERC20.vue",
+    "chunkName": "pages/docs/plasma/erc20/balanceOfERC20",
+    "_name": "_2fefef9e"
+  },
+  {
+    "name": "docs-plasma-erc20-depositERC20ForUser",
+    "path": "/docs/plasma/erc20/depositERC20ForUser",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/depositERC20ForUser.vue",
+    "chunkName": "pages/docs/plasma/erc20/depositERC20ForUser",
+    "_name": "_d388cb1e"
+  },
+  {
+    "name": "docs-plasma-erc20-startWithdraw",
+    "path": "/docs/plasma/erc20/startWithdraw",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/startWithdraw.vue",
+    "chunkName": "pages/docs/plasma/erc20/startWithdraw",
+    "_name": "_1f11ebff"
+  },
+  {
+    "name": "docs-plasma-erc20-transferERC20Tokens",
+    "path": "/docs/plasma/erc20/transferERC20Tokens",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/transferERC20Tokens.vue",
+    "chunkName": "pages/docs/plasma/erc20/transferERC20Tokens",
+    "_name": "_666ba696"
+  },
+  {
+    "name": "docs-plasma-erc20-withdraw",
+    "path": "/docs/plasma/erc20/withdraw",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc20/withdraw.vue",
+    "chunkName": "pages/docs/plasma/erc20/withdraw",
+    "_name": "_052f0432"
+  },
+  {
+    "name": "docs-plasma-erc721-balanceOfERC721",
+    "path": "/docs/plasma/erc721/balanceOfERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/balanceOfERC721.vue",
+    "chunkName": "pages/docs/plasma/erc721/balanceOfERC721",
+    "_name": "_fc4772b4"
+  },
+  {
+    "name": "docs-plasma-ERC721-balanceOfERC721",
+    "path": "/docs/plasma/ERC721/balanceOfERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/balanceOfERC721.vue",
+    "chunkName": "pages/docs/plasma/ERC721/balanceOfERC721",
+    "_name": "_407666c6"
+  },
+  {
+    "name": "docs-plasma-erc721-safeDepositERC721Tokens",
+    "path": "/docs/plasma/erc721/safeDepositERC721Tokens",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/safeDepositERC721Tokens.vue",
+    "chunkName": "pages/docs/plasma/erc721/safeDepositERC721Tokens",
+    "_name": "_866862c4"
+  },
+  {
+    "name": "docs-plasma-ERC721-safeDepositERC721Tokens",
+    "path": "/docs/plasma/ERC721/safeDepositERC721Tokens",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/safeDepositERC721Tokens.vue",
+    "chunkName": "pages/docs/plasma/ERC721/safeDepositERC721Tokens",
+    "_name": "_57d3cebe"
+  },
+  {
+    "name": "docs-plasma-erc721-startWithdrawForNFT",
+    "path": "/docs/plasma/erc721/startWithdrawForNFT",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/startWithdrawForNFT.vue",
+    "chunkName": "pages/docs/plasma/erc721/startWithdrawForNFT",
+    "_name": "_4ec054b2"
+  },
+  {
+    "name": "docs-plasma-ERC721-startWithdrawForNFT",
+    "path": "/docs/plasma/ERC721/startWithdrawForNFT",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/startWithdrawForNFT.vue",
+    "chunkName": "pages/docs/plasma/ERC721/startWithdrawForNFT",
+    "_name": "_15e5365c"
+  },
+  {
+    "name": "docs-plasma-erc721-tokenOfOwnerByIndexERC721",
+    "path": "/docs/plasma/erc721/tokenOfOwnerByIndexERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/tokenOfOwnerByIndexERC721.vue",
+    "chunkName": "pages/docs/plasma/erc721/tokenOfOwnerByIndexERC721",
+    "_name": "_a939a9aa"
+  },
+  {
+    "name": "docs-plasma-ERC721-tokenOfOwnerByIndexERC721",
+    "path": "/docs/plasma/ERC721/tokenOfOwnerByIndexERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/tokenOfOwnerByIndexERC721.vue",
+    "chunkName": "pages/docs/plasma/ERC721/tokenOfOwnerByIndexERC721",
+    "_name": "_b728b96a"
+  },
+  {
+    "name": "docs-plasma-erc721-transferERC721Tokens",
+    "path": "/docs/plasma/erc721/transferERC721Tokens",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/transferERC721Tokens.vue",
+    "chunkName": "pages/docs/plasma/erc721/transferERC721Tokens",
+    "_name": "_00e9efa2"
+  },
+  {
+    "name": "docs-plasma-ERC721-transferERC721Tokens",
+    "path": "/docs/plasma/ERC721/transferERC721Tokens",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/transferERC721Tokens.vue",
+    "chunkName": "pages/docs/plasma/ERC721/transferERC721Tokens",
+    "_name": "_243ee382"
+  },
+  {
+    "name": "docs-plasma-erc721-withdrawNFT",
+    "path": "/docs/plasma/erc721/withdrawNFT",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/erc721/withdrawNFT.vue",
+    "chunkName": "pages/docs/plasma/erc721/withdrawNFT",
+    "_name": "_cf2350b6"
+  },
+  {
+    "name": "docs-plasma-ERC721-withdrawNFT",
+    "path": "/docs/plasma/ERC721/withdrawNFT",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/withdrawNFT.vue",
+    "chunkName": "pages/docs/plasma/ERC721/withdrawNFT",
+    "_name": "_405d87c5"
   },
   {
     "name": "index",

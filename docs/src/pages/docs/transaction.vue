@@ -1,5 +1,5 @@
 <template><Layout title='Transaction' description='learn how to use transaction in jsstore' keywords='transaction, api, query, indexeddb, jsstore' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/transaction.md'><p>IndexedDB is a pure transactional database which means all the query is executed using the transaction.</p>
-<p>JsStore provides - 'transaction' api for executing transaction. </p>
+<p>JsStore provides - 'transaction' api for executing transaction.</p>
 <pre><code>await connection.transaction({
     tables: ['Customers'], // list of tables which will be used inside a transaction
     method: "buyProducts" // name of method which implements transaction
@@ -19,7 +19,7 @@
 <li><p>remove</p></li>
 <li><p>insert</p></li>
 <li><p>setResult - setResult accepts key and value. setResult is used to save the value which will be returned when transaction completes. The transaction returns an object, the object is in form of key and value which is set using setResult.</p></li>
-<li><p>abort - abort is used to abort the transaction. </p></li>
+<li><p>abort - abort is used to abort the transaction.</p></li>
 <li><p>getResult - getResult is used to get the value setted by setResult.</p></li>
 <li><p>data - value passed in transaction api as data.</p></li>
 </ul>
@@ -37,7 +37,7 @@ When using jsstore with a web worker - you can use <a href="/tutorial/import-scr
 <p>after script is imported your method is now available inside the jsstore web worker.
 <br>
 <br></p>
-<h3 id="accessiblitywithoutwebworker">Accessiblity without  web worker</h3>
+<h3 id="accessiblitywithoutwebworker">Accessiblity without web worker</h3>
 <p><br>
 you can create a method anywhere and make it available on window.</p>
 <pre><code>function buyProducts(){
@@ -48,17 +48,17 @@ you can create a method anywhere and make it available on window.</p>
 window.buyProducts = buyProducts;
 </code></pre>
 <p>Let's see a example - Consider a situation where a customer buy some products and customer is new.</p>
-<p>So the steps will be - </p>
+<p>So the steps will be -</p>
 <ol>
 <li>Add new customer - insert in the table - "Customer"</li>
 <li>add new order - insert new order for the above customer</li>
-<li>Insert OrderDetails </li>
-<li>Update products - reduce the quantity of product available. </li>
+<li>Insert OrderDetails</li>
+<li>Update products - reduce the quantity of product available.</li>
 <li>Calculate total price</li>
 </ol>
 <pre><code>FileName -  transaction.js
 
-async function buyProducts(ctx) {  
+async function buyProducts(ctx) {
 
     ctx.start(); // start the transaction
 
@@ -118,7 +118,7 @@ async function buyProducts(ctx) {
             });
             if (productUpdated &lt; 0) {
                 ctx.abort("No orderDetails inserted");
-            }  
+            }
         };
 
         updateProduct();
@@ -149,7 +149,7 @@ await connection.importScripts("./transaction.js");
 <p>Now method is accessible and can be executed, let's call the transaction api -</p>
 <pre><code>var result = await connection.transaction({
     tables: ['customers', 'orders', 'products', 'orderDetails'], // list of tables which will be used in transaction
-    method: "buyProducts" 
+    method: "buyProducts"
     data: { // the transaction logic will be called with supplying data
         customer: {
             customerName: 'ujjwal gupta',
@@ -171,9 +171,9 @@ await connection.importScripts("./transaction.js");
 const totalPrice = result.totalPrice;
 </code></pre>
 <div class="margin-top-30px top-border margin-bottom-20px"></div>
-<p>Few important things to make sure you are using transaction in right way - </p>
+<p>Few important things to make sure you are using transaction in right way -</p>
 <ul>
-<li><p>Transaction should be light weight. Dont write too many or heavy logics inside it. The reason is  - the indexeddb transaction is asyc and automatically commited and so jsstore.</p></li>
+<li><p>Transaction should be light weight. Dont write too many or heavy logics inside it. The reason is - the indexeddb transaction is asyc and automatically commited and so jsstore.</p></li>
 <li><p>There may be situation where you have a heavy logic, in that case - calculate the result and put it in data option.</p></li>
 </ul>
 <p class="margin-top-40px center-align">

@@ -8,7 +8,7 @@ Column_Name In (value1, value2, ...)
 <pre><code>connection.select({
     from: "Table_Name",
     where: {
-        Column_Name: { 
+        Column_Name: {
             in: [value1, value2, ...]
         }
     }

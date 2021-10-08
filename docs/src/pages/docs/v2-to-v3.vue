@@ -8,22 +8,22 @@
             name: 'Id',
             primaryKey: true,
             autoIncrement: true
-        }, 
+        },
         {
             name: 'ItemName',
             notNull: true,
             dataType: JsStore.DATA_TYPE.String
-        }, 
+        },
         {
             name: 'Price',
             notNull: true,
             dataType: JsStore.DATA_TYPE.Number
-        }, 
+        },
         {
             name: 'Quantity',
             notNull: true,
             dataType: JsStore.DATA_TYPE.Number
-        }]   
+        }]
     };
     var db = {
       name: dbName,

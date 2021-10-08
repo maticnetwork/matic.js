@@ -1,146 +1,31 @@
-<template><Layout title='Get Started' description='learn how to use indexeddb with jsstore' keywords='jsstore, get started, introduction, indexeddb, tutorial' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/get-started.md'><p>In this get started tutorial we will learn how to do crud operation in indexeddb using jsstore. You can download the example of this tutorial from - <a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/simple_example">Crud implementation</a></p>
-<h4 id="installation">Installation</h4>
-<p>JsStore can be installed using npm, cdn or scripts can be also download from jsstore github page. </p>
-<p>IndexedDb query can be executed inside web worker &amp; JsStore preserve this functionality by providing way to execute query inside both web worker &amp; without web worker. But it is highly recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">web worker</a> because it runs scripts in background thread. So i am going to use web worker in this tutorial. </p>
-<p>Let's download the script from github. Go to this link - <a href="https://github.com/ujjwalguptaofficial/JsStore/releases/latest" target="_blank">jsstore release</a> &amp; download files jsstore.js &amp; jsstore.worker.js. </p>
-<p>Now create a html page &amp; include jsstore.js - </p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;
-    &lt;title&gt;Crud Demo using jsstore&lt;/title&gt;
-    &lt;script src="jsstore.js"&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h4&gt;We have included JsStore in this html code.&lt;/h4&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+<template><Layout title='Introduction' description='learn how to use indexeddb with jsstore' keywords='jsstore, get started, introduction, indexeddb, tutorial' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/get-started.md'><p>The <a href="https://github.com/maticnetwork/matic.js/"><code>@matic.js</code></a> client library makes it easy for developers, who may not be deeply familiar with smart contract development, to interact with the various components of Matic Network.</p>
+<h2 id="quicksetup">Quick Setup</h2>
+<p>Install the maticjs package via npm:</p>
+<pre><code class="bash language-bash">$ npm install --save @maticnetwork/maticjs
 </code></pre>
-<p>For more about installation check out the <a href="/tutorial/installation">installation</a> page</p>
-<h4 id="creatingdatabase">Creating Database</h4>
-<p>JsStore follows SQL approach to create database - A database is consist of tables and a table is consist of columns.</p>
-<p>Lets see how to create a database schema in JsStore.</p>
-<pre><code>var dbName ='JsStore_Demo';
-function getDbSchema() {
-  var tblProduct = {
-    name: 'Product',
-    columns: {
-        // Here "Id" is name of column 
-        id:{ primaryKey: true, autoIncrement: true },
-        itemName:  { notNull: true, dataType: "string" },
-        price:  { notNull: true, dataType: "number" },
-        quantity : { notNull: true, dataType: "number" }
-    }
-  };
-  var db = {
-      name: dbName,
-      tables: [tblProduct]
-  }
-  return db;
-}
+<h3 id="bridge">Bridge</h3>
+<p>A bridge is basically a set of contracts that help in moving assets from the root chain to the child chain and vice versa.</p>
+<p>There are primarily two bridges to move assets between Ethereum and Matic.</p>
+<ol>
+<li><a href="https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/">POS</a> </li>
+<li><a href="https://docs.matic.today/docs/develop/ethereum-matic/plasma/getting-started">Plasma</a></li>
+</ol>
+<p>You can read more about Bridge here - https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/</p>
+<p>Matic.js provides you respective client to use these bridges </p>
+<h4 id="plasmabridge">Plasma Bridge</h4>
+<pre><code class="js language-js">const MaticPlasmaClient = require("@maticnetwork/maticjs");
 </code></pre>
-<p>As written in the code you can define constraints like autoincrement, datatype, default, notnull similar to what you can do in SQL.</p>
-<p>Now we need to use the above database schema to create the database in indexeddb -</p>
-<pre><code>// executing jsstore inside a web worker
-var connection = new JsStore.Connection(new Worker('jsstore.worker.js'));
-
-async function initJsStore() {
-      var database = getDbSchema();
-      const isDbCreated = await connection.initDb(database);
-      if(isDbCreated===true){
-          console.log("db created");
-          // here you can prefill database with some data
-      }
-      else {
-          console.log("db opened");
-      }
-}
+<p>Now using <code>MaticPlasmaClient</code> we can do transaction on plasma bridge. The client contains different apis to help you with the transaction.
+These API are covered in <a href="/docs/plasma/initialize/">Plasma API</a>.</p>
+<h4 id="posbridge">POS Bridge</h4>
+<pre><code class="js language-js">const { MaticPoSClient } = require("@maticnetwork/maticjs");
 </code></pre>
-<p>In the above code -</p>
+<p>Now using <code>MaticPoSClient</code> we can do transaction on POS bridge. The client contains different apis to help you with the transaction.
+These API are covered in <a href="/docs/pos/initialize/">POS API</a>.</p>
+<h3 id="someimportantlinks">Some important links</h3>
 <ul>
-<li>Line 1 - Storing the JsStore connection in a variable 'connection'.</li>
-<li>Line 2 - Declared a function initJsStore which will create the database using provided schema in IndexedDB. </li>
-</ul>
-<p><br>
-<strong>Note :-</strong> The connection object will be used to execute future queries so we dont need to initiate it multiple times.</p>
-<h4 id="insertingdata">Inserting data</h4>
-<p>JsStore provides <a href="/tutorial/insert">insert</a> API for inserting data.</p>
-<p>Let's say we have below value -</p>
-<pre><code>var value = {
-    itemName: 'Blue Jeans',
-    price: 2000,
-    quantity: 1000
-}
-</code></pre>
-<p>One thing to notice is that value does not contain the "id" property. Since it is an autoincrement column, it will be automatically generated by jsstore before inserting data and added with supplied data. </p>
-<p>Now, let's insert this value into db -  </p>
-<pre><code>var noOfDataInserted = await connection.insert({
-    into: 'Product',
-    values: [value]
-});
-if (noOfDataInserted &gt; 0) {
-    alert('successfully added');
-}
-</code></pre>
-<h4 id="readdata">Read data</h4>
-<p>JsStore provides <a href="/tutorial/select">select</a> API for reading data. Lets say I want to retrieve the record with Id of 5.</p>
-<pre><code>// results will be array of objects
-var results = await connection.select({
-    from: 'Product',
-    where: {
-        id: 5
-    }
-});
-alert(results.length + 'record found');
-</code></pre>
-<p>You can also perform operations like- "IN", "LIKE", "BETWEEN", "LIMIT" etc.</p>
-<h4 id="updatingdata">Updating data</h4>
-<p>JsStore provides <a href="/tutorial/update">update</a> API for reading data. </p>
-<p>Lets say We want to update Quantity to 2000 on the products with Item Name containing the substring 'black'.</p>
-<pre><code>var rowsUpdated = await connection.update({ 
-    in: 'Product',
-    where: {
-        itemName: {
-            like: '%black%'
-        }
-    },
-    set: {
-        quantity: 2000
-    }
-});
-alert(rowsUpdated + ' rows updated');
-</code></pre>
-<h4 id="removedata">Remove data</h4>
-<p>JsStore provides <a href="/tutorial/remove">remove</a> API for reading data. </p>
-<p>Lets say I want to delete the product with Id of 10.</p>
-<pre><code>var rowsDeleted = await connection.remove({
-    from: 'Product',
-    where: {
-        id: 10
-    }
-});
-alert(rowsDeleted + ' record deleted');
-</code></pre>
-<p>We hope you have understood this article. Now lets make something awesome.</p>
-<h4 id="checkitoutsometutorialexamplesformoreunderstanding">* Check it out some tutorial &amp; examples for more understanding -</h4>
-<ul>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/vue">Vue integration</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/react">React integration</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/angular">Angular integration</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/svelte">Svelte integration</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/electron">ElectronJs integration</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/without_web_worker">JsStore without web worker</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/JsStore/tree/master/examples/webpack">Building an indexeddb app with webpack</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples">Crud implementation</a></li>
-<li><a href="https://github.com/ujjwalguptaofficial/jsstore-examples/tree/master/typescript">Using jsstore in typescript</a></li>
-</ul>
-<style>
-    iframe {
-        height: 300px;
-    }
-</style></Layout></template>
+<li><a href="https://github.com/maticnetwork/matic.js/tree/master/examples">Examples</a></li>
+</ul></Layout></template>
         <script>import Layout from '/home/warrior/projects/opensource/matic.js/docs/layouts/docs.vue'
         export default {
             components:{Layout}

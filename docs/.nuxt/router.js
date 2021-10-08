@@ -56,6 +56,8 @@ const _64bf37f5 = () =>
   interopDefault(import('../src/pages/docs/installation.vue' /* webpackChunkName: "pages/docs/installation" */))
 const _9e1c7218 = () =>
   interopDefault(import('../src/pages/docs/intersect.vue' /* webpackChunkName: "pages/docs/intersect" */))
+const _25737c56 = () =>
+  interopDefault(import('../src/pages/docs/introduction.vue' /* webpackChunkName: "pages/docs/introduction" */))
 const _6fc12d99 = () =>
   interopDefault(import('../src/pages/docs/keypath.vue' /* webpackChunkName: "pages/docs/keypath" */))
 const _1463345c = () => interopDefault(import('../src/pages/docs/like.vue' /* webpackChunkName: "pages/docs/like" */))
@@ -92,6 +94,22 @@ const _acbacd3e = () =>
 const _193ac9b9 = () =>
   interopDefault(import('../src/pages/docs/v2-to-v3.vue' /* webpackChunkName: "pages/docs/v2-to-v3" */))
 const _d2843d88 = () => interopDefault(import('../src/pages/docs/where.vue' /* webpackChunkName: "pages/docs/where" */))
+const _541ef59e = () =>
+  interopDefault(
+    import('../src/pages/docs/basics/how_to_use.vue' /* webpackChunkName: "pages/docs/basics/how_to_use" */)
+  )
+const _044c8e9c = () =>
+  interopDefault(
+    import('../src/pages/docs/basics/how-it-works.vue' /* webpackChunkName: "pages/docs/basics/how-it-works" */)
+  )
+const _774ad7f1 = () =>
+  interopDefault(
+    import('../src/pages/docs/basics/how-to-use.vue' /* webpackChunkName: "pages/docs/basics/how-to-use" */)
+  )
+const _4f8825ce = () =>
+  interopDefault(
+    import('../src/pages/docs/basics/installation.vue' /* webpackChunkName: "pages/docs/basics/installation" */)
+  )
 const _59a33dad = () =>
   interopDefault(import('../src/pages/docs/select/group-by.vue' /* webpackChunkName: "pages/docs/select/group-by" */))
 const _fef8e41c = () =>
@@ -102,6 +120,118 @@ const _b8f81404 = () =>
   interopDefault(import('../src/pages/docs/select/order-by.vue' /* webpackChunkName: "pages/docs/select/order-by" */))
 const _53f163c7 = () =>
   interopDefault(import('../src/pages/docs/select/skip.vue' /* webpackChunkName: "pages/docs/select/skip" */))
+const _6df9e813 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/approveERC20TokensForDeposit.vue' /* webpackChunkName: "pages/docs/plasma/erc20/approveERC20TokensForDeposit" */
+    )
+  )
+const _b6fe3468 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/balance-of-erc20.vue' /* webpackChunkName: "pages/docs/plasma/erc20/balance-of-erc20" */
+    )
+  )
+const _2fefef9e = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/balanceOfERC20.vue' /* webpackChunkName: "pages/docs/plasma/erc20/balanceOfERC20" */
+    )
+  )
+const _d388cb1e = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/depositERC20ForUser.vue' /* webpackChunkName: "pages/docs/plasma/erc20/depositERC20ForUser" */
+    )
+  )
+const _1f11ebff = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/startWithdraw.vue' /* webpackChunkName: "pages/docs/plasma/erc20/startWithdraw" */
+    )
+  )
+const _666ba696 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc20/transferERC20Tokens.vue' /* webpackChunkName: "pages/docs/plasma/erc20/transferERC20Tokens" */
+    )
+  )
+const _052f0432 = () =>
+  interopDefault(
+    import('../src/pages/docs/plasma/erc20/withdraw.vue' /* webpackChunkName: "pages/docs/plasma/erc20/withdraw" */)
+  )
+const _fc4772b4 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/balanceOfERC721.vue' /* webpackChunkName: "pages/docs/plasma/erc721/balanceOfERC721" */
+    )
+  )
+const _407666c6 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/balanceOfERC721.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/balanceOfERC721" */
+    )
+  )
+const _866862c4 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/safeDepositERC721Tokens.vue' /* webpackChunkName: "pages/docs/plasma/erc721/safeDepositERC721Tokens" */
+    )
+  )
+const _57d3cebe = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/safeDepositERC721Tokens.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/safeDepositERC721Tokens" */
+    )
+  )
+const _4ec054b2 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/startWithdrawForNFT.vue' /* webpackChunkName: "pages/docs/plasma/erc721/startWithdrawForNFT" */
+    )
+  )
+const _15e5365c = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/startWithdrawForNFT.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/startWithdrawForNFT" */
+    )
+  )
+const _a939a9aa = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/tokenOfOwnerByIndexERC721.vue' /* webpackChunkName: "pages/docs/plasma/erc721/tokenOfOwnerByIndexERC721" */
+    )
+  )
+const _b728b96a = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/tokenOfOwnerByIndexERC721.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/tokenOfOwnerByIndexERC721" */
+    )
+  )
+const _00e9efa2 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/transferERC721Tokens.vue' /* webpackChunkName: "pages/docs/plasma/erc721/transferERC721Tokens" */
+    )
+  )
+const _243ee382 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/transferERC721Tokens.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/transferERC721Tokens" */
+    )
+  )
+const _cf2350b6 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/erc721/withdrawNFT.vue' /* webpackChunkName: "pages/docs/plasma/erc721/withdrawNFT" */
+    )
+  )
+const _405d87c5 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/ERC721/withdrawNFT.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/withdrawNFT" */
+    )
+  )
 const _d9d3108e = () => interopDefault(import('../src/pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
@@ -257,6 +387,11 @@ export const routerOptions = {
       name: 'docs-intersect',
     },
     {
+      path: '/docs/introduction',
+      component: _25737c56,
+      name: 'docs-introduction',
+    },
+    {
       path: '/docs/keypath',
       component: _6fc12d99,
       name: 'docs-keypath',
@@ -357,6 +492,26 @@ export const routerOptions = {
       name: 'docs-where',
     },
     {
+      path: '/docs/basics/how_to_use',
+      component: _541ef59e,
+      name: 'docs-basics-how_to_use',
+    },
+    {
+      path: '/docs/basics/how-it-works',
+      component: _044c8e9c,
+      name: 'docs-basics-how-it-works',
+    },
+    {
+      path: '/docs/basics/how-to-use',
+      component: _774ad7f1,
+      name: 'docs-basics-how-to-use',
+    },
+    {
+      path: '/docs/basics/installation',
+      component: _4f8825ce,
+      name: 'docs-basics-installation',
+    },
+    {
       path: '/docs/select/group-by',
       component: _59a33dad,
       name: 'docs-select-group-by',
@@ -380,6 +535,101 @@ export const routerOptions = {
       path: '/docs/select/skip',
       component: _53f163c7,
       name: 'docs-select-skip',
+    },
+    {
+      path: '/docs/plasma/erc20/approveERC20TokensForDeposit',
+      component: _6df9e813,
+      name: 'docs-plasma-erc20-approveERC20TokensForDeposit',
+    },
+    {
+      path: '/docs/plasma/erc20/balance-of-erc20',
+      component: _b6fe3468,
+      name: 'docs-plasma-erc20-balance-of-erc20',
+    },
+    {
+      path: '/docs/plasma/erc20/balanceOfERC20',
+      component: _2fefef9e,
+      name: 'docs-plasma-erc20-balanceOfERC20',
+    },
+    {
+      path: '/docs/plasma/erc20/depositERC20ForUser',
+      component: _d388cb1e,
+      name: 'docs-plasma-erc20-depositERC20ForUser',
+    },
+    {
+      path: '/docs/plasma/erc20/startWithdraw',
+      component: _1f11ebff,
+      name: 'docs-plasma-erc20-startWithdraw',
+    },
+    {
+      path: '/docs/plasma/erc20/transferERC20Tokens',
+      component: _666ba696,
+      name: 'docs-plasma-erc20-transferERC20Tokens',
+    },
+    {
+      path: '/docs/plasma/erc20/withdraw',
+      component: _052f0432,
+      name: 'docs-plasma-erc20-withdraw',
+    },
+    {
+      path: '/docs/plasma/erc721/balanceOfERC721',
+      component: _fc4772b4,
+      name: 'docs-plasma-erc721-balanceOfERC721',
+    },
+    {
+      path: '/docs/plasma/ERC721/balanceOfERC721',
+      component: _407666c6,
+      name: 'docs-plasma-ERC721-balanceOfERC721',
+    },
+    {
+      path: '/docs/plasma/erc721/safeDepositERC721Tokens',
+      component: _866862c4,
+      name: 'docs-plasma-erc721-safeDepositERC721Tokens',
+    },
+    {
+      path: '/docs/plasma/ERC721/safeDepositERC721Tokens',
+      component: _57d3cebe,
+      name: 'docs-plasma-ERC721-safeDepositERC721Tokens',
+    },
+    {
+      path: '/docs/plasma/erc721/startWithdrawForNFT',
+      component: _4ec054b2,
+      name: 'docs-plasma-erc721-startWithdrawForNFT',
+    },
+    {
+      path: '/docs/plasma/ERC721/startWithdrawForNFT',
+      component: _15e5365c,
+      name: 'docs-plasma-ERC721-startWithdrawForNFT',
+    },
+    {
+      path: '/docs/plasma/erc721/tokenOfOwnerByIndexERC721',
+      component: _a939a9aa,
+      name: 'docs-plasma-erc721-tokenOfOwnerByIndexERC721',
+    },
+    {
+      path: '/docs/plasma/ERC721/tokenOfOwnerByIndexERC721',
+      component: _b728b96a,
+      name: 'docs-plasma-ERC721-tokenOfOwnerByIndexERC721',
+    },
+    {
+      path: '/docs/plasma/erc721/transferERC721Tokens',
+      component: _00e9efa2,
+      name: 'docs-plasma-erc721-transferERC721Tokens',
+    },
+    {
+      path: '/docs/plasma/ERC721/transferERC721Tokens',
+      component: _243ee382,
+      name: 'docs-plasma-ERC721-transferERC721Tokens',
+    },
+    {
+      path: '/docs/plasma/erc721/withdrawNFT',
+      component: _cf2350b6,
+      name: 'docs-plasma-erc721-withdrawNFT',
+    },
+    {
+      path: '/docs/plasma/ERC721/withdrawNFT',
+      component: _405d87c5,
+      name: 'docs-plasma-ERC721-withdrawNFT',
     },
     {
       path: '/',

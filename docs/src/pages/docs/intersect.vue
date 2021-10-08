@@ -2,8 +2,8 @@
 <h2 id="usecase">Use Case</h2>
 <p><br>
 There are times when one query is not able to fulfill the situation and so you need to use multiple query but now you are getting duplicate records. <code>intersect</code> api is useful in these situation where it combines the results of multiple select query and takes only common records between them.</p>
-<p>e.g - Consider below queries - </p>
-<p>1st query </p>
+<p>e.g - Consider below queries -</p>
+<p>1st query</p>
 <pre><code>connection.select({
     from: 'Products',
     where: {
@@ -13,7 +13,7 @@ There are times when one query is not able to fulfill the situation and so you n
     }
 })
 </code></pre>
-<p>2nd query </p>
+<p>2nd query</p>
 <pre><code>connection.select({
     from: 'Products',
     where: {
@@ -24,7 +24,7 @@ There are times when one query is not able to fulfill the situation and so you n
 })
 </code></pre>
 <p>now in the above two queries - results from first query will have some records existing in results of 2nd query.</p>
-<p>so using intersect we will take common results between two results and query will be - </p>
+<p>so using intersect we will take common results between two results and query will be -</p>
 <pre><code>var query1=  {
     from: 'Products',
     where: {
@@ -42,7 +42,7 @@ var query2 = {
     }
 };
 var results = await connection.intersect({
-    queries:[query1,query2]    
+    queries:[query1,query2]
 })
 </code></pre>
 <p class="margin-top-40px center-align">
