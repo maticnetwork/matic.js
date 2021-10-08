@@ -110,6 +110,42 @@ const _4f8825ce = () =>
   interopDefault(
     import('../src/pages/docs/basics/installation.vue' /* webpackChunkName: "pages/docs/basics/installation" */)
   )
+const _062ff7ce = () =>
+  interopDefault(
+    import('../src/pages/docs/plasma/depositEthers.vue' /* webpackChunkName: "pages/docs/plasma/depositEthers" */)
+  )
+const _6214e8fa = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/depositStatusFromTxHash.vue' /* webpackChunkName: "pages/docs/plasma/depositStatusFromTxHash" */
+    )
+  )
+const _00b19d19 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/getTransferSignature.vue' /* webpackChunkName: "pages/docs/plasma/getTransferSignature" */
+    )
+  )
+const _111bdf5c = () =>
+  interopDefault(
+    import('../src/pages/docs/plasma/initialize.vue' /* webpackChunkName: "pages/docs/plasma/initialize" */)
+  )
+const _da6d5db0 = () =>
+  interopDefault(
+    import('../src/pages/docs/plasma/processExits.vue' /* webpackChunkName: "pages/docs/plasma/processExits" */)
+  )
+const _e266b9d6 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/transferWithSignature.vue' /* webpackChunkName: "pages/docs/plasma/transferWithSignature" */
+    )
+  )
+const _a00bb634 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/depositEtherForUser.vue' /* webpackChunkName: "pages/docs/pos/depositEtherForUser" */)
+  )
+const _a9402ab4 = () =>
+  interopDefault(import('../src/pages/docs/pos/initialize.vue' /* webpackChunkName: "pages/docs/pos/initialize" */))
 const _59a33dad = () =>
   interopDefault(import('../src/pages/docs/select/group-by.vue' /* webpackChunkName: "pages/docs/select/group-by" */))
 const _fef8e41c = () =>
@@ -231,6 +267,78 @@ const _405d87c5 = () =>
     import(
       '../src/pages/docs/plasma/ERC721/withdrawNFT.vue' /* webpackChunkName: "pages/docs/plasma/ERC721/withdrawNFT" */
     )
+  )
+const _f5990614 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken.vue' /* webpackChunkName: "pages/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken" */
+    )
+  )
+const _0825e1e7 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/plasma/WithdrawManager/startExitForMintableBurntToken.vue' /* webpackChunkName: "pages/docs/plasma/WithdrawManager/startExitForMintableBurntToken" */
+    )
+  )
+const _67d8e38d = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC1155/approveERC1155ForDeposit.vue' /* webpackChunkName: "pages/docs/pos/ERC1155/approveERC1155ForDeposit" */
+    )
+  )
+const _4eb6a588 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC1155/burnERC1155.vue' /* webpackChunkName: "pages/docs/pos/ERC1155/burnERC1155" */)
+  )
+const _717a8006 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC1155/depositERC1155ForUser.vue' /* webpackChunkName: "pages/docs/pos/ERC1155/depositERC1155ForUser" */
+    )
+  )
+const _651e324e = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC1155/exitERC1155.vue' /* webpackChunkName: "pages/docs/pos/ERC1155/exitERC1155" */)
+  )
+const _bd511b66 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC20/approveERC20ForDeposit.vue' /* webpackChunkName: "pages/docs/pos/ERC20/approveERC20ForDeposit" */
+    )
+  )
+const _5d3b0f04 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC20/burnERC20.vue' /* webpackChunkName: "pages/docs/pos/ERC20/burnERC20" */)
+  )
+const _91888d06 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC20/depositERC20ForUser.vue' /* webpackChunkName: "pages/docs/pos/ERC20/depositERC20ForUser" */
+    )
+  )
+const _84f11ed6 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC20/exitERC20.vue' /* webpackChunkName: "pages/docs/pos/ERC20/exitERC20" */)
+  )
+const _1a60ffee = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC721/approveERC721ForDeposit.vue' /* webpackChunkName: "pages/docs/pos/ERC721/approveERC721ForDeposit" */
+    )
+  )
+const _1b924d50 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC721/burnERC721.vue' /* webpackChunkName: "pages/docs/pos/ERC721/burnERC721" */)
+  )
+const _d62f2682 = () =>
+  interopDefault(
+    import(
+      '../src/pages/docs/pos/ERC721/depositERC721ForUser.vue' /* webpackChunkName: "pages/docs/pos/ERC721/depositERC721ForUser" */
+    )
+  )
+const _c912ac32 = () =>
+  interopDefault(
+    import('../src/pages/docs/pos/ERC721/exitERC721.vue' /* webpackChunkName: "pages/docs/pos/ERC721/exitERC721" */)
   )
 const _d9d3108e = () => interopDefault(import('../src/pages/index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -512,6 +620,46 @@ export const routerOptions = {
       name: 'docs-basics-installation',
     },
     {
+      path: '/docs/plasma/depositEthers',
+      component: _062ff7ce,
+      name: 'docs-plasma-depositEthers',
+    },
+    {
+      path: '/docs/plasma/depositStatusFromTxHash',
+      component: _6214e8fa,
+      name: 'docs-plasma-depositStatusFromTxHash',
+    },
+    {
+      path: '/docs/plasma/getTransferSignature',
+      component: _00b19d19,
+      name: 'docs-plasma-getTransferSignature',
+    },
+    {
+      path: '/docs/plasma/initialize',
+      component: _111bdf5c,
+      name: 'docs-plasma-initialize',
+    },
+    {
+      path: '/docs/plasma/processExits',
+      component: _da6d5db0,
+      name: 'docs-plasma-processExits',
+    },
+    {
+      path: '/docs/plasma/transferWithSignature',
+      component: _e266b9d6,
+      name: 'docs-plasma-transferWithSignature',
+    },
+    {
+      path: '/docs/pos/depositEtherForUser',
+      component: _a00bb634,
+      name: 'docs-pos-depositEtherForUser',
+    },
+    {
+      path: '/docs/pos/initialize',
+      component: _a9402ab4,
+      name: 'docs-pos-initialize',
+    },
+    {
       path: '/docs/select/group-by',
       component: _59a33dad,
       name: 'docs-select-group-by',
@@ -630,6 +778,76 @@ export const routerOptions = {
       path: '/docs/plasma/ERC721/withdrawNFT',
       component: _405d87c5,
       name: 'docs-plasma-ERC721-withdrawNFT',
+    },
+    {
+      path: '/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken',
+      component: _f5990614,
+      name: 'docs-plasma-WithdrawManager-startExitForMetadataMintableBurntToken',
+    },
+    {
+      path: '/docs/plasma/WithdrawManager/startExitForMintableBurntToken',
+      component: _0825e1e7,
+      name: 'docs-plasma-WithdrawManager-startExitForMintableBurntToken',
+    },
+    {
+      path: '/docs/pos/ERC1155/approveERC1155ForDeposit',
+      component: _67d8e38d,
+      name: 'docs-pos-ERC1155-approveERC1155ForDeposit',
+    },
+    {
+      path: '/docs/pos/ERC1155/burnERC1155',
+      component: _4eb6a588,
+      name: 'docs-pos-ERC1155-burnERC1155',
+    },
+    {
+      path: '/docs/pos/ERC1155/depositERC1155ForUser',
+      component: _717a8006,
+      name: 'docs-pos-ERC1155-depositERC1155ForUser',
+    },
+    {
+      path: '/docs/pos/ERC1155/exitERC1155',
+      component: _651e324e,
+      name: 'docs-pos-ERC1155-exitERC1155',
+    },
+    {
+      path: '/docs/pos/ERC20/approveERC20ForDeposit',
+      component: _bd511b66,
+      name: 'docs-pos-ERC20-approveERC20ForDeposit',
+    },
+    {
+      path: '/docs/pos/ERC20/burnERC20',
+      component: _5d3b0f04,
+      name: 'docs-pos-ERC20-burnERC20',
+    },
+    {
+      path: '/docs/pos/ERC20/depositERC20ForUser',
+      component: _91888d06,
+      name: 'docs-pos-ERC20-depositERC20ForUser',
+    },
+    {
+      path: '/docs/pos/ERC20/exitERC20',
+      component: _84f11ed6,
+      name: 'docs-pos-ERC20-exitERC20',
+    },
+    {
+      path: '/docs/pos/ERC721/approveERC721ForDeposit',
+      component: _1a60ffee,
+      name: 'docs-pos-ERC721-approveERC721ForDeposit',
+    },
+    {
+      path: '/docs/pos/ERC721/burnERC721',
+      component: _1b924d50,
+      name: 'docs-pos-ERC721-burnERC721',
+    },
+    {
+      path: '/docs/pos/ERC721/depositERC721ForUser',
+      component: _d62f2682,
+      name: 'docs-pos-ERC721-depositERC721ForUser',
+    },
+    {
+      path: '/docs/pos/ERC721/exitERC721',
+      component: _c912ac32,
+      name: 'docs-pos-ERC721-exitERC721',
     },
     {
       path: '/',

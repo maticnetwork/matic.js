@@ -1,6 +1,6 @@
 <template>
   <div class="row b-tutorial">
-    <div class="col-sm-4 col-md-3 col-lg-2 b-tutorial__links">
+    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links">
       <input
         class="textbox b-tutorial__links__search"
         type="text"
@@ -24,7 +24,7 @@
         :spllitedUrl="spllitedUrl"
       />
     </div>
-    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-8">
+    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6">
       <slot></slot>
       <div class="b-tutorial__content__btns">
         <a :href="prevUrl">
@@ -35,7 +35,7 @@
         </a>
       </div>
     </div>
-    <div class="col-lg-2 width-full pl-10px pr-5px"></div>
+    <div class="col-lg-3 width-full pl-10px pr-5px"></div>
     <div class="b-tutorial__sticky-btn">
       <a
         class="btn rounded secondary margin-bottom-70px"
@@ -271,7 +271,7 @@ export default {
   padding: 10px 10px 0 10px;
 }
 .b-tutorial__links {
-  padding-right: 30px;
+  padding: 0 30px 30px 0;
   border-right: 1px solid #e9ecef;
   position: sticky;
   top: 4rem;

@@ -24,6 +24,10 @@ module.exports = [
     expand: true,
     children: [
       {
+        text: 'Initialize Plasma client',
+        url: 'initialize',
+      },
+      {
         text: 'ERC20',
         url: 'erc20',
         expand: true,
@@ -84,6 +88,122 @@ module.exports = [
             url: 'transferERC721Tokens',
           },
         ],
+      },
+      {
+        text: 'Deposit Ethers',
+        url: 'depositEthers',
+      },
+      {
+        text: 'Deposit Status From TxHash',
+        url: 'depositStatusFromTxHash',
+      },
+      {
+        text: 'Get Transfer Signature',
+        url: 'getTransferSignature',
+      },
+      {
+        text: 'Transfer with Signature',
+        url: 'transferWithSignature',
+      },
+      {
+        text: 'Process Exit',
+        url: 'processExits',
+      },
+      {
+        text: 'Withdraw Manager',
+        url: 'WithdrawManager',
+        expand: true,
+        children: [
+          {
+            text: 'Exit Mintable Burnt Tokens',
+            url: 'startExitForMintableBurntToken',
+          },
+          {
+            text: 'Exit Metadata Mintable Burnt Tokens',
+            url: 'startExitForMetadataMintableBurntToken',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    text: 'POS API',
+    url: 'pos',
+    expand: true,
+    children: [
+      {
+        text: 'Initialize POS client',
+        url: 'initialize',
+      },
+      {
+        text: 'ERC20',
+        url: 'ERC20',
+        children: [
+          {
+            text: 'Approve ERC20 Deposit',
+            url: 'approveERC20ForDeposit',
+          },
+          {
+            text: 'Deposit ERC20',
+            url: 'depositERC20ForUser',
+          },
+          {
+            text: 'Burn ERC20',
+            url: 'burnERC20',
+          },
+          {
+            text: 'Exit ERC20',
+            url: 'exitERC20',
+          },
+        ],
+      },
+      {
+        text: 'ERC721',
+        url: 'ERC721',
+        children: [
+          {
+            text: 'Approve ERC721 Deposit',
+            url: 'approveERC721ForDeposit',
+          },
+          {
+            text: 'Deposit ERC721',
+            url: 'depositERC721ForUser',
+          },
+          {
+            text: 'Burn ERC721',
+            url: 'burnERC721',
+          },
+          {
+            text: 'Exit ERC721',
+            url: 'exitERC721',
+          },
+        ],
+      },
+      {
+        text: 'ERC1155',
+        url: 'ERC1155',
+        children: [
+          {
+            text: 'Approve ERC1155 Deposit',
+            url: 'approveERC1155ForDeposit',
+          },
+          {
+            text: 'Deposit ERC1155',
+            url: 'depositSingleERC1155ForUser',
+          },
+          {
+            text: 'Burn ERC1155',
+            url: 'burnSingleERC1155',
+          },
+          {
+            text: 'Exit ERC1155',
+            url: 'exitSingleERC1155',
+          },
+        ],
+      },
+      {
+        text: 'Deposit Ethers',
+        url: 'depositEtherForUser',
       },
     ],
   },

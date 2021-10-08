@@ -7,18 +7,18 @@
 <p>A bridge is basically a set of contracts that help in moving assets from the root chain to the child chain and vice versa.</p>
 <p>There are primarily two bridges to move assets between Ethereum and Matic.</p>
 <ol>
-<li><a href="https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/">POS</a> </li>
+<li><a href="https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/">POS</a></li>
 <li><a href="https://docs.matic.today/docs/develop/ethereum-matic/plasma/getting-started">Plasma</a></li>
 </ol>
 <p>You can read more about Bridge here - https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/</p>
-<p>Matic.js provides you respective client to use these bridges </p>
+<p>Matic.js provides you respective client to use these bridges</p>
 <h4 id="plasmabridge">Plasma Bridge</h4>
-<pre><code class="js language-js">const MaticPlasmaClient = require("@maticnetwork/maticjs");
+<pre><code class="js language-js">const MaticPlasmaClient = require('@maticnetwork/maticjs')
 </code></pre>
 <p>Now using <code>MaticPlasmaClient</code> we can do transaction on plasma bridge. The client contains different apis to help you with the transaction.
 These API are covered in <a href="/docs/plasma/initialize/">Plasma API</a>.</p>
 <h4 id="posbridge">POS Bridge</h4>
-<pre><code class="js language-js">const { MaticPoSClient } = require("@maticnetwork/maticjs");
+<pre><code class="js language-js">const { MaticPoSClient } = require('@maticnetwork/maticjs')
 </code></pre>
 <p>Now using <code>MaticPoSClient</code> we can do transaction on POS bridge. The client contains different apis to help you with the transaction.
 These API are covered in <a href="/docs/pos/initialize/">POS API</a>.</p>

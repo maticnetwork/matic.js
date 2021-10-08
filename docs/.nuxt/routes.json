@@ -371,6 +371,62 @@
     "_name": "_4f8825ce"
   },
   {
+    "name": "docs-plasma-depositEthers",
+    "path": "/docs/plasma/depositEthers",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/depositEthers.vue",
+    "chunkName": "pages/docs/plasma/depositEthers",
+    "_name": "_062ff7ce"
+  },
+  {
+    "name": "docs-plasma-depositStatusFromTxHash",
+    "path": "/docs/plasma/depositStatusFromTxHash",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/depositStatusFromTxHash.vue",
+    "chunkName": "pages/docs/plasma/depositStatusFromTxHash",
+    "_name": "_6214e8fa"
+  },
+  {
+    "name": "docs-plasma-getTransferSignature",
+    "path": "/docs/plasma/getTransferSignature",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/getTransferSignature.vue",
+    "chunkName": "pages/docs/plasma/getTransferSignature",
+    "_name": "_00b19d19"
+  },
+  {
+    "name": "docs-plasma-initialize",
+    "path": "/docs/plasma/initialize",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/initialize.vue",
+    "chunkName": "pages/docs/plasma/initialize",
+    "_name": "_111bdf5c"
+  },
+  {
+    "name": "docs-plasma-processExits",
+    "path": "/docs/plasma/processExits",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/processExits.vue",
+    "chunkName": "pages/docs/plasma/processExits",
+    "_name": "_da6d5db0"
+  },
+  {
+    "name": "docs-plasma-transferWithSignature",
+    "path": "/docs/plasma/transferWithSignature",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/transferWithSignature.vue",
+    "chunkName": "pages/docs/plasma/transferWithSignature",
+    "_name": "_e266b9d6"
+  },
+  {
+    "name": "docs-pos-depositEtherForUser",
+    "path": "/docs/pos/depositEtherForUser",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/depositEtherForUser.vue",
+    "chunkName": "pages/docs/pos/depositEtherForUser",
+    "_name": "_a00bb634"
+  },
+  {
+    "name": "docs-pos-initialize",
+    "path": "/docs/pos/initialize",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/initialize.vue",
+    "chunkName": "pages/docs/pos/initialize",
+    "_name": "_a9402ab4"
+  },
+  {
     "name": "docs-select-group-by",
     "path": "/docs/select/group-by",
     "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/select/group-by.vue",
@@ -537,6 +593,104 @@
     "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/ERC721/withdrawNFT.vue",
     "chunkName": "pages/docs/plasma/ERC721/withdrawNFT",
     "_name": "_405d87c5"
+  },
+  {
+    "name": "docs-plasma-WithdrawManager-startExitForMetadataMintableBurntToken",
+    "path": "/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken.vue",
+    "chunkName": "pages/docs/plasma/WithdrawManager/startExitForMetadataMintableBurntToken",
+    "_name": "_f5990614"
+  },
+  {
+    "name": "docs-plasma-WithdrawManager-startExitForMintableBurntToken",
+    "path": "/docs/plasma/WithdrawManager/startExitForMintableBurntToken",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/plasma/WithdrawManager/startExitForMintableBurntToken.vue",
+    "chunkName": "pages/docs/plasma/WithdrawManager/startExitForMintableBurntToken",
+    "_name": "_0825e1e7"
+  },
+  {
+    "name": "docs-pos-ERC1155-approveERC1155ForDeposit",
+    "path": "/docs/pos/ERC1155/approveERC1155ForDeposit",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC1155/approveERC1155ForDeposit.vue",
+    "chunkName": "pages/docs/pos/ERC1155/approveERC1155ForDeposit",
+    "_name": "_67d8e38d"
+  },
+  {
+    "name": "docs-pos-ERC1155-burnERC1155",
+    "path": "/docs/pos/ERC1155/burnERC1155",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC1155/burnERC1155.vue",
+    "chunkName": "pages/docs/pos/ERC1155/burnERC1155",
+    "_name": "_4eb6a588"
+  },
+  {
+    "name": "docs-pos-ERC1155-depositERC1155ForUser",
+    "path": "/docs/pos/ERC1155/depositERC1155ForUser",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC1155/depositERC1155ForUser.vue",
+    "chunkName": "pages/docs/pos/ERC1155/depositERC1155ForUser",
+    "_name": "_717a8006"
+  },
+  {
+    "name": "docs-pos-ERC1155-exitERC1155",
+    "path": "/docs/pos/ERC1155/exitERC1155",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC1155/exitERC1155.vue",
+    "chunkName": "pages/docs/pos/ERC1155/exitERC1155",
+    "_name": "_651e324e"
+  },
+  {
+    "name": "docs-pos-ERC20-approveERC20ForDeposit",
+    "path": "/docs/pos/ERC20/approveERC20ForDeposit",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC20/approveERC20ForDeposit.vue",
+    "chunkName": "pages/docs/pos/ERC20/approveERC20ForDeposit",
+    "_name": "_bd511b66"
+  },
+  {
+    "name": "docs-pos-ERC20-burnERC20",
+    "path": "/docs/pos/ERC20/burnERC20",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC20/burnERC20.vue",
+    "chunkName": "pages/docs/pos/ERC20/burnERC20",
+    "_name": "_5d3b0f04"
+  },
+  {
+    "name": "docs-pos-ERC20-depositERC20ForUser",
+    "path": "/docs/pos/ERC20/depositERC20ForUser",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC20/depositERC20ForUser.vue",
+    "chunkName": "pages/docs/pos/ERC20/depositERC20ForUser",
+    "_name": "_91888d06"
+  },
+  {
+    "name": "docs-pos-ERC20-exitERC20",
+    "path": "/docs/pos/ERC20/exitERC20",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC20/exitERC20.vue",
+    "chunkName": "pages/docs/pos/ERC20/exitERC20",
+    "_name": "_84f11ed6"
+  },
+  {
+    "name": "docs-pos-ERC721-approveERC721ForDeposit",
+    "path": "/docs/pos/ERC721/approveERC721ForDeposit",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC721/approveERC721ForDeposit.vue",
+    "chunkName": "pages/docs/pos/ERC721/approveERC721ForDeposit",
+    "_name": "_1a60ffee"
+  },
+  {
+    "name": "docs-pos-ERC721-burnERC721",
+    "path": "/docs/pos/ERC721/burnERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC721/burnERC721.vue",
+    "chunkName": "pages/docs/pos/ERC721/burnERC721",
+    "_name": "_1b924d50"
+  },
+  {
+    "name": "docs-pos-ERC721-depositERC721ForUser",
+    "path": "/docs/pos/ERC721/depositERC721ForUser",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC721/depositERC721ForUser.vue",
+    "chunkName": "pages/docs/pos/ERC721/depositERC721ForUser",
+    "_name": "_d62f2682"
+  },
+  {
+    "name": "docs-pos-ERC721-exitERC721",
+    "path": "/docs/pos/ERC721/exitERC721",
+    "component": "/home/warrior/projects/opensource/matic.js/docs/src/pages/docs/pos/ERC721/exitERC721.vue",
+    "chunkName": "pages/docs/pos/ERC721/exitERC721",
+    "_name": "_c912ac32"
   },
   {
     "name": "index",
