@@ -24,16 +24,16 @@
         :spllitedUrl="spllitedUrl"
       />
     </div>
-    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6">
+    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6 pb-20px">
       <slot></slot>
-      <div class="b-tutorial__content__btns">
+      <!-- <div class="b-tutorial__content__btns">
         <a :href="prevUrl">
           <i class="fas fa-chevron-left"></i>
         </a>
         <a :href="nextUrl">
           <i class="fas fa-chevron-right"></i>
         </a>
-      </div>
+      </div> -->
     </div>
     <div class="col-lg-3 width-full pl-10px pr-5px"></div>
     <div class="b-tutorial__sticky-btn">
@@ -289,13 +289,6 @@ export default {
     background: #e4dddd;
   }
 }
-
-// .b-tutorial__links__item-children {
-//   @extend .b-tutorial__links__item;
-//   margin-left: 20px;
-//   font-size: 1rem;
-// }
-
 .b-tutorial__content {
   padding-left: 40px;
 }

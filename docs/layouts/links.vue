@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="b-links" :class="{ 'b-links--ischild': isChild }">
     <div v-for="(link, index) in links" :key="link.text">
       <a
         class="row content-v-center b-tutorial__links__item ripple"
@@ -24,6 +24,7 @@
         :childDepth="childDepth - 1"
         :relative="relative + link.url + '/'"
         :currentUrlIndex="index"
+        :isChild="true"
       />
     </div>
   </div>
@@ -47,8 +48,7 @@ export default {
     relative: {
       default: '/docs/',
     },
-    isParent: {
-      default: false,
+    isChild: {
       type: Boolean,
     },
   },
@@ -90,5 +90,9 @@ export default {
 }
 .b-tutorial__links__item--active-with-children {
   justify-content: unset;
+}
+
+.b-links--ischild {
+  margin-left: 15px;
 }
 </style>
