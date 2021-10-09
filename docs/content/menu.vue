@@ -38,7 +38,7 @@
       </a>
       <template v-if="release">
         <div class="ml-10px mr-10px">|</div>
-        <a target="_blank" :href="release.url">v - {{ release.tag }}</a>
+        <a target="_blank" :href="release.url">{{ release.tag }}</a>
       </template>
     </div>
   </div>
