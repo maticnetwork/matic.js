@@ -55,6 +55,7 @@ export default {
   methods: {
     getActiveUrlIndex(links, depth) {
       if (depth > 0) {
+        // debugger;
         const spllitedUrl = this.spllitedUrl
         const targetPath = spllitedUrl[spllitedUrl.length - 1 - depth]
         return links.findIndex(q => q.url.match(new RegExp(targetPath, 'i')))
