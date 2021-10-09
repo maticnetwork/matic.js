@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/balanceOfERC721.md'><h1 id="balanceoferc721">Balance Of ERC721</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/balanceOfERC721.md'><h1 id="balanceoferc721">Balance Of ERC721</h1>
 <pre><code class="js language-js">matic.balanceOfERC721(userAddress, token, options)
 </code></pre>
 <p>Get balance of ERC721 <code>token</code> for <code>address</code>.</p>

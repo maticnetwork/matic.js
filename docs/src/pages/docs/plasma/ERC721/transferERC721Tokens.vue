@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/transferERC721Tokens.md'><h1 id="transfererc721">Transfer ERC721</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/transferERC721Tokens.md'><h1 id="transfererc721">Transfer ERC721</h1>
 <pre><code class="js language-js">matic.transferERC721Tokens(token, user, tokenId, options)
 </code></pre>
 <p>Transfer given <code>tokenId</code> of <code>token</code> to <code>user</code>.</p>

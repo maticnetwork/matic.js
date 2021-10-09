@@ -12,5 +12,7 @@ test-blockchain/data/**
 bundle.js
 dist
 
+
 *.tgz
 config.json
+config.js

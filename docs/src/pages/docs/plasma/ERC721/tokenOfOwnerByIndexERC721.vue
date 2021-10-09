@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/tokenOfOwnerByIndexERC721.md'><h1 id="tokenofownerbyindexerc721">Token Of Owner By Index ERC721</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/tokenOfOwnerByIndexERC721.md'><h1 id="tokenofownerbyindexerc721">Token Of Owner By Index ERC721</h1>
 <pre><code class="js language-js">matic.tokenOfOwnerByIndexERC721(userAddress, token, index, options)
 </code></pre>
 <p>Get ERC721 tokenId at <code>index</code> for <code>token</code> and for <code>address</code>.</p>

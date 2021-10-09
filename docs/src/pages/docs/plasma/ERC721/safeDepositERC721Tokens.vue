@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/safeDepositERC721Tokens.md'><h1 id="safedepositerc721">Safe Deposit ERC721</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/safeDepositERC721Tokens.md'><h1 id="safedepositerc721">Safe Deposit ERC721</h1>
 <pre><code class="js language-js">matic.safeDepositERC721Tokens(token, tokenId, options)
 </code></pre>
 <p>Deposit given <code>TokenID</code> of <code>token</code> with user <code>user</code>.</p>

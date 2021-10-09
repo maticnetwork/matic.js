@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/startWithdrawForNFT.md'><h1 id="startwithdrawfornft">Start Withdraw For NFT</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/startWithdrawForNFT.md'><h1 id="startwithdrawfornft">Start Withdraw For NFT</h1>
 <pre><code class="js language-js">matic.startWithdrawForNFT(token, tokenId, options)
 </code></pre>
 <p>Start withdraw process with given <code>tokenId</code> for <code>token</code>.</p>

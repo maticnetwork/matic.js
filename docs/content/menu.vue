@@ -1,15 +1,12 @@
 <template>
   <div class="b-menu row">
     <template v-if="shouldShowMenuIcon">
-      <button
-        @click="onMenuBtnClick"
-        class="b-menu__hamburger"
-        style="color: white; padding-right: 10px"
-      >
+      <button @click="onMenuBtnClick" class="b-menu__hamburger" style="color: white; padding-right: 10px">
         <i class="material-icons">menu</i>
       </button>
-      <a class="b-menu__icon" href="/" title="JsStore Index Page">
-        <img :src="'JsStore_145_64.png' | imgPath" alt="JsStore" />
+      <a class="row b-menu__icon content-v-center" href="/" title="JsStore Index Page">
+        <img :src="'logo.svg' | imgPath" alt="MaticJs Logo" />
+        <span class="ml-10px">Matic.js</span>
       </a>
     </template>
     <div v-else></div>
@@ -49,66 +46,60 @@
 <script>
 export default {
   created() {
-    this.repoUrl = "maticnetwork/matic.js";
+    this.repoUrl = 'maticnetwork/matic.js'
   },
   computed: {
     shouldShowMenuIcon() {
-      return this.$route.path != "/";
+      return this.$route.path != '/'
     },
     githubUrl() {
-      return "https://github.com/" + this.repoUrl;
+      return 'https://github.com/' + this.repoUrl
     },
     forkUrl() {
-      return this.githubUrl + "/fork";
+      return this.githubUrl + '/fork'
     },
     apiUrl() {
-      return "https://api.github.com/repos/" + this.repoUrl;
+      return 'https://api.github.com/repos/' + this.repoUrl
     },
   },
   data() {
     return {
       release: null,
       starCount: null,
-    };
+    }
   },
   async mounted() {
-    this.activeVersion = this.getVersion();
+    this.activeVersion = this.getVersion()
     try {
-      const responses = await Promise.all([
-        fetch(this.apiUrl),
-        fetch(`${this.apiUrl}/releases`),
-      ]);
-      this.starCount = (await responses[0].json()).stargazers_count;
-      const releaseResponse = await responses[1].json();
+      const responses = await Promise.all([fetch(this.apiUrl), fetch(`${this.apiUrl}/releases`)])
+      this.starCount = (await responses[0].json()).stargazers_count
+      const releaseResponse = await responses[1].json()
       this.release = {
         tag: releaseResponse[0].tag_name,
         url: releaseResponse[0].html_url,
-      };
+      }
     } catch (ex) {}
   },
   methods: {
     onMenuBtnClick() {
-      this.$emit("menu_click");
+      this.$emit('menu_click')
     },
 
     onVersionChange() {
-      this.$emit("version_change", this.activeVersion);
+      this.$emit('version_change', this.activeVersion)
     },
 
     getVersion() {
-      const currentUrl = this.$route.path;
-      if (currentUrl.indexOf("v1") >= 0 && currentUrl.indexOf("v2") < 0) {
-        return 1;
-      } else if (
-        currentUrl.indexOf("v2") >= 0 &&
-        currentUrl.indexOf("v3") < 0
-      ) {
-        return 2;
+      const currentUrl = this.$route.path
+      if (currentUrl.indexOf('v1') >= 0 && currentUrl.indexOf('v2') < 0) {
+        return 1
+      } else if (currentUrl.indexOf('v2') >= 0 && currentUrl.indexOf('v3') < 0) {
+        return 2
       }
-      return 3;
+      return 3
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 .b-menu {
@@ -163,7 +154,7 @@ a {
   border-radius: 4px;
 }
 .star-count:before {
-  content: "";
+  content: '';
   position: absolute;
   display: inline-block;
   width: 0;

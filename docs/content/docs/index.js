@@ -138,6 +138,8 @@ module.exports = [
       {
         text: 'ERC20',
         url: 'ERC20',
+        expand: true,
+
         children: [
           {
             text: 'Approve ERC20 Deposit',
@@ -160,6 +162,8 @@ module.exports = [
       {
         text: 'ERC721',
         url: 'ERC721',
+        expand: true,
+
         children: [
           {
             text: 'Approve ERC721 Deposit',
@@ -182,6 +186,7 @@ module.exports = [
       {
         text: 'ERC1155',
         url: 'ERC1155',
+        expand: true,
         children: [
           {
             text: 'Approve ERC1155 Deposit',
@@ -189,15 +194,15 @@ module.exports = [
           },
           {
             text: 'Deposit ERC1155',
-            url: 'depositSingleERC1155ForUser',
+            url: 'depositERC1155ForUser',
           },
           {
             text: 'Burn ERC1155',
-            url: 'burnSingleERC1155',
+            url: 'burnERC1155',
           },
           {
             text: 'Exit ERC1155',
-            url: 'exitSingleERC1155',
+            url: 'exitERC1155',
           },
         ],
       },

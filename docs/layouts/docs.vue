@@ -41,14 +41,14 @@
         class="btn rounded secondary margin-bottom-70px"
         alt="edit this doc"
         target="_blank"
-        href="https://gitter.im/fortjs/Lobby"
+        href="https://discord.com/invite/polygon"
       >
-        <i class="fab fa-gitter"></i>
+        <i class="fab fa-discord"></i>
       </a>
       <a
         alt="edit this doc"
         target="_blank"
-        :href="`https://github.com/ujjwalguptaofficial/fortjs.docs/edit/master/content${currentUrl}.md`"
+        :href="`https://github.com/maticnetwork/matic.js/tree/docs/edit/master/content${currentUrl}.md`"
         class="btn secondary"
         fixed
         bottom
@@ -82,7 +82,7 @@ export default {
   },
   head() {
     return {
-      title: `JsStore - ${this.title}`,
+      title: `Matic.js ${this.title != 'undefined' ? '- ' + this.title : ''}`,
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
@@ -114,24 +114,28 @@ export default {
       return path
     },
     spllitedUrl() {
-      return this.currentUrl.split('/')
+      return this.currentUrl.split('/').slice(2)
     },
     activeUrlIndex() {
       const splittedPath = this.spllitedUrl
       const lastPath = splittedPath[splittedPath.length - 1]
       // this.childDepth = -1
-
+      let routeIndex = 0
       const getActiveUrlIndex = (links, isChild = false) => {
         const result = links.findIndex((val, index) => {
-          if (val.url === lastPath) {
-            if (isChild) {
-              this.childActiveUrlIndex = index
-            } else {
-              this.childActiveUrlIndex = -1
-              this.childDepth = 0
+          if (val.url === splittedPath[routeIndex]) {
+            ++routeIndex
+            if (val.url === lastPath) {
+              if (isChild) {
+                this.childActiveUrlIndex = index
+              } else {
+                this.childActiveUrlIndex = -1
+                this.childDepth = 0
+              }
+              return true
             }
-            return true
           }
+
           const children = val.children
           if (children) {
             const index = getActiveUrlIndex(children, true)

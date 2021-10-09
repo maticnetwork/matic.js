@@ -1,4 +1,4 @@
-<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/ERC721/withdrawNFT.md'><h1 id="withdrawerc721">Withdraw ERC721</h1>
+<template><Layout title='undefined' description='undefined' keywords='undefined' contentSrc='/home/warrior/projects/opensource/matic.js/docs/content/docs/plasma/erc721/withdrawNFT.md'><h1 id="withdrawerc721">Withdraw ERC721</h1>
 <pre><code class="js language-js">matic.withdrawNFT(txId, options)
 </code></pre>
 <p>Withdraw tokens on mainchain using <code>txId</code> from <code>startWithdraw</code> method after header has been submitted to mainchain.</p>
