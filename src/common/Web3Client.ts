@@ -87,33 +87,23 @@ export default class Web3Client {
       !_options.nonce ? web3.eth.getTransactionCount(from, 'pending') : _options.nonce,
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
+
+    const web3Options = {
+      from,
+      gas: gasLimit,
+      gasLimit: gasLimit,
+      nonce,
+      chainId,
+      value: _options.value || 0,
+      to: _options.to || null,
+      data: _options.data,
+      encodeAbi: _options.encodeAbi || false,
+    }
+
     if (supportsEip1559 && !_options.gasPrice) {
-      return {
-        from,
-        gas: gasLimit,
-        gasLimit: gasLimit,
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-        nonce,
-        chainId,
-        value: _options.value || 0,
-        to: _options.to || null,
-        data: _options.data || txObject.encodeABI(),
-        encodeAbi: _options.encodeAbi || false,
-      }
+      return Object.assign(web3Options, { maxFeePerGas, maxPriorityFeePerGas })
     } else {
-      return {
-        from,
-        gas: gasLimit,
-        gasLimit: gasLimit,
-        gasPrice,
-        nonce,
-        chainId,
-        value: _options.value || 0,
-        to: _options.to || null,
-        data: _options.data,
-        encodeAbi: _options.encodeAbi || false,
-      }
+      return Object.assign(web3Options, { gasPrice })
     }
   }
 

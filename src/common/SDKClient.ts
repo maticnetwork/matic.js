@@ -87,6 +87,47 @@ export default class SDKClient extends ContractsBase {
     return this.web3Client.send(txObject, web3Options, options)
   }
 
+  async transferERC1155Tokens(
+    token: address,
+    to: address,
+    tokenIds: (BN | string)[],
+    values: (BN | string)[],
+    options: SendOptions
+  ) {
+    if (!options || !options.from) {
+      throw new Error('options.from is missing')
+    }
+    if (!to || !token || !tokenIds || !values) {
+      throw new Error('to address, token, tokenId or value are missing')
+    }
+    if (tokenIds.length !== values.length) {
+      throw new Error('Token ids and values arrays are not equal in length')
+    }
+
+    Object.assign(options, { to })
+    const txObject =
+      tokenIds.length > 1
+        ? this.getPOSERC1155TokenContract(token, true).methods.safeBatchTransferFrom(
+            options.from,
+            to,
+            tokenIds,
+            values,
+            '0x'
+          )
+        : this.getPOSERC1155TokenContract(token, true).methods.safeTransferFrom(
+            options.from,
+            to,
+            tokenIds,
+            values,
+            '0x'
+          )
+    const web3Options = await this.web3Client.fillOptions(txObject, true /* onRootChain */, options)
+    if (web3Options.encodeAbi) {
+      return Object.assign(web3Options, { data: txObject.encodeABI(), to: token })
+    }
+    return this.web3Client.send(txObject, web3Options, options)
+  }
+
   async transferMaticEth(to: address, amount: BN | string, options?: SendOptions) {
     if (options && (!options.from || !amount || !to)) {
       throw new Error('options.from, to or amount is missing')
