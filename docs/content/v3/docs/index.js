@@ -16,7 +16,43 @@ module.exports = [
             text: 'getBalance',
             url: 'get-balance',
           },
+          {
+            text: 'approve',
+            url: 'approve',
+          },
+          {
+            text: 'approveMax',
+            url: 'approve-max',
+          },
+          {
+            text: 'deposit',
+            url: 'deposit',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'withdrawExitFaster',
+            url: 'withdraw-exit-faster',
+          },
+          {
+            text: 'isWithdrawExited',
+            url: 'is-withdraw-exited',
+          },
         ],
+      },
+      {
+        text: 'ERC721',
+        url: 'erc721',
+      },
+      {
+        text: 'isCheckPointed',
+        url: 'is-check-pointed',
       },
     ],
   },

@@ -114,7 +114,7 @@ export default {
       return path
     },
     spllitedUrl() {
-      return this.currentUrl.split('/').slice(2)
+      return this.currentUrl.split('/').slice(3)
     },
     activeUrlIndex() {
       const splittedPath = this.spllitedUrl
