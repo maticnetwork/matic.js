@@ -99,7 +99,7 @@ export default class Web3Client {
         chainId,
         value: _options.value || 0,
         to: _options.to || null,
-        data: _options.data || txObject.encodeABI(),
+        data: _options.data,
         encodeAbi: _options.encodeAbi || false,
       }
     } else {
