@@ -95,6 +95,11 @@ ol {
   list-style-type: decimal;
 }
 
+ul,
+ol {
+  padding-left: 40px;
+}
+
 .top-border {
   border-top: 2px solid #e9ecef;
 }

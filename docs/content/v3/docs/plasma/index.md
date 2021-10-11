@@ -4,7 +4,7 @@ Keywords: 'maticjs, plasma client, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-`maticjs` provides `plasmaClient` to interact with **POS** Bridge.
+`maticjs` provides `plasmaClient` to interact with **Plasma** Bridge.
 
 ```
 import { PlasmaClient } from "@maticnetwork/maticjs"
