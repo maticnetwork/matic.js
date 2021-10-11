@@ -105,9 +105,9 @@ const txHash = approveResult.getTransactionHash();
 const txReceipt = approveResult.getReceipt();
 ```
 
-<div class="highlight">
-As you can see maticjs makes very easy to interact with maticjs bridge with its simple APIS. Let's create something awesome.
-</div>
+<div class="mt-20px mb-20px top-border"></div>
+
+As you can see maticjs makes very easy to interact with maticjs bridge with its simple APIS. **Let's create something awesome.**
 
 ### Some important links
 
