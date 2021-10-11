@@ -13,13 +13,13 @@ In this get started tutorial - we will learn about how we can setup and interact
 **Install the maticjs package via npm:**
 
 ```bash
-$ npm install --save @maticnetwork/maticjs
+npm install @maticnetwork/maticjs
 ```
 
 **Install the web3js plugin**
 
 ```bash
-$ npm install --save @maticnetwork/maticjs-web3js
+npm install @maticnetwork/maticjs-web3js
 ```
 
 ## Setup

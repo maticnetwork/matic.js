@@ -4,6 +4,25 @@ module.exports = [
     url: 'get-started',
   },
   {
+    text: 'Installation',
+    url: 'installation',
+  },
+  {
+    text: 'Setup',
+    url: 'setup',
+    // expand: true,
+    children: [
+      {
+        text: 'Web3.js',
+        url: 'web3js',
+      },
+      {
+        text: 'Ethers',
+        url: 'ethers',
+      },
+    ],
+  },
+  {
     text: 'POS',
     url: 'pos',
     children: [
@@ -57,7 +76,7 @@ module.exports = [
     ],
   },
   {
-    text: 'PLASMA',
+    text: 'Plasma',
     url: 'plasma',
     children: [
       {
