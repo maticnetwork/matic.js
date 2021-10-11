@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 Burn ERC1155 tokens(deposited using POS Portal) on Matic chain and retrieve the Transaction hash
