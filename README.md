@@ -145,7 +145,7 @@ await matic.transferERC20Tokens(
 // Transfer ERC721 token on Matic
 await matic.transferERC721Tokens(
   token,  // Token address
-  to,   // Recipient address
+  user,   // Recipient address
   tokenId,  // TokenId
   options // transaction fields
 )
