@@ -842,7 +842,7 @@ matic.transferERC721Tokens('0x718Ca123...', user, '100006500000000000000', {
 
 <a name="transferERC1155Tokens"></a>
 
-#### matic.transferERC1155Tokens(token, user, tokenId, options)
+#### matic.transferERC1155Tokens(token, to, tokenIds, values, options)
 
 Transfer gives `values` of `tokens` with `tokenIds` to `to` user.
 

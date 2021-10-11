@@ -8,7 +8,7 @@ sidebar_position: 3
 matic.transferERC1155Tokens(token, to, tokenIds, values, options)
 ```
 
-Transfer given `tokenId` of `token` to `user`.
+Transfer given `values` of `token` with `tokenIds` to `to` user.
 
 - `token` must be valid ERC1155 token address
 - `to` must be valid account address
