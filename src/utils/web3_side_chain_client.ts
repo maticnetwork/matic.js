@@ -21,8 +21,8 @@ export class Web3SideChainClient {
             throw new Error("Web3Client is not set");
         }
 
-        this.parent = new Web3Client(config.parent.provider, this.logger);
-        this.child = new Web3Client(config.child.provider, this.logger);
+        this.parent = new (Web3Client as any)(config.parent.provider, this.logger);
+        this.child = new (Web3Client as any)(config.child.provider, this.logger);
 
     }
 

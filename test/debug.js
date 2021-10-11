@@ -7,10 +7,10 @@ const from = user1.address;
 
 const execute = async () => {
   const privateKey = user1.privateKey;
-  const mumbaiERC720 = plasma.child.erc20;
-  const goerliERC720 = plasma.parent.erc20;
+  const mumbaiERC720 = pos.child.erc721;
+  const goerliERC720 = plasma.parent.erc721;
 
-  const client = new PlasmaClient({
+  const client = new POSClient({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -31,8 +31,8 @@ const execute = async () => {
   await client.init();
   console.log("init called");
 
-  const mumbaiERC720Token = client.erc20(mumbaiERC720);
-  const goerliERC720Token = client.erc20(goerliERC720, true);
+  const mumbaiERC720Token = client.erc721(mumbaiERC720);
+  const goerliERC720Token = client.erc721(goerliERC720, true);
 
 
   // const balance = await mumbaiERC720Token.getBalance(from);
@@ -44,7 +44,10 @@ const execute = async () => {
   // console.log("txReceipt", await tx.getReceipt());
 
   //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
-  const tx = await goerliERC720Token.withdrawExit()
+  const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
+
+  const tx = await mumbaiERC720Token.withdrawStart(32);
+  // console.log("tx", tx);
   // const tx = await mumbaiERC720Token.withdrawStart(
   //   10,
   //   {

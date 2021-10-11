@@ -25,7 +25,7 @@ export abstract class BaseWeb3Client {
     abstract getBlock(blockHashOrBlockNumber): Promise<IBlock>;
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
 
-    getRootHash(startBlock: number, endBlock: number) {
+    getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
             jsonrpc: '2.0',
             method: 'eth_getRootHash',
