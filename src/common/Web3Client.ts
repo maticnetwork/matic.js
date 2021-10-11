@@ -87,6 +87,7 @@ export default class Web3Client {
       !_options.nonce ? web3.eth.getTransactionCount(from, 'pending') : _options.nonce,
       !_options.chainId ? web3.eth.net.getId() : _options.chainId,
     ])
+
     if (supportsEip1559 && !_options.gasPrice) {
       return {
         from,
