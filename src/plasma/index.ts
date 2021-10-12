@@ -3,7 +3,6 @@ import { ERC721 } from "./erc721";
 import { Web3SideChainClient } from "../utils";
 import { IPlasmaClientConfig, IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
-import { LOGGER } from "../constant";
 import { RegistryContract } from "./registry";
 import { Ether } from "./ether";
 import { ExitManager, RootChain } from "../pos";
@@ -49,7 +48,7 @@ export class PlasmaClient {
 
     constructor(config: IPlasmaClientConfig) {
         this.client_ = new Web3SideChainClient(config);
-        LOGGER.enableLog(config.log);
+        this.client_.logger.enableLog(config.log);
     }
 
     init() {

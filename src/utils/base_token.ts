@@ -2,7 +2,7 @@ import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { merge } from "../utils";
-import { EXTRA_GAS_FOR_PROXY_CALL, LOGGER } from "../constant";
+import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
@@ -43,7 +43,7 @@ export class BaseToken {
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        LOGGER.log("process write");
+        this.client.logger.log("process write");
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -51,7 +51,7 @@ export class BaseToken {
                 method,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                LOGGER.log("process write config");
+                this.client.logger.log("process write config");
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
@@ -67,7 +67,7 @@ export class BaseToken {
     }
 
     protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        LOGGER.log("process write");
+        this.client.logger.log("process write");
         const isParent = this.contractParam.isParent;
         const client = this.getClient_(isParent);
         return this.createTransactionConfig(
@@ -77,7 +77,7 @@ export class BaseToken {
                 method: null as any,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                LOGGER.log("process write config");
+                this.client.logger.log("process write config");
                 if (option.returnTransaction) {
                     return config as any;
                 }
@@ -90,7 +90,7 @@ export class BaseToken {
     }
 
     protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        LOGGER.log("process read");
+        this.client.logger.log("process read");
         const isParent = this.contractParam.isParent;
         const client = this.getClient_(isParent);
         return this.createTransactionConfig(
@@ -100,7 +100,7 @@ export class BaseToken {
                 method: null as any,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                LOGGER.log("process read config");
+                this.client.logger.log("process read config");
                 if (option.returnTransaction) {
                     return config as any;
                 }
@@ -111,7 +111,7 @@ export class BaseToken {
     }
 
     protected processRead<T>(method: BaseContractMethod, option: ITransactionOption = {}): Promise<T> {
-        LOGGER.log("process read");
+        this.client.logger.log("process read");
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -119,7 +119,7 @@ export class BaseToken {
                 method,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                LOGGER.log("process read config");
+                this.client.logger.log("process read config");
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),

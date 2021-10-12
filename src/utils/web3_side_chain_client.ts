@@ -1,7 +1,8 @@
-import { Web3Client, LOGGER } from "../constant";
+import { Web3Client } from "../constant";
 import { IPlasmaClientConfig } from "../interfaces";
 import { BaseWeb3Client } from "../abstracts";
 import { ABIHelper } from "../helpers";
+import { Logger } from "./logger";
 
 export class Web3SideChainClient {
     parent: BaseWeb3Client;
@@ -50,7 +51,7 @@ export class Web3SideChainClient {
     }
 
     get logger() {
-        return LOGGER;
+        return new Logger();
     }
 }
 

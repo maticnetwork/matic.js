@@ -2,7 +2,6 @@ import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
 import { Web3SideChainClient } from "../utils";
 import { IPOSClientConfig } from "../interfaces";
-import { LOGGER } from "../constant";
 import { ExitManager } from "./exit_manager";
 import { RootChain } from "./root_chain";
 import { ERC721 } from "./erc721";
@@ -22,12 +21,12 @@ export class POSClient {
 
     constructor(config: IPOSClientConfig) {
         this.client_ = new Web3SideChainClient(config);
+        this.client_.logger.enableLog(config.log);
     }
 
     init() {
         const client = this.client_;
         let config: IPOSClientConfig = client.config;
-        LOGGER.enableLog(config.log);
 
         return client.init().then(_ => {
             const mainPOSContracts = this.client_.mainPOSContracts;

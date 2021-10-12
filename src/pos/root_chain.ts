@@ -1,7 +1,7 @@
 import { BaseToken, Web3SideChainClient } from "../utils";
 import { TYPE_AMOUNT } from "../types";
 import BN from "bn.js";
-import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO, LOGGER } from "../constant";
+import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO } from "../constant";
 import { ITransactionOption } from "../interfaces";
 
 export class RootChain extends BaseToken {
