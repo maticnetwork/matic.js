@@ -4,8 +4,7 @@
       <a
         class="row content-v-center b-tutorial__links__item ripple"
         :class="{
-          'b-tutorial__links__item--active': childActiveUrlIndex < 0 && index === activeUrlIndex,
-          'b-tutorial__links__item--active-with-children': link.children && childActiveUrlIndex < 0,
+          'b-tutorial__links__item--active': isActiveUrl(url(link, relative)),
         }"
         :href="url(link, relative)"
       >
@@ -61,6 +60,9 @@ export default {
         return links.findIndex(q => q.url.match(new RegExp(targetPath, 'i')))
       }
       return 0
+    },
+    isActiveUrl(link) {
+      return this.childDepth<=0 && link === this.$route.path
     },
   },
 }
