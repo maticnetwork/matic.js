@@ -22,6 +22,7 @@
         :childDepth="childDepth"
         :isParent="true"
         :spllitedUrl="spllitedUrl"
+        :relative="relativeUrl"
       />
     </div>
     <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6 pb-20px">
@@ -103,8 +104,15 @@ export default {
     title: String,
     description: String,
     keywords: String,
+    relativeUrl: {
+      default: '/docs/',
+    },
+    propLinks: {},
   },
   computed: {
+    links() {
+      return this.propLinks || this.savedLinks
+    },
     currentUrl() {
       let path = this.$route.path
       const length = path.length
@@ -114,7 +122,7 @@ export default {
       return path
     },
     spllitedUrl() {
-      return this.currentUrl.split('/').slice(2)
+      return this.currentUrl.split('/').slice(this.relativeUrl.split('/').length - 1)
     },
     activeUrlIndex() {
       const splittedPath = this.spllitedUrl
@@ -166,7 +174,7 @@ export default {
   },
   data() {
     return {
-      links: [],
+      savedLinks: [],
       childActiveUrlIndex: -1,
       searchResults: [],
       searchText: '',
@@ -175,7 +183,7 @@ export default {
   },
   fetch() {
     const links = require('../content/docs')
-    this.links = links
+    this.savedLinks = links
   },
   mounted() {
     hljs.highlightAll()
