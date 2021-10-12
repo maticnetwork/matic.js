@@ -22,6 +22,7 @@
         :childDepth="childDepth"
         :isParent="true"
         :spllitedUrl="spllitedUrl"
+        :relative="relativeUrl"
       />
     </div>
     <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6 pb-20px">
@@ -63,7 +64,7 @@
 <script  >
 import { copyToClipboard } from '@/utils'
 import FlexSearch from 'flexsearch'
-import Links from './links.vue'
+import Links from '../links.vue'
 
 export default {
   components: {
@@ -79,6 +80,7 @@ export default {
       worker: false,
       cache: false,
     })
+    this.relativeUrl = '/v3/docs/'
   },
   head() {
     return {
