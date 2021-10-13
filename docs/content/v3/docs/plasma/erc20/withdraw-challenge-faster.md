@@ -16,9 +16,9 @@ const erc20Token = plasmaClient.erc20(<token address>);
 // start withdraw process for 100 amount
 const result = await erc20Token.withdrawExitFaster(<burn tx hash>);
 
-const txHash = result.getTransactionHash();
+const txHash = await result.getTransactionHash();
 
-const txReceipt = result.getReceipt();
+const txReceipt = await result.getReceipt();
 
 ```
 

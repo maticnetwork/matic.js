@@ -48,6 +48,10 @@ module.exports = [
             url: 'deposit',
           },
           {
+            text: 'transfer',
+            url: 'transfer',
+          },
+          {
             text: 'withdrawStart',
             url: 'withdraw-start',
           },
@@ -97,8 +101,8 @@ module.exports = [
             url: 'approve-max',
           },
           {
-            text: 'deposit',
-            url: 'deposit',
+            text: 'transfer',
+            url: 'transfer',
           },
           {
             text: 'withdrawStart',

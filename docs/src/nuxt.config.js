@@ -38,7 +38,7 @@ module.exports = {
     dir: '../build',
   },
   head: {
-    title: 'JsStore - Think in SQL and do in JS',
+    title: 'Matic.js - Javascript developer library to interact with Matic Network',
     meta: [
       {
         name: 'theme-color',
@@ -50,7 +50,7 @@ module.exports = {
       },
       {
         name: 'author',
-        content: 'Ujjwal Gupta',
+        content: 'MaticNetwork',
       },
       {
         name: 'Rating',

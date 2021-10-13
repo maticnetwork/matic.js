@@ -10,11 +10,11 @@ Description: 'Get started with maticjs'
 const erc20RootToken = posClient.erc20(<root token address>);
 
 //deposit 100 to user address
-const approveResult = await erc20Token.deposit(100, <user address>);
+const result = await erc20Token.deposit(100, <user address>);
 
-const txHash = approveResult.getTransactionHash();
+const txHash = await result.getTransactionHash();
 
-const txReceipt = approveResult.getReceipt();
+const txReceipt = await result.getReceipt();
 
 ```
 

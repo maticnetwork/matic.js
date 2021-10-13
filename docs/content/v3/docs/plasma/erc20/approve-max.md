@@ -11,8 +11,8 @@ const erc20RootToken = plasmaClient.erc20(<root token address>);
 
 const approveResult = await erc20Token.approveMax();
 
-const txHash = approveResult.getTransactionHash();
+const txHash = await approveResult.getTransactionHash();
 
-const txReceipt = approveResult.getReceipt();
+const txReceipt = await approveResult.getReceipt();
 
 ```
