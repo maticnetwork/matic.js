@@ -174,4 +174,8 @@ export class ERC20 extends POSToken {
         });
     }
 
+    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        return this['transfer_'](to, amount, option);
+    }
+
 }

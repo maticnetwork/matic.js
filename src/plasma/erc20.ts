@@ -129,4 +129,8 @@ export class ERC20 extends BaseToken {
         );
     }
 
+    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        return this['transfer_'](to, amount, option);
+    }
+
 }

@@ -1,11 +1,7 @@
 import { TYPE_AMOUNT } from "../types";
 import { IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { Web3SideChainClient, Converter, BaseToken } from "../utils";
-import { DepositManager } from "./deposit_manager";
 import { ERC20 } from "./erc20";
-import { RegistryContract } from "./registry";
-import { ExitManager } from "../pos";
-import { WithdrawManager } from "./withdraw_manager";
 
 export class Ether extends BaseToken {
 

@@ -193,7 +193,7 @@ export class BaseToken {
         }
     }
 
-    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    private transfer_(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "transfer",
