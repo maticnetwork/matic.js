@@ -71,7 +71,6 @@ export default {
     Links,
   },
   created() {
-    this.ads = ['Component based framework for nodejs']
     this.finder = new FlexSearch({
       encode: 'balance',
       tokenize: 'forward',
