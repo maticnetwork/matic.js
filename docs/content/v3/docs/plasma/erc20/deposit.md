@@ -12,9 +12,9 @@ const erc20RootToken = plasmaClient.erc20(<root token address>);
 //deposit 100 to user address
 const approveResult = await erc20Token.deposit(100, <user address>);
 
-const txHash = approveResult.getTransactionHash();
+const txHash = await approveResult.getTransactionHash();
 
-const txReceipt = approveResult.getReceipt();
+const txReceipt = await approveResult.getReceipt();
 
 ```
 

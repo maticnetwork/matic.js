@@ -12,9 +12,9 @@ const erc20ChildToken = plasmaClient.erc20(<child token address>);
 // start withdraw process for 100 amount
 const result = await erc20ChildToken.withdrawStart(100);
 
-const txHash = result.getTransactionHash();
+const txHash = await result.getTransactionHash();
 
-const txReceipt = result.getReceipt();
+const txReceipt = await result.getReceipt();
 
 ```
 

@@ -11,9 +11,9 @@ const erc20RootToken = plasmaClient.erc20(<root token address>);
 
 const result = await erc20Token.withdrawExit();
 
-const txHash = result.getTransactionHash();
+const txHash = await result.getTransactionHash();
 
-const txReceipt = result.getReceipt();
+const txReceipt = await result.getReceipt();
 
 ```
 

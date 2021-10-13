@@ -14,8 +14,8 @@ const erc20RootToken = posClient.erc20(<root token address>);
 // approve 100 amount
 const approveResult = await erc20Token.approve(100);
 
-const txHash = approveResult.getTransactionHash();
+const txHash = await approveResult.getTransactionHash();
 
-const txReceipt = approveResult.getReceipt();
+const txReceipt = await approveResult.getReceipt();
 
 ```
