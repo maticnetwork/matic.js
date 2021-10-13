@@ -101,8 +101,12 @@ console.log('balance', balance)
 ```
 // approve amount 10 on parent token
 const approveResult = await erc20ParentToken.approve(10);
-const txHash = approveResult.getTransactionHash();
-const txReceipt = approveResult.getReceipt();
+
+// get transaction hash
+const txHash = await approveResult.getTransactionHash();
+
+// get transaction receipt
+const txReceipt = await approveResult.getReceipt();
 ```
 
 <div class="mt-20px mb-20px top-border"></div>
