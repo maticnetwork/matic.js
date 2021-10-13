@@ -206,7 +206,7 @@ module.exports = [
           },
           {
             text: 'Transfer ERC1155',
-            url: 'transferERC1155Tokens',
+            url: 'transferERC1155',
           },
         ],
       },
