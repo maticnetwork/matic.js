@@ -16,3 +16,4 @@ dist
 *.tgz
 config.json
 config.js
+build
