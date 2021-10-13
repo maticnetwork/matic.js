@@ -1,11 +1,12 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
-import { merge } from "../utils";
+import { Converter, merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
+import { TYPE_AMOUNT } from "../types";
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -190,6 +191,19 @@ export class BaseToken {
         if (this.contractParam.isParent) {
             this.client.logger.error(ERROR_TYPE.AllowedOnChild, methodName).throw();
         }
+    }
+
+    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "transfer",
+                to,
+                Converter.toHex(amount)
+            );
+            return this.processWrite(
+                method, option
+            );
+        });
     }
 
 }

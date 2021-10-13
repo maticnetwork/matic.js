@@ -51,21 +51,11 @@ export class Ether extends BaseToken {
         }).then(ethAddress => {
             const erc20 = new ERC20(
                 ethAddress,
-                false,
+                isParent,
                 this.client,
                 this.contracts_
             );
-            return erc20['getContract']();
-        }).then(contract => {
-            const method = contract.method(
-                "transfer",
-                to,
-                Converter.toHex(amount)
-            );
-            return this.processWrite(
-                method, option
-            );
+            return erc20.transfer(to, amount);
         });
     }
-
 }
