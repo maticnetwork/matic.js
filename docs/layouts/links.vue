@@ -6,7 +6,7 @@
         :class="{
           'b-tutorial__links__item--active': isActiveUrl(url(link, relative)),
         }"
-        :href="url(link, relative)"
+        :href="removeSlash(url(link, relative))"
       >
         <template v-if="link.children">
           <i v-if="index === activeUrlIndex" class="fas fa-chevron-down"></i>
@@ -62,7 +62,14 @@ export default {
       return 0
     },
     isActiveUrl(link) {
-      return this.childDepth<=0 && link === this.$route.path
+      return this.childDepth <= 0 && link === this.$route.path
+    },
+    removeSlash(value) {
+      // remove / from string at 0th index
+      if (value[0] === '/') {
+        return value.substr(1)
+      }
+      return value
     },
   },
 }
