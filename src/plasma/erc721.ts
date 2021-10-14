@@ -24,7 +24,7 @@ export class ERC721 extends BaseToken {
      * @param options 
      */
     getBalance(userAddress: string, options: ITransactionOption = {}) {
-        this.getContract().then(contract => {
+        return this.getContract().then(contract => {
             const method = contract.method(
                 "balanceOf",
                 userAddress
@@ -34,14 +34,13 @@ export class ERC721 extends BaseToken {
     }
 
     /**
-     * READ
-     * returns token's id on that index
+     * returns token id on that index for owner
      * 
      * @param userAddress 
      * @param index starting from zero, if no token found on that it will return error
      * @param options 
      */
-    getOwnerByIndex(userAddress: string, index: number, options?: ITransactionOption) {
+    getTokenIdForOwnerByIndex(index: number, userAddress: string, options?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "tokenOfOwnerByIndex",
@@ -54,24 +53,24 @@ export class ERC721 extends BaseToken {
     }
 
     /**
-     * WRITE
-     * deposit ERC721 from parent to child
+     * 
+     * safely deposit from parent to child
      * 
      * @param tokenId 
      * @param options 
      */
-    // safeDepositERC721(tokenId: number, options?: ITransactionOption) {
-    //     return this.getContract().then(contract => {
-    //         const method = contract.method(
-    //             "safeTransferFrom",
-    //             options.from,
-    //             this.depositManager.contract.address,
-    //             tokenId,
-    //         );
+    safeDeposit(tokenId: string | number, userAddress: string, options?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "safeTransferFrom",
+                userAddress,
+                this.depositManager.address,
+                tokenId,
+            );
 
-    //         return this.processWrite(method, options);
-    //     });
-    // }
+            return this.processWrite(method, options);
+        });
+    }
 
     /**
      * WRITE

@@ -1,7 +1,7 @@
 import { Web3Client } from "../constant";
 import { IPlasmaClientConfig } from "../interfaces";
 import { BaseWeb3Client } from "../abstracts";
-import { ABIHelper } from "../helpers";
+import { ABIManager } from "../helpers";
 import { Logger } from "./logger";
 
 export class Web3SideChainClient {
@@ -10,7 +10,7 @@ export class Web3SideChainClient {
 
     config: IPlasmaClientConfig;
 
-    abiHelper: ABIHelper;
+    abiHelper: ABIManager;
 
     constructor(config: IPlasmaClientConfig) {
         config = config || {} as any;
@@ -31,7 +31,7 @@ export class Web3SideChainClient {
         const config = this.config;
         const network = config.network;
         const version = config.version;
-        const abiHelper = this.abiHelper = new ABIHelper(network, version);
+        const abiHelper = this.abiHelper = new ABIManager(network, version);
         console.log("init called", abiHelper);
         return abiHelper.init().catch(err => {
             throw new Error(`network ${network} - ${version} is not supported`);

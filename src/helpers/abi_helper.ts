@@ -14,9 +14,9 @@ type T_ABI_CACHE = {
     }
 };
 
-let cache: T_ABI_CACHE = {};
+const cache: T_ABI_CACHE = {};
 
-export class ABIHelper {
+export class ABIManager {
     constructor(public networkName: string, public version: string) {
 
     }
@@ -42,7 +42,7 @@ export class ABIHelper {
     }
 
     getABI(contractName: string, bridgeType = 'plasma'): Promise<any> {
-        let targetBridgeABICache = cache[this.networkName][this.version].
+        const targetBridgeABICache = cache[this.networkName][this.version].
             abi[bridgeType];
 
         if (targetBridgeABICache) {
@@ -57,18 +57,16 @@ export class ABIHelper {
             bridgeType,
             contractName
         ).then(result => {
-            targetBridgeABICache = {
-                [contractName]: result
-            };
+            this.setABI(contractName, bridgeType, result);
             return result;
         });
     }
 
-    static set cache(value: T_ABI_CACHE) {
-        cache = value;
-    }
-
-    static get cache() {
-        return cache;
+    setABI(contractName: string, bridgeType: string, abi: any) {
+        const abiStore = cache[this.networkName][this.version].abi;
+        if (!abiStore[bridgeType]) {
+            abiStore[bridgeType] = {};
+        }
+        abiStore[bridgeType][contractName] = abi;
     }
 }

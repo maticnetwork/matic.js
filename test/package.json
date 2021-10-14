@@ -29,6 +29,7 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "@maticnetwork/maticjs-web3": "^0.1.0",
     "mochapack": "^2.1.2"
   }
 }
