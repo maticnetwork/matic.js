@@ -56,7 +56,7 @@ export class BaseToken {
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
-                        to: this.contract_.address
+                        to: method.address
                     } as ITransactionConfig);
                 }
                 const methodResult = method.write(

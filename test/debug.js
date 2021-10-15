@@ -34,8 +34,15 @@ const execute = async () => {
   console.log("init called");
 
   // const mumbaiERC720Token = client.erc721('0x33fc58f12a56280503b04ac7911d1eceebce179c');
-  const mumbaiERC720Token = client.erc721(plasma.child.erc721);
-  const goerliERC720Token = client.erc721(plasma.parent.erc721, true);
+  const goerliERC20Token = client.erc20(plasma.parent.erc20, true);
+
+  // const tx = await goerliERC20Token.approve(104);
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
+  // return;
+
+  const mumbaiERC721Token = client.erc721(plasma.child.erc721);
+  const goerliERC721Token = client.erc721(plasma.parent.erc721, true);
 
 
   // const balance = await mumbaiERC720Token.getBalance(
@@ -60,7 +67,7 @@ const execute = async () => {
   // console.log("tx", tx);
   // const result = await client.isCheckPointed('0x41162584974896bfc96d91e7ce72009373cd31acabe92024950831ee7b8067c0')
   // console.log("result", result);
-  const tx = await goerliERC720Token.withdrawChallenge(
+  const tx = await goerliERC721Token.withdrawChallenge(
     '0x41162584974896bfc96d91e7ce72009373cd31acabe92024950831ee7b8067c0',
     {
       // nonce: 11793,
@@ -68,10 +75,11 @@ const execute = async () => {
       // gas: 10000,
       // returnTransaction: true,
       // gasPrice: '4000000000',
-      returnTransaction: true
+      // returnTransaction: true,
+      gasLimit: 1046107,
     }
   );
-  return console.log("tx", tx)
+  console.log("tx", tx)
   console.log("txHash", await tx.getTransactionHash());
   console.log("txReceipt", await tx.getReceipt());
 }
