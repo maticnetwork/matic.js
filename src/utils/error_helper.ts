@@ -30,6 +30,9 @@ export class ErrorHelper implements IError {
             case ERROR_TYPE.AllowedOnRoot:
                 errMsg = `The action ${info} is allowed only on root token.`;
                 break;
+            case ERROR_TYPE.ProofAPINotSet:
+                errMsg = `Proof api is not set, please set it using "setProofApi"`;
+                break;
             default:
                 if (!this.type) {
                     this.type = ERROR_TYPE.Unknown;

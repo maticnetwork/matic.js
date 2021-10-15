@@ -1,6 +1,6 @@
 import { ERC20 } from "./erc20";
 import { ERC721 } from "./erc721";
-import { Web3SideChainClient } from "../utils";
+import { BridgeClient, Web3SideChainClient } from "../utils";
 import { IPlasmaClientConfig, IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 import { RegistryContract } from "./registry";
@@ -8,12 +8,11 @@ import { Ether } from "./ether";
 import { ExitManager, RootChain } from "../pos";
 import { WithdrawManager } from "./withdraw_manager";
 
-export class PlasmaClient {
+export class PlasmaClient extends BridgeClient {
 
     private client_: Web3SideChainClient;
 
     withdrawManager: WithdrawManager;
-    exitManager: ExitManager;
 
     depositManager: DepositManager;
     registry: RegistryContract;
@@ -47,6 +46,7 @@ export class PlasmaClient {
     }
 
     constructor(config: IPlasmaClientConfig) {
+        super();
         this.client_ = new Web3SideChainClient(config);
         this.client_.logger.enableLog(config.log);
     }

@@ -6,6 +6,8 @@ import ethUtils from "ethereumjs-util";
 import { ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseWeb3Client } from "../abstracts";
+import { ErrorHelper } from "../utils/error_helper";
+import { ERROR_TYPE } from "..";
 
 interface IChainBlockInfo {
     lastChildBlock: string;
@@ -144,6 +146,10 @@ export class ExitManager {
     }
 
     async buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+
+        if (isFast && !service.network) {
+            new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
+        }
 
         const blockInfo = await this.getChainBlockInfo(
             burnTxHash

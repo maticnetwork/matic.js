@@ -1,6 +1,6 @@
 import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
-import { Web3SideChainClient } from "../utils";
+import { BridgeClient, Web3SideChainClient } from "../utils";
 import { IPOSClientConfig } from "../interfaces";
 import { ExitManager } from "./exit_manager";
 import { RootChain } from "./root_chain";
@@ -10,16 +10,16 @@ export * from "./exit_manager";
 export * from "./root_chain_manager";
 export * from "./root_chain";
 
-export class POSClient {
+export class POSClient extends BridgeClient {
 
     rootChainManager: RootChainManager;
     rootChain: RootChain;
     private client_: Web3SideChainClient;
 
-    exitManager: ExitManager;
 
 
     constructor(config: IPOSClientConfig) {
+        super();
         this.client_ = new Web3SideChainClient(config);
         this.client_.logger.enableLog(config.log);
     }
@@ -78,29 +78,4 @@ export class POSClient {
             this.exitManager
         );
     }
-
-    /**
-     * check whether a txHash is checkPointed 
-     *
-     * @param {string} txHash
-     * @returns
-     * @memberof POSClient
-     */
-    isCheckPointed(txHash: string) {
-        return this.exitManager.isCheckPointed(
-            txHash
-        );
-    }
-
-    // getBalanceUsingRPC() {
-    //     return this.client_.child.client.sendRPCRequest({
-    //         jsonrpc: '2.0',
-    //         method: 'eth_getBalance',
-    //         params: [
-    //             '0x0ef2e86a73c7be7f767d7abe53b1d4cbfbccbf3a',
-    //             'latest'
-    //         ],
-    //         id: new Date().getTime()
-    //     });
-    // }
 }

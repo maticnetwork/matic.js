@@ -42,7 +42,7 @@ export class ERC721 extends PlasmaToken {
      * @param index starting from zero, if no token found on that it will return error
      * @param options 
      */
-    getTokenIdForOwnerByIndex(index: number, userAddress: string, options?: ITransactionOption) {
+    getTokenIdForUserByIndex(index: number, userAddress: string, options?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "tokenOfOwnerByIndex",
@@ -50,7 +50,7 @@ export class ERC721 extends PlasmaToken {
                 index
             );
 
-            return this.processRead(method, options);
+            return this.processRead<string>(method, options);
         });
     }
 
@@ -123,5 +123,20 @@ export class ERC721 extends PlasmaToken {
             tokenId,
             option
         );
+    }
+
+    getAllTokens(userAddress: string) {
+        return this.getBalance(userAddress).then(balance => {
+            balance = Number(balance);
+            const promises = [];
+            for (let i = 0; i < balance; i++) {
+                promises.push(
+                    this.getTokenIdForUserByIndex(i, userAddress)
+                );
+            }
+            return Promise.all(
+                promises
+            );
+        });
     }
 }
