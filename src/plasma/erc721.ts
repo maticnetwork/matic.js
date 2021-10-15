@@ -85,10 +85,9 @@ export class ERC721 extends PlasmaToken {
     }
 
     getPredicate() {
-        return this['getPredicate_'](
-            "erc20Predicate", "ERC20Predicate"
-        );
+        return this['getPredicate_']("erc721Predicate", "ERC721Predicate");
     }
+
 
     private withdrawChallenge_(burnTxHash: string, isFast: boolean, option: ITransactionOption) {
         return Promise.all([
@@ -100,6 +99,7 @@ export class ERC721 extends PlasmaToken {
             )
         ]).then(result => {
             const [predicate, payload] = result;
+            console.log("address", predicate.address);
             const method = predicate.method(
                 "startExitWithBurntTokens",
                 payload

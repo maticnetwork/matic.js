@@ -21,7 +21,6 @@ export class POSClient extends BridgeClient {
     constructor(config: IPOSClientConfig) {
         super();
         this.client_ = new Web3SideChainClient(config);
-        this.client_.logger.enableLog(config.log);
     }
 
     init() {

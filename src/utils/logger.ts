@@ -6,7 +6,7 @@ export class Logger {
     private isEnabled: boolean;
 
     enableLog(value) {
-        this.isEnabled = true;
+        this.isEnabled = value ? true : false;
     }
 
     log(...message) {

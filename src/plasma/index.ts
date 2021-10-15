@@ -48,7 +48,6 @@ export class PlasmaClient extends BridgeClient {
     constructor(config: IPlasmaClientConfig) {
         super();
         this.client_ = new Web3SideChainClient(config);
-        this.client_.logger.enableLog(config.log);
     }
 
     init() {

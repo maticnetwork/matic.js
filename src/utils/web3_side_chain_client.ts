@@ -12,6 +12,8 @@ export class Web3SideChainClient {
 
     abiHelper: ABIManager;
 
+    logger = new Logger();
+
     constructor(config: IPlasmaClientConfig) {
         config = config || {} as any;
         config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
@@ -25,6 +27,7 @@ export class Web3SideChainClient {
         this.parent = new (Web3Client as any)(config.parent.provider, this.logger);
         this.child = new (Web3Client as any)(config.child.provider, this.logger);
 
+        this.logger.enableLog(config.log);
     }
 
     init() {
@@ -50,8 +53,6 @@ export class Web3SideChainClient {
         return this.abiHelper.getAddress("Main.POSContracts");
     }
 
-    get logger() {
-        return new Logger();
-    }
+
 }
 

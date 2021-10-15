@@ -12,6 +12,7 @@ const execute = async () => {
   const goerliERC720 = plasma.parent.erc721;
 
   const client = new PlasmaClient({
+    log: true,
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -59,16 +60,18 @@ const execute = async () => {
   // console.log("tx", tx);
   // const result = await client.isCheckPointed('0x41162584974896bfc96d91e7ce72009373cd31acabe92024950831ee7b8067c0')
   // console.log("result", result);
-  const tx = await goerliERC720Token.withdrawChallengeFaster(
+  const tx = await goerliERC720Token.withdrawChallenge(
     '0x41162584974896bfc96d91e7ce72009373cd31acabe92024950831ee7b8067c0',
     {
       // nonce: 11793,
       // gasPrice: '1000',
       // gas: 10000,
       // returnTransaction: true,
-      // gasPrice: '4000000000'
+      // gasPrice: '4000000000',
+      returnTransaction: true
     }
   );
+  return console.log("tx", tx)
   console.log("txHash", await tx.getTransactionHash());
   console.log("txReceipt", await tx.getReceipt());
 }

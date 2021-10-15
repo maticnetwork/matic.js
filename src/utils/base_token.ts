@@ -154,7 +154,7 @@ export class BaseToken {
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
         const defaultConfig = isParent ? this.parentDefaultConfig : this.childDefaultConfig;
         txConfig = Object.assign(defaultConfig, (txConfig || {}));
-        console.log("txConfig", txConfig, isParent, isWrite);
+        this.client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const client = isParent ? this.client.parent :
             this.client.child;
         const estimateGas = (config: ITransactionConfig) => {
@@ -170,7 +170,7 @@ export class BaseToken {
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
                 !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
-            console.log("calculated");
+            this.client.logger.log("options filled");
             txConfig.gasLimit = isParent ? Number(gasLimit) + EXTRA_GAS_FOR_PROXY_CALL : gasLimit;
             txConfig.gasPrice = gasPrice;
             txConfig.nonce = nonce;

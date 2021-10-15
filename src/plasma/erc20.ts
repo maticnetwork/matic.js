@@ -21,9 +21,12 @@ export class ERC20 extends PlasmaToken {
         }, client, contracts);
     }
 
-    getPredicate(): Promise<BaseContract> {
-        return this['getPredicate_']("erc721Predicate", "ERC721Predicate");
+    getPredicate() {
+        return this['getPredicate_'](
+            "erc20Predicate", "ERC20Predicate"
+        );
     }
+
 
     getBalance(userAddress: string, option: ITransactionOption = {}) {
         return this.getContract().then(contract => {

@@ -25,7 +25,6 @@ export class MerkleTree {
                 () => utils.zeros(32)
             )
         );
-        console.log("this.leaves", this.leaves, "leaves", leaves);
         this.layers = [this.leaves];
         this.createHashes(this.leaves);
     }
@@ -35,7 +34,6 @@ export class MerkleTree {
             return false;
         }
 
-        console.log("nodes", nodes);
 
         const treeLevel = [];
         for (let i = 0; i < nodes.length; i += 2) {

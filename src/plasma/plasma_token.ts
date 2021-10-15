@@ -16,7 +16,7 @@ export class PlasmaToken extends BaseToken {
         super(contractParam_, client);
     }
 
-    private getPredicate_(methodName: string, contractName: string): Promise<BaseContract> {
+    protected getPredicate_(methodName: string, contractName: string): Promise<BaseContract> {
         if (this.predicate_) {
             return promiseResolve(this.predicate_);
         }
