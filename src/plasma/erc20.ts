@@ -3,41 +3,26 @@ import { Log_Event_Signature } from "../enums";
 import { BaseContract } from "../abstracts";
 import { IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { BaseToken, Converter, promiseResolve, Web3SideChainClient } from "../utils";
-import { Erc20Predicate } from "./erc20_predicate";
+import { ErcPredicate } from "./erc20_predicate";
+import { PlasmaToken } from "./plasma_token";
 
-
-
-
-export class ERC20 extends BaseToken {
-
-    private predicate_: BaseContract;
-
+export class ERC20 extends PlasmaToken {
 
     constructor(
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient,
-        private contracts_: IPlasmaContracts
+        contracts: IPlasmaContracts
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC20'
-        }, client);
+        }, client, contracts);
     }
 
     getPredicate(): Promise<BaseContract> {
-        if (this.predicate_) {
-            return promiseResolve(this.predicate_);
-        }
-        return this.contracts_.registry.getContract().then(contract => {
-            return contract.method("erc20Predicate").read<string>();
-        }).then(predicateAddress => {
-            return new Erc20Predicate(this.client, predicateAddress).getContract();
-        }).then(contract => {
-            this.predicate_ = contract;
-            return contract;
-        });
+        return this['getPredicate_']("erc721Predicate", "ERC721Predicate");
     }
 
     getBalance(userAddress: string, option: ITransactionOption = {}) {
@@ -123,14 +108,9 @@ export class ERC20 extends BaseToken {
         return this.withdrawChallenge_(burnTxHash, true, option);
     }
 
-    withdrawExit(option?: ITransactionOption) {
-        return this.contracts_.withdrawManager.withdrawExit(
-            this.contractParam.address, option
-        );
+    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+        return this['transferERC20_'](to, amount, option);
     }
 
-    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        return this['transfer_'](to, amount, option);
-    }
 
 }

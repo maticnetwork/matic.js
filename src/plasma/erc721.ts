@@ -1,20 +1,22 @@
-import { BaseToken, Web3SideChainClient } from "../utils";
-import { ITransactionOption } from "../interfaces";
-import { DepositManager } from "./deposit_manager";
+import { BaseToken, Converter, Web3SideChainClient } from "../utils";
+import { IPlasmaContracts, ITransactionOption } from "../interfaces";
+import { PlasmaToken } from "./plasma_token";
+import { Log_Event_Signature } from "../enums";
 
-export class ERC721 extends BaseToken {
+export class ERC721 extends PlasmaToken {
 
     constructor(
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient,
-        public depositManager: DepositManager
+        contracts: IPlasmaContracts
+
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC721'
-        }, client);
+        }, client, contracts);
     }
 
     /**
@@ -64,7 +66,7 @@ export class ERC721 extends BaseToken {
             const method = contract.method(
                 "safeTransferFrom",
                 userAddress,
-                this.depositManager.address,
+                this.contracts_.depositManager.address,
                 tokenId,
             );
 
@@ -72,20 +74,54 @@ export class ERC721 extends BaseToken {
         });
     }
 
-    /**
-     * WRITE
-     * returns burn hash
-     * 
-     * @param tokenId 
-     * @param options 
-     */
-    startWithdrawForNFT(tokenId: number, options: ITransactionOption = {}) {
+    withdrawStart(tokenId: string | number, options: ITransactionOption = {}) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdraw",
-                tokenId,
+                Converter.toHex(tokenId),
             );
             return this.processWrite(method, options);
         });
+    }
+
+    getPredicate() {
+        return this['getPredicate_'](
+            "erc20Predicate", "ERC20Predicate"
+        );
+    }
+
+    private withdrawChallenge_(burnTxHash: string, isFast: boolean, option: ITransactionOption) {
+        return Promise.all([
+            this.getPredicate(),
+            this.contracts_.exitManager.buildPayloadForExit(
+                burnTxHash,
+                Log_Event_Signature.PlasmaErc721WithdrawEventSig,
+                isFast
+            )
+        ]).then(result => {
+            const [predicate, payload] = result;
+            const method = predicate.method(
+                "startExitWithBurntTokens",
+                payload
+            );
+            return this.processWrite(method, option);
+        });
+    }
+
+    withdrawChallenge(burnTxHash: string, option?: ITransactionOption) {
+        return this.withdrawChallenge_(burnTxHash, false, option);
+    }
+
+    withdrawChallengeFaster(burnTxHash: string, option?: ITransactionOption) {
+        return this.withdrawChallenge_(burnTxHash, true, option);
+    }
+
+    transfer(from: string, to: string, tokenId: string, option?: ITransactionOption) {
+        return this.transferERC721_(
+            from,
+            to,
+            tokenId,
+            option
+        );
     }
 }

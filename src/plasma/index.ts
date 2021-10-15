@@ -19,7 +19,7 @@ export class PlasmaClient {
     registry: RegistryContract;
     rootChain: RootChain;
 
-    private getContracts_() {
+    private getContracts__() {
         return {
             depositManager: this.depositManager,
             exitManager: this.exitManager,
@@ -33,7 +33,7 @@ export class PlasmaClient {
             tokenAddress,
             isParent,
             this.client_,
-            this.getContracts_()
+            this.getContracts__()
         );
     }
 
@@ -42,7 +42,7 @@ export class PlasmaClient {
             tokenAddress,
             isParent,
             this.client_,
-            this.depositManager
+            this.getContracts__()
         );
     }
 
@@ -98,7 +98,7 @@ export class PlasmaClient {
     }
 
     ether(isParent?) {
-        return new Ether(isParent, this.client_, this.getContracts_());
+        return new Ether(isParent, this.client_, this.getContracts__());
     }
 
     withdrawExit(tokens: string | string[], option?: ITransactionOption) {

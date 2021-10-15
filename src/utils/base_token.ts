@@ -193,12 +193,26 @@ export class BaseToken {
         }
     }
 
-    private transfer_(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    protected transferERC20_(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "transfer",
                 to,
                 Converter.toHex(amount)
+            );
+            return this.processWrite(
+                method, option
+            );
+        });
+    }
+
+    protected transferERC721_(from: string, to: string, tokenId: string, option: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "transferFrom",
+                from,
+                to,
+                tokenId
             );
             return this.processWrite(
                 method, option
