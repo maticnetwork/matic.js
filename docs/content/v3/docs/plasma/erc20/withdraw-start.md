@@ -4,6 +4,8 @@ Keywords: 'plasma client, erc20, approveMax, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# withdrawStart
+
 `withdrawStart` method can be used to initiate the withdraw process which will burn the specified amount on child token.
 
 ```

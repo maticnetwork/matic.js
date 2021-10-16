@@ -4,7 +4,9 @@ Keywords: 'pos client, erc20, getBalance, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-`erc20` provides `getBalance` method which can be used to get the balance of user. It is available on both child and parent token.
+# getBalance
+
+`getBalance` method can be used to get the balance of user. It is available on both child and parent token.
 
 ```
 const erc20Token = plasmaClient.erc20(<token address>);

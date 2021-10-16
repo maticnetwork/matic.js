@@ -4,7 +4,9 @@ Keywords: 'POS client, erc20, transfer, polygon, sdk'
 Description: 'Transfer erc20 POS tokens'
 ---
 
-`erc20` provides `transfer` method which can be used to transfer amount from one address to another address.
+# transfer
+
+`transfer` method can be used to transfer amount from one address to another address.
 
 ```
 const erc20Token = posClient.erc20(<token address>);

@@ -4,6 +4,8 @@ Keywords: 'maticjs, pos client, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# POSClient
+
 `maticjs` provides `POSClient` to interact with **POS** Bridge.
 
 ```

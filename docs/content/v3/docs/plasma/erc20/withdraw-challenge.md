@@ -4,6 +4,8 @@ Keywords: 'plasma client, erc20, withdrawChallenge, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# withdrawChallenge
+
 `withdrawChallenge` method can be used to challenge the withdraw process. The challenge period is 7 days.
 
 **Note**- withdrawStart transaction must be checkpointed in order to challenge the withdraw.

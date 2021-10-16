@@ -126,6 +126,10 @@ module.exports = [
       //   text: 'ERC721',
       //   url: 'erc721',
       // },
+      {
+        text: 'isCheckPointed',
+        url: 'is-check-pointed',
+      },
     ],
   },
 ]

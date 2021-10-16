@@ -4,6 +4,8 @@ Keywords: 'maticjs, plasma client, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# PlasmaClient
+
 `maticjs` provides `plasmaClient` to interact with **Plasma** Bridge.
 
 ```

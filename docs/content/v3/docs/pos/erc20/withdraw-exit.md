@@ -4,6 +4,8 @@ Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# withdrawExit
+
 `withdrawExit` method can be used to exit the withdraw process by using the txHash from `withdrawStart` method.
 
 **Note**- withdrawStart transaction must be checkpointed in order to exit the withdraw.
