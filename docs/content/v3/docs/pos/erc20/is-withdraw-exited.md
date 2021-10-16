@@ -4,6 +4,8 @@ Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# isWithdrawExited
+
 `isWithdrawExited` method can be used to know whether the withdraw has been exited or not.
 
 ```

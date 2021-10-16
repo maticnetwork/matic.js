@@ -4,6 +4,8 @@ Keywords: 'pos client, erc20, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# ERC20
+
 `POSClient` provides `erc20` method which helps you to interact with a erc20 token.
 
 ## Child token
