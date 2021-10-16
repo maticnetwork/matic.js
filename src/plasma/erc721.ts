@@ -127,7 +127,7 @@ export class ERC721 extends PlasmaToken {
         return this.withdrawChallenge_(burnTxHash, true, option);
     }
 
-    transfer(from: string, to: string, tokenId: string, option?: ITransactionOption) {
+    transfer(tokenId: string, from: string, to: string, option?: ITransactionOption) {
         return this.transferERC721_(
             from,
             to,

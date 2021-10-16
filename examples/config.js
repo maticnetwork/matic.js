@@ -48,6 +48,6 @@ module.exports = {
     address: process.env.FROM
   },
   user2: {
-    address: '<paste address here>', // Your address
+    address:  process.env.USER2_ADDRESS
   },
 }

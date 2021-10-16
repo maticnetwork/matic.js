@@ -3,6 +3,7 @@ import { Log_Event_Signature } from "../enums";
 import { IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { BaseToken, Converter, promiseResolve, Web3SideChainClient } from "../utils";
 import { PlasmaToken } from "./plasma_token";
+import { MATIC_TOKEN_ADDRESS_ON_POLYGON } from "../constant";
 
 export class ERC20 extends PlasmaToken {
 
@@ -111,8 +112,11 @@ export class ERC20 extends PlasmaToken {
         return this.withdrawChallenge_(burnTxHash, true, option);
     }
 
-    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        return this['transferERC20_'](to, amount, option);
+    transfer(to: string, amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+        if (this.contractParam.address === MATIC_TOKEN_ADDRESS_ON_POLYGON) {
+            option.to = to;
+        }
+        return this.transferERC20_(to, amount, option);
     }
 
 

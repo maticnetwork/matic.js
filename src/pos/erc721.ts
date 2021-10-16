@@ -304,4 +304,23 @@ export class ERC721 extends POSToken {
         });
     }
 
+    /**
+     * tranfer to another user
+     *
+     * @param {string} tokenId
+     * @param {string} from
+     * @param {string} to
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC721
+     */
+    transfer(tokenId: string, from: string, to: string, option?: ITransactionOption) {
+        return this.transferERC721_(
+            from,
+            to,
+            tokenId,
+            option
+        );
+    }
+
 }

@@ -168,8 +168,17 @@ export class ERC20 extends POSToken {
         });
     }
 
+    /**
+     * transfer amount to another user
+     *
+     * @param {string} to
+     * @param {TYPE_AMOUNT} amount
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        return this['transfer_'](to, amount, option);
+        return this.transferERC20_(to, amount, option);
     }
 
 }

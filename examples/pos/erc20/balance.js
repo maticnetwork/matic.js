@@ -1,13 +1,18 @@
-const { getMaticPOSClient, from, pos } = require('../../utils')
+const { pos } = require('../../config');
+const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
-  try {
-    const maticPOSClient = getMaticPOSClient()
-    const tx = await maticPOSClient.balanceOfERC20(from, pos.child.erc20, {})
+  const client = await getPOSClient();
+  const erc720Token = client.erc20(pos.child.erc20);
 
-    console.log(tx) // eslint-disable-line
-  } catch (e) {
-    console.error(e) // eslint-disable-line
-  }
+  const result = await erc720Token.getBalance(from);
+
+  console.log("result", result);
+
 }
-execute().then(() => process.exit(0))
+execute().then(() => {
+}).catch(err => {
+  console.error("err", err);
+}).finally(_ => {
+  process.exit(0);
+})

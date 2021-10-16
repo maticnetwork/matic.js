@@ -7,6 +7,7 @@ import { RegistryContract } from "./registry";
 import { Ether } from "./ether";
 import { ExitManager, RootChain } from "../pos";
 import { WithdrawManager } from "./withdraw_manager";
+import { MATIC_TOKEN_ADDRESS_ON_POLYGON } from "../constant";
 
 export class PlasmaClient extends BridgeClient {
 
@@ -28,6 +29,7 @@ export class PlasmaClient extends BridgeClient {
     }
 
     erc20(tokenAddress: string, isParent?: boolean) {
+        tokenAddress = tokenAddress ? tokenAddress : MATIC_TOKEN_ADDRESS_ON_POLYGON;
         return new ERC20(
             tokenAddress,
             isParent,
