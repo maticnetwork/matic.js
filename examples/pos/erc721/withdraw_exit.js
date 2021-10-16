@@ -5,7 +5,7 @@ const execute = async () => {
   const client = await getPOSClient();
   const erc721Token = client.erc721(pos.parent.erc721, true);
 
-  const result = await erc721Token.approve('7398876539240070972813129052603381458438854170847909423332655142373978982692');
+  const result = await erc721Token.withdrawExit('0xf63a77f1b6435e5d89c8958d80b658350f74409188a8efa17d51044d3a32e1d0');
 
   const txHash = await result.getTransactionHash();
   console.log("txHash", txHash);

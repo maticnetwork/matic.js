@@ -33,6 +33,7 @@ async function getPlasmaClient(network = 'testnet', version = 'mumbai') {
 
 const getPOSClient = (network = 'testnet', version = 'mumbai') => {
   const posClient = new POSClient({
+    log: true,
     network: network,
     version: version,
     child: {

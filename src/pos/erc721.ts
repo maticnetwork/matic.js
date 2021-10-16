@@ -60,7 +60,7 @@ export class ERC721 extends POSToken {
      * @returns
      * @memberof ERC721
      */
-    getTokenIdForUserByIndex(index: number, userAddress: string, options?: ITransactionOption) {
+    getTokenIdAtIndexForUser(index: number, userAddress: string, options?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "tokenOfOwnerByIndex",
@@ -72,13 +72,24 @@ export class ERC721 extends POSToken {
         });
     }
 
-    getAllTokens(userAddress: string) {
-        return this.getTokensCount(userAddress).then(balance => {
-            balance = Number(balance);
+    /**
+     * get all tokens for user
+     *
+     * @param {string} userAddress
+     * @param {*} [limit=Infinity]
+     * @returns
+     * @memberof ERC721
+     */
+    getAllTokens(userAddress: string, limit = Infinity) {
+        return this.getTokensCount(userAddress).then(count => {
+            count = Number(count);
+            if (count > limit) {
+                count = limit;
+            }
             const promises = [];
-            for (let i = 0; i < balance; i++) {
+            for (let i = 0; i < count; i++) {
                 promises.push(
-                    this.getTokenIdForUserByIndex(i, userAddress)
+                    this.getTokenIdAtIndexForUser(i, userAddress)
                 );
             }
             return Promise.all(

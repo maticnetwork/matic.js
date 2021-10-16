@@ -7,6 +7,7 @@ import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { TYPE_AMOUNT } from "../types";
+import { ErrorHelper } from "./error_helper";
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionConfig;
@@ -44,6 +45,8 @@ export class BaseToken {
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
+        this.validateTxOption__(option);
+
         this.client.logger.log("process write");
         return this.createTransactionConfig(
             {
@@ -68,6 +71,8 @@ export class BaseToken {
     }
 
     protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+        this.validateTxOption__(option);
+
         this.client.logger.log("process write");
         const isParent = this.contractParam.isParent;
         const client = this.getClient_(isParent);
@@ -91,6 +96,7 @@ export class BaseToken {
     }
 
     protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+        this.validateTxOption__(option);
         this.client.logger.log("process read");
         const isParent = this.contractParam.isParent;
         const client = this.getClient_(isParent);
@@ -111,7 +117,14 @@ export class BaseToken {
             });
     }
 
+    private validateTxOption__(option: ITransactionOption) {
+        if (typeof option !== 'object' || Array.isArray(option)) {
+            new ErrorHelper(ERROR_TYPE.TransactionOptionNotObject).throw();
+        }
+    }
+
     protected processRead<T>(method: BaseContractMethod, option: ITransactionOption = {}): Promise<T> {
+        this.validateTxOption__(option);
         this.client.logger.log("process read");
         return this.createTransactionConfig(
             {

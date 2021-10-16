@@ -46,7 +46,7 @@ export class ERC721 extends PlasmaToken {
     * @returns
     * @memberof ERC721
     */
-   getTokenIdForUserByIndex(index: number, userAddress: string, options?: ITransactionOption) {
+   getTokenIdAtIndexForUser(index: number, userAddress: string, options?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "tokenOfOwnerByIndex",
@@ -135,7 +135,7 @@ export class ERC721 extends PlasmaToken {
             const promises = [];
             for (let i = 0; i < balance; i++) {
                 promises.push(
-                    this.getTokenIdForUserByIndex(i, userAddress)
+                    this.getTokenIdAtIndexForUser(i, userAddress)
                 );
             }
             return Promise.all(

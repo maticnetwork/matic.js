@@ -3,9 +3,9 @@ const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
     const client = await getPOSClient();
-    const erc721Token = client.erc721(pos.child.erc721);
+    const erc721Token = client.erc721(pos.parent.erc721, true);
 
-    const result = await erc721Token.getAllTokens(from, 2);
+    const result = await erc721Token.getTokenIdAtIndexForUser(0, from);
 
     console.log("result", result);
 }
