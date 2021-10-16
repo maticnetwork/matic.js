@@ -1,9 +1,7 @@
 import { TYPE_AMOUNT } from "../types";
 import { Log_Event_Signature } from "../enums";
-import { BaseContract } from "../abstracts";
 import { IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { BaseToken, Converter, promiseResolve, Web3SideChainClient } from "../utils";
-import { ErcPredicate } from "./erc20_predicate";
 import { PlasmaToken } from "./plasma_token";
 
 export class ERC20 extends PlasmaToken {
@@ -39,7 +37,7 @@ export class ERC20 extends PlasmaToken {
     }
 
     approve(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
-        this.checkForParent("approve");
+        this.checkForRoot_("approve");
         return this.getContract().then(contract => {
             const method = contract.method(
                 "approve",
@@ -59,7 +57,7 @@ export class ERC20 extends PlasmaToken {
     }
 
     deposit(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption = {}) {
-        this.checkForParent("deposit");
+        this.checkForRoot_("deposit");
 
         return this.contracts_.depositManager.getContract().then(contract => {
             const method = contract.method(
@@ -73,7 +71,7 @@ export class ERC20 extends PlasmaToken {
     }
 
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForChild("withdrawStart");
+        this.checkForChild_("withdrawStart");
 
 
         return this.getContract().then(tokenContract => {
@@ -86,6 +84,8 @@ export class ERC20 extends PlasmaToken {
     }
 
     private withdrawChallenge_(burnTxHash: string, isFast: boolean, option: ITransactionOption) {
+        this.checkForRoot_("withdrawChallenge");
+
         return Promise.all([
             this.getPredicate(),
             this.contracts_.exitManager.buildPayloadForExit(

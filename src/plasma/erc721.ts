@@ -37,16 +37,16 @@ export class ERC721 extends PlasmaToken {
         });
     }
 
-   /**
-    * returns token id on supplied index for user
-    *
-    * @param {number} index
-    * @param {string} userAddress
-    * @param {ITransactionOption} [options]
-    * @returns
-    * @memberof ERC721
-    */
-   getTokenIdAtIndexForUser(index: number, userAddress: string, options?: ITransactionOption) {
+    /**
+     * returns token id on supplied index for user
+     *
+     * @param {number} index
+     * @param {string} userAddress
+     * @param {ITransactionOption} [options]
+     * @returns
+     * @memberof ERC721
+     */
+    getTokenIdAtIndexForUser(index: number, userAddress: string, options?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "tokenOfOwnerByIndex",
@@ -66,6 +66,8 @@ export class ERC721 extends PlasmaToken {
      * @param options 
      */
     safeDeposit(tokenId: string | number, userAddress: string, options?: ITransactionOption) {
+        this.checkForRoot_("safeDeposit");
+
         return this.getContract().then(contract => {
             const method = contract.method(
                 "safeTransferFrom",
@@ -79,6 +81,9 @@ export class ERC721 extends PlasmaToken {
     }
 
     withdrawStart(tokenId: string | number, options: ITransactionOption = {}) {
+        this.checkForChild_("withdrawStart");
+
+
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdraw",
@@ -94,6 +99,8 @@ export class ERC721 extends PlasmaToken {
 
 
     private withdrawChallenge_(burnTxHash: string, isFast: boolean, option: ITransactionOption) {
+        this.checkForRoot_("withdrawChallenge");
+
         return Promise.all([
             this.getPredicate(),
             this.contracts_.exitManager.buildPayloadForExit(

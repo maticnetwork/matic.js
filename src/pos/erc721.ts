@@ -99,6 +99,8 @@ export class ERC721 extends POSToken {
     }
 
     isApproved(tokenId: string, option?: ITransactionOption) {
+        this.checkForRoot_("isApproved");
+
         return this.getContract().then(contract => {
             const method = contract.method(
                 "getApproved",
@@ -114,6 +116,8 @@ export class ERC721 extends POSToken {
     }
 
     isApprovedAll(userAddress: string, option?: ITransactionOption) {
+        this.checkForRoot_("isApprovedAll");
+
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
             const method = contract.method(
@@ -127,6 +131,8 @@ export class ERC721 extends POSToken {
     }
 
     approve(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
+        this.checkForRoot_("approve");
+
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
             const method = contract.method(
@@ -139,6 +145,8 @@ export class ERC721 extends POSToken {
     }
 
     approveAll(option?: ITransactionOption) {
+        this.checkForRoot_("approveAll");
+
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
             const method = contract.method(
@@ -152,6 +160,8 @@ export class ERC721 extends POSToken {
 
 
     deposit(tokenId: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
+        this.checkForRoot_("deposit");
+
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(tokenId)],
             ['uint256'],
@@ -165,6 +175,8 @@ export class ERC721 extends POSToken {
     }
 
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
+        this.checkForRoot_("depositMany");
+
         const tokensInUint256 = this.validateMany__(tokenIds);
 
         const amountInABI = this.client.parent.encodeParameters(
@@ -180,6 +192,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStart(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
+        this.checkForChild_("withdrawStart");
+
+
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdraw",
@@ -190,6 +205,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
+        this.checkForChild_("withdrawStartMany");
+
+
         const tokensInUint256 = this.validateMany__(tokenIds);
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -201,6 +219,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot_("withdrawExit");
+
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721Transfer,
@@ -213,6 +234,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot_("withdrawExitMany");
+
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721BatchTransfer,
@@ -225,6 +249,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot_("withdrawExitFaster");
+
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721Transfer,
@@ -237,6 +264,9 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitFasterMany(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot_("withdrawExitFasterMany");
+
+
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721BatchTransfer,

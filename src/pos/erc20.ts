@@ -35,9 +35,8 @@ export class ERC20 extends POSToken {
     }
 
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        if (!this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "approve").throw();
-        }
+        this.checkForRoot_("approve");
+
         return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
             const method = contract.method(
@@ -66,9 +65,8 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        if (!this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "deposit").throw();
-        }
+        this.checkForRoot_("deposit");
+
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(amount)],
@@ -91,9 +89,8 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        if (this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnChild, "withdrawStart").throw();
-        }
+        this.checkForChild_("withdrawStart");
+
 
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -113,9 +110,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
-        if (!this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "withdrawExit").throw();
-        }
+        this.checkForRoot_("withdrawExit");
 
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,
@@ -139,9 +134,8 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
-        if (!this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, "withdrawExitFaster").throw();
-        }
+        this.checkForRoot_("withdrawExitFaster");
+
 
         return this.exitManager.buildPayloadForExit(
             burnTransactionHash,

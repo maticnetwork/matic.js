@@ -192,20 +192,6 @@ export class BaseToken {
         return txConfig;
     }
 
-    protected checkForParent(methodName) {
-        if (!this.contractParam.isParent) {
-            this.client.logger.error(
-                ERROR_TYPE.AllowedOnRoot, methodName
-            ).throw();
-        }
-    }
-
-    protected checkForChild(methodName) {
-        if (this.contractParam.isParent) {
-            this.client.logger.error(ERROR_TYPE.AllowedOnChild, methodName).throw();
-        }
-    }
-
     protected transferERC20_(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -231,6 +217,18 @@ export class BaseToken {
                 method, option
             );
         });
+    }
+
+    protected checkForRoot_(methodName) {
+        if (!this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnRoot, methodName).throw();
+        }
+    }
+
+    protected checkForChild_(methodName) {
+        if (this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnChild, "withdrawStart").throw();
+        }
     }
 
 }
