@@ -24,12 +24,66 @@ export class ERC721 extends POSToken {
         }, client, rootChainManager, exitManager);
     }
 
-    private validateMany_(tokenIds) {
+    private validateMany__(tokenIds) {
         if (tokenIds.length > 20) {
             throw new Error('can not process more than 20 tokens');
         }
         return tokenIds.map(tokenId => {
             return Converter.toHex(tokenId);
+        });
+    }
+
+    /**
+     * get tokens count for the user
+     *
+     * @param {string} userAddress
+     * @param {ITransactionOption} [options]
+     * @returns
+     * @memberof ERC721
+     */
+    getTokensCount(userAddress: string, options?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "balanceOf",
+                userAddress
+            );
+            return this.processRead<number>(method, options);
+        });
+    }
+
+    /**
+     * returns token id on supplied index for user
+     *
+     * @param {number} index
+     * @param {string} userAddress
+     * @param {ITransactionOption} [options]
+     * @returns
+     * @memberof ERC721
+     */
+    getTokenIdForUserByIndex(index: number, userAddress: string, options?: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "tokenOfOwnerByIndex",
+                userAddress,
+                index
+            );
+
+            return this.processRead<string>(method, options);
+        });
+    }
+
+    getAllTokens(userAddress: string) {
+        return this.getTokensCount(userAddress).then(balance => {
+            balance = Number(balance);
+            const promises = [];
+            for (let i = 0; i < balance; i++) {
+                promises.push(
+                    this.getTokenIdForUserByIndex(i, userAddress)
+                );
+            }
+            return Promise.all(
+                promises
+            );
         });
     }
 
@@ -100,7 +154,7 @@ export class ERC721 extends POSToken {
     }
 
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
-        const tokensInUint256 = this.validateMany_(tokenIds);
+        const tokensInUint256 = this.validateMany__(tokenIds);
 
         const amountInABI = this.client.parent.encodeParameters(
             tokensInUint256,
@@ -125,7 +179,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
-        const tokensInUint256 = this.validateMany_(tokenIds);
+        const tokensInUint256 = this.validateMany__(tokenIds);
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdrawBatch",

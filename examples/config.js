@@ -1,4 +1,9 @@
-// Testnet V3 config
+const dotenv = require('dotenv');
+const path = require('path');
+const env = dotenv.config({
+  path: path.join(__dirname, '.env')
+});
+
 module.exports = {
   plasma: {
     parent: {
@@ -15,10 +20,10 @@ module.exports = {
     depositManagerAddress: '0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989', // An address for a DepositManager contract in Ropsten testnet
   },
   parent: {
-    rpc: '<goerli RPC>',
+    rpc: process.env.ROOT_RPC,
   },
   child: {
-    rpc: 'https://rpc-mumbai.matic.today', // This is the MATIC testnet RPC
+    rpc: process.env.MATIC_RPC || 'https://rpc-mumbai.matic.today',
   },
   pos: {
     parent: {
@@ -37,8 +42,10 @@ module.exports = {
   SYNCER_URL: 'https://testnetv3-syncer.api.matic.network/api/v1', // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
   WATCHER_URL: 'https://testnetv3-watcher.api.matic.network/api/v1', // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
   user1: {
-    privateKey: '<paste your private key here>', // A sample private key prefix with `0x`
-    address: '<paste address belonging to private key here>', // Your address
+    // '<paste your private key here>' - A sample private key prefix with `0x`
+    privateKey: process.env.PRIVATE_KEY,
+    //'<paste address belonging to private key here>', Your address
+    address: process.env.FROM
   },
   user2: {
     address: '<paste address here>', // Your address

@@ -26,7 +26,8 @@
     "lint:fix": "tslint src/**/*.ts --fix",
     "test": "npm run build:pack && cd test && npm run install:lib:test",
     "debug": "npm run build:pack && cd test && npm run install:lib:debug",
-    "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
+    "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000",
+    "install:example": "cd examples && npm i ../maticnetwork-maticjs-3.0.0-beta.2.tgz --no-save"
   },
   "repository": {
     "type": "git",

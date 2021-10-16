@@ -5,11 +5,13 @@
   "main": "config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "link:lib":"npm link @maticnetwork/maticjs"
+    "link:lib": "npm link @maticnetwork/maticjs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@maticnetwork/maticjs": "^2.0.44"
+    "@maticnetwork/maticjs": "^2.0.44",
+    "@maticnetwork/maticjs-web3": "^0.1.0",
+    "dotenv": "^10.0.0"
   }
 }
