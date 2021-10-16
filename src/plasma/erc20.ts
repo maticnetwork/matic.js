@@ -37,6 +37,27 @@ export class ERC20 extends PlasmaToken {
         });
     }
 
+    /**
+     * get allowance for user
+     *
+     * @param {string} userAddress
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    getAllowance(userAddress: string, option?: ITransactionOption) {
+        this.checkForRoot_("getAllowance");
+
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "allowance",
+                userAddress,
+                this.contracts_.depositManager.address,
+            );
+            return this.processRead<string>(method, option);
+        });
+    }
+
     approve(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         this.checkForRoot_("approve");
         return this.getContract().then(contract => {

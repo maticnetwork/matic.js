@@ -34,6 +34,28 @@ export class ERC20 extends POSToken {
         });
     }
 
+    /**
+     * get allowance of user
+     *
+     * @param {string} userAddress
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    getAllowance(userAddress: string, option?: ITransactionOption) {
+        this.checkForRoot_("getAllowance");
+
+        return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
+            const [predicateAddress, contract] = result;
+            const method = contract.method(
+                "allowance",
+                userAddress,
+                predicateAddress,
+            );
+            return this.processRead<string>(method, option);
+        });
+    }
+
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
         this.checkForRoot_("approve");
 
