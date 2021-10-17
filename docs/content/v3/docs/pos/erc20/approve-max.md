@@ -9,7 +9,7 @@ Description: 'Get started with maticjs'
 `approveMax` method can be used to approve max amount on root token.
 
 ```
-const erc20RootToken = posClient.erc20(<root token address>);
+const erc20RootToken = posClient.erc20(<root token address>, true);
 
 const requireAmount = 100;
 

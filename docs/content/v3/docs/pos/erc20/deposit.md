@@ -9,7 +9,7 @@ Description: 'Get started with maticjs'
 `deposit` method can be used to deposit required amount from root token to child token.
 
 ```
-const erc20RootToken = posClient.erc20(<root token address>);
+const erc20RootToken = posClient.erc20(<root token address>, true);
 
 //deposit 100 to user address
 const result = await erc20Token.deposit(100, <user address>);

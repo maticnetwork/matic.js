@@ -6,10 +6,10 @@ Description: 'Get started with maticjs'
 
 # withdrawStart
 
-`withdrawStart` method can be used to initiate the withdraw process which will burn the specified amount on child token.
+`withdrawStart` method can be used to initiate the withdraw process which will burn the specified amount on polygon chain.
 
 ```
-const erc20RootToken = posClient.erc20(<root token address>);
+const erc20Token = posClient.erc20(<token address>);
 
 // start withdraw process for 100 amount
 const result = await erc20Token.withdrawStart(100);

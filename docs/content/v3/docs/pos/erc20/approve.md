@@ -11,7 +11,7 @@ Description: 'Get started with maticjs'
 approve is required in order to deposit amount on polygon chain.
 
 ```
-const erc20RootToken = posClient.erc20(<root token address>);
+const erc20RootToken = posClient.erc20(<root token address>,true);
 
 // approve 100 amount
 const approveResult = await erc20Token.approve(100);

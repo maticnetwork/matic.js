@@ -11,7 +11,7 @@ Description: 'Get started with maticjs'
 **Note**- withdrawStart transaction must be checkpointed in order to exit the withdraw.
 
 ```
-const erc20RootToken = posClient.erc20(<root token address>);
+const erc20RootToken = posClient.erc20(<root token address>, true);
 
 // start withdraw process for 100 amount
 const result = await erc20Token.withdrawExit(<burn tx hash>);
