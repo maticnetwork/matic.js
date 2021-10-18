@@ -1,7 +1,7 @@
 ---
-Title: 'API Type'
-Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
-Description: 'Get started with maticjs'
+Title: 'API Architecture'
+Keywords: 'api architecture, api type, read, write, polygon'
+Description: 'The library follows common api architecture throughout'
 ---
 
 The library follows common api architecture throughout and APIS are divided into two type -
