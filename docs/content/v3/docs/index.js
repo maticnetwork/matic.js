@@ -210,4 +210,20 @@ module.exports = [
       },
     ],
   },
+  {
+    text: 'Advanced',
+    url: 'advanced',
+    expand: true,
+
+    children: [
+      {
+        text: 'ABIManager',
+        url: 'abi-manager',
+      },
+      {
+        text: 'Plugin',
+        url: 'plugin',
+      },
+    ],
+  },
 ]
