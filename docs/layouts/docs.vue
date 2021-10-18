@@ -118,6 +118,9 @@ export default {
       if (path[length - 1] === '/') {
         path = path.substr(0, length - 1)
       }
+      if (this.isRouteWithIndex) {
+        path += '/index'
+      }
       return path
     },
     spllitedUrl() {
@@ -133,6 +136,12 @@ export default {
           if (val.url === splittedPath[routeIndex]) {
             ++routeIndex
             if (val.url === lastPath) {
+              // debugger
+              const targetParent = links[index]
+              if (targetParent.children) {
+                ++this.childDepth
+                this.isRouteWithIndex = true
+              }
               if (isChild) {
                 this.childActiveUrlIndex = index
               } else {
@@ -178,6 +187,7 @@ export default {
       searchResults: [],
       searchText: '',
       childDepth: 0,
+      isRouteWithIndex: false,
     }
   },
   fetch() {

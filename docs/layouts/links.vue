@@ -4,7 +4,7 @@
       <a
         class="row content-v-center b-tutorial__links__item ripple"
         :class="{
-          'b-tutorial__links__item--active': isActiveUrl(url(link, relative)),
+          'b-tutorial__links__item--active': isActiveUrl(link),
         }"
         :href="removeSlash(url(link, relative))"
       >
@@ -54,7 +54,6 @@ export default {
   methods: {
     getActiveUrlIndex(links, depth) {
       if (depth > 0) {
-        // debugger;
         const spllitedUrl = this.spllitedUrl
         const targetPath = spllitedUrl[spllitedUrl.length - 1 - depth]
         return links.findIndex(q => q.url.match(new RegExp(targetPath, 'i')))
@@ -62,7 +61,17 @@ export default {
       return 0
     },
     isActiveUrl(link) {
-      return this.childDepth <= 0 && link === this.$route.path
+      // return this.childDepth <= 0 && link === this.$route.path
+      link = this.url(link, this.relative)
+      const result = link === this.$route.path
+      if (process.browser && result) {
+        const className = 'b-tutorial__links__item--active'
+        const el = document.querySelectorAll(`.${className}`)
+        if (el.length > 1) {
+          el[0].classList.remove(className)
+        }
+      }
+      return result
     },
     removeSlash(value) {
       // remove / from string at 0th index
