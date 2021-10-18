@@ -23,6 +23,10 @@ module.exports = [
     ],
   },
   {
+    text: 'API Architecture',
+    url: 'api-architecture',
+  },
+  {
     text: 'POS',
     url: 'pos',
     children: [
