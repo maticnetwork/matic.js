@@ -58,7 +58,8 @@ export default {
         const targetPath = spllitedUrl[spllitedUrl.length - 1 - depth]
         return links.findIndex(q => q.url.match(new RegExp(targetPath, 'i')))
       }
-      return 0
+      // debugger
+      return depth >= 0 ? 0 : -1
     },
     isActiveUrl(link) {
       // return this.childDepth <= 0 && link === this.$route.path
