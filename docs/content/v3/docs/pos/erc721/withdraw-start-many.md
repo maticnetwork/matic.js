@@ -11,7 +11,7 @@ Description: 'Get started with maticjs'
 ```
 const erc721Token = posClient.erc721(<root token address>);
 
-const result = await erc721Token.withdrawStart([<token id1>, <token id2>]);
+const result = await erc721Token.withdrawStartMany([<token id1>, <token id2>]);
 
 const txHash = await result.getTransactionHash();
 
