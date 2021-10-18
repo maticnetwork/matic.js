@@ -6,7 +6,7 @@ Description: 'Get started with maticjs'
 
 ## Setup
 
-In order to support multiple ethereum library - maticjs provides plugin for different ethers library.
+In order to support multiple web3 library - maticjs provides plugin for different web3 library.
 
 Currently two library are supported -
 

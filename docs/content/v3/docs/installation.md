@@ -31,7 +31,7 @@ matic.js supports two popular library -
 #### Web3.js
 
 ```
-npm install @maticnetwork/maticjs-web3js
+npm install @maticnetwork/maticjs-web3
 ```
 
 #### ethers

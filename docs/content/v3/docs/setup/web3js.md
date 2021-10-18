@@ -11,7 +11,7 @@ In order to use web3.js, you need to first install web3js plugin.
 ### Installation
 
 ```
-npm install @maticnetwork/maticjs-web3js
+npm install @maticnetwork/maticjs-web3
 
 ```
 
@@ -19,8 +19,8 @@ npm install @maticnetwork/maticjs-web3js
 
 ```
 import { use } from '@maticnetwork/maticjs'
-import Web3Plugin from '@maticnetwork/maticjs-web3js'
+import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 
 // install web3 plugin
-use(Web3Plugin)
+use(Web3ClientPlugin)
 ```

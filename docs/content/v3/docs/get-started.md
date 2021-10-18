@@ -19,7 +19,7 @@ npm install @maticnetwork/maticjs
 **Install the web3js plugin**
 
 ```bash
-npm install @maticnetwork/maticjs-web3js
+npm install @maticnetwork/maticjs-web3
 ```
 
 ## Setup
@@ -32,7 +32,7 @@ import Web3Plugin from '@maticnetwork/maticjs-web3js'
 use(Web3Plugin)
 ```
 
-In the above code we are intiating maticjs with `web3js` but you can similarly initiate with `ethers`.
+In the above code we are intiating maticjs with `web3js` but you can similarly initiate with [ethers](v3/docs/setup/ethers).
 
 ## POS client
 
