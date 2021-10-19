@@ -1,6 +1,6 @@
 ---
-Title: 'withdrawStart erc721 POS  '
-Keywords: 'pos client, erc721, withdrawStart, polygon, sdk'
+Title: 'withdrawStart erc721 plasma  '
+Keywords: 'plasma client, erc721, withdrawStart, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
@@ -9,7 +9,7 @@ Description: 'Get started with maticjs'
 `withdrawStart` method can be used to initiate the withdraw process which will burn the specified token on polygon chain.
 
 ```
-const erc721Token = posClient.erc721(<token address>);
+const erc721Token = plasmaClient.erc721(<token address>);
 
 const result = await erc721Token.withdrawStart(<token id>);
 
