@@ -48,6 +48,10 @@ module.exports = [
             url: 'approve-max',
           },
           {
+            text: 'getAllowance',
+            url: 'get-allowance',
+          },
+          {
             text: 'deposit',
             url: 'deposit',
           },
@@ -179,6 +183,10 @@ module.exports = [
             url: 'approve-max',
           },
           {
+            text: 'getAllowance',
+            url: 'get-allowance',
+          },
+          {
             text: 'transfer',
             url: 'transfer',
           },
@@ -200,15 +208,61 @@ module.exports = [
           },
         ],
       },
-      // {
-      //   text: 'ERC721',
-      //   url: 'erc721',
-      // },
+      {
+        text: 'ERC721',
+        url: 'erc721',
+        children: [
+          {
+            text: 'getTokensCount',
+            url: 'get-tokens-count',
+          },
+          {
+            text: 'getTokenIdAtIndexForUser',
+            url: 'get-token-id-at-index-for-user',
+          },
+          {
+            text: 'getAllTokens',
+            url: 'get-all-tokens',
+          },
+          {
+            text: 'safeDeposit',
+            url: 'safe-deposit',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawChallenge',
+            url: 'withdraw-challenge',
+          },
+          {
+            text: 'withdrawChallengeFaster',
+            url: 'withdraw-challenge-faster',
+          },
+          // {
+          //   text: 'withdrawExit',
+          //   url: 'withdraw-exit',
+          // },
+          // {
+          //   text: 'withdrawExitFaster',
+          //   url: 'withdraw-exit-faster',
+          // },
+          {
+            text: 'transfer',
+            url: 'transfer',
+          },
+        ],
+      },
       {
         text: 'isCheckPointed',
         url: 'is-check-pointed',
       },
     ],
+  },
+  {
+    text: 'setProofApi',
+    url: 'set-proof-api',
   },
   {
     text: 'Advanced',
