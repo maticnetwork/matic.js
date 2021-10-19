@@ -23,6 +23,10 @@ module.exports = [
     ],
   },
   {
+    text: 'API Architecture',
+    url: 'api-architecture',
+  },
+  {
     text: 'POS',
     url: 'pos',
     children: [
@@ -42,6 +46,10 @@ module.exports = [
           {
             text: 'approveMax',
             url: 'approve-max',
+          },
+          {
+            text: 'getAllowance',
+            url: 'get-allowance',
           },
           {
             text: 'deposit',
@@ -69,10 +77,84 @@ module.exports = [
           },
         ],
       },
-      // {
-      //   text: 'ERC721',
-      //   url: 'erc721',
-      // },
+      {
+        text: 'ERC721',
+        url: 'erc721',
+        children: [
+          {
+            text: 'getTokensCount',
+            url: 'get-tokens-count',
+          },
+          {
+            text: 'getTokenIdAtIndexForUser',
+            url: 'get-token-id-at-index-for-user',
+          },
+          {
+            text: 'getAllTokens',
+            url: 'get-all-tokens',
+          },
+          {
+            text: 'isApproved',
+            url: 'is-approved',
+          },
+          {
+            text: 'isApprovedAll',
+            url: 'is-approved-all',
+          },
+          {
+            text: 'approve',
+            url: 'approve',
+          },
+          {
+            text: 'approveAll',
+            url: 'approve-all',
+          },
+          {
+            text: 'deposit',
+            url: 'deposit',
+          },
+          {
+            text: 'depositMany',
+            url: 'deposit-many',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawStartMany',
+            url: 'withdraw-start-many',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'withdrawExitMany',
+            url: 'withdraw-exit-many',
+          },
+          {
+            text: 'withdrawExitFaster',
+            url: 'withdraw-exit-faster',
+          },
+          {
+            text: 'withdrawExitFasterMany',
+            url: 'withdraw-exit-faster-many',
+          },
+          {
+            text: 'isExited',
+            url: 'is-exited',
+          },
+          {
+            text: 'isExitedMany',
+            url: 'is-exited-many',
+          },
+          {
+            text: 'transfer',
+            url: 'transfer',
+          },
+        ],
+      },
       {
         text: 'isCheckPointed',
         url: 'is-check-pointed',
@@ -101,6 +183,10 @@ module.exports = [
             url: 'approve-max',
           },
           {
+            text: 'getAllowance',
+            url: 'get-allowance',
+          },
+          {
             text: 'transfer',
             url: 'transfer',
           },
@@ -122,10 +208,76 @@ module.exports = [
           },
         ],
       },
-      // {
-      //   text: 'ERC721',
-      //   url: 'erc721',
-      // },
+      {
+        text: 'ERC721',
+        url: 'erc721',
+        children: [
+          {
+            text: 'getTokensCount',
+            url: 'get-tokens-count',
+          },
+          {
+            text: 'getTokenIdAtIndexForUser',
+            url: 'get-token-id-at-index-for-user',
+          },
+          {
+            text: 'getAllTokens',
+            url: 'get-all-tokens',
+          },
+          {
+            text: 'safeDeposit',
+            url: 'safe-deposit',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawChallenge',
+            url: 'withdraw-challenge',
+          },
+          {
+            text: 'withdrawChallengeFaster',
+            url: 'withdraw-challenge-faster',
+          },
+          // {
+          //   text: 'withdrawExit',
+          //   url: 'withdraw-exit',
+          // },
+          // {
+          //   text: 'withdrawExitFaster',
+          //   url: 'withdraw-exit-faster',
+          // },
+          {
+            text: 'transfer',
+            url: 'transfer',
+          },
+        ],
+      },
+      {
+        text: 'isCheckPointed',
+        url: 'is-check-pointed',
+      },
+    ],
+  },
+  {
+    text: 'setProofApi',
+    url: 'set-proof-api',
+  },
+  {
+    text: 'Advanced',
+    url: 'advanced',
+    expand: true,
+
+    children: [
+      {
+        text: 'ABIManager',
+        url: 'abi-manager',
+      },
+      {
+        text: 'Plugin',
+        url: 'plugin',
+      },
     ],
   },
 ]

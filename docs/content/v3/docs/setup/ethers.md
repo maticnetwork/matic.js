@@ -6,7 +6,7 @@ Description: 'Get started with maticjs'
 
 ## Setup ethers
 
-In order to use web3.js, you need to first install web3js plugin.
+In order to use ethers, you need to first install ethers plugin.
 
 ### Installation
 
