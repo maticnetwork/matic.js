@@ -7,6 +7,7 @@ import { RegistryContract } from "./registry";
 import { ExitManager, RootChain } from "../pos";
 import { WithdrawManager } from "./withdraw_manager";
 import { MATIC_TOKEN_ADDRESS_ON_POLYGON } from "../constant";
+import { TYPE_AMOUNT } from "../types";
 
 export class PlasmaClient extends BridgeClient {
 
@@ -104,6 +105,13 @@ export class PlasmaClient extends BridgeClient {
         return this.withdrawManager.withdrawExit(
             tokens, option
         );
+    }
+
+    depositEther(amount: TYPE_AMOUNT, option: ITransactionOption) {
+        return new ERC20(
+            '', true, this.client_,
+            this.getContracts__()
+        )['depositEther__'](amount, option);
     }
 
 }

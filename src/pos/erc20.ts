@@ -103,7 +103,7 @@ export class ERC20 extends POSToken {
         );
     }
 
-    depositEther(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+    private depositEther__(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         this.checkForRoot_("depositEther");
       
 

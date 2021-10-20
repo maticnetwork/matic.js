@@ -93,7 +93,7 @@ export class ERC20 extends PlasmaToken {
         });
     }
 
-    depositEther(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+    private depositEther__(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         this.checkForRoot_("depositEther");
 
         return this.contracts_.depositManager.getContract().then(contract => {
