@@ -29,7 +29,9 @@ export class PlasmaClient extends BridgeClient {
     }
 
     erc20(tokenAddress: string, isParent?: boolean) {
-        tokenAddress = tokenAddress ? tokenAddress : MATIC_TOKEN_ADDRESS_ON_POLYGON;
+        tokenAddress = tokenAddress == null && !isParent ?
+            MATIC_TOKEN_ADDRESS_ON_POLYGON : tokenAddress;
+            
         return new ERC20(
             tokenAddress,
             isParent,

@@ -13,16 +13,11 @@ export class Ether extends BaseToken {
     ) {
 
         super({
-            isParent: true,
+            isParent: isParent,
             address: null as any,
             name: null as any,
             bridgeType: null
         }, client);
-    }
-
-    getBalance(userAddress: string, option: ITransactionOption = {}) {
-        option.from = userAddress;
-        return this.readTransaction(option);
     }
 
     deposit(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {

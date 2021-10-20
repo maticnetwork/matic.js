@@ -150,4 +150,6 @@ export class ERC721 extends PlasmaToken {
             );
         });
     }
+
+    
 }

@@ -278,7 +278,7 @@ export class ERC721 extends POSToken {
         });
     }
 
-    isExited(txHash: string) {
+    isWithdrawExited(txHash: string) {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
@@ -291,7 +291,7 @@ export class ERC721 extends POSToken {
         });
     }
 
-    isExitedMany(txHash: string) {
+    isWithdrawExitedMany(txHash: string) {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
