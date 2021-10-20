@@ -142,12 +142,12 @@ module.exports = [
             url: 'withdraw-exit-faster-many',
           },
           {
-            text: 'isExited',
-            url: 'is-exited',
+            text: 'isWithdrawExited',
+            url: 'is-withdraw-exited',
           },
           {
-            text: 'isExitedMany',
-            url: 'is-exited-many',
+            text: 'isWithdrawExitedMany',
+            url: 'is-withdraw-exited-many',
           },
           {
             text: 'transfer',
