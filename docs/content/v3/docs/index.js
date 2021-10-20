@@ -159,6 +159,10 @@ module.exports = [
         text: 'isCheckPointed',
         url: 'is-check-pointed',
       },
+      {
+        text: 'depositEther',
+        url: 'deposit-ether',
+      },
     ],
   },
   {
@@ -257,6 +261,10 @@ module.exports = [
       {
         text: 'withdrawExit',
         url: 'withdraw-exit',
+      },
+      {
+        text: 'depositEther',
+        url: 'deposit-ether',
       },
     ],
   },
