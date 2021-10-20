@@ -13,10 +13,10 @@ It is fast because it generates proof in backend. The backend can be configured 
 **Note**- withdrawStart transaction must be checkpointed in order to challenge the withdraw.
 
 ```
-const erc20Token = plasmaClient.erc20(<token address>);
+const erc20Token = plasmaClient.erc20(<token address>, true);
 
 // start withdraw process for 100 amount
-const result = await erc20Token.withdrawExitFaster(<burn tx hash>);
+const result = await erc20Token.withdrawChallengeFaster(<burn tx hash>);
 
 const txHash = await result.getTransactionHash();
 

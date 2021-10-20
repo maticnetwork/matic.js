@@ -11,7 +11,7 @@ Description: 'Get started with maticjs'
 **Note**- withdrawStart transaction must be checkpointed in order to challenge the withdraw.
 
 ```
-const erc20Token = plasmaClient.erc20(<token address>);
+const erc20Token = plasmaClient.erc20(<token address>, true);
 
 const result = await erc20Token.withdrawChallenge(<burn tx hash>);
 
