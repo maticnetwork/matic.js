@@ -33,6 +33,9 @@ export class ErrorHelper implements IError {
             case ERROR_TYPE.ProofAPINotSet:
                 errMsg = `Proof api is not set, please set it using "setProofApi"`;
                 break;
+            case ERROR_TYPE.BurnTxNotCheckPointed:
+                errMsg = `Burn transaction has not been checkpointed as yet`;
+                break;
             default:
                 if (!this.type) {
                     this.type = ERROR_TYPE.Unknown;

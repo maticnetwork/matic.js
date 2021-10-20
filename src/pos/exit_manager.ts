@@ -1,6 +1,5 @@
 import { RootChain } from "./root_chain";
 import { Converter, ProofUtil } from "../utils";
-import assert from "assert";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
 import { ITransactionReceipt } from "../interfaces";
@@ -237,10 +236,10 @@ export class ExitManager {
         const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
         const block = await this.maticClient_.getBlockWithTransaction(receipt.blockNumber);
 
-        assert.ok(
-            new BN(lastChildBlock).gte(new BN(receipt.blockNumber)),
-            'Burn transaction has not been checkpointed as yet'
-        );
+        if (!this.isCheckPointed_({ lastChildBlock: lastChildBlock, txBlockNumber: receipt.blockNumber })) {
+            this.maticClient_.logger.error(ERROR_TYPE.BurnTxNotCheckPointed).throw();
+        }
+
 
         const receiptProof: any = await ProofUtil.getReceiptProof(
             receipt,
