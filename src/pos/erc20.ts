@@ -5,6 +5,7 @@ import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitManager } from "./exit_manager";
 import { Log_Event_Signature, ERROR_TYPE } from "../enums";
+import { MAX_AMOUNT } from "..";
 
 export class ERC20 extends POSToken {
 
@@ -72,7 +73,7 @@ export class ERC20 extends POSToken {
 
     approveMax(option?: ITransactionOption) {
         return this.approve(
-            '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+            MAX_AMOUNT
             , option
         );
     }
