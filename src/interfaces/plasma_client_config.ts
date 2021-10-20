@@ -6,4 +6,5 @@ export interface IPlasmaClientConfig extends IBaseClientConfig {
     withdrawManager?: string;
     registry?: string;
     rootChain?: string;
+    erc20Predicate?: string;
 }

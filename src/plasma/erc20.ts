@@ -92,6 +92,16 @@ export class ERC20 extends PlasmaToken {
         });
     }
 
+    depositEther(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+        return this.contracts_.depositManager.getContract().then(contract => {
+            option.value = Converter.toHex(amount);
+            const method = contract.method(
+                "depositEther",
+            );
+            return this.processWrite(method, option);
+        });
+    }
+
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
         this.checkForChild_("withdrawStart");
 
@@ -139,6 +149,7 @@ export class ERC20 extends PlasmaToken {
         }
         return this.transferERC20_(to, amount, option);
     }
+    
 
 
 }

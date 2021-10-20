@@ -4,7 +4,6 @@ import { BridgeClient, Web3SideChainClient } from "../utils";
 import { IPlasmaClientConfig, IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 import { RegistryContract } from "./registry";
-import { Ether } from "./ether";
 import { ExitManager, RootChain } from "../pos";
 import { WithdrawManager } from "./withdraw_manager";
 import { MATIC_TOKEN_ADDRESS_ON_POLYGON } from "../constant";
@@ -19,35 +18,6 @@ export class PlasmaClient extends BridgeClient {
     registry: RegistryContract;
     rootChain: RootChain;
 
-    private getContracts__() {
-        return {
-            depositManager: this.depositManager,
-            exitManager: this.exitManager,
-            registry: this.registry,
-            withdrawManager: this.withdrawManager
-        } as IPlasmaContracts;
-    }
-
-    erc20(tokenAddress: string, isParent?: boolean) {
-        tokenAddress = tokenAddress == null && !isParent ?
-            MATIC_TOKEN_ADDRESS_ON_POLYGON : tokenAddress;
-            
-        return new ERC20(
-            tokenAddress,
-            isParent,
-            this.client_,
-            this.getContracts__()
-        );
-    }
-
-    erc721(tokenAddress: string, isParent?: boolean) {
-        return new ERC721(
-            tokenAddress,
-            isParent,
-            this.client_,
-            this.getContracts__()
-        );
-    }
 
     constructor(config: IPlasmaClientConfig) {
         super();
@@ -100,8 +70,34 @@ export class PlasmaClient extends BridgeClient {
         });
     }
 
-    ether(isParent?) {
-        return new Ether(isParent, this.client_, this.getContracts__());
+    private getContracts__() {
+        return {
+            depositManager: this.depositManager,
+            exitManager: this.exitManager,
+            registry: this.registry,
+            withdrawManager: this.withdrawManager
+        } as IPlasmaContracts;
+    }
+
+    erc20(tokenAddress: string, isParent?: boolean) {
+        tokenAddress = tokenAddress == null && !isParent ?
+            MATIC_TOKEN_ADDRESS_ON_POLYGON : tokenAddress;
+
+        return new ERC20(
+            tokenAddress,
+            isParent,
+            this.client_,
+            this.getContracts__()
+        );
+    }
+
+    erc721(tokenAddress: string, isParent?: boolean) {
+        return new ERC721(
+            tokenAddress,
+            isParent,
+            this.client_,
+            this.getContracts__()
+        );
     }
 
     withdrawExit(tokens: string | string[], option?: ITransactionOption) {
