@@ -240,14 +240,10 @@ module.exports = [
             text: 'withdrawChallengeFaster',
             url: 'withdraw-challenge-faster',
           },
-          // {
-          //   text: 'withdrawExit',
-          //   url: 'withdraw-exit',
-          // },
-          // {
-          //   text: 'withdrawExitFaster',
-          //   url: 'withdraw-exit-faster',
-          // },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
           {
             text: 'transfer',
             url: 'transfer',
@@ -257,6 +253,10 @@ module.exports = [
       {
         text: 'isCheckPointed',
         url: 'is-check-pointed',
+      },
+      {
+        text: 'withdrawExit',
+        url: 'withdraw-exit',
       },
     ],
   },

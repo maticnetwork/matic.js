@@ -1,6 +1,6 @@
 ---
-Title: 'withdraw exit erc721 POS '
-Keywords: 'pos client, erc721, withdrawExit, polygon, sdk'
+Title: 'withdraw exit Plasma'
+Keywords: 'plasma client, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
@@ -9,12 +9,12 @@ Description: 'Get started with maticjs'
 `withdrawExit` method can be used to exit the withdraw process once challenge period has been completed.
 
 ```
-const erc20RootToken = plasmaClient.erc721(<root token address>, true);
-
-const result = await erc20Token.withdrawExit();
+const result = plasmaClient.withdrawExit(<token | tokens[]>);
 
 const txHash = await result.getTransactionHash();
 
 const txReceipt = await result.getReceipt();
 
 ```
+
+You can also exit for multiple tokens by providing tokens list in array.
