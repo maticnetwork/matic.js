@@ -7,4 +7,5 @@ export interface IPlasmaClientConfig extends IBaseClientConfig {
     registry?: string;
     rootChain?: string;
     erc20Predicate?: string;
+    erc721Predicate?: string;
 }

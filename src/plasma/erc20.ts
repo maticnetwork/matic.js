@@ -22,7 +22,7 @@ export class ERC20 extends PlasmaToken {
 
     getPredicate() {
         return this['getPredicate_'](
-            "erc20Predicate", "ERC20Predicate"
+            "erc20Predicate", "ERC20Predicate", this.client.config.erc20Predicate
         );
     }
 

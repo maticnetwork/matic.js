@@ -94,7 +94,11 @@ export class ERC721 extends PlasmaToken {
     }
 
     getPredicate() {
-        return this['getPredicate_']("erc721Predicate", "ERC721Predicate");
+        return this.getPredicate_(
+            "erc721Predicate",
+            "ERC721Predicate",
+            this.client.config.erc721Predicate
+        );
     }
 
 
@@ -151,5 +155,5 @@ export class ERC721 extends PlasmaToken {
         });
     }
 
-    
+
 }

@@ -16,18 +16,24 @@ export class PlasmaToken extends BaseToken {
         super(contractParam_, client);
     }
 
-    protected getPredicate_(methodName: string, contractName: string): Promise<BaseContract> {
+    protected getPredicate_(methodName: string, contractName: string, predicateAddress: string): Promise<BaseContract> {
         if (this.predicate_) {
             return promiseResolve(this.predicate_);
         }
-        return this.contracts_.registry.getContract().then(contract => {
-            return contract.method(
-                methodName
-            ).read<string>();
-        }).then(predicateAddress => {
+        const getPredicateAddress = () => {
+            if (predicateAddress) {
+                return promiseResolve<string>(predicateAddress);
+            }
+            return this.contracts_.registry.getContract().then(contract => {
+                return contract.method(
+                    methodName
+                ).read<string>();
+            });
+        };
+        getPredicateAddress().then(address => {
             return new ErcPredicate(
                 this.client,
-                predicateAddress,
+                address,
                 contractName
             ).getContract();
         }).then(contract => {
