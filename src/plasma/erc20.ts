@@ -94,6 +94,8 @@ export class ERC20 extends PlasmaToken {
     }
 
     depositEther(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+        this.checkForRoot_("depositEther");
+
         return this.contracts_.depositManager.getContract().then(contract => {
             option.value = Converter.toHex(amount);
             const method = contract.method(
