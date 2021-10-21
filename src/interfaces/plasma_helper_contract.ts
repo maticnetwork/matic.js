@@ -6,6 +6,6 @@ import { DepositManager } from "../plasma/deposit_manager";
 export interface IPlasmaContracts {
     depositManager: DepositManager;
     registry: RegistryContract;
-    exitManager: ExitUtil;
+    exitUtil: ExitUtil;
     withdrawManager: WithdrawManager;
 }

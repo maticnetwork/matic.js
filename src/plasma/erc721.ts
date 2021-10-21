@@ -107,7 +107,7 @@ export class ERC721 extends PlasmaToken {
 
         return Promise.all([
             this.getPredicate(),
-            this.contracts_.exitManager.buildPayloadForExit(
+            this.contracts_.exitUtil.buildPayloadForExit(
                 burnTxHash,
                 Log_Event_Signature.PlasmaErc721WithdrawEventSig,
                 isFast

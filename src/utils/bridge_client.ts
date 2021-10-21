@@ -1,7 +1,7 @@
 import { ExitUtil } from "../pos";
 
 export class BridgeClient {
-    exitManager: ExitUtil;
+    exitUtil: ExitUtil;
 
     /**
      * check whether a txHash is checkPointed 
@@ -11,7 +11,7 @@ export class BridgeClient {
      * @memberof BridgeClient
      */
     isCheckPointed(txHash: string) {
-        return this.exitManager.isCheckPointed(
+        return this.exitUtil.isCheckPointed(
             txHash
         );
     }

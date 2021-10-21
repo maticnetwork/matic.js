@@ -49,7 +49,7 @@ export class POSClient extends BridgeClient {
                 config.rootChain,
             );
 
-            this.exitManager = new ExitUtil(
+            this.exitUtil = new ExitUtil(
                 this.client_.child,
                 this.rootChain,
                 config.requestConcurrency
@@ -65,7 +65,7 @@ export class POSClient extends BridgeClient {
             isParent,
             this.client_,
             this.rootChainManager,
-            this.exitManager
+            this.exitUtil
         );
     }
 
@@ -75,7 +75,7 @@ export class POSClient extends BridgeClient {
             isParent,
             this.client_,
             this.rootChainManager,
-            this.exitManager
+            this.exitUtil
         );
     }
 
@@ -83,7 +83,7 @@ export class POSClient extends BridgeClient {
         return new ERC20(
             '', true, this.client_,
             this.rootChainManager,
-            this.exitManager
+            this.exitUtil
         )['depositEther__'](amount, option);
     }
 }

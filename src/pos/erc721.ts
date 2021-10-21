@@ -14,14 +14,14 @@ export class ERC721 extends POSToken {
         isParent: boolean,
         client: Web3SideChainClient,
         rootChainManager: RootChainManager,
-        exitManager: ExitUtil
+        exitUtil: ExitUtil
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC721',
             bridgeType: 'pos'
-        }, client, rootChainManager, exitManager);
+        }, client, rootChainManager, exitUtil);
     }
 
     private validateMany__(tokenIds) {
@@ -222,7 +222,7 @@ export class ERC721 extends POSToken {
         this.checkForRoot_("withdrawExit");
 
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721Transfer,
             false
@@ -237,7 +237,7 @@ export class ERC721 extends POSToken {
         this.checkForRoot_("withdrawExitMany");
 
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721BatchTransfer,
             false
@@ -252,7 +252,7 @@ export class ERC721 extends POSToken {
         this.checkForRoot_("withdrawExitFaster");
 
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721Transfer,
             true
@@ -267,7 +267,7 @@ export class ERC721 extends POSToken {
         this.checkForRoot_("withdrawExitFasterMany");
 
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721BatchTransfer,
             true
@@ -282,7 +282,7 @@ export class ERC721 extends POSToken {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
-        return this.exitManager.getExitHash(
+        return this.exitUtil.getExitHash(
             txHash, Log_Event_Signature.Erc721Transfer
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(
@@ -295,7 +295,7 @@ export class ERC721 extends POSToken {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
-        return this.exitManager.getExitHash(
+        return this.exitUtil.getExitHash(
             txHash, Log_Event_Signature.Erc721BatchTransfer
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(

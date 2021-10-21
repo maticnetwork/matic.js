@@ -56,7 +56,7 @@ export class PlasmaClient extends BridgeClient {
                 client.config.depositManager
             );
 
-            this.exitManager = new ExitUtil(
+            this.exitUtil = new ExitUtil(
                 client.child,
                 this.rootChain,
                 config.requestConcurrency
@@ -74,7 +74,7 @@ export class PlasmaClient extends BridgeClient {
     private getContracts__() {
         return {
             depositManager: this.depositManager,
-            exitManager: this.exitManager,
+            exitUtil: this.exitUtil,
             registry: this.registry,
             withdrawManager: this.withdrawManager
         } as IPlasmaContracts;

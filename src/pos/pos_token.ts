@@ -11,7 +11,7 @@ export class POSToken extends BaseToken {
         contractParam: IContractInitParam,
         client: Web3SideChainClient,
         protected rootChainManager: RootChainManager,
-        protected exitManager: ExitUtil
+        protected exitUtil: ExitUtil
     ) {
         super(contractParam, client);
     }

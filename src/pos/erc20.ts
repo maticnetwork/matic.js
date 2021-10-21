@@ -15,14 +15,14 @@ export class ERC20 extends POSToken {
         isParent: boolean,
         client: Web3SideChainClient,
         rootChainManager: RootChainManager,
-        exitManager: ExitUtil
+        exitUtil: ExitUtil
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC20',
             bridgeType: 'pos'
-        }, client, rootChainManager, exitManager);
+        }, client, rootChainManager, exitUtil);
     }
 
     getBalance(userAddress: string, option?: ITransactionOption) {
@@ -145,7 +145,7 @@ export class ERC20 extends POSToken {
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot_("withdrawExit");
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc20Transfer,
             false
@@ -170,7 +170,7 @@ export class ERC20 extends POSToken {
         this.checkForRoot_("withdrawExitFaster");
 
 
-        return this.exitManager.buildPayloadForExit(
+        return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc20Transfer,
             true
@@ -192,7 +192,7 @@ export class ERC20 extends POSToken {
         if (!txHash) {
             throw new Error(`txHash not provided`);
         }
-        return this.exitManager.getExitHash(
+        return this.exitUtil.getExitHash(
             txHash, Log_Event_Signature.Erc20Transfer
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(
