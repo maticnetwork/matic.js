@@ -2,12 +2,12 @@ import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
 import { BaseToken, BridgeClient, Web3SideChainClient } from "../utils";
 import { IPOSClientConfig, ITransactionOption } from "../interfaces";
-import { ExitManager } from "./exit_manager";
+import { ExitUtil } from "./exit_util";
 import { RootChain } from "./root_chain";
 import { ERC721 } from "./erc721";
 import { TYPE_AMOUNT } from "../types";
 
-export * from "./exit_manager";
+export * from "./exit_util";
 export * from "./root_chain_manager";
 export * from "./root_chain";
 
@@ -49,7 +49,7 @@ export class POSClient extends BridgeClient {
                 config.rootChain,
             );
 
-            this.exitManager = new ExitManager(
+            this.exitManager = new ExitUtil(
                 this.client_.child,
                 this.rootChain,
                 config.requestConcurrency

@@ -3,7 +3,7 @@ import { RootChainManager } from "./root_chain_manager";
 import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
-import { ExitManager } from "./exit_manager";
+import { ExitUtil } from "./exit_util";
 import { Log_Event_Signature } from "../enums";
 
 export class ERC721 extends POSToken {
@@ -14,7 +14,7 @@ export class ERC721 extends POSToken {
         isParent: boolean,
         client: Web3SideChainClient,
         rootChainManager: RootChainManager,
-        exitManager: ExitManager
+        exitManager: ExitUtil
     ) {
         super({
             isParent,

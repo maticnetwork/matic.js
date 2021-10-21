@@ -4,7 +4,7 @@ import { BridgeClient, Web3SideChainClient } from "../utils";
 import { IPlasmaClientConfig, IPlasmaContracts, ITransactionOption } from "../interfaces";
 import { DepositManager } from "./deposit_manager";
 import { RegistryContract } from "./registry";
-import { ExitManager, RootChain } from "../pos";
+import { ExitUtil, RootChain } from "../pos";
 import { WithdrawManager } from "./withdraw_manager";
 import { MATIC_TOKEN_ADDRESS_ON_POLYGON } from "../constant";
 import { TYPE_AMOUNT } from "../types";
@@ -56,7 +56,7 @@ export class PlasmaClient extends BridgeClient {
                 client.config.depositManager
             );
 
-            this.exitManager = new ExitManager(
+            this.exitManager = new ExitUtil(
                 client.child,
                 this.rootChain,
                 config.requestConcurrency

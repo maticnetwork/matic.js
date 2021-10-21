@@ -1,7 +1,7 @@
 import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
 import { IContractInitParam } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
-import { ExitManager } from "./exit_manager";
+import { ExitUtil } from "./exit_util";
 
 export class POSToken extends BaseToken {
 
@@ -11,7 +11,7 @@ export class POSToken extends BaseToken {
         contractParam: IContractInitParam,
         client: Web3SideChainClient,
         protected rootChainManager: RootChainManager,
-        protected exitManager: ExitManager
+        protected exitManager: ExitUtil
     ) {
         super(contractParam, client);
     }

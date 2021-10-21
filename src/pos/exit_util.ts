@@ -19,7 +19,7 @@ interface IRootBlockInfo {
     blockNumber: BN;
 }
 
-export class ExitManager {
+export class ExitUtil {
     private maticClient_: BaseWeb3Client;
 
     rootChain: RootChain;
