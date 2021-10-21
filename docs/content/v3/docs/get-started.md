@@ -26,10 +26,10 @@ npm install @maticnetwork/maticjs-web3
 
 ```javascript
 import { use } from '@maticnetwork/maticjs'
-import Web3Plugin from '@maticnetwork/maticjs-web3js'
+import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 
 // install web3 plugin
-use(Web3Plugin)
+use(Web3ClientPlugin)
 ```
 
 In the above code we are intiating maticjs with `web3js` but you can similarly initiate with [ethers](v3/docs/setup/ethers).
@@ -40,11 +40,11 @@ In the above code we are intiating maticjs with `web3js` but you can similarly i
 
 ```
 import { POSClient,use } from "@maticnetwork/maticjs"
-import Web3Plugin from "@maticnetwork/maticjs-web3js"
+import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 import HDWalletProvider from "@truffle/hdwallet-provider"
 
 // install web3 plugin
-use(Web3Plugin);
+use(Web3ClientPlugin);
 
 const posClient = new POSClient({
     network: 'testnet',
