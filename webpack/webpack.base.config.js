@@ -1,7 +1,9 @@
 const path = require('path')
 const copyPlugin = require('copy-webpack-plugin')
+const SmartBannerPlugin = require('smart-banner-webpack-plugin');
+const banner = require('./licence');
 
-const libraryName = 'matic'
+const libraryName = 'Matic'
 exports.libraryName = libraryName;
 let mode = process.env.NODE_ENV
 const isProd = mode === 'production'
@@ -15,7 +17,7 @@ exports.default = {
     target: 'web',
     output: {
         path: path.join(__dirname, "./../dist"),
-        filename: `${libraryName}.umd${isProd ? '.min' : ''}.js`,
+        filename: `${libraryName.toLowerCase()}.umd${isProd ? '.min' : ''}.js`,
         library: libraryName,
         libraryTarget: 'umd',
         // libraryExport: 'default',
@@ -30,16 +32,7 @@ exports.default = {
             },
         ],
     },
-    externals: {
-        'ethereumjs-util': 'ethereumjs-util',
-        'bn.js': 'bn.js',
-        'eth-sig-util': 'eth-sig-util',
-        'ethereumjs-block': 'ethereumjs-block',
-        'ethereumjs-tx': 'ethereumjs-tx',
-        'ethereumjs-util': 'ethereumjs-util',
-        'merkle-patricia-tree': 'merkle-patricia-tree',
-        'node-fetch': 'node-fetch',
-    },
+   
     resolve: {
         modules: [path.resolve(__dirname, 'src'), 'node_modules'],
         extensions: ['.json', '.js', '.ts', 'tsx'],
@@ -51,5 +44,6 @@ exports.default = {
         new copyPlugin({
             patterns: [{ from: path.resolve('build_helper', 'npm.export.js'), to: '' }],
         }),
+        new SmartBannerPlugin(banner)
     ],
 }
