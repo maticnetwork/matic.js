@@ -70,15 +70,4 @@ export class RootChain extends BaseToken {
         return ans.mul(CHECKPOINT_INTERVAL);
     }
 
-    deposit(userAddress: string, tokenAddress: string, depositData: string, option?: ITransactionOption) {
-        return this.method(
-            "depositFor",
-            userAddress,
-            tokenAddress,
-            depositData
-        ).then(method => {
-            return this.processWrite(method, option);
-        });
-    }
-
 }

@@ -1,5 +1,4 @@
 export * from "./plugin";
-export * from "./plasma_client_config";
 export * from "./method";
 export * from "./transaction_config";
 export * from "./send_result";
@@ -16,4 +15,3 @@ export * from "./rpc_response_payload";
 export * from "./map_promise_option";
 export * from "./base_client_config";
 export * from "./error";
-export * from "./plasma_helper_contract";

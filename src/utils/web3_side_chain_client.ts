@@ -1,5 +1,5 @@
 import { Web3Client } from "../constant";
-import { IPlasmaClientConfig } from "../interfaces";
+import { IPOSClientConfig } from "../interfaces";
 import { BaseWeb3Client } from "../abstracts";
 import { ABIManager } from "../helpers";
 import { Logger } from "./logger";
@@ -8,13 +8,13 @@ export class Web3SideChainClient {
     parent: BaseWeb3Client;
     child: BaseWeb3Client;
 
-    config: IPlasmaClientConfig;
+    config: IPOSClientConfig;
 
     abiHelper: ABIManager;
 
     logger = new Logger();
 
-    constructor(config: IPlasmaClientConfig) {
+    constructor(config: IPOSClientConfig) {
         config = config || {} as any;
         config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
         config.child.defaultConfig = config.child.defaultConfig || {} as any;

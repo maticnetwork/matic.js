@@ -1,4 +1,3 @@
-import { Logger } from "./utils";
 import BN from "bn.js";
 import { BaseWeb3Client } from "./abstracts";
 
@@ -16,5 +15,3 @@ export const BIG_TWO = new BN(2)
 export const CHECKPOINT_INTERVAL = new BN(10000)
 
 export const MAX_AMOUNT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-
-export const MATIC_TOKEN_ADDRESS_ON_POLYGON = '0x0000000000000000000000000000000000001010'
