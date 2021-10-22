@@ -4,7 +4,7 @@
       <button @click="onMenuBtnClick" class="b-menu__hamburger" style="color: white; padding-right: 10px">
         <i class="material-icons">menu</i>
       </button>
-      <a class="row b-menu__icon content-v-center" href="/" title="JsStore Index Page">
+      <a class="row b-menu__icon content-v-center" href="" title="JsStore Index Page">
         <img :src="'logo.svg' | imgPath" alt="MaticJs Logo" />
         <span class="ml-10px">Matic.js</span>
       </a>
