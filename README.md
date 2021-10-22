@@ -12,7 +12,7 @@ We will be improving this library to make all features available like Plasma Fas
 
 ## Docs
 
-https://maticnetwork.github.io/matic.js/docs/
+https://maticnetwork.github.io/matic.js
 
 ## Support
 
