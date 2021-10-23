@@ -10,15 +10,18 @@
     "install:lib:test": "npm run install:lib && npm run test",
     "install:lib:debug": "npm run install:lib && npm run debug",
     "un:lib": "npm un @maticnetwork/maticjs",
-    "test": "cross-env-file -p ./config.json cross-env NODE_ENV=test karma start karma.conf.js",
+    "test": "dotenv cross-env NODE_ENV=test karma start karma.conf.js",
     "test:mocha": "cross-env-file -p ./config.json cross-env NODE_ENV=test mochapack --webpack-config ./webpack.config.test.js --colors ./specs/index.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/mocha": "^9.0.0",
+    "chai": "^3.5.0",
     "cross-env": "^7.0.3",
     "cross-env-file": "^1.0.0",
     "dotenv": "^10.0.0",
+    "dotenv-cli": "^4.0.0",
     "karma": "^6.3.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -26,6 +29,7 @@
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^4.0.2",
+    "mocha": "^8.2.1",
     "puppeteer": "^5.5.0",
     "webpack-cli": "^4.2.0"
   },
