@@ -9,9 +9,9 @@ const from = user1.address;
 const execute = async () => {
   const privateKey = user1.privateKey;
   const mumbaiERC720 = pos.child.erc721;
-  const goerliERC720 = plasma.parent.erc721;
+  const goerliERC720 = pos.parent.erc721;
 
-  const client = new PlasmaClient({
+  const client = new POSClient({
     log: true,
     network: 'testnet',
     version: 'mumbai',
@@ -36,13 +36,7 @@ const execute = async () => {
   // const mumbaiERC720Token = client.erc721('0x33fc58f12a56280503b04ac7911d1eceebce179c');
   const goerliERC20Token = client.erc20(plasma.parent.erc20, true);
 
-  const tx = await goerliERC20Token.approve(104);
-  console.log("txHash", await tx.getTransactionHash());
-  console.log("txReceipt", await tx.getReceipt());
-  return;
-
-  const mumbaiERC721Token = client.erc721(plasma.child.erc721);
-  const goerliERC721Token = client.erc721(plasma.parent.erc721, true);
+  return console.log(await goerliERC20Token.getBalance(from));
 
 
   // const balance = await mumbaiERC720Token.getBalance(
