@@ -16,7 +16,7 @@
     "clean": "rimraf lib dist",
     "build": "npm run build:dev",
     "build:link": "npm run build && npm link",
-    "build:webpack": "npm run lint && webpack --config webpack/webpack.all.config.js",
+    "build:webpack": "npm run lint && npm run clean && webpack --config webpack/webpack.all.config.js",
     "build:pack": "npm run build:dev && npm pack",
     "build:dev": "cross-env NODE_ENV=development npm run build:webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",

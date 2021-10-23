@@ -36,7 +36,7 @@ const execute = async () => {
   // const mumbaiERC720Token = client.erc721('0x33fc58f12a56280503b04ac7911d1eceebce179c');
   const goerliERC20Token = client.erc20(pos.parent.erc20, true);
 
-  return console.log(await goerliERC20Token.getBalance(from));
+  return console.log(await goerliERC20Token.getAllowance(from));
 
 
   // const balance = await mumbaiERC720Token.getBalance(

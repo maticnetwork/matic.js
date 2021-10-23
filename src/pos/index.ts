@@ -1,7 +1,7 @@
 import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
 import { BaseToken, BridgeClient, Web3SideChainClient } from "../utils";
-import { IPOSClientConfig, ITransactionOption } from "../interfaces";
+import { IPOSClientConfig, IPOSContracts, ITransactionOption } from "../interfaces";
 import { ExitUtil } from "./exit_util";
 import { RootChain } from "./root_chain";
 import { ERC721 } from "./erc721";
@@ -64,8 +64,7 @@ export class POSClient extends BridgeClient {
             tokenAddress,
             isParent,
             this.client_,
-            this.rootChainManager,
-            this.exitUtil
+            this.getContracts_.bind(this)
         );
     }
 
@@ -74,16 +73,21 @@ export class POSClient extends BridgeClient {
             tokenAddress,
             isParent,
             this.client_,
-            this.rootChainManager,
-            this.exitUtil
+            this.getContracts_.bind(this)
         );
     }
 
     depositEther(amount: TYPE_AMOUNT, option: ITransactionOption) {
         return new ERC20(
             '', true, this.client_,
-            this.rootChainManager,
-            this.exitUtil
-        )['depositEther__'](amount, option);
+            this.getContracts_,
+        )['depositEther_'](amount, option);
+    }
+
+    private getContracts_() {
+        return {
+            exitUtil: this.exitUtil,
+            rootChainManager: this.rootChainManager
+        } as IPOSContracts;
     }
 }

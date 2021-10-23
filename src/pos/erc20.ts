@@ -6,6 +6,7 @@ import { TYPE_AMOUNT } from "../types";
 import { ExitUtil } from "./exit_util";
 import { Log_Event_Signature } from "../enums";
 import { IPOSClientConfig, MAX_AMOUNT } from "..";
+import { IPOSContracts } from "../interfaces/pos_contracts";
 
 export class ERC20 extends POSToken {
 
@@ -14,15 +15,14 @@ export class ERC20 extends POSToken {
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient<IPOSClientConfig>,
-        rootChainManager: RootChainManager,
-        exitUtil: ExitUtil
+        getContracts: () => IPOSContracts
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC20',
             bridgeType: 'pos'
-        }, client, rootChainManager, exitUtil);
+        }, client, getContracts);
     }
 
     getBalance(userAddress: string, option?: ITransactionOption) {
@@ -103,7 +103,7 @@ export class ERC20 extends POSToken {
         );
     }
 
-    private depositEther__(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+    private depositEther_(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         this.checkForRoot_("depositEther");
 
 

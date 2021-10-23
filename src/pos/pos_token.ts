@@ -2,6 +2,7 @@ import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
 import { IBaseClientConfig, IContractInitParam, IPOSClientConfig } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { ExitUtil } from "./exit_util";
+import { IPOSContracts } from "../interfaces";
 
 export class POSToken extends BaseToken<IPOSClientConfig> {
 
@@ -10,11 +11,23 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
     constructor(
         contractParam: IContractInitParam,
         client: Web3SideChainClient<IPOSClientConfig>,
-        protected rootChainManager: RootChainManager,
-        protected exitUtil: ExitUtil
+        protected getPOSContracts: () => IPOSContracts
     ) {
         super(contractParam, client);
     }
+
+    get rootChainManager() {
+        const contracts = this.getPOSContracts();
+        console.log("contracts", contracts);
+        return contracts.rootChainManager;
+    }
+
+    get exitUtil() {
+        const contracts = this.getPOSContracts();
+        console.log("contracts", contracts);
+        return contracts.exitUtil;
+    }
+
 
     async getPredicateAddress() {
         if (this.predicateAddress) {

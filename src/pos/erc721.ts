@@ -1,4 +1,4 @@
-import { IPOSClientConfig, ITransactionOption } from "../interfaces";
+import { IPOSClientConfig, IPOSContracts, ITransactionOption } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
@@ -13,15 +13,14 @@ export class ERC721 extends POSToken {
         tokenAddress: string,
         isParent: boolean,
         client: Web3SideChainClient<IPOSClientConfig>,
-        rootChainManager: RootChainManager,
-        exitUtil: ExitUtil
+        getContracts: () => IPOSContracts
     ) {
         super({
             isParent,
             address: tokenAddress,
             name: 'ChildERC721',
             bridgeType: 'pos'
-        }, client, rootChainManager, exitUtil);
+        }, client, getContracts);
     }
 
     private validateMany__(tokenIds) {
