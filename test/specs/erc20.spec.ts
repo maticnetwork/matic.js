@@ -30,4 +30,14 @@ describe('ERC20', () => {
         expect(allowance).to.be.an('string');
         expect(Number(allowance)).gte(0);
     })
+
+    it('is check pointed', async () => {
+        const isCheckPointed = await posClient.isCheckPointed('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
+        expect(isCheckPointed).to.be.an('boolean').equal(true);
+    })
+
+    // it('isWithdrawExited', async () => {
+    //     const isExited = await erc20Parent.isWithdrawExited('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
+    //     expect(isExited).to.be.an('boolean').equal(true);
+    // })
 });

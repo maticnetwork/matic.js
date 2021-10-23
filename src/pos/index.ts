@@ -14,10 +14,7 @@ export * from "./root_chain";
 export class POSClient extends BridgeClient {
 
     rootChainManager: RootChainManager;
-    rootChain: RootChain;
     private client_: Web3SideChainClient<IPOSClientConfig>;
-
-
 
     constructor(config: IPOSClientConfig) {
         super();
@@ -44,14 +41,14 @@ export class POSClient extends BridgeClient {
                 config.rootChainManager,
             );
 
-            this.rootChain = new RootChain(
+            const rootChain = new RootChain(
                 this.client_,
                 config.rootChain,
             );
 
             this.exitUtil = new ExitUtil(
                 this.client_.child,
-                this.rootChain,
+                rootChain,
                 config.requestConcurrency
             );
 

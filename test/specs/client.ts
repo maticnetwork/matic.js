@@ -8,6 +8,10 @@ export const erc20 = {
     parent: pos.parent.erc20,
     child: pos.child.erc20
 }
+export const erc721 = {
+    parent: pos.parent.erc721,
+    child: pos.child.erc721
+}
 
 export const posClient = new POSClient({
     log: true,
