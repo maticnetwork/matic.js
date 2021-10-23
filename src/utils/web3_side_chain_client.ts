@@ -14,21 +14,20 @@ export class Web3SideChainClient<T_CONFIG> {
 
     logger = new Logger();
 
-    constructor(config: T_CONFIG) {
+    constructor(config: IBaseClientConfig) {
         config = config || {} as any;
-        const baseConfig: IBaseClientConfig = config as any;
-        baseConfig.parent.defaultConfig = baseConfig.parent.defaultConfig || {} as any;
-        baseConfig.child.defaultConfig = baseConfig.child.defaultConfig || {} as any;
-        this.config = baseConfig as any;
+        config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
+        config.child.defaultConfig = config.child.defaultConfig || {} as any;
+        this.config = config as any;
 
         if (!Web3Client) {
             throw new Error("Web3Client is not set");
         }
 
-        this.parent = new (Web3Client as any)(baseConfig.parent.provider, this.logger);
-        this.child = new (Web3Client as any)(baseConfig.child.provider, this.logger);
+        this.parent = new (Web3Client as any)(config.parent.provider, this.logger);
+        this.child = new (Web3Client as any)(config.child.provider, this.logger);
 
-        this.logger.enableLog(baseConfig.log);
+        this.logger.enableLog(config.log);
     }
 
     init() {
