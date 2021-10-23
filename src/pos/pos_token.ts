@@ -1,15 +1,15 @@
 import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
-import { IContractInitParam } from "../interfaces";
+import { IBaseClientConfig, IContractInitParam, IPOSClientConfig } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { ExitUtil } from "./exit_util";
 
-export class POSToken extends BaseToken {
+export class POSToken extends BaseToken<IPOSClientConfig> {
 
     private predicateAddress: string;
 
     constructor(
         contractParam: IContractInitParam,
-        client: Web3SideChainClient,
+        client: Web3SideChainClient<IPOSClientConfig>,
         protected rootChainManager: RootChainManager,
         protected exitUtil: ExitUtil
     ) {

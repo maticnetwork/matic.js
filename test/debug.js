@@ -2,7 +2,7 @@ const { PlasmaClient, POSClient, use, Web3SideChainClient } = require("@maticnet
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const { user1, plasma, rpc, pos } = require("./config");
+const { user1, rpc, pos } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 
@@ -34,7 +34,7 @@ const execute = async () => {
   console.log("init called");
 
   // const mumbaiERC720Token = client.erc721('0x33fc58f12a56280503b04ac7911d1eceebce179c');
-  const goerliERC20Token = client.erc20(plasma.parent.erc20, true);
+  const goerliERC20Token = client.erc20(pos.parent.erc20, true);
 
   return console.log(await goerliERC20Token.getBalance(from));
 

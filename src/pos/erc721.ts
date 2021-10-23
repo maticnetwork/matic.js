@@ -1,4 +1,4 @@
-import { ITransactionOption } from "../interfaces";
+import { IPOSClientConfig, ITransactionOption } from "../interfaces";
 import { RootChainManager } from "./root_chain_manager";
 import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
@@ -12,7 +12,7 @@ export class ERC721 extends POSToken {
     constructor(
         tokenAddress: string,
         isParent: boolean,
-        client: Web3SideChainClient,
+        client: Web3SideChainClient<IPOSClientConfig>,
         rootChainManager: RootChainManager,
         exitUtil: ExitUtil
     ) {

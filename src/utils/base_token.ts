@@ -1,5 +1,5 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionConfig, ITransactionOption, IContractInitParam } from "../interfaces";
+import { ITransactionConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { Converter, merge } from "../utils";
 import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
@@ -16,15 +16,16 @@ export interface ITransactionConfigParam {
     isParent?: boolean;
 }
 
-export class BaseToken {
+export class BaseToken<T_CLIENT_CONFIG> {
 
     private contract_: BaseContract;
 
     constructor(
         protected contractParam: IContractInitParam,
-        protected client: Web3SideChainClient,
+        protected client: Web3SideChainClient<T_CLIENT_CONFIG>,
     ) {
     }
+
 
     getContract(): Promise<BaseContract> {
         if (this.contract_) {
@@ -157,11 +158,13 @@ export class BaseToken {
     }
 
     protected get parentDefaultConfig() {
-        return this.client.config.parent.defaultConfig;
+        const config: IBaseClientConfig = this.client.config as any;
+        return config.parent.defaultConfig;
     }
 
     protected get childDefaultConfig() {
-        return this.client.config.child.defaultConfig;
+        const config: IBaseClientConfig = this.client.config as any;
+        return config.child.defaultConfig;
     }
 
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {

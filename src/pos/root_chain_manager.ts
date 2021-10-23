@@ -1,9 +1,9 @@
 import { BaseToken, Web3SideChainClient } from "../utils";
-import { ITransactionOption } from "../interfaces";
+import { IPOSClientConfig, ITransactionOption } from "../interfaces";
 
-export class RootChainManager extends BaseToken {
+export class RootChainManager extends BaseToken<IPOSClientConfig> {
 
-    constructor(client_: Web3SideChainClient, address: string) {
+    constructor(client_: Web3SideChainClient<IPOSClientConfig>, address: string) {
         super({
             address: address,
             name: 'RootChainManager',

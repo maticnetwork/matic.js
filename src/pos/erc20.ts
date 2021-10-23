@@ -4,8 +4,8 @@ import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ExitUtil } from "./exit_util";
-import { Log_Event_Signature, ERROR_TYPE } from "../enums";
-import { MAX_AMOUNT } from "..";
+import { Log_Event_Signature } from "../enums";
+import { IPOSClientConfig, MAX_AMOUNT } from "..";
 
 export class ERC20 extends POSToken {
 
@@ -13,7 +13,7 @@ export class ERC20 extends POSToken {
     constructor(
         tokenAddress: string,
         isParent: boolean,
-        client: Web3SideChainClient,
+        client: Web3SideChainClient<IPOSClientConfig>,
         rootChainManager: RootChainManager,
         exitUtil: ExitUtil
     ) {
@@ -105,7 +105,7 @@ export class ERC20 extends POSToken {
 
     private depositEther__(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
         this.checkForRoot_("depositEther");
-      
+
 
         option.value = Converter.toHex(amount);
         return this.rootChainManager.method("depositEtherFor").then(method => {

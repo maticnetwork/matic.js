@@ -15,7 +15,7 @@ export class POSClient extends BridgeClient {
 
     rootChainManager: RootChainManager;
     rootChain: RootChain;
-    private client_: Web3SideChainClient;
+    private client_: Web3SideChainClient<IPOSClientConfig>;
 
 
 
