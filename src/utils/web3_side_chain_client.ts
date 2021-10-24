@@ -35,7 +35,7 @@ export class Web3SideChainClient<T_CONFIG> {
         const network = config.network;
         const version = config.version;
         const abiHelper = this.abiManager = new ABIManager(network, version);
-        console.log("init called", abiHelper);
+        this.logger.log("init called", abiHelper);
         return abiHelper.init().catch(err => {
             throw new Error(`network ${network} - ${version} is not supported`);
         });

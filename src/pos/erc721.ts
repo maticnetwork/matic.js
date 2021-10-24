@@ -98,7 +98,7 @@ export class ERC721 extends POSToken {
     }
 
     isApproved(tokenId: string, option?: ITransactionOption) {
-        this.checkForRoot_("isApproved");
+        this.checkForRoot("isApproved");
 
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -115,7 +115,7 @@ export class ERC721 extends POSToken {
     }
 
     isApprovedAll(userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot_("isApprovedAll");
+        this.checkForRoot("isApprovedAll");
 
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
@@ -130,7 +130,7 @@ export class ERC721 extends POSToken {
     }
 
     approve(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForRoot_("approve");
+        this.checkForRoot("approve");
 
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
@@ -144,7 +144,7 @@ export class ERC721 extends POSToken {
     }
 
     approveAll(option?: ITransactionOption) {
-        this.checkForRoot_("approveAll");
+        this.checkForRoot("approveAll");
 
         return Promise.all([this.getContract(), this.getPredicateAddress()]).then(result => {
             const [contract, predicateAddress] = result;
@@ -159,7 +159,7 @@ export class ERC721 extends POSToken {
 
 
     deposit(tokenId: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot_("deposit");
+        this.checkForRoot("deposit");
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(tokenId)],
@@ -174,7 +174,7 @@ export class ERC721 extends POSToken {
     }
 
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot_("depositMany");
+        this.checkForRoot("depositMany");
 
         const tokensInUint256 = this.validateMany__(tokenIds);
 
@@ -191,7 +191,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStart(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForChild_("withdrawStart");
+        this.checkForChild("withdrawStart");
 
 
         return this.getContract().then(contract => {
@@ -204,7 +204,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
-        this.checkForChild_("withdrawStartMany");
+        this.checkForChild("withdrawStartMany");
 
 
         const tokensInUint256 = this.validateMany__(tokenIds);
@@ -218,7 +218,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExit");
+        this.checkForRoot("withdrawExit");
 
 
         return this.exitUtil.buildPayloadForExit(
@@ -233,7 +233,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExitMany");
+        this.checkForRoot("withdrawExitMany");
 
 
         return this.exitUtil.buildPayloadForExit(
@@ -248,7 +248,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExitFaster");
+        this.checkForRoot("withdrawExitFaster");
 
 
         return this.exitUtil.buildPayloadForExit(
@@ -263,7 +263,7 @@ export class ERC721 extends POSToken {
     }
 
     withdrawExitFasterMany(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExitFasterMany");
+        this.checkForRoot("withdrawExitFasterMany");
 
 
         return this.exitUtil.buildPayloadForExit(
@@ -314,7 +314,7 @@ export class ERC721 extends POSToken {
      * @memberof ERC721
      */
     transfer(tokenId: string, from: string, to: string, option?: ITransactionOption) {
-        return this.transferERC721_(
+        return this.transferERC721(
             from,
             to,
             tokenId,

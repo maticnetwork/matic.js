@@ -44,7 +44,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     getAllowance(userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot_("getAllowance");
+        this.checkForRoot("getAllowance");
 
         return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
@@ -58,7 +58,7 @@ export class ERC20 extends POSToken {
     }
 
     approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForRoot_("approve");
+        this.checkForRoot("approve");
 
         return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
@@ -88,7 +88,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot_("deposit");
+        this.checkForRoot("deposit");
 
 
         const amountInABI = this.client.parent.encodeParameters(
@@ -104,7 +104,7 @@ export class ERC20 extends POSToken {
     }
 
     private depositEther_(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
-        this.checkForRoot_("depositEther");
+        this.checkForRoot("depositEther");
 
 
         option.value = Converter.toHex(amount);
@@ -122,7 +122,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawStart(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForChild_("withdrawStart");
+        this.checkForChild("withdrawStart");
 
 
         return this.getContract().then(contract => {
@@ -143,7 +143,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExit");
+        this.checkForRoot("withdrawExit");
 
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
@@ -167,7 +167,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot_("withdrawExitFaster");
+        this.checkForRoot("withdrawExitFaster");
 
 
         return this.exitUtil.buildPayloadForExit(
@@ -211,7 +211,7 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        return this.transferERC20_(to, amount, option);
+        return this.transferERC20(to, amount, option);
     }
 
 }

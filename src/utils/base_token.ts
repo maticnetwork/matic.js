@@ -46,7 +46,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        this.validateTxOption__(option);
+        this.validateTxOption_(option);
 
         this.client.logger.log("process write");
         return this.createTransactionConfig(
@@ -72,11 +72,11 @@ export class BaseToken<T_CLIENT_CONFIG> {
     }
 
     protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        this.validateTxOption__(option);
+        this.validateTxOption_(option);
 
         this.client.logger.log("process write");
         const isParent = this.contractParam.isParent;
-        const client = this.getClient_(isParent);
+        const client = this.getClient(isParent);
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -97,10 +97,10 @@ export class BaseToken<T_CLIENT_CONFIG> {
     }
 
     protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
-        this.validateTxOption__(option);
+        this.validateTxOption_(option);
         this.client.logger.log("process read");
         const isParent = this.contractParam.isParent;
-        const client = this.getClient_(isParent);
+        const client = this.getClient(isParent);
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -108,7 +108,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method: null as any,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                this.client.logger.log("process read config");
+                this.client.logger.log("write tx config created");
                 if (option.returnTransaction) {
                     return config as any;
                 }
@@ -118,14 +118,14 @@ export class BaseToken<T_CLIENT_CONFIG> {
             });
     }
 
-    private validateTxOption__(option: ITransactionOption) {
+    private validateTxOption_(option: ITransactionOption) {
         if (typeof option !== 'object' || Array.isArray(option)) {
             new ErrorHelper(ERROR_TYPE.TransactionOptionNotObject).throw();
         }
     }
 
     protected processRead<T>(method: BaseContractMethod, option: ITransactionOption = {}): Promise<T> {
-        this.validateTxOption__(option);
+        this.validateTxOption_(option);
         this.client.logger.log("process read");
         return this.createTransactionConfig(
             {
@@ -134,7 +134,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                this.client.logger.log("process read config");
+                this.client.logger.log("read tx config created");
                 if (option.returnTransaction) {
                     return merge(config, {
                         data: method.encodeABI(),
@@ -147,13 +147,13 @@ export class BaseToken<T_CLIENT_CONFIG> {
             });
     }
 
-    protected getClient_(isParent) {
+    protected getClient(isParent) {
         return isParent ? this.client.parent :
             this.client.child;
     }
 
     private getContract_({ isParent, tokenAddress, abi }) {
-        const client = this.getClient_(isParent);
+        const client = this.getClient(isParent);
         return client.getContract(tokenAddress, abi);
     }
 
@@ -195,7 +195,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         return txConfig;
     }
 
-    protected transferERC20_(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    protected transferERC20(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "transfer",
@@ -208,7 +208,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         });
     }
 
-    protected transferERC721_(from: string, to: string, tokenId: string, option: ITransactionOption) {
+    protected transferERC721(from: string, to: string, tokenId: string, option: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(
                 "transferFrom",
@@ -222,13 +222,13 @@ export class BaseToken<T_CLIENT_CONFIG> {
         });
     }
 
-    protected checkForRoot_(methodName) {
+    protected checkForRoot(methodName) {
         if (!this.contractParam.isParent) {
             this.client.logger.error(ERROR_TYPE.AllowedOnRoot, methodName).throw();
         }
     }
 
-    protected checkForChild_(methodName) {
+    protected checkForChild(methodName) {
         if (this.contractParam.isParent) {
             this.client.logger.error(ERROR_TYPE.AllowedOnChild, "withdrawStart").throw();
         }

@@ -39,7 +39,6 @@ export class MerkleTree {
         for (let i = 0; i < nodes.length; i += 2) {
             const left = nodes[i];
             const right = nodes[i + 1];
-            console.log("left", left, "right", right);
 
             const data = SafeBuffer.concat([left, right]);
             treeLevel.push(sha3(data));

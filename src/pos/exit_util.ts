@@ -105,15 +105,15 @@ export class ExitUtil {
 
     private async getRootBlockInfoFromAPI(txBlockNumber: number) {
         try {
-            console.log("block info from API 1");
+            this.maticClient_.logger.log("block info from API 1");
             const headerBlock = await service.network.getBlockIncluded(txBlockNumber);
-            console.log("block info from API 2", headerBlock);
+            this.maticClient_.logger.log("block info from API 2", headerBlock);
             if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
                 throw Error('Network API Error');
             }
             return headerBlock;
         } catch (err) {
-            console.log("block info from API", err);
+            this.maticClient_.logger.log("block info from API", err);
             return this.getRootBlockInfo(txBlockNumber);
         }
     }
@@ -137,7 +137,7 @@ export class ExitUtil {
             if (!blockProof) {
                 throw Error('Network API Error');
             }
-            console.log("block proof from API 1");
+            this.maticClient_.logger.log("block proof from API 1");
             return blockProof;
         } catch (err) {
             return this.getBlockProof(txBlockNumber, rootBlockInfo);

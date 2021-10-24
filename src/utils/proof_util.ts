@@ -72,7 +72,6 @@ export class ProofUtil {
                     // Build a merkle tree of correct size for the subtree using these merkle roots
                     const leaves = Array.from({ length: 2 ** heightDifference }, () => ethUtils.toBuffer(leafRoots));
                     leaves[0] = remainingNodesHash;
-                    console.log("leaves", leaves);
                     const subTreeMerkleRoot = new MerkleTree(leaves).getRoot();
                     reversedProof.push(subTreeMerkleRoot);
                 }
