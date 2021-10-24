@@ -1,4 +1,4 @@
-import { erc20, from, posClient } from "./client";
+import { erc20, from, posClient, to } from "./client";
 import { expect } from 'chai'
 
 
@@ -11,7 +11,7 @@ describe('ERC20', () => {
     });
 
     it('get balance child', async () => {
-        console.log('process.env.test_all', process.env.test_all);
+        console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
         const balance = await erc20Child.getBalance(from);
         console.log('balance', balance);
@@ -42,4 +42,42 @@ describe('ERC20', () => {
         const isExited = await erc20Parent.isWithdrawExited('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
         expect(isExited).to.be.an('boolean').equal(true);
     })
+
+    // it('isDeposited', async () => {
+    //     const txHash = '0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258';
+    //     const isExited = await posClient.isDeposited(txHash);
+    //     expect(isExited).to.be.an('boolean').equal(true);
+    // })
+
+    if (process.env.NODE_ENV === 'test_all') {
+        // it('transfer', async () => {
+        //     const result = await erc20Child.transfer(to, '10');
+        //     const txHash = await result.getTransactionHash();
+        //     expect(txHash).to.be.an('string');
+
+        //     const txReceipt = await result.getReceipt();
+        //     expect(txReceipt).to.be.an('object');
+        // });
+
+        // it('approve', async () => {
+        //     const result = await erc20Parent.approve('10');
+
+        //     const txHash = await result.getTransactionHash();
+        //     expect(txHash).to.be.an('string');
+
+        //     const txReceipt = await result.getReceipt();
+        //     console.log("txReceipt", txReceipt);
+        //     expect(txReceipt.type).equal('0x0');
+        // });
+
+        it('deposit', async () => {
+            const result = await erc20Parent.deposit('10', from);
+
+            const txHash = await result.getTransactionHash();
+            expect(txHash).to.be.an('string');
+
+            const txReceipt = await result.getReceipt();
+            expect(txReceipt).to.be.an('object');
+        });
+    }
 });

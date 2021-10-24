@@ -10,8 +10,9 @@
     "install:lib:test": "npm run install:lib && npm run test",
     "install:lib:debug": "npm run install:lib && npm run debug",
     "un:lib": "npm un @maticnetwork/maticjs",
-    "test": "dotenv cross-env NODE_ENV=test karma start karma.conf.js",
-    "test:all": "cross-env NODE_ENV=test_all npm run test",
+    "karma:start": "dotenv karma start karma.conf.js",
+    "test": "cross-env NODE_ENV=test npm run karma:start",
+    "test:all": "cross-env NODE_ENV=test_all npm run karma:start",
     "test:mocha": "cross-env-file -p ./config.json cross-env NODE_ENV=test mochapack --webpack-config ./webpack.config.test.js --colors ./specs/index.ts"
   },
   "author": "",

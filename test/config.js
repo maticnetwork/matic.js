@@ -23,10 +23,10 @@ module.exports = {
         },
     },
     user1: {
-        "privateKey": process.env.PRIVATE_KEY,
-        "address": process.env.FROM
+        "privateKey": process.env.USER1_PRIVATE_KEY,
+        "address": process.env.USER1_FROM
     },
     user2: {
-        address: '<paste address here>', // Your address
+        address: process.env.USER2_FROM, // Your address
     },
 }

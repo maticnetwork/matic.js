@@ -2,7 +2,7 @@ import { ITransactionWriteResult, ITransactionReceipt } from "../interfaces";
 
 export class ContractWriteResult {
     private txHashPromise: Promise<string>;
-    private receiptPromise: Promise<string>;
+    private receiptPromise: Promise<ITransactionReceipt>;
 
     constructor(result: ITransactionWriteResult) {
         this.txHashPromise = new Promise((res, rej) => {

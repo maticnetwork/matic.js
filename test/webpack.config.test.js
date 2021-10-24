@@ -1,6 +1,9 @@
 const webpack = require('webpack')
 const path = require('path')
 
+// return console.log('process.env', process.env.from)
+
+
 module.exports = {
   mode: 'development',
   module: {
@@ -21,8 +24,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      // 'process.env.NODE_ENV': "'test'"
       'process.env': JSON.stringify(process.env),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
   ],
   devtool: 'inline-source-map',
