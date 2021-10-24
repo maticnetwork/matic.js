@@ -1,4 +1,4 @@
-const { PlasmaClient, POSClient, use, Web3SideChainClient } = require("@maticnetwork/maticjs");
+const { setProofApi, POSClient, use } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
@@ -33,7 +33,7 @@ const execute = async () => {
   await client.init();
   console.log("init called");
 
-  const mumbaiERC720Token = client.erc20(mumbaiERC20);
+  const mumbaiERC20Token = client.erc20(mumbaiERC20);
   const goerliERC20Token = client.erc20(goerliERC20, true);
 
   // return console.log(await goerliERC20Token.getAllowance(from));
@@ -50,7 +50,8 @@ const execute = async () => {
   // return console.log("tokens", tokens);
 
   // const tx = await goerliERC720Token.safeDeposit(104, from);
-  const tx = await mumbaiERC720Token.withdrawStart(10);
+  // setProofApi("https://apis.matic.network")
+  const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
   console.log("txHash", await tx.getTransactionHash());
   console.log("txReceipt", await tx.getReceipt());
 

@@ -6,12 +6,13 @@ describe('ERC20', () => {
 
     let erc20Child = posClient.erc20(erc20.child);
     let erc20Parent = posClient.erc20(erc20.parent, true);
-
     before(() => {
         return posClient.init();
     });
 
     it('get balance child', async () => {
+        console.log('process.env.test_all', process.env.test_all);
+
         const balance = await erc20Child.getBalance(from);
         console.log('balance', balance);
         expect(balance).to.be.an('string');
@@ -36,8 +37,9 @@ describe('ERC20', () => {
         expect(isCheckPointed).to.be.an('boolean').equal(true);
     })
 
-    // it('isWithdrawExited', async () => {
-    //     const isExited = await erc20Parent.isWithdrawExited('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
-    //     expect(isExited).to.be.an('boolean').equal(true);
-    // })
+    it('isWithdrawExited', async () => {
+        const exitTxHash = '0x95844235073da694e311dc90476c861e187c36f86a863a950534c9ac2b7c1a48';
+        const isExited = await erc20Parent.isWithdrawExited('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
+        expect(isExited).to.be.an('boolean').equal(true);
+    })
 });

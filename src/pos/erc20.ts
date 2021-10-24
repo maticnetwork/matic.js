@@ -184,16 +184,16 @@ export class ERC20 extends POSToken {
     /**
      * check if exit has been completed for a transaction hash
      *
-     * @param {string} txHash
+     * @param {string} burnTxHash
      * @returns
      * @memberof ERC20
      */
-    isWithdrawExited(txHash: string) {
-        if (!txHash) {
+    isWithdrawExited(burnTxHash: string) {
+        if (!burnTxHash) {
             throw new Error(`txHash not provided`);
         }
         return this.exitUtil.getExitHash(
-            txHash, Log_Event_Signature.Erc20Transfer
+            burnTxHash, Log_Event_Signature.Erc20Transfer
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(
                 exitHash

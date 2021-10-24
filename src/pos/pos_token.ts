@@ -1,7 +1,5 @@
 import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
-import { IBaseClientConfig, IContractInitParam, IPOSClientConfig } from "../interfaces";
-import { RootChainManager } from "./root_chain_manager";
-import { ExitUtil } from "./exit_util";
+import { IContractInitParam, IPOSClientConfig } from "../interfaces";
 import { IPOSContracts } from "../interfaces";
 
 export class POSToken extends BaseToken<IPOSClientConfig> {
@@ -17,15 +15,11 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
     }
 
     get rootChainManager() {
-        const contracts = this.getPOSContracts();
-        console.log("contracts", contracts);
-        return contracts.rootChainManager;
+        return this.getPOSContracts().rootChainManager;
     }
 
     get exitUtil() {
-        const contracts = this.getPOSContracts();
-        console.log("contracts", contracts);
-        return contracts.exitUtil;
+        return this.getPOSContracts().exitUtil;
     }
 
 
