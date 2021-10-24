@@ -11,43 +11,41 @@ export * from "./exit_util";
 export * from "./root_chain_manager";
 export * from "./root_chain";
 
-export class POSClient extends BridgeClient {
+export class POSClient extends BridgeClient<IPOSClientConfig> {
 
     rootChainManager: RootChainManager;
-    private client_: Web3SideChainClient<IPOSClientConfig>;
 
     constructor(config: IPOSClientConfig) {
-        super();
-        this.client_ = new Web3SideChainClient(config);
+        super(config);
     }
 
     init() {
-        const client = this.client_;
+        const client = this.client;
         let config: IPOSClientConfig = client.config;
 
         return client.init().then(_ => {
-            const mainPOSContracts = this.client_.mainPOSContracts;
+            const mainPOSContracts = this.client.mainPOSContracts;
             client.config = config = Object.assign(
                 {
 
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
-                    rootChain: this.client_.mainPlasmaContracts.RootChainProxy
+                    rootChain: this.client.mainPlasmaContracts.RootChainProxy
                 } as IPOSClientConfig,
                 config
             );
 
             this.rootChainManager = new RootChainManager(
-                this.client_,
+                this.client,
                 config.rootChainManager,
             );
 
             const rootChain = new RootChain(
-                this.client_,
+                this.client,
                 config.rootChain,
             );
 
             this.exitUtil = new ExitUtil(
-                this.client_.child,
+                this.client.child,
                 rootChain,
                 config.requestConcurrency
             );
@@ -60,7 +58,7 @@ export class POSClient extends BridgeClient {
         return new ERC20(
             tokenAddress,
             isParent,
-            this.client_,
+            this.client,
             this.getContracts_.bind(this)
         );
     }
@@ -69,14 +67,14 @@ export class POSClient extends BridgeClient {
         return new ERC721(
             tokenAddress,
             isParent,
-            this.client_,
+            this.client,
             this.getContracts_.bind(this)
         );
     }
 
     depositEther(amount: TYPE_AMOUNT, option: ITransactionOption) {
         return new ERC20(
-            '', true, this.client_,
+            '', true, this.client,
             this.getContracts_,
         )['depositEther_'](amount, option);
     }

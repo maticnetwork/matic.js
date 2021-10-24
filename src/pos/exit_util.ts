@@ -259,5 +259,4 @@ export class ExitUtil {
             receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex
         );
     }
-
 }

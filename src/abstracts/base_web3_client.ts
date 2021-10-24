@@ -39,5 +39,6 @@ export abstract class BaseWeb3Client {
     abstract sendRPCRequest(request: IJsonRpcRequestPayload): Promise<IJsonRpcResponse>;
 
     abstract encodeParameters(params: any[], types: any[]): string;
+    abstract decodeParameters(hexString: string, types: any[]): any[];
     abstract etheriumSha3(...value): string;
 }

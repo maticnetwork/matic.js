@@ -10,7 +10,7 @@ export class Web3SideChainClient<T_CONFIG> {
 
     config: T_CONFIG;
 
-    abiHelper: ABIManager;
+    abiManager: ABIManager;
 
     logger = new Logger();
 
@@ -34,7 +34,7 @@ export class Web3SideChainClient<T_CONFIG> {
         const config = this.config as any as IBaseClientConfig;
         const network = config.network;
         const version = config.version;
-        const abiHelper = this.abiHelper = new ABIManager(network, version);
+        const abiHelper = this.abiManager = new ABIManager(network, version);
         console.log("init called", abiHelper);
         return abiHelper.init().catch(err => {
             throw new Error(`network ${network} - ${version} is not supported`);
@@ -42,15 +42,15 @@ export class Web3SideChainClient<T_CONFIG> {
     }
 
     getABI(name: string, type?: string) {
-        return this.abiHelper.getABI(name, type);
+        return this.abiManager.getABI(name, type);
     }
 
     get mainPlasmaContracts() {
-        return this.abiHelper.getAddress("Main.Contracts");
+        return this.abiManager.getAddress("Main.Contracts");
     }
 
     get mainPOSContracts() {
-        return this.abiHelper.getAddress("Main.POSContracts");
+        return this.abiManager.getAddress("Main.POSContracts");
     }
 
 
