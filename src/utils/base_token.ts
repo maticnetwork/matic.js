@@ -176,26 +176,28 @@ export class BaseToken<T_CLIENT_CONFIG> {
             return method ? method.estimateGas(config) :
                 client.estimateGas(config);
         };
+        txConfig.chainId = !txConfig.chainId ? await client.getChainId() : txConfig.chainId;
+        txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
             const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
             const isEIP1559Supported = this.client.isEIP1559Supported(isParent);
-            if (!isParent && isEIP1559Supported && (maxFeePerGas || maxPriorityFeePerGas)) {
-                throw new Error(`Child chain doesn't support eip-1559`);
+            const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
+
+            if (!isEIP1559Supported && isMaxFeeProvided) {
+                this.client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
             }
 
-            const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
+            const [gasLimit, gasPrice, nonce] = await Promise.all([
                 !(txConfig.gasLimit)
                     ? estimateGas({ from: txConfig.from, value: txConfig.value })
                     : txConfig.gasLimit,
                 !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
-                !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
             this.client.logger.log("options filled");
             txConfig.gasLimit = Number(gasLimit);
             txConfig.nonce = nonce;
-            txConfig.chainId = chainId;
-            if (isEIP1559Supported) {
+            if (isEIP1559Supported && isMaxFeeProvided) {
                 txConfig.maxFeePerGas = maxFeePerGas;
                 txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
             }

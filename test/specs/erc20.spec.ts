@@ -1,5 +1,6 @@
 import { erc20, from, posClient, to } from "./client";
 import { expect } from 'chai'
+import BN from "bn.js";
 
 
 describe('ERC20', () => {
@@ -43,28 +44,87 @@ describe('ERC20', () => {
         expect(isExited).to.be.an('boolean').equal(true);
     })
 
+    it('child transfer returnTransaction with erp1159', async () => {
+        const amount = 10;
+        try {
+            const result = await erc20Child.transfer(to, amount, {
+                maxFeePerGas: 10,
+                maxPriorityFeePerGas: 10,
+                returnTransaction: true
+            });
+            console.log('result', result);
+        } catch (error) {
+            console.log('error', error);
+            expect(error).deep.equal({
+                message: `Child chain doesn't support eip-1559`,
+                type: 'eip-1559_not_supported'
+            })
+        }
+    });
+
+    it('parent transfer returnTransaction with erp1159', async () => {
+        const amount = 10;
+        const result = await erc20Parent.transfer(to, amount, {
+            maxFeePerGas: 10,
+            maxPriorityFeePerGas: 10,
+            returnTransaction: true
+        });
+        console.log('result', result);
+
+        expect(result).to.have.property('maxFeePerGas', 10)
+        expect(result).to.have.property('maxPriorityFeePerGas', 10)
+        expect(result).to.have.not.property('gasPrice')
+
+    });
+
     // it('isDeposited', async () => {
     //     const txHash = '0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258';
     //     const isExited = await posClient.isDeposited(txHash);
     //     expect(isExited).to.be.an('boolean').equal(true);
     // })
 
+    it('child transfer', async () => {
+        const oldBalance = await erc20Child.getBalance(to);
+        console.log('oldBalance', oldBalance);
+        const amount = 10;
+        const result = await erc20Child.transfer(to, amount);
+        const txHash = await result.getTransactionHash();
+        expect(txHash).to.be.an('string');
+        console.log('txHash', txHash);
+        const txReceipt = await result.getReceipt();
+        console.log("txReceipt", txReceipt);
+
+        expect(txReceipt.transactionHash).equal(txHash);
+        expect(txReceipt).to.be.an('object');
+        expect(txReceipt.from).equal(from);
+        expect(txReceipt.to.toLowerCase()).equal(erc20.child.toLowerCase());
+        expect(txReceipt.type).equal('0x0');
+        expect(txReceipt.gasUsed).to.be.an('number').gt(0);
+        expect(txReceipt.cumulativeGasUsed).to.be.an('number').gt(0);
+
+        expect(txReceipt).to.have.property('blockHash')
+        expect(txReceipt).to.have.property('blockNumber');
+        expect(txReceipt).to.have.property('events');
+        // expect(txReceipt).to.have.property('logs');
+        expect(txReceipt).to.have.property('logsBloom');
+        expect(txReceipt).to.have.property('status');
+        expect(txReceipt).to.have.property('transactionIndex');
+
+        const newBalance = await erc20Child.getBalance(to);
+        console.log('newBalance', newBalance);
+
+        const oldBalanceBig = new BN(oldBalance);
+        const newBalanceBig = new BN(newBalance);
+
+        expect(newBalanceBig.toString()).equal(
+            oldBalanceBig.add(new BN(amount)).toString()
+        )
+    });
+
+
+
     if (process.env.NODE_ENV === 'test_all') {
-        it('transfer', async () => {
-            const oldBalance = await erc20Child.getBalance(to);
-            console.log('oldBalance', oldBalance);
 
-            const result = await erc20Child.transfer(to, '10');
-            const txHash = await result.getTransactionHash();
-            expect(txHash).to.be.an('string');
-            console.log('txHash', txHash);
-            const txReceipt = await result.getReceipt();
-            expect(txReceipt).to.be.an('object');
-            
-            // const newBalance = await erc20Child.getBalance(to);
-            // console.log('newBalance', newBalance);
-
-        });
 
         // it('approve', async () => {
         //     const result = await erc20Parent.approve('10');

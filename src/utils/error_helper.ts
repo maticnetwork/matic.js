@@ -36,6 +36,9 @@ export class ErrorHelper implements IError {
             case ERROR_TYPE.BurnTxNotCheckPointed:
                 errMsg = `Burn transaction has not been checkpointed as yet`;
                 break;
+            case ERROR_TYPE.EIP1559NotSupported:
+                errMsg = `${info ? 'Root' : 'Child'} chain doesn't support eip-1559`;
+                break;
             default:
                 if (!this.type) {
                     this.type = ERROR_TYPE.Unknown;
