@@ -62,17 +62,28 @@ describe('ERC20', () => {
         }
     });
 
+    it('child transfer returnTransaction', async () => {
+        const amount = 10;
+        const result = await erc20Child.transfer(to, amount, {
+            returnTransaction: true
+        });
+        console.log('result', result);
+        expect(result).to.have.not.property('maxFeePerGas')
+        expect(result).to.have.not.property('maxPriorityFeePerGas')
+        expect(result).to.have.property('gasPrice')
+    });
+
     it('parent transfer returnTransaction with erp1159', async () => {
         const amount = 10;
         const result = await erc20Parent.transfer(to, amount, {
-            maxFeePerGas: 10,
-            maxPriorityFeePerGas: 10,
+            maxFeePerGas: 20,
+            maxPriorityFeePerGas: 20,
             returnTransaction: true
         });
         console.log('result', result);
 
-        expect(result).to.have.property('maxFeePerGas', 10)
-        expect(result).to.have.property('maxPriorityFeePerGas', 10)
+        expect(result).to.have.property('maxFeePerGas', 20)
+        expect(result).to.have.property('maxPriorityFeePerGas', 20)
         expect(result).to.have.not.property('gasPrice')
 
     });
@@ -121,30 +132,27 @@ describe('ERC20', () => {
         )
     });
 
+    if (process.env.NODE_ENV !== 'test_all') return;
 
+    it('approve', async () => {
+        const result = await erc20Parent.approve('10');
 
-    if (process.env.NODE_ENV === 'test_all') {
+        const txHash = await result.getTransactionHash();
+        expect(txHash).to.be.an('string');
 
+        const txReceipt = await result.getReceipt();
+        console.log("txReceipt", txReceipt);
+        expect(txReceipt.type).equal('0x0');
+    });
 
-        // it('approve', async () => {
-        //     const result = await erc20Parent.approve('10');
+    it('deposit', async () => {
+        const result = await erc20Parent.deposit('10', from);
 
-        //     const txHash = await result.getTransactionHash();
-        //     expect(txHash).to.be.an('string');
+        const txHash = await result.getTransactionHash();
+        expect(txHash).to.be.an('string');
 
-        //     const txReceipt = await result.getReceipt();
-        //     console.log("txReceipt", txReceipt);
-        //     expect(txReceipt.type).equal('0x0');
-        // });
+        const txReceipt = await result.getReceipt();
+        expect(txReceipt).to.be.an('object');
+    });
 
-        // it('deposit', async () => {
-        //     const result = await erc20Parent.deposit('10', from);
-
-        //     const txHash = await result.getTransactionHash();
-        //     expect(txHash).to.be.an('string');
-
-        //     const txReceipt = await result.getReceipt();
-        //     expect(txReceipt).to.be.an('object');
-        // });
-    }
 });

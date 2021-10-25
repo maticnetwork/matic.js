@@ -168,7 +168,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
 
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
         const defaultConfig = isParent ? this.parentDefaultConfig : this.childDefaultConfig;
-        txConfig = Object.assign(defaultConfig, (txConfig || {}));
+        txConfig = merge(defaultConfig, (txConfig || {}));
         this.client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const client = isParent ? this.client.parent :
             this.client.child;
@@ -184,6 +184,8 @@ export class BaseToken<T_CLIENT_CONFIG> {
             const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
 
             if (!isEIP1559Supported && isMaxFeeProvided) {
+                // tslint:disable-next-line
+                debugger;
                 this.client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
             }
 
