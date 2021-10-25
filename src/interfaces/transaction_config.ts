@@ -11,4 +11,6 @@ export interface ITransactionConfig {
     chainId?: number;
     chain?: string;
     hardfork?: string;
+    maxFeePerGas?: number | string;
+    maxPriorityFeePerGas?: number | string;
 }

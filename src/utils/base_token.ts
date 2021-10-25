@@ -2,7 +2,6 @@ import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { Converter, merge } from "../utils";
-import { EXTRA_GAS_FOR_PROXY_CALL } from "../constant";
 import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
@@ -178,6 +177,12 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 client.estimateGas(config);
         };
         if (isWrite) {
+            const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
+            const isEIP1559Supported = this.client.isEIP1559Supported(isParent);
+            if (!isParent && isEIP1559Supported && (maxFeePerGas || maxPriorityFeePerGas)) {
+                throw new Error(`Child chain doesn't support eip-1559`);
+            }
+
             const [gasLimit, gasPrice, nonce, chainId] = await Promise.all([
                 !(txConfig.gasLimit)
                     ? estimateGas({ from: txConfig.from, value: txConfig.value })
@@ -187,10 +192,17 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 !txConfig.chainId ? client.getChainId() : txConfig.chainId,
             ]);
             this.client.logger.log("options filled");
-            txConfig.gasLimit = isParent ? Number(gasLimit) + EXTRA_GAS_FOR_PROXY_CALL : gasLimit;
-            txConfig.gasPrice = gasPrice;
+            txConfig.gasLimit = Number(gasLimit);
             txConfig.nonce = nonce;
             txConfig.chainId = chainId;
+            if (isEIP1559Supported) {
+                txConfig.maxFeePerGas = maxFeePerGas;
+                txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
+            }
+            else {
+                txConfig.gasPrice = Number(gasPrice);
+            }
+
         }
         return txConfig;
     }

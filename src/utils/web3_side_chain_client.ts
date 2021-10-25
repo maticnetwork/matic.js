@@ -45,12 +45,21 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.abiManager.getABI(name, type);
     }
 
+    getConfig(path: string) {
+        return this.abiManager.getConfig(path);
+    }
+
     get mainPlasmaContracts() {
-        return this.abiManager.getAddress("Main.Contracts");
+        return this.getConfig("Main.Contracts");
     }
 
     get mainPOSContracts() {
-        return this.abiManager.getAddress("Main.POSContracts");
+        return this.getConfig("Main.POSContracts");
+    }
+
+    isEIP1559Supported(isParent: boolean): boolean {
+        return isParent ? this.getConfig("Main.SupportsEIP1559") :
+            this.getConfig("Matic.SupportsEIP1559");
     }
 
 

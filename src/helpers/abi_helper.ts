@@ -34,7 +34,7 @@ export class ABIManager {
         });
     }
 
-    getAddress(path: string) {
+    getConfig(path: string) {
         return resolve(
             cache[this.networkName][this.version].address,
             path

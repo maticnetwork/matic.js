@@ -50,14 +50,21 @@ describe('ERC20', () => {
     // })
 
     if (process.env.NODE_ENV === 'test_all') {
-        // it('transfer', async () => {
-        //     const result = await erc20Child.transfer(to, '10');
-        //     const txHash = await result.getTransactionHash();
-        //     expect(txHash).to.be.an('string');
+        it('transfer', async () => {
+            const oldBalance = await erc20Child.getBalance(to);
+            console.log('oldBalance', oldBalance);
 
-        //     const txReceipt = await result.getReceipt();
-        //     expect(txReceipt).to.be.an('object');
-        // });
+            const result = await erc20Child.transfer(to, '10');
+            const txHash = await result.getTransactionHash();
+            expect(txHash).to.be.an('string');
+            console.log('txHash', txHash);
+            const txReceipt = await result.getReceipt();
+            expect(txReceipt).to.be.an('object');
+            
+            // const newBalance = await erc20Child.getBalance(to);
+            // console.log('newBalance', newBalance);
+
+        });
 
         // it('approve', async () => {
         //     const result = await erc20Parent.approve('10');
@@ -70,14 +77,14 @@ describe('ERC20', () => {
         //     expect(txReceipt.type).equal('0x0');
         // });
 
-        it('deposit', async () => {
-            const result = await erc20Parent.deposit('10', from);
+        // it('deposit', async () => {
+        //     const result = await erc20Parent.deposit('10', from);
 
-            const txHash = await result.getTransactionHash();
-            expect(txHash).to.be.an('string');
+        //     const txHash = await result.getTransactionHash();
+        //     expect(txHash).to.be.an('string');
 
-            const txReceipt = await result.getReceipt();
-            expect(txReceipt).to.be.an('object');
-        });
+        //     const txReceipt = await result.getReceipt();
+        //     expect(txReceipt).to.be.an('object');
+        // });
     }
 });

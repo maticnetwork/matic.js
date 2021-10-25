@@ -32,7 +32,7 @@ export class BridgeClient<T> {
             "genesis",
         ).then(abi => {
             const contract = client.child.getContract(
-                client.abiManager.getAddress("Matic.GenesisContracts.StateReceiver"),
+                client.abiManager.getConfig("Matic.GenesisContracts.StateReceiver"),
                 abi
             );
             return Promise.all([
