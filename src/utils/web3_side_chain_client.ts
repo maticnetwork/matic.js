@@ -1,4 +1,4 @@
-import { Web3Client } from "../constant";
+import { getWeb3Client } from "../constant";
 import { IBaseClientConfig, IPOSClientConfig } from "../interfaces";
 import { BaseWeb3Client } from "../abstracts";
 import { ABIManager } from "../helpers";
@@ -19,6 +19,9 @@ export class Web3SideChainClient<T_CONFIG> {
         config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
         config.child.defaultConfig = config.child.defaultConfig || {} as any;
         this.config = config as any;
+
+        // tslint:disable-next-line
+        const Web3Client = getWeb3Client();
 
         if (!Web3Client) {
             throw new Error("Web3Client is not set");

@@ -1,4 +1,4 @@
-import { setWeb3Client, Web3Client } from "./constant";
+import { setWeb3Client, getWeb3Client } from "./constant";
 import { POSClient } from "./pos";
 import { use } from "./utils";
 import { BaseWeb3Client } from "./abstracts";
@@ -8,7 +8,7 @@ export const defaultExport = {
         setWeb3Client(client);
     },
     get Web3Client() {
-        return Web3Client as any;
+        return getWeb3Client();
     },
     use,
     POSClient,

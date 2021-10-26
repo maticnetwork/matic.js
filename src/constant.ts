@@ -1,10 +1,13 @@
 import BN from "bn.js";
 import { BaseWeb3Client } from "./abstracts";
 
-export let Web3Client: typeof BaseWeb3Client;
+let Web3Client: typeof BaseWeb3Client;
 
 export const setWeb3Client = (web3Client) => {
     Web3Client = web3Client;
+}
+export const getWeb3Client = () => {
+    return Web3Client;
 }
 
 export const BIG_ONE = new BN(1)
