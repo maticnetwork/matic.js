@@ -184,16 +184,13 @@ export class BaseToken<T_CLIENT_CONFIG> {
             const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
 
             if (!isEIP1559Supported && isMaxFeeProvided) {
-                // tslint:disable-next-line
-                debugger;
                 this.client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
             }
 
-            const [gasLimit, gasPrice, nonce] = await Promise.all([
+            const [gasLimit, nonce] = await Promise.all([
                 !(txConfig.gasLimit)
                     ? estimateGas({ from: txConfig.from, value: txConfig.value })
                     : txConfig.gasLimit,
-                !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
             ]);
             this.client.logger.log("options filled");
@@ -204,6 +201,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
             }
             else {
+                const gasPrice = !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice;
                 txConfig.gasPrice = Number(gasPrice);
             }
 
