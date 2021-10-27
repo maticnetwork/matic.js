@@ -201,7 +201,8 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
             }
             else {
-                const gasPrice = !txConfig.gasPrice ? client.getGasPrice() : txConfig.gasPrice;
+                const gasPrice = !txConfig.gasPrice ? await client.getGasPrice() : txConfig.gasPrice;
+                console.log('gas price calculated', gasPrice);
                 txConfig.gasPrice = Number(gasPrice);
             }
 

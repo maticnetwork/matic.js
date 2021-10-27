@@ -103,12 +103,12 @@ export class ERC20 extends POSToken {
         );
     }
 
-    private depositEther_(amount: TYPE_AMOUNT, option: ITransactionOption = {}) {
+    private depositEther_(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption = {}) {
         this.checkForRoot("depositEther");
 
 
         option.value = Converter.toHex(amount);
-        return this.rootChainManager.method("depositEtherFor").then(method => {
+        return this.rootChainManager.method("depositEtherFor", userAddress).then(method => {
             return this.processWrite(method, option);
         });
     }

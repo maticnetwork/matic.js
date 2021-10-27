@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@maticnetwork/maticjs": "^2.0.44",
-    "@maticnetwork/maticjs-web3": "^0.1.0",
+    "@maticnetwork/maticjs": "^3.0.0-beta.6",
+    "@maticnetwork/maticjs-web3": "^0.2.0",
     "dotenv": "^10.0.0"
   }
 }

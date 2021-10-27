@@ -10,27 +10,6 @@ use(Web3ClientPlugin);
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
 
-
-async function getPlasmaClient(network = 'testnet', version = 'mumbai') {
-  const plasmaClient = new PlasmaClient({
-    network: network,
-    version: version,
-    child: {
-      provider: new HDWalletProvider(privateKey, config.child.rpc),
-      defaultConfig: {
-        from: userAddress
-      }
-    },
-    parent: {
-      provider: new HDWalletProvider(privateKey, config.parent.rpc),
-      defaultConfig: {
-        from: userAddress
-      }
-    }
-  })
-  return plasmaClient.init();
-}
-
 const getPOSClient = (network = 'testnet', version = 'mumbai') => {
   const posClient = new POSClient({
     log: true,
@@ -54,7 +33,6 @@ const getPOSClient = (network = 'testnet', version = 'mumbai') => {
 
 module.exports = {
   SCALING_FACTOR,
-  getPlasmaClient: getPlasmaClient,
   getPOSClient: getPOSClient,
   child: config.child,
   plasma: config.plasma,

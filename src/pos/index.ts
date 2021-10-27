@@ -72,11 +72,11 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
         );
     }
 
-    depositEther(amount: TYPE_AMOUNT, option: ITransactionOption) {
+    depositEther(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption) {
         return new ERC20(
             '', true, this.client,
-            this.getContracts_,
-        )['depositEther_'](amount, option);
+            this.getContracts_.bind(this),
+        )['depositEther_'](amount, userAddress, option);
     }
 
     private getContracts_() {
