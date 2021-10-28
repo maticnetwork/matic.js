@@ -14,11 +14,11 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
         super(contractParam, client);
     }
 
-    get rootChainManager() {
+    protected get rootChainManager() {
         return this.getPOSContracts().rootChainManager;
     }
 
-    get exitUtil() {
+    protected get exitUtil() {
         return this.getPOSContracts().exitUtil;
     }
 
@@ -39,5 +39,18 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
         const predicateAddress = await typeToPredicateMethod.read<string>();
         this.predicateAddress = predicateAddress;
         return predicateAddress;
+    }
+
+    protected isWithdrawn(txHash: string, eventSignature: string) {
+        if (!txHash) {
+            throw new Error(`txHash not provided`);
+        }
+        return this.exitUtil.getExitHash(
+            txHash, eventSignature
+        ).then(exitHash => {
+            return this.rootChainManager.isExitProcessed(
+                exitHash
+            );
+        });
     }
 }

@@ -36,6 +36,7 @@ const execute = async () => {
   const mumbaiERC20Token = client.erc20(mumbaiERC20);
   const goerliERC20Token = client.erc20(goerliERC20, true);
   const goerliERC721Token = client.erc721(pos.parent.erc721, true);
+  const mumbaiERC721Token = client.erc721(pos.child.erc721);
 
 
 
@@ -47,19 +48,19 @@ const execute = async () => {
   // );
   // return console.log("balance", balance);
 
-  // const tokens = await goerliERC720Token.getAllTokens(
+  // const tokens = await mumbaiERC721Token.getAllTokens(
   //   from
   // );
   // return console.log("tokens", tokens);
 
-  const tx = await goerliERC721Token.deposit(10, from, {
-    returnTransaction: true
+  const tx = await goerliERC721Token.withdrawExit('0x2697a930ae883dd28c40a263a6a3b4d41a027cab56836de987ed2c2896abcdeb', {
+    // returnTransaction: true
   });
-  console.log('tx', tx);
+  // console.log('tx', tx);
   // // setProofApi("https://apis.matic.network")
   // // const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
-  // console.log("txHash", await tx.getTransactionHash());
-  // console.log("txReceipt", await tx.getReceipt());
+  console.log("txHash", await tx.getTransactionHash());
+  console.log("txReceipt", await tx.getReceipt());
 
   //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
   const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'

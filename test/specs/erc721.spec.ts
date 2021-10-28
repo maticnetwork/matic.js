@@ -37,6 +37,12 @@ describe('ERC721', () => {
         expect(allTokens).to.be.an('array').length(tokensCount);
     })
 
+    it('isWithdrawExited', async () => {
+        // const exitHash = '0xa3ed203336807249dea53dc99434e2d06b71c85f55c89ee49ca10244ab3dbcf5';
+        const isExited = await erc721Parent.isWithdrawExited('0x2697a930ae883dd28c40a263a6a3b4d41a027cab56836de987ed2c2896abcdeb');
+        expect(isExited).equal(true);
+    })
+
     it('transfer return tx', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         const targetToken = allTokensFrom[0];
@@ -62,7 +68,13 @@ describe('ERC721', () => {
         expect(result['to'].toLowerCase()).equal(erc721.parent.toLowerCase());
     })
 
-    // return;
+    it('withdrawStart return tx', async () => {
+        const allTokens = await erc721Child.getAllTokens(from);
+        const result = await erc721Child.withdrawStart(allTokens[0], {
+            returnTransaction: true
+        });
+        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+    })
 
     it('transfer write', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);

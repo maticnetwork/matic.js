@@ -23,7 +23,7 @@ export class ERC721 extends POSToken {
         }, client, getContracts);
     }
 
-    private validateMany__(tokenIds) {
+    private validateMany_(tokenIds) {
         if (tokenIds.length > 20) {
             throw new Error('can not process more than 20 tokens');
         }
@@ -178,7 +178,7 @@ export class ERC721 extends POSToken {
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
         this.checkForRoot("depositMany");
 
-        const tokensInUint256 = this.validateMany__(tokenIds);
+        const tokensInUint256 = this.validateMany_(tokenIds);
 
         const amountInABI = this.client.parent.encodeParameters(
             tokensInUint256,
@@ -209,7 +209,7 @@ export class ERC721 extends POSToken {
         this.checkForChild("withdrawStartMany");
 
 
-        const tokensInUint256 = this.validateMany__(tokenIds);
+        const tokensInUint256 = this.validateMany_(tokenIds);
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdrawBatch",
@@ -280,29 +280,15 @@ export class ERC721 extends POSToken {
     }
 
     isWithdrawExited(txHash: string) {
-        if (!txHash) {
-            throw new Error(`txHash not provided`);
-        }
-        return this.exitUtil.getExitHash(
+        return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721Transfer
-        ).then(exitHash => {
-            return this.rootChainManager.isExitProcessed(
-                exitHash
-            );
-        });
+        );
     }
 
     isWithdrawExitedMany(txHash: string) {
-        if (!txHash) {
-            throw new Error(`txHash not provided`);
-        }
-        return this.exitUtil.getExitHash(
+        return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721BatchTransfer
-        ).then(exitHash => {
-            return this.rootChainManager.isExitProcessed(
-                exitHash
-            );
-        });
+        );
     }
 
     /**
