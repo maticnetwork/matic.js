@@ -210,7 +210,7 @@ export class ERC20 extends POSToken {
      * @returns
      * @memberof ERC20
      */
-    transfer(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    transfer(amount: TYPE_AMOUNT, to: string, option?: ITransactionOption) {
         return this.transferERC20(to, amount, option);
     }
 

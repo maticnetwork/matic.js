@@ -1,4 +1,4 @@
-import { erc20, from, posClient, to } from "./client";
+import { erc20, from, posClient, posClientForTo, to } from "./client";
 import { expect } from 'chai'
 import { ABIManager } from '@maticnetwork/maticjs'
 import BN from "bn.js";
@@ -53,7 +53,7 @@ describe('ERC20', () => {
     it('child transfer returnTransaction with erp1159', async () => {
         const amount = 10;
         try {
-            const result = await erc20Child.transfer(to, amount, {
+            const result = await erc20Child.transfer(amount, to, {
                 maxFeePerGas: 10,
                 maxPriorityFeePerGas: 10,
                 returnTransaction: true
@@ -70,10 +70,9 @@ describe('ERC20', () => {
 
     it('child transfer returnTransaction', async () => {
         const amount = 10;
-        const result = await erc20Child.transfer(to, amount, {
+        const result = await erc20Child.transfer(amount, to, {
             returnTransaction: true
         });
-        console.log('result', result);
         expect(result).to.have.not.property('maxFeePerGas')
         expect(result).to.have.not.property('maxPriorityFeePerGas')
         expect(result).to.have.property('gasPrice')
@@ -83,12 +82,11 @@ describe('ERC20', () => {
 
     it('parent transfer returnTransaction with erp1159', async () => {
         const amount = 10;
-        const result = await erc20Parent.transfer(to, amount, {
+        const result = await erc20Parent.transfer(amount, to, {
             maxFeePerGas: 20,
             maxPriorityFeePerGas: 20,
             returnTransaction: true
         });
-        console.log('result', result);
 
         expect(result).to.have.property('maxFeePerGas', 20)
         expect(result).to.have.property('maxPriorityFeePerGas', 20)
@@ -132,16 +130,27 @@ describe('ERC20', () => {
         expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
     });
 
+    it('withdrawExit return tx', async () => {
+        const result = await erc20Parent.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+            returnTransaction: true
+        });
+        console.log('result', result);
+
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+    });
+
+
     it('child transfer', async () => {
         const oldBalance = await erc20Child.getBalance(to);
         console.log('oldBalance', oldBalance);
-        const amount = 10;
-        const result = await erc20Child.transfer(to, amount);
-        const txHash = await result.getTransactionHash();
+        const amount = 10000000;
+        let result = await erc20Child.transfer(amount, to);
+        let txHash = await result.getTransactionHash();
         expect(txHash).to.be.an('string');
-        console.log('txHash', txHash);
-        const txReceipt = await result.getReceipt();
-        console.log("txReceipt", txReceipt);
+        // console.log('txHash', txHash);
+        let txReceipt = await result.getReceipt();
+        // console.log("txReceipt", txReceipt);
 
         expect(txReceipt.transactionHash).equal(txHash);
         expect(txReceipt).to.be.an('object');
@@ -168,6 +177,16 @@ describe('ERC20', () => {
         expect(newBalanceBig.toString()).equal(
             oldBalanceBig.add(new BN(amount)).toString()
         )
+
+
+
+        //transfer money back to user
+        await posClientForTo.init();
+        const erc20ChildToken = posClientForTo.erc20(erc20.child);
+
+        result = await erc20ChildToken.transfer(amount, to);
+        txHash = await result.getTransactionHash();
+        txReceipt = await result.getReceipt();
     });
 
     if (process.env.NODE_ENV !== 'test_all') return;

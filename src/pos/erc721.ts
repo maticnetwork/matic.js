@@ -46,7 +46,9 @@ export class ERC721 extends POSToken {
                 "balanceOf",
                 userAddress
             );
-            return this.processRead<number>(method, options);
+            return this.processRead<string>(method, options);
+        }).then(count => {
+            return Number(count);
         });
     }
 

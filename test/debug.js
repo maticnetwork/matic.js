@@ -35,21 +35,24 @@ const execute = async () => {
 
   const mumbaiERC20Token = client.erc20(mumbaiERC20);
   const goerliERC20Token = client.erc20(goerliERC20, true);
+  const goerliERC721Token = client.erc721(pos.parent.erc721, true);
+
+
 
   // return console.log(await client.isDeposited('0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258'));
 
 
-  const balance = await mumbaiERC20Token.getBalance(
-    from
-  );
-  return console.log("balance", balance);
+  // const balance = await mumbaiERC20Token.getBalance(
+  //   from
+  // );
+  // return console.log("balance", balance);
 
   // const tokens = await goerliERC720Token.getAllTokens(
   //   from
   // );
   // return console.log("tokens", tokens);
 
-  const tx = await goerliERC20Token.deposit(10, from, {
+  const tx = await goerliERC721Token.deposit(10, from, {
     returnTransaction: true
   });
   console.log('tx', tx);
