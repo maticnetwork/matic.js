@@ -13,3 +13,4 @@ export * from "./set_proof_api_url";
 export * from "./resolve";
 export * from "./promise_resolve";
 export * from "./bridge_client";
+export * from "./abi_manager";

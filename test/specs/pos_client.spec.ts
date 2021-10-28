@@ -1,11 +1,15 @@
 import { erc721, from, posClient } from "./client";
 import { expect } from 'chai'
+import { ABIManager } from '@maticnetwork/maticjs'
 
+describe('POS Client', () => {
 
-describe('POS Bridge', () => {
-
+    const abiManager = new ABIManager("testnet", "mumbai");
     before(() => {
-        return posClient.init();
+        return Promise.all([
+            posClient.init(),
+            abiManager.init()
+        ]);
     });
 
     it('depositEther return transaction', async () => {
@@ -13,7 +17,8 @@ describe('POS Bridge', () => {
         const result = await posClient.depositEther(amount, from, {
             returnTransaction: true
         });
-        console.log('tokensCount', result);
-
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+        expect(result['value']).equal('0x64')
     })
 });

@@ -1,5 +1,6 @@
 import { erc20, from, posClient, to } from "./client";
 import { expect } from 'chai'
+import { ABIManager } from '@maticnetwork/maticjs'
 import BN from "bn.js";
 
 
@@ -7,8 +8,13 @@ describe('ERC20', () => {
 
     let erc20Child = posClient.erc20(erc20.child);
     let erc20Parent = posClient.erc20(erc20.parent, true);
+
+    const abiManager = new ABIManager("testnet", "mumbai");
     before(() => {
-        return posClient.init();
+        return Promise.all([
+            posClient.init(),
+            abiManager.init()
+        ]);
     });
 
     it('get balance child', async () => {
@@ -96,6 +102,35 @@ describe('ERC20', () => {
     //     const isExited = await posClient.isDeposited(txHash);
     //     expect(isExited).to.be.an('boolean').equal(true);
     // })
+
+    it('withdrawstart return tx', async () => {
+        const result = await erc20Child.withdrawStart('10', {
+            returnTransaction: true
+        });
+
+        expect(result['to'].toLowerCase()).equal(erc20.child.toLowerCase());
+        expect(result).to.have.property('data')
+
+    });
+
+    it('approve return tx', async () => {
+        const result = await erc20Parent.approve('10', {
+            returnTransaction: true
+        });
+
+        expect(result['to'].toLowerCase()).equal(erc20.parent.toLowerCase());
+        expect(result).to.have.property('data')
+
+    });
+
+    it('deposit return tx', async () => {
+        const result = await erc20Parent.deposit(10, from, {
+            returnTransaction: true
+        });
+
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+    });
 
     it('child transfer', async () => {
         const oldBalance = await erc20Child.getBalance(to);

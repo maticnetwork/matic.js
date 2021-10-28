@@ -1,7 +1,7 @@
 import { getWeb3Client } from "../constant";
-import { IBaseClientConfig, IPOSClientConfig } from "../interfaces";
+import { IBaseClientConfig } from "../interfaces";
 import { BaseWeb3Client } from "../abstracts";
-import { ABIManager } from "../helpers";
+import { ABIManager } from "../utils";
 import { Logger } from "./logger";
 
 export class Web3SideChainClient<T_CONFIG> {

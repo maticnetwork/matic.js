@@ -1,5 +1,5 @@
 import { service } from "../services";
-import { resolve, promiseResolve } from "../utils";
+import { resolve, promiseResolve } from ".";
 
 type T_ABI_CACHE = {
     [networkName: string]: {
