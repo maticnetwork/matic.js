@@ -45,10 +45,8 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
             );
 
             this.exitUtil = new ExitUtil(
-                config,
-                this.client.child,
-                rootChain,
-                config.requestConcurrency
+                this.client,
+                rootChain
             );
 
             return this;

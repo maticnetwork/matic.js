@@ -53,7 +53,7 @@ const execute = async () => {
   // );
   // return console.log("tokens", tokens);
 
-  const tx = await goerliERC721Token.withdrawExit('0x2697a930ae883dd28c40a263a6a3b4d41a027cab56836de987ed2c2896abcdeb', {
+  const tx = await client.depositEther('10000', from, {
     // returnTransaction: true
   });
   // console.log('tx', tx);

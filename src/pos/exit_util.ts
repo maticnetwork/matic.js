@@ -1,5 +1,5 @@
 import { RootChain } from "./root_chain";
-import { Converter, ProofUtil } from "../utils";
+import { Converter, ProofUtil, Web3SideChainClient } from "../utils";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
 import { ITransactionReceipt } from "../interfaces";
@@ -27,11 +27,12 @@ export class ExitUtil {
     requestConcurrency: number;
     config: IBaseClientConfig;
 
-    constructor(config: IBaseClientConfig, maticClient: BaseWeb3Client, rootChain: RootChain, requestConcurrency: number) {
-        this.maticClient_ = maticClient;
+    constructor(client: Web3SideChainClient<IBaseClientConfig>, rootChain: RootChain) {
+        this.maticClient_ = client.child;
         this.rootChain = rootChain;
-        this.requestConcurrency = requestConcurrency;
+        const config = client.config;
         this.config = config;
+        this.requestConcurrency = config.requestConcurrency;
     }
 
     private getLogIndex_(logEventSig: string, receipt: ITransactionReceipt) {
