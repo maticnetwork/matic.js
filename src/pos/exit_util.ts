@@ -6,7 +6,7 @@ import { ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseWeb3Client } from "../abstracts";
 import { ErrorHelper } from "../utils/error_helper";
-import { ERROR_TYPE } from "..";
+import { ERROR_TYPE, IBaseClientConfig } from "..";
 
 interface IChainBlockInfo {
     lastChildBlock: string;
@@ -25,11 +25,13 @@ export class ExitUtil {
     rootChain: RootChain;
 
     requestConcurrency: number;
+    config: IBaseClientConfig;
 
-    constructor(maticClient: BaseWeb3Client, rootChain: RootChain, requestConcurrency: number) {
+    constructor(config: IBaseClientConfig, maticClient: BaseWeb3Client, rootChain: RootChain, requestConcurrency: number) {
         this.maticClient_ = maticClient;
         this.rootChain = rootChain;
         this.requestConcurrency = requestConcurrency;
+        this.config = config;
     }
 
     private getLogIndex_(logEventSig: string, receipt: ITransactionReceipt) {
@@ -106,7 +108,7 @@ export class ExitUtil {
     private async getRootBlockInfoFromAPI(txBlockNumber: number) {
         try {
             this.maticClient_.logger.log("block info from API 1");
-            const headerBlock = await service.network.getBlockIncluded(txBlockNumber);
+            const headerBlock = await service.network.getBlockIncluded(this.config.network, txBlockNumber);
             this.maticClient_.logger.log("block info from API 2", headerBlock);
             if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
                 throw Error('Network API Error');
@@ -131,7 +133,9 @@ export class ExitUtil {
 
         try {
             const blockProof = await service.network.getProof(
-                rootBlockInfo.start, rootBlockInfo.end,
+                this.config.network,
+                rootBlockInfo.start,
+                rootBlockInfo.end,
                 txBlockNumber
             );
             if (!blockProof) {

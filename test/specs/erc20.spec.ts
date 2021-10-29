@@ -1,6 +1,6 @@
 import { erc20, from, posClient, posClientForTo, to } from "./client";
 import { expect } from 'chai'
-import { ABIManager } from '@maticnetwork/maticjs'
+import { ABIManager, setProofApi } from '@maticnetwork/maticjs'
 import BN from "bn.js";
 
 
@@ -134,11 +134,35 @@ describe('ERC20', () => {
         const result = await erc20Parent.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
             returnTransaction: true
         });
-        console.log('result', result);
 
         const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
         expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
     });
+
+    it('withdrawExitFaster return tx without setProofAPI', async () => {
+        try {
+            const result = await erc20Parent.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+                returnTransaction: true
+            });
+            throw new Error("there should be exception");
+        } catch (error) {
+            expect(error).deep.equal({
+                message: `Proof api is not set, please set it using "setProofApi"`,
+                type: 'proof_api_not_set'
+            })
+        }
+    });
+
+    it('withdrawExitFaster return tx', async () => {
+        setProofApi("https://apis.matic.network");
+        const result = await erc20Parent.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+            returnTransaction: true
+        });
+
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+    });
+
 
 
     it('child transfer', async () => {
