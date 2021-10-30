@@ -95,11 +95,11 @@ describe('ERC20', () => {
 
     });
 
-    // it('isDeposited', async () => {
-    //     const txHash = '0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258';
-    //     const isExited = await posClient.isDeposited(txHash);
-    //     expect(isExited).to.be.an('boolean').equal(true);
-    // })
+    it('isDeposited', async () => {
+        const txHash = '0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258';
+        const isDeposited = await posClient.isDeposited(txHash);
+        expect(isDeposited).to.be.an('boolean').equal(true);
+    })
 
     it('withdrawstart return tx', async () => {
         const result = await erc20Child.withdrawStart('10', {

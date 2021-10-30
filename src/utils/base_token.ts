@@ -73,9 +73,10 @@ export class BaseToken<T_CLIENT_CONFIG> {
     protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
         this.validateTxOption_(option);
 
-        this.client.logger.log("process write");
         const isParent = this.contractParam.isParent;
         const client = this.getClient(isParent);
+        client.logger.log("process write");
+
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -83,7 +84,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method: null as any,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                this.client.logger.log("process write config");
+                client.logger.log("process write config");
                 if (option.returnTransaction) {
                     return config as any;
                 }
@@ -97,9 +98,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
 
     protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
         this.validateTxOption_(option);
-        this.client.logger.log("process read");
         const isParent = this.contractParam.isParent;
         const client = this.getClient(isParent);
+        client.logger.log("process read");
         return this.createTransactionConfig(
             {
                 txConfig: option,
@@ -107,7 +108,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method: null as any,
                 isParent: this.contractParam.isParent
             }).then(config => {
-                this.client.logger.log("write tx config created");
+                client.logger.log("write tx config created");
                 if (option.returnTransaction) {
                     return config as any;
                 }
@@ -169,9 +170,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
     protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
         const defaultConfig = isParent ? this.parentDefaultConfig : this.childDefaultConfig;
         txConfig = merge(defaultConfig, (txConfig || {}));
-        this.client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const client = isParent ? this.client.parent :
             this.client.child;
+        client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const estimateGas = (config: ITransactionConfig) => {
             return method ? method.estimateGas(config) :
                 client.estimateGas(config);
@@ -193,7 +194,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                     : txConfig.gasLimit,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
             ]);
-            this.client.logger.log("options filled");
+            client.logger.log("options filled");
             txConfig.gasLimit = Number(gasLimit);
             txConfig.nonce = nonce;
             if (isEIP1559Supported && isMaxFeeProvided) {
@@ -202,7 +203,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
             }
             else {
                 const gasPrice = !txConfig.gasPrice ? await client.getGasPrice() : txConfig.gasPrice;
-                console.log('gas price calculated', gasPrice);
+                client.logger.log('gas price calculated', gasPrice);
                 txConfig.gasPrice = Number(gasPrice);
             }
 

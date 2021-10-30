@@ -195,8 +195,8 @@ export class ERC20 extends POSToken {
     /**
      * transfer amount to another user
      *
-     * @param {string} to
      * @param {TYPE_AMOUNT} amount
+     * @param {string} to
      * @param {ITransactionOption} [option]
      * @returns
      * @memberof ERC20
