@@ -5,7 +5,7 @@ const execute = async () => {
   const client = await getPOSClient();
   const erc721Token = client.erc721(pos.child.erc721);
 
-  const result = await erc721Token.withdrawStart('801', {
+  const result = await erc721Token.withdrawStartMany(['800', '802'], {
     // nonce: 11793,
     // returnTransaction: true,
     gasPrice: '4000000000',
