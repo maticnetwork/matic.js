@@ -1,14 +1,12 @@
+const { pos } = require('../config');
 const { getPOSClient, from } = require('../utils');
 
 const execute = async () => {
     const client = await getPOSClient();
-    const result = await client.depositEther(100);
 
-    const txHash = await result.getTransactionHash();
-    console.log("txHash", txHash);
-    const receipt = await result.getReceipt();
-    console.log("receipt", receipt);
+    const isDeposited = await client.isDeposited('0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258');
 
+    console.log("isDeposited", isDeposited);
 }
 execute().then(() => {
 }).catch(err => {

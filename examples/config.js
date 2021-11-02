@@ -5,20 +5,6 @@ const env = dotenv.config({
 });
 
 module.exports = {
-  plasma: {
-    parent: {
-      erc20: '0x3f152B63Ec5CA5831061B2DccFb29a874C317502',
-      erc721: '0x4f765cd1d33b2e9ae6dcba1f5852de93b285eb78',
-    },
-    child: {
-      erc721: '0x0f3Fb1354337965BAd0775a75c692D167fbb39F9',
-      erc20: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
-    },
-    registryAddress: '0x56B082d0a590A7ce5d170402D6f7f88B58F71988',
-    rootChainAddress: '0x82a72315E16cE224f28E1F1fB97856d3bF83f010', // The address for the main Plasma contract in  Ropsten testnet
-    withdrawManagerAddress: '0x3cf9aD3395028a42EAfc949e2EC4588396b8A7D4', // An address for the WithdrawManager contract on Ropsten testnet
-    depositManagerAddress: '0x3Bc6701cA1C32BBaC8D1ffA2294EE3444Ad93989', // An address for a DepositManager contract in Ropsten testnet
-  },
   parent: {
     rpc: process.env.ROOT_RPC,
   },
@@ -48,6 +34,6 @@ module.exports = {
     address: process.env.FROM
   },
   user2: {
-    address:  process.env.USER2_ADDRESS
+    address: process.env.USER2_ADDRESS
   },
 }
