@@ -3,11 +3,10 @@ const { getPOSClient, to } = require('../../utils');
 
 const execute = async () => {
     const client = await getPOSClient();
-    const erc720Token = client.erc20(pos.parent.erc20);
+    const erc20Token = client.erc20(pos.parent.erc20, true);
 
-    const result = await erc720Token.transfer(to, 10, {
-        gasPrice: '4000000000',
-        nonce: 11795,
+    const result = await erc20Token.transfer(100, to, {
+        gasPrice: '30000000000',
     });
 
     const txHash = await result.getTransactionHash();

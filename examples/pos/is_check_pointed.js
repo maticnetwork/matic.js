@@ -4,7 +4,7 @@ const { getPOSClient, from } = require('../utils');
 const execute = async () => {
     const client = await getPOSClient();
 
-    const result = await client.isCheckPointed('0xf63a77f1b6435e5d89c8958d80b658350f74409188a8efa17d51044d3a32e1d0');
+    const result = await client.isCheckPointed('0xb005d8db45f33836c422ee18286fa8ebe49b4ec7b9930e673d85ecd081cc3b8e');
 
     console.log("result", result);
 }
