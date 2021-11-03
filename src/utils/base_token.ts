@@ -178,7 +178,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 client.estimateGas(config);
         };
         txConfig.chainId = !txConfig.chainId ? await client.getChainId() : txConfig.chainId;
-        txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
+        // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
             const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
             const isEIP1559Supported = this.client.isEIP1559Supported(isParent);
