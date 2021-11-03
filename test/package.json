@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@maticnetwork/maticjs-web3": "^0.4.0",
+    "@truffle/hdwallet-provider": "^1.5.1-alpha.1",
     "mochapack": "^2.1.2"
   }
 }
