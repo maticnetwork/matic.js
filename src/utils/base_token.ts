@@ -198,10 +198,13 @@ export class BaseToken<T_CLIENT_CONFIG> {
             txConfig.gasLimit = Number(gasLimit);
             txConfig.nonce = nonce;
             if (isEIP1559Supported && isMaxFeeProvided) {
+                client.logger.log("tx config created for EIP1559");
+                // txConfig.type = '0x2';
                 txConfig.maxFeePerGas = maxFeePerGas;
                 txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
             }
             else {
+                client.logger.log("tx config created for legacy");
                 const gasPrice = !txConfig.gasPrice ? await client.getGasPrice() : txConfig.gasPrice;
                 client.logger.log('gas price calculated', gasPrice);
                 txConfig.gasPrice = Number(gasPrice);

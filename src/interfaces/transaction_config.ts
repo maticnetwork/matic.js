@@ -13,4 +13,5 @@ export interface ITransactionConfig {
     hardfork?: string;
     maxFeePerGas?: number | string;
     maxPriorityFeePerGas?: number | string;
+    type?: string;
 }
