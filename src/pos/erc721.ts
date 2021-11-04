@@ -178,10 +178,10 @@ export class ERC721 extends POSToken {
     depositMany(tokenIds: TYPE_AMOUNT[], userAddress: string, option?: ITransactionOption) {
         this.checkForRoot("depositMany");
 
-        const tokensInUint256 = this.validateMany_(tokenIds);
+        const tokensInHex = this.validateMany_(tokenIds);
 
         const amountInABI = this.client.parent.encodeParameters(
-            tokensInUint256,
+            [tokensInHex],
             ['uint256[]'],
         );
         return this.rootChainManager.deposit(
@@ -208,12 +208,12 @@ export class ERC721 extends POSToken {
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
         this.checkForChild("withdrawStartMany");
 
+        const tokensInHex = this.validateMany_(tokenIds);
 
-        const tokensInUint256 = this.validateMany_(tokenIds);
         return this.getContract().then(contract => {
             const method = contract.method(
                 "withdrawBatch",
-                tokensInUint256
+                tokensInHex
             );
             return this.processWrite(method, option);
         });

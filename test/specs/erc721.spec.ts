@@ -1,5 +1,6 @@
 import { erc721, from, posClient, posClientForTo, to, } from "./client";
 import { expect } from 'chai'
+import { ABIManager, setProofApi } from '@maticnetwork/maticjs'
 
 
 describe('ERC721', () => {
@@ -7,8 +8,12 @@ describe('ERC721', () => {
     let erc721Child = posClient.erc721(erc721.child);
     let erc721Parent = posClient.erc721(erc721.parent, true);
 
+    const abiManager = new ABIManager("testnet", "mumbai");
     before(() => {
-        return posClient.init();
+        return Promise.all([
+            posClient.init(),
+            abiManager.init()
+        ]);
     });
 
     it('getTokensCounts child', async () => {
@@ -68,6 +73,24 @@ describe('ERC721', () => {
         expect(result['to'].toLowerCase()).equal(erc721.parent.toLowerCase());
     })
 
+    it('deposit return tx', async () => {
+        const allTokens = await erc721Parent.getAllTokens(from);
+        const tx = await erc721Parent.deposit(allTokens[0], from, {
+            returnTransaction: true
+        });
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+    })
+
+    it('depositMany return tx', async () => {
+        const allTokens = await erc721Parent.getAllTokens(from);
+        const tx = await erc721Parent.depositMany(allTokens, from, {
+            returnTransaction: true
+        });
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+    })
+
     it('withdrawStart return tx', async () => {
         const allTokens = await erc721Child.getAllTokens(from);
         const result = await erc721Child.withdrawStart(allTokens[0], {
@@ -78,9 +101,9 @@ describe('ERC721', () => {
 
     it('transfer write', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
-        console.log('allTokensFrom', allTokensFrom);
+        // console.log('allTokensFrom', allTokensFrom);
         const allTokensTo = await erc721Child.getAllTokens(to);
-        console.log('allTokensTo', allTokensTo);
+        // console.log('allTokensTo', allTokensTo);
 
         const targetToken = allTokensFrom[0];
         let result = await erc721Child.transfer(targetToken, from, to);
@@ -101,10 +124,10 @@ describe('ERC721', () => {
 
 
         const newAllTokensFrom = await erc721Child.getAllTokens(from);
-        console.log('newAllTokensFrom', newAllTokensFrom);
+        // console.log('newAllTokensFrom', newAllTokensFrom);
         expect(newAllTokensFrom.length).equal(allTokensFrom.length - 1);
         const newAllTokensTo = await erc721Child.getAllTokens(to);
-        console.log('newAllTokensTo', newAllTokensTo);
+        // console.log('newAllTokensTo', newAllTokensTo);
         expect(newAllTokensTo.length).equal(allTokensTo.length + 1);
 
         await posClientForTo.init();

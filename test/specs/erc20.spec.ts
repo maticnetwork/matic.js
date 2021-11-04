@@ -77,7 +77,8 @@ describe('ERC20', () => {
         expect(result).to.have.not.property('maxPriorityFeePerGas')
         expect(result).to.have.property('gasPrice')
         expect(result['gasPrice']).to.be.an('number').gt(0);
-        expect(result).to.have.property('chainId', '0x13881');
+        expect(result).to.have.property('chainId', 80001);
+        expect(result['chainId']).to.be.an('number');
     });
 
     it('parent transfer returnTransaction with erp1159', async () => {
@@ -91,7 +92,7 @@ describe('ERC20', () => {
         expect(result).to.have.property('maxFeePerGas', 20)
         expect(result).to.have.property('maxPriorityFeePerGas', 20)
         expect(result).to.have.not.property('gasPrice')
-        expect(result).to.have.property('chainId', '0x5');
+        expect(result).to.have.property('chainId', 5);
 
     });
 
