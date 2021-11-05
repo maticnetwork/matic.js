@@ -6,6 +6,7 @@ import { mapPromise } from "./map_promise";
 const TRIE = require('merkle-patricia-tree');
 const rlp = ethUtils.rlp;
 import EthereumBlock from 'ethereumjs-block/from-rpc';
+import { promiseResolve } from "..";
 
 
 export class ProofUtil {
@@ -112,11 +113,12 @@ export class ProofUtil {
         );
     }
 
-    static async getReceiptProof(receipt: ITransactionReceipt, block: IBlockWithTransaction, web3: BaseWeb3Client, requestConcurrency = Infinity, receipts?: ITransactionReceipt[]) {
+    static getReceiptProof(receipt: ITransactionReceipt, block: IBlockWithTransaction, web3: BaseWeb3Client, requestConcurrency = Infinity, receiptsVal?: ITransactionReceipt[]) {
         const stateSyncTxHash = ethUtils.bufferToHex(ProofUtil.getStateSyncTxHash(block));
         const receiptsTrie = new TRIE();
-        const receiptPromises = [];
-        if (!receipts) {
+        let receiptPromise: Promise<ITransactionReceipt[]>;
+        if (!receiptsVal) {
+            const receiptPromises = [];
             block.transactions.forEach(tx => {
                 if (tx.transactionHash === stateSyncTxHash) {
                     // ignore if tx hash is bor state-sync tx
@@ -126,7 +128,7 @@ export class ProofUtil {
                     web3.getTransactionReceipt(tx.transactionHash)
                 );
             });
-            receipts = await mapPromise(
+            receiptPromise = mapPromise(
                 receiptPromises,
                 val => {
                     return val;
@@ -136,41 +138,47 @@ export class ProofUtil {
                 }
             );
         }
-
-        for (let i = 0, length = receipts.length; i < length; i++) {
-            const siblingReceipt = receipts[i];
-            const path = rlp.encode(siblingReceipt.transactionIndex);
-            const rawReceipt = ProofUtil.getReceiptBytes(siblingReceipt);
-            await new Promise((resolve, reject) => {
-                receiptsTrie.put(path, rawReceipt, err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve({});
-                    }
-                });
-            });
+        else {
+            receiptPromise = promiseResolve(receiptsVal);
         }
 
-        // promise
-        return new Promise((resolve, reject) => {
-            receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), (err, rawReceiptNode, reminder, stack) => {
-                if (err) {
-                    return reject(err);
-                }
+        return receiptPromise.then(receipts => {
+            return Promise.all(
+                receipts.map(siblingReceipt => {
+                    const path = rlp.encode(siblingReceipt.transactionIndex);
+                    const rawReceipt = ProofUtil.getReceiptBytes(siblingReceipt);
+                    return new Promise((resolve, reject) => {
+                        receiptsTrie.put(path, rawReceipt, err => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve({});
+                            }
+                        });
+                    });
+                })
+            );
+        }).then(_ => {
+            // promise
+            return new Promise((resolve, reject) => {
+                receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), (err, rawReceiptNode, reminder, stack) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                if (reminder.length > 0) {
-                    return reject(new Error('Node does not contain the key'));
-                }
+                    if (reminder.length > 0) {
+                        return reject(new Error('Node does not contain the key'));
+                    }
 
-                const prf = {
-                    blockHash: ethUtils.toBuffer(receipt.blockHash),
-                    parentNodes: stack.map(s => s.raw),
-                    root: ProofUtil.getRawHeader(block).receiptTrie,
-                    path: rlp.encode(receipt.transactionIndex),
-                    value: rlp.decode(rawReceiptNode.value),
-                };
-                resolve(prf);
+                    const prf = {
+                        blockHash: ethUtils.toBuffer(receipt.blockHash),
+                        parentNodes: stack.map(s => s.raw),
+                        root: ProofUtil.getRawHeader(block).receiptTrie,
+                        path: rlp.encode(receipt.transactionIndex),
+                        value: rlp.decode(rawReceiptNode.value),
+                    };
+                    resolve(prf);
+                });
             });
         });
     }

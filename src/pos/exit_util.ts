@@ -157,66 +157,74 @@ export class ExitUtil {
         });
     }
 
-    async buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+    buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
 
         if (isFast && !service.network) {
             new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
         }
 
-        const blockInfo = await this.getChainBlockInfo(
+        let txBlockNumber: number,
+            rootBlockInfo: IRootBlockInfo,
+            receipt: ITransactionReceipt,
+            block: IBlockWithTransaction,
+            blockProof;
+
+        return this.getChainBlockInfo(
             burnTxHash
-        );
+        ).then(blockInfo => {
+            if (!this.isCheckPointed_(blockInfo)) {
+                throw new Error(
+                    'Burn transaction has not been checkpointed as yet'
+                );
+            }
 
-        if (!this.isCheckPointed_(blockInfo)) {
-            throw new Error(
-                'Burn transaction has not been checkpointed as yet'
+            txBlockNumber = blockInfo.txBlockNumber;
+            return Promise.all([
+                this.maticClient_.getTransactionReceipt(burnTxHash),
+                this.maticClient_.getBlockWithTransaction(txBlockNumber)
+            ]);
+        }).then(result => {
+            [receipt, block] = result;
+            return (
+                isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
+                    this.getRootBlockInfo(txBlockNumber)
             );
-        }
+        }).then(rootBlockInfoResult => {
+            rootBlockInfo = rootBlockInfoResult;
+            // build block proof
+            return (
+                isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
+                    this.getBlockProof(txBlockNumber, rootBlockInfo)
+            );
+        }).then(blockProofResult => {
+            blockProof = blockProofResult;
+            return ProofUtil.getReceiptProof(
+                receipt,
+                block,
+                this.maticClient_,
+                this.requestConcurrency
+            );
+        }).then((receiptProof: any) => {
+            const logIndex = this.getLogIndex_(
+                logEventSig, receipt
+            );
 
-        const { txBlockNumber } = blockInfo;
-
-        const [receipt, block] = await Promise.all([
-            this.maticClient_.getTransactionReceipt(burnTxHash),
-            this.maticClient_.getBlockWithTransaction(txBlockNumber)
-        ]);
-
-        const rootBlockInfo = await (
-            isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
-                this.getRootBlockInfo(txBlockNumber)
-        );
-
-        // build block proof
-        const blockProof = await (
-            isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
-                this.getBlockProof(txBlockNumber, rootBlockInfo)
-        );
-
-        const receiptProof: any = await ProofUtil.getReceiptProof(
-            receipt,
-            block,
-            this.maticClient_,
-            this.requestConcurrency
-        );
-
-        const logIndex = this.getLogIndex_(
-            logEventSig, receipt
-        );
-
-        return this._encodePayload(
-            rootBlockInfo.blockNumber,
-            blockProof,
-            txBlockNumber,
-            block.timestamp,
-            Buffer.from(block.transactionsRoot.slice(2), 'hex'),
-            Buffer.from(block.receiptsRoot.slice(2), 'hex'),
-            ProofUtil.getReceiptBytes(receipt), // rlp encoded
-            receiptProof.parentNodes,
-            receiptProof.path,
-            logIndex
-        );
+            return this.encodePayload_(
+                rootBlockInfo.blockNumber,
+                blockProof,
+                txBlockNumber,
+                block.timestamp,
+                Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+                Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+                ProofUtil.getReceiptBytes(receipt), // rlp encoded
+                receiptProof.parentNodes,
+                receiptProof.path,
+                logIndex
+            );
+        });
     }
 
-    private _encodePayload(
+    private encodePayload_(
         headerNumber,
         buildBlockProof,
         blockNumber,
