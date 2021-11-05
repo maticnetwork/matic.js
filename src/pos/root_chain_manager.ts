@@ -42,7 +42,7 @@ export class RootChainManager extends BaseToken<IPOSClientConfig> {
         return this.method(
             "processedExits", exitHash
         ).then(method => {
-            return method.read<boolean>();
+            return this.processRead<boolean>(method);
         });
     }
 

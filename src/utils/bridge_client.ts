@@ -1,6 +1,7 @@
 import BN from "bn.js";
 import { Web3SideChainClient } from "../utils";
 import { ExitUtil } from "../pos";
+import { BaseToken } from "..";
 
 export class BridgeClient<T> {
 
@@ -27,17 +28,20 @@ export class BridgeClient<T> {
 
     isDeposited(depositTxHash: string) {
         const client = this.client;
-        return client.getABI(
-            "StateReceiver",
-            "genesis",
-        ).then(abi => {
-            const contract = client.child.getContract(
-                client.abiManager.getConfig("Matic.GenesisContracts.StateReceiver"),
-                abi
-            );
+
+        const token = new BaseToken({
+            address: client.abiManager.getConfig("Matic.GenesisContracts.StateReceiver"),
+            isParent: false,
+            name: 'StateReceiver',
+            bridgeType: 'genesis'
+        }, client);
+
+        return token.getContract().then(contract => {
             return Promise.all([
                 client.parent.getTransactionReceipt(depositTxHash),
-                contract.method("lastStateId").read<string>()
+                token['processRead']<string>(
+                    contract.method("lastStateId")
+                )
             ]);
         }).then(result => {
             const [receipt, lastStateId] = result;
