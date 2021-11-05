@@ -1,3 +1,4 @@
+import { promiseResolve } from '..';
 import { IMapPromiseOption } from '../interfaces';
 
 const runPromises = (promises: Array<Promise<any>>, converter: Function) => {
@@ -12,15 +13,14 @@ export function mapPromise(values: any[], converter: Function, option: IMapPromi
   const concurrency = option.concurrency || valuesLength;
 
   let result = [];
-  const limitPromiseRun = async () => {
+  const limitPromiseRun: () => Promise<any> = () => {
     const promises = values.splice(0, concurrency);
-    const promiseResult = await runPromises(promises, converter);
-    result = result.concat(promiseResult);
+    return runPromises(promises, converter).then(promiseResult => {
+      result = result.concat(promiseResult);
 
-    if (valuesLength > result.length) {
-      await limitPromiseRun();
-    }
-    return result;
+      return valuesLength > result.length ?
+        limitPromiseRun() : promiseResolve(result);
+    });
   };
 
   return limitPromiseRun();

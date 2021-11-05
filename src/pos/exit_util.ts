@@ -2,7 +2,7 @@ import { RootChain } from "./root_chain";
 import { Converter, ProofUtil, Web3SideChainClient } from "../utils";
 import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
-import { ITransactionReceipt } from "../interfaces";
+import { IBlockWithTransaction, ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseWeb3Client } from "../abstracts";
 import { ErrorHelper } from "../utils/error_helper";
@@ -113,22 +113,24 @@ export class ExitUtil {
 
     }
 
-    private async getRootBlockInfoFromAPI(txBlockNumber: number) {
-        try {
-            this.maticClient_.logger.log("block info from API 1");
-            const headerBlock = await service.network.getBlockIncluded(this.config.network, txBlockNumber);
+    private getRootBlockInfoFromAPI(txBlockNumber: number) {
+        this.maticClient_.logger.log("block info from API 1");
+        return service.network.getBlockIncluded(
+            this.config.network,
+            txBlockNumber
+        ).then(headerBlock => {
             this.maticClient_.logger.log("block info from API 2", headerBlock);
             if (!headerBlock || !headerBlock.start || !headerBlock.end || !headerBlock.headerBlockNumber) {
                 throw Error('Network API Error');
             }
             return headerBlock;
-        } catch (err) {
+        }).catch(err => {
             this.maticClient_.logger.log("block info from API", err);
             return this.getRootBlockInfo(txBlockNumber);
-        }
+        });
     }
 
-    private async getBlockProof(txBlockNumber: number, rootBlockInfo: { start, end }) {
+    private getBlockProof(txBlockNumber: number, rootBlockInfo: { start, end }) {
         return ProofUtil.buildBlockProof(
             this.maticClient_,
             parseInt(rootBlockInfo.start, 10),
@@ -137,23 +139,22 @@ export class ExitUtil {
         );
     }
 
-    private async getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
+    private getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
 
-        try {
-            const blockProof = await service.network.getProof(
-                this.config.network,
-                rootBlockInfo.start,
-                rootBlockInfo.end,
-                txBlockNumber
-            );
+        return service.network.getProof(
+            this.config.network,
+            rootBlockInfo.start,
+            rootBlockInfo.end,
+            txBlockNumber
+        ).then(blockProof => {
             if (!blockProof) {
                 throw Error('Network API Error');
             }
             this.maticClient_.logger.log("block proof from API 1");
             return blockProof;
-        } catch (err) {
+        }).catch(_ => {
             return this.getBlockProof(txBlockNumber, rootBlockInfo);
-        }
+        });
     }
 
     async buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
@@ -243,32 +244,42 @@ export class ExitUtil {
         );
     }
 
-    async getExitHash(burnTxHash, logEventSig) {
-        const lastChildBlock = await this.rootChain.getLastChildBlock();
-        const receipt = await this.maticClient_.getTransactionReceipt(burnTxHash);
-        const block = await this.maticClient_.getBlockWithTransaction(receipt.blockNumber);
+    getExitHash(burnTxHash, logEventSig) {
+        let lastChildBlock: string,
+            receipt: ITransactionReceipt,
+            block: IBlockWithTransaction;
 
-        if (!this.isCheckPointed_({ lastChildBlock: lastChildBlock, txBlockNumber: receipt.blockNumber })) {
-            this.maticClient_.logger.error(ERROR_TYPE.BurnTxNotCheckPointed).throw();
-        }
+        return Promise.all([
+            this.rootChain.getLastChildBlock(),
+            this.maticClient_.getTransactionReceipt(burnTxHash)
+        ]).then(result => {
+            lastChildBlock = result[0];
+            receipt = result[1];
+            return this.maticClient_.getBlockWithTransaction(
+                receipt.blockNumber
+            );
+        }).then(blockResult => {
+            block = blockResult;
+            if (!this.isCheckPointed_({ lastChildBlock: lastChildBlock, txBlockNumber: receipt.blockNumber })) {
+                this.maticClient_.logger.error(ERROR_TYPE.BurnTxNotCheckPointed).throw();
+            }
+            return ProofUtil.getReceiptProof(
+                receipt,
+                block,
+                this.maticClient_,
+                this.requestConcurrency
+            );
+        }).then((receiptProof: any) => {
+            const logIndex = this.getLogIndex_(logEventSig, receipt);
+            const nibbleArr = [];
+            receiptProof.path.forEach(byte => {
+                nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'));
+                nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'));
+            });
 
-
-        const receiptProof: any = await ProofUtil.getReceiptProof(
-            receipt,
-            block,
-            this.maticClient_,
-            this.requestConcurrency
-        );
-
-        const logIndex = this.getLogIndex_(logEventSig, receipt);
-        const nibbleArr = [];
-        receiptProof.path.forEach(byte => {
-            nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'));
-            nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'));
+            return this.maticClient_.etheriumSha3(
+                receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex
+            );
         });
-
-        return this.maticClient_.etheriumSha3(
-            receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex
-        );
     }
 }
