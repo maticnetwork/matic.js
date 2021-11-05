@@ -82,24 +82,26 @@ export class ProofUtil {
         return reversedProof.reverse();
     }
 
-    static async buildBlockProof(maticWeb3: BaseWeb3Client, startBlock: number, endBlock: number, blockNumber: number) {
-        const proof = await ProofUtil.getFastMerkleProof(maticWeb3, blockNumber, startBlock, endBlock);
-        return ethUtils.bufferToHex(
-            Buffer.concat(
-                proof.map(p => {
-                    return ethUtils.toBuffer(p);
-                })
-            )
-        );
+    static buildBlockProof(maticWeb3: BaseWeb3Client, startBlock: number, endBlock: number, blockNumber: number) {
+        return ProofUtil.getFastMerkleProof(
+            maticWeb3, blockNumber, startBlock, endBlock
+        ).then(proof => {
+            return ethUtils.bufferToHex(
+                Buffer.concat(
+                    proof.map(p => {
+                        return ethUtils.toBuffer(p);
+                    })
+                )
+            );
+        });
     }
 
-    static async queryRootHash(client: BaseWeb3Client, startBlock: number, endBlock: number) {
-        try {
-            const rootHash = await client.getRootHash(startBlock, endBlock);
+    static queryRootHash(client: BaseWeb3Client, startBlock: number, endBlock: number) {
+        return client.getRootHash(startBlock, endBlock).then(rootHash => {
             return ethUtils.toBuffer(`0x${rootHash}`);
-        } catch (err) {
+        }).catch(_ => {
             return null;
-        }
+        });
     }
 
     static recursiveZeroHash(n: number, client: BaseWeb3Client) {

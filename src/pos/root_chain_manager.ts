@@ -29,7 +29,7 @@ export class RootChainManager extends BaseToken<IPOSClientConfig> {
         });
     }
 
-    async exit(exitPayload: string, option: ITransactionOption) {
+    exit(exitPayload: string, option: ITransactionOption) {
         return this.method("exit", exitPayload).then(method => {
             return this.processWrite(
                 method,

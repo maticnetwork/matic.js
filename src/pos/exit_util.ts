@@ -83,7 +83,7 @@ export class ExitUtil {
         return new BN(data.lastChildBlock).gte(new BN(data.txBlockNumber));
     }
 
-    async isCheckPointed(burnTxHash: string) {
+    isCheckPointed(burnTxHash: string) {
         return this.getChainBlockInfo(
             burnTxHash
         ).then(result => {
@@ -93,17 +93,24 @@ export class ExitUtil {
         });
     }
 
-    private async getRootBlockInfo(txBlockNumber: number) {
+    private getRootBlockInfo(txBlockNumber: number) {
         // find in which block child was included in parent
-        const rootBlockNumber = await this.rootChain.findRootBlockFromChild(
+        let rootBlockNumber: BN;
+        return this.rootChain.findRootBlockFromChild(
             txBlockNumber
-        );
-        const method = await this.rootChain.method(
-            "headerBlocks", Converter.toHex(rootBlockNumber)
-        );
-        const rootBlockInfo = await method.read<IRootBlockInfo>();
-        rootBlockInfo.blockNumber = rootBlockNumber;
-        return rootBlockInfo;
+        ).then(blockNumber => {
+            rootBlockNumber = blockNumber;
+            return this.rootChain.method(
+                "headerBlocks",
+                Converter.toHex(blockNumber)
+            );
+        }).then(method => {
+            return method.read<IRootBlockInfo>();
+        }).then(rootBlockInfo => {
+            rootBlockInfo.blockNumber = rootBlockNumber;
+            return rootBlockInfo;
+        });
+
     }
 
     private async getRootBlockInfoFromAPI(txBlockNumber: number) {

@@ -23,22 +23,28 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
     }
 
 
-    async getPredicateAddress() {
+    getPredicateAddress(): Promise<string> {
         if (this.predicateAddress) {
             return promiseResolve(this.predicateAddress);
         }
-        const method = await this.rootChainManager.method("tokenToType", this.contractParam.address);
-        const tokenType = await method.read();
-        if (!tokenType) {
-            throw new Error('Invalid Token Type');
-        }
-        const typeToPredicateMethod = await this.rootChainManager.method
-            (
+        return this.rootChainManager.method(
+            "tokenToType",
+            this.contractParam.address
+        ).then(method => {
+            return method.read();
+        }).then(tokenType => {
+            if (!tokenType) {
+                throw new Error('Invalid Token Type');
+            }
+            return this.rootChainManager.method(
                 "typeToPredicate", tokenType
             );
-        const predicateAddress = await typeToPredicateMethod.read<string>();
-        this.predicateAddress = predicateAddress;
-        return predicateAddress;
+        }).then(typeToPredicateMethod => {
+            return typeToPredicateMethod.read<string>();
+        }).then(predicateAddress => {
+            this.predicateAddress = predicateAddress;
+            return predicateAddress;
+        });
     }
 
     protected isWithdrawn(txHash: string, eventSignature: string) {
