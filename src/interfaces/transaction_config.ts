@@ -1,7 +1,7 @@
 import BN from "bn.js";
 
 export interface ITransactionConfig {
-    from?: string | number;
+    from?: string;
     to?: string;
     value?: number | string | BN;
     gasLimit?: number | string;

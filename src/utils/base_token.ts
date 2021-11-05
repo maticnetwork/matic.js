@@ -167,7 +167,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         return config.child.defaultConfig;
     }
 
-    protected async createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
+    protected createTransactionConfig({ txConfig, method, isParent, isWrite }: ITransactionConfigParam) {
         const defaultConfig = isParent ? this.parentDefaultConfig : this.childDefaultConfig;
         txConfig = merge(defaultConfig, (txConfig || {}));
         const client = isParent ? this.client.parent :
@@ -184,37 +184,51 @@ export class BaseToken<T_CLIENT_CONFIG> {
             const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
 
             if (!isEIP1559Supported && isMaxFeeProvided) {
-                this.client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
+                client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
             }
-
-            const [gasLimit, nonce, chainId] = await Promise.all([
+            // const [gasLimit, nonce, chainId] = 
+            return Promise.all([
                 !(txConfig.gasLimit)
-                    ? estimateGas({ from: txConfig.from, value: txConfig.value })
+                    ? estimateGas({
+                        from: txConfig.from, value: txConfig.value
+                    })
                     : txConfig.gasLimit,
-                !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
-                !txConfig.chainId ? await client.getChainId() : txConfig.chainId
-            ]);
-            client.logger.log("options filled");
+                !txConfig.nonce ?
+                    client.getTransactionCount(txConfig.from, 'pending')
+                    : txConfig.nonce,
+                !txConfig.chainId ?
+                    client.getChainId() : txConfig.chainId
+            ]).then(result => {
+                const [gasLimit, nonce, chainId] = result;
+                client.logger.log("options filled");
 
-            txConfig.gasLimit = Number(gasLimit);
-            txConfig.nonce = nonce;
-            txConfig.chainId = chainId;
+                txConfig.gasLimit = Number(gasLimit);
+                txConfig.nonce = nonce;
+                txConfig.chainId = chainId;
 
-            if (isEIP1559Supported && isMaxFeeProvided) {
-                client.logger.log("tx config created for EIP1559");
-                // txConfig.type = '0x2';
-                txConfig.maxFeePerGas = maxFeePerGas;
-                txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
-            }
-            else {
-                client.logger.log("tx config created for legacy");
-                const gasPrice = !txConfig.gasPrice ? await client.getGasPrice() : txConfig.gasPrice;
-                client.logger.log('gas price calculated', gasPrice);
-                txConfig.gasPrice = Number(gasPrice);
-            }
-
+                return (() => {
+                    if (isEIP1559Supported && isMaxFeeProvided) {
+                        client.logger.log("tx config created for EIP1559");
+                        // txConfig.type = '0x2';
+                        txConfig.maxFeePerGas = maxFeePerGas;
+                        txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
+                        return promiseResolve(null);
+                    }
+                    else {
+                        client.logger.log("tx config created for legacy");
+                        return (!txConfig.gasPrice ? client.getGasPrice() :
+                            promiseResolve(txConfig.gasPrice)
+                        ).then(gasPrice => {
+                            client.logger.log('gas price calculated', gasPrice);
+                            txConfig.gasPrice = Number(gasPrice);
+                        });
+                    }
+                })().then(_ => {
+                    return txConfig;
+                });
+            });
         }
-        return txConfig;
+        return promiseResolve<ITransactionConfig>(txConfig);
     }
 
     protected transferERC20(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
