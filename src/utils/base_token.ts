@@ -177,7 +177,6 @@ export class BaseToken<T_CLIENT_CONFIG> {
             return method ? method.estimateGas(config) :
                 client.estimateGas(config);
         };
-        txConfig.chainId = !txConfig.chainId ? await client.getChainId() : txConfig.chainId;
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
             const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
@@ -188,15 +187,19 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 this.client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
             }
 
-            const [gasLimit, nonce] = await Promise.all([
+            const [gasLimit, nonce, chainId] = await Promise.all([
                 !(txConfig.gasLimit)
                     ? estimateGas({ from: txConfig.from, value: txConfig.value })
                     : txConfig.gasLimit,
                 !txConfig.nonce ? client.getTransactionCount(txConfig.from as string, 'pending') : txConfig.nonce,
+                !txConfig.chainId ? await client.getChainId() : txConfig.chainId
             ]);
             client.logger.log("options filled");
+
             txConfig.gasLimit = Number(gasLimit);
             txConfig.nonce = nonce;
+            txConfig.chainId = chainId;
+
             if (isEIP1559Supported && isMaxFeeProvided) {
                 client.logger.log("tx config created for EIP1559");
                 // txConfig.type = '0x2';
