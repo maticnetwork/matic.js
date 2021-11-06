@@ -1,3 +1,4 @@
+import BN from "bn.js";
 import { BaseContract } from "../abstracts";
 import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse, ITransactionWriteResult } from "../interfaces";
 import { Logger } from "../utils";
@@ -41,4 +42,5 @@ export abstract class BaseWeb3Client {
     abstract encodeParameters(params: any[], types: any[]): string;
     abstract decodeParameters(hexString: string, types: any[]): any[];
     abstract etheriumSha3(...value): string;
+
 }

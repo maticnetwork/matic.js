@@ -1,3 +1,4 @@
+import BN from "bn.js";
 import { BaseWeb3Client, Converter, TYPE_AMOUNT } from "..";
 
 export * from "./use";
@@ -19,5 +20,8 @@ export * from "./abi_manager";
 
 export const utils = {
     converter: Converter,
-    Web3Client: BaseWeb3Client
+    Web3Client: BaseWeb3Client,
+    isBN(value) {
+        return BN.isBN(value);
+    }
 };

@@ -6,7 +6,7 @@ import { mapPromise } from "./map_promise";
 const TRIE = require('merkle-patricia-tree');
 const rlp = ethUtils.rlp;
 import EthereumBlock from 'ethereumjs-block/from-rpc';
-import { promiseResolve } from "..";
+import { Converter, promiseResolve, utils } from "..";
 
 
 export class ProofUtil {
@@ -217,7 +217,8 @@ export class ProofUtil {
                 ];
             }),
         ]);
-        if (receipt.status !== undefined && receipt.status !== null && receipt.type !== '0x0' && receipt.type !== '0x') {
+        const hexType = Converter.toHex(receipt.type);
+        if (receipt.status != null && hexType !== '0x0' && hexType !== '0x') {
             encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData]);
         }
         return encodedData;

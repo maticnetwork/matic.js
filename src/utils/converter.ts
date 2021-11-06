@@ -1,4 +1,5 @@
 import BN from "bn.js";
+import { utils } from "../utils";
 
 export class Converter {
     static toHex(amount: BN | string | number) {
@@ -11,7 +12,7 @@ export class Converter {
             }
             amount = new BN(amount);
         }
-        if (BN.isBN(amount)) {
+        if (utils.isBN(amount)) {
             return '0x' + amount.toString(16);
         }
         else {
