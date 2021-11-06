@@ -108,8 +108,11 @@ export class ExitUtil {
         }).then(method => {
             return method.read<IRootBlockInfo>();
         }).then(rootBlockInfo => {
-            rootBlockInfo.blockNumber = rootBlockNumber;
-            return rootBlockInfo;
+            return {
+                blockNumber: rootBlockNumber,
+                end: rootBlockInfo.end.toString(),
+                start: rootBlockInfo.start.toString(),
+            } as IRootBlockInfo;
         });
 
     }

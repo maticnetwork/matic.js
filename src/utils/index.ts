@@ -1,5 +1,5 @@
 import { BaseWeb3Client, Converter, TYPE_AMOUNT } from "..";
-import { MaticBigNumber } from "../implementation";
+import { EmptyBigNumber } from "../implementation";
 
 export * from "./use";
 export * from "./event_bus";
@@ -22,5 +22,5 @@ export * from "./not_implemented";
 export const utils = {
     converter: Converter,
     Web3Client: BaseWeb3Client,
-    BN: MaticBigNumber
+    BN: EmptyBigNumber
 };

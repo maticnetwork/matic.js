@@ -1,7 +1,7 @@
 import { throwNotImplemented } from "..";
 import { BaseBigNumber } from "../abstracts";
 
-export class MaticBigNumber extends BaseBigNumber {
+export class EmptyBigNumber extends BaseBigNumber {
 
     constructor(value) {
         super();
