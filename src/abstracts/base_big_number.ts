@@ -1,6 +1,8 @@
+import { throwNotImplemented } from "..";
+
 export abstract class BaseBigNumber {
-    static isBN(value): boolean {
-        throw new Error("not implemented");
+    static isBN(value) {
+        return throwNotImplemented<boolean>();
     }
 
     abstract toString(): string;

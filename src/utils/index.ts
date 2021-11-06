@@ -16,6 +16,7 @@ export * from "./resolve";
 export * from "./promise_resolve";
 export * from "./bridge_client";
 export * from "./abi_manager";
+export * from "./not_implemented";
 
 
 export const utils = {

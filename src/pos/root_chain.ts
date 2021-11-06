@@ -1,6 +1,5 @@
 import { BaseToken, utils, Web3SideChainClient } from "../utils";
 import { TYPE_AMOUNT } from "../types";
-import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO } from "../constant";
 import { IPOSClientConfig, ITransactionOption } from "../interfaces";
 import { BaseBigNumber } from "..";
 
@@ -27,15 +26,19 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
     }
 
     async findRootBlockFromChild(childBlockNumber: TYPE_AMOUNT): Promise<BaseBigNumber> {
+        const bigOne = new utils.BN(1);
+        const bigtwo = new utils.BN(2);
+        const checkPointInterval = new utils.BN(10000);
+
         childBlockNumber = new utils.BN(childBlockNumber);
         // first checkpoint id = start * 10000
-        let start = BIG_ONE;
+        let start = bigOne;
 
         // last checkpoint id = end * 10000
         const method = await this.method("currentHeaderBlock");
         const currentHeaderBlock = await method.read<string>();
         let end = new utils.BN(currentHeaderBlock).div(
-            CHECKPOINT_INTERVAL
+            checkPointInterval
         );
 
         // binary search on all the checkpoints to find the checkpoint that contains the childBlockNumber
@@ -45,10 +48,10 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
                 ans = start;
                 break;
             }
-            const mid = start.add(end).div(BIG_TWO);
+            const mid = start.add(end).div(bigtwo);
             const headerBlocksMethod = await this.method(
                 "headerBlocks",
-                mid.mul(CHECKPOINT_INTERVAL).toString()
+                mid.mul(checkPointInterval).toString()
             );
             const headerBlock = await headerBlocksMethod.read<{ start: number, end: number }>();
 
@@ -61,13 +64,13 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
                 break;
             } else if (headerStart.gt(childBlockNumber)) {
                 // childBlockNumber was checkpointed before this header
-                end = mid.sub(BIG_ONE);
+                end = mid.sub(bigOne);
             } else if (headerEnd.lt(childBlockNumber)) {
                 // childBlockNumber was checkpointed after this header
-                start = mid.add(BIG_ONE);
+                start = mid.add(bigOne);
             }
         }
-        return ans.mul(CHECKPOINT_INTERVAL);
+        return ans.mul(checkPointInterval);
     }
 
 }

@@ -1,94 +1,61 @@
 import BN from "bn.js";
+import { throwNotImplemented } from "..";
 import { BaseBigNumber } from "../abstracts";
 
 export class MaticBigNumber extends BaseBigNumber {
-    private bn_: BN;
 
     constructor(value) {
         super();
-        this.bn_ = new BN(value);
-
-        // this.bn_.toString()
-    }
-
-    static isBN(value) {
-        if (value instanceof MaticBigNumber) {
-            return true;
-        }
-        return BN.isBN(value);
     }
 
     toString(base?) {
-        return this.bn_.toString(base);
+        return throwNotImplemented<string>();
     }
 
     toNumber() {
-        return this.bn_.toNumber();
+        return throwNotImplemented<number>();
     }
 
     toBuffer(base?) {
-        return this.bn_.toBuffer();
+        return throwNotImplemented<Buffer>();
     }
 
-    // static from(value) {
-    //     return new MaticBigNumber(value);
-    // }
-
     add(value: BaseBigNumber) {
-        const bn = this.bn_.add(
-            new BN(value.toString())
-        );
-        return new MaticBigNumber(bn);
+        return throwNotImplemented<BaseBigNumber>();
     }
 
     sub(value: BaseBigNumber) {
-        const bn = this.bn_.sub(
-            new BN(value.toString())
-        );
-        return new MaticBigNumber(bn);
+        return throwNotImplemented<BaseBigNumber>();
     }
 
     mul(value: BaseBigNumber) {
-        const bn = this.bn_.mul(
-            new BN(value.toString())
-        );
-        return new MaticBigNumber(bn);
+        return throwNotImplemented<BaseBigNumber>();
     }
 
     div(value: BaseBigNumber) {
-        const bn = this.bn_.div(
-            new BN(value.toString())
-        );
-        return new MaticBigNumber(bn);
+        return throwNotImplemented<BaseBigNumber>();
     }
 
     lte(value: BaseBigNumber) {
-        return this.bn_.lte(
-            new BN(value.toString())
-        );
+        return throwNotImplemented<boolean>();
     }
 
     lt(value: BaseBigNumber) {
-        return this.bn_.lt(
-            new BN(value.toString())
-        );
+        return throwNotImplemented<boolean>();
+
     }
 
     gte(value: BaseBigNumber) {
-        return this.bn_.gte(
-            new BN(value.toString())
-        );
+        return throwNotImplemented<boolean>();
+
     }
 
     gt(value: BaseBigNumber) {
-        return this.bn_.gt(
-            new BN(value.toString())
-        );
+        return throwNotImplemented<boolean>();
+
     }
 
     eq(value: BaseBigNumber) {
-        return this.bn_.eq(
-            new BN(value.toString())
-        );
+        return throwNotImplemented<boolean>();
     }
 }
