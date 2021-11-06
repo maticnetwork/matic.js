@@ -43,29 +43,35 @@ const execute = async () => {
   // return console.log(await client.isDeposited('0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258'));
 
 
-  const balance = await mumbaiERC20Token.getBalance(
-    from
-  );
-  return console.log("balance", balance);
+  // const balance = await mumbaiERC20Token.getBalance(
+  //   from
+  // );
+  // return console.log("balance", balance);
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from
   // );
   // return console.log("tokens", tokens);
 
-  const tx = await goerliERC721Token.approveAll({
-    maxPriorityFeePerGas: 2000000000,
-    // returnTransaction: true
-  });
+  // const tx = await goerliERC721Token.approveAll({
+  //   maxPriorityFeePerGas: 2000000000,
+  //   returnTransaction: true
+  // });
 
   // const tx = await goerliERC721Token.depositMany(['70362948865848051982628883253610138761681237831617060123833093242173388773544'], from, {
   //   returnTransaction: true
   // });
+  setProofApi("https://apis.matic.network")
+  const tx = await goerliERC20Token.withdrawExitFaster(
+    '0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+    returnTransaction: true
+  });
+
   console.log('tx', tx);
   // // setProofApi("https://apis.matic.network")
   // // const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
-  console.log("txHash", await tx.getTransactionHash());
-  console.log("txReceipt", await tx.getReceipt());
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
 
   //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
   const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'

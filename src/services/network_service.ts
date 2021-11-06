@@ -1,5 +1,5 @@
+import { BaseBigNumber } from "..";
 import { HttpRequest } from "../utils";
-import BN from "bn.js";
 
 export class NetworkService {
     httpRequest: HttpRequest;
@@ -19,7 +19,7 @@ export class NetworkService {
             start: string;
             end: string;
             headerBlockNumber: string;
-            blockNumber: BN
+            blockNumber: BaseBigNumber
         }>(url).then(result => {
             result['blockNumber'] = result.headerBlockNumber as any;
             return result;

@@ -1,12 +1,11 @@
 import { RootChain } from "./root_chain";
 import { Converter, ProofUtil, Web3SideChainClient } from "../utils";
-import BN from "bn.js";
 import ethUtils from "ethereumjs-util";
 import { IBlockWithTransaction, ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
-import { BaseWeb3Client } from "../abstracts";
+import { BaseBigNumber, BaseWeb3Client } from "../abstracts";
 import { ErrorHelper } from "../utils/error_helper";
-import { ERROR_TYPE, IBaseClientConfig } from "..";
+import { ERROR_TYPE, IBaseClientConfig, utils } from "..";
 
 interface IChainBlockInfo {
     lastChildBlock: string;
@@ -16,7 +15,7 @@ interface IChainBlockInfo {
 interface IRootBlockInfo {
     start: string;
     end: string;
-    blockNumber: BN;
+    blockNumber: BaseBigNumber;
 }
 
 export class ExitUtil {
@@ -80,7 +79,9 @@ export class ExitUtil {
 
     private isCheckPointed_(data: IChainBlockInfo) {
         // lastchild block is greater equal to transacton block number; 
-        return new BN(data.lastChildBlock).gte(new BN(data.txBlockNumber));
+        return new utils.BN(data.lastChildBlock).gte(
+            new utils.BN(data.txBlockNumber)
+        );
     }
 
     isCheckPointed(burnTxHash: string) {
@@ -95,7 +96,7 @@ export class ExitUtil {
 
     private getRootBlockInfo(txBlockNumber: number) {
         // find in which block child was included in parent
-        let rootBlockNumber: BN;
+        let rootBlockNumber: BaseBigNumber;
         return this.rootChain.findRootBlockFromChild(
             txBlockNumber
         ).then(blockNumber => {
@@ -210,7 +211,7 @@ export class ExitUtil {
             );
 
             return this.encodePayload_(
-                rootBlockInfo.blockNumber,
+                rootBlockInfo.blockNumber.toNumber(),
                 blockProof,
                 txBlockNumber,
                 block.timestamp,

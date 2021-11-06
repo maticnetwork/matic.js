@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import { BaseContract } from "../abstracts";
 import { ITransactionConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse, ITransactionWriteResult } from "../interfaces";
 import { Logger } from "../utils";

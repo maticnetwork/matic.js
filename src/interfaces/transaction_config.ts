@@ -1,11 +1,11 @@
-import BN from "bn.js";
+import { BaseBigNumber } from "../abstracts";
 
 export interface ITransactionConfig {
     from?: string;
     to?: string;
-    value?: number | string | BN;
+    value?: number | string | BaseBigNumber;
     gasLimit?: number | string;
-    gasPrice?: number | string | BN;
+    gasPrice?: number | string | BaseBigNumber;
     data?: string;
     nonce?: number;
     chainId?: number;

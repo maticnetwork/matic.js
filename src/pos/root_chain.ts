@@ -1,8 +1,8 @@
-import { BaseToken, Web3SideChainClient } from "../utils";
+import { BaseToken, utils, Web3SideChainClient } from "../utils";
 import { TYPE_AMOUNT } from "../types";
-import BN from "bn.js";
 import { BIG_ONE, CHECKPOINT_INTERVAL, BIG_TWO } from "../constant";
 import { IPOSClientConfig, ITransactionOption } from "../interfaces";
+import { BaseBigNumber } from "..";
 
 export class RootChain extends BaseToken<IPOSClientConfig> {
 
@@ -26,15 +26,15 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
         });
     }
 
-    async findRootBlockFromChild(childBlockNumber: TYPE_AMOUNT): Promise<BN> {
-        childBlockNumber = new BN(childBlockNumber);
+    async findRootBlockFromChild(childBlockNumber: TYPE_AMOUNT): Promise<BaseBigNumber> {
+        childBlockNumber = new utils.BN(childBlockNumber);
         // first checkpoint id = start * 10000
         let start = BIG_ONE;
 
         // last checkpoint id = end * 10000
         const method = await this.method("currentHeaderBlock");
         const currentHeaderBlock = await method.read<string>();
-        let end = new BN(currentHeaderBlock).div(
+        let end = new utils.BN(currentHeaderBlock).div(
             CHECKPOINT_INTERVAL
         );
 
@@ -52,8 +52,8 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
             );
             const headerBlock = await headerBlocksMethod.read<{ start: number, end: number }>();
 
-            const headerStart = new BN(headerBlock.start);
-            const headerEnd = new BN(headerBlock.end);
+            const headerStart = new utils.BN(headerBlock.start);
+            const headerEnd = new utils.BN(headerBlock.end);
 
             if (headerStart.lte(childBlockNumber) && childBlockNumber.lte(headerEnd)) {
                 // if childBlockNumber is between the upper and lower bounds of the headerBlock, we found our answer

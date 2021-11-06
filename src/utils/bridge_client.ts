@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import { Web3SideChainClient } from "../utils";
 import { ExitUtil } from "../pos";
 import { BaseToken, utils } from "..";
@@ -51,8 +50,8 @@ export class BridgeClient<T> {
                 throw new Error("StateSynced event not found");
             }
             const rootStateId = client.child.decodeParameters(targetLog.topics[1], ['uint256'])[0];
-            const rootStateIdBN = utils.isBN(rootStateId) ? rootStateId : new BN(rootStateId);
-            return new BN(lastStateId).gte(
+            const rootStateIdBN = utils.BN.isBN(rootStateId) ? rootStateId : new utils.BN(rootStateId);
+            return new utils.BN(lastStateId).gte(
                 rootStateIdBN
             );
         });
