@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import { throwNotImplemented } from "..";
 import { BaseBigNumber } from "../abstracts";
 
