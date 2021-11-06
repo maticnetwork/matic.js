@@ -1,5 +1,5 @@
-import { ITransactionConfig } from "./transaction_config";
+import { ITransactionRequestConfig } from "./transaction_config";
 
-export interface ITransactionOption extends ITransactionConfig {
+export interface ITransactionOption extends ITransactionRequestConfig {
     returnTransaction?: boolean;
 }

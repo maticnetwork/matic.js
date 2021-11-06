@@ -1,6 +1,6 @@
 import { BaseBigNumber } from "../abstracts";
 
-export interface ITransactionConfig {
+export interface ITransactionRequestConfig {
     from?: string;
     to?: string;
     value?: number | string | BaseBigNumber;

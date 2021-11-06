@@ -5,3 +5,7 @@ src
 build_helper
 test
 *.env
+examples
+webpack
+docs
+test

@@ -1,6 +1,6 @@
-import { ITransactionConfig } from "./transaction_config";
+import { ITransactionRequestConfig } from "./transaction_config";
 
 export interface ITransactionResult {
-	estimateGas(tx?: ITransactionConfig): Promise<number>;
+	estimateGas(tx?: ITransactionRequestConfig): Promise<number>;
 	encodeABI(): string;
 }

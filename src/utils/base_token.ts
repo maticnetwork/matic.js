@@ -1,5 +1,5 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig } from "../interfaces";
+import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { Converter, merge } from "../utils";
 import { ContractWriteResult } from "../helpers";
@@ -9,7 +9,7 @@ import { TYPE_AMOUNT } from "../types";
 import { ErrorHelper } from "./error_helper";
 
 export interface ITransactionConfigParam {
-    txConfig: ITransactionConfig;
+    txConfig: ITransactionRequestConfig;
     method?: BaseContractMethod;
     isWrite?: boolean;
     isParent?: boolean;
@@ -60,7 +60,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                     return merge(config, {
                         data: method.encodeABI(),
                         to: method.address
-                    } as ITransactionConfig);
+                    } as ITransactionRequestConfig);
                 }
                 const methodResult = method.write(
                     config,
@@ -139,7 +139,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                     return merge(config, {
                         data: method.encodeABI(),
                         to: this.contract_.address
-                    } as ITransactionConfig);
+                    } as ITransactionRequestConfig);
                 }
                 return method.read(
                     config,
@@ -173,7 +173,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         const client = isParent ? this.client.parent :
             this.client.child;
         client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
-        const estimateGas = (config: ITransactionConfig) => {
+        const estimateGas = (config: ITransactionRequestConfig) => {
             return method ? method.estimateGas(config) :
                 client.estimateGas(config);
         };
@@ -228,7 +228,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 });
             });
         }
-        return promiseResolve<ITransactionConfig>(txConfig);
+        return promiseResolve<ITransactionRequestConfig>(txConfig);
     }
 
     protected transferERC20(to: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
