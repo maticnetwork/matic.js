@@ -36,4 +36,5 @@ module.exports = {
   user2: {
     address: process.env.USER2_ADDRESS
   },
+  proofApi: process.env.PROOF_API
 }

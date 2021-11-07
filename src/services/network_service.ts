@@ -9,7 +9,7 @@ export class NetworkService {
     }
 
     private createUrl(network: string, url: string) {
-        return `${network === 'mainnet' ? 'matic' : network}${url}`;
+        return `${network === 'mainnet' ? 'matic' : 'mumbai'}${url}`;
     }
 
     getBlockIncluded(network: string, blockNumber: number) {
