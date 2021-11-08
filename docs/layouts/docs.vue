@@ -25,7 +25,7 @@
         :relative="relativeUrl"
       />
     </div>
-    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6 pb-20px">
+    <div class="b-tutorial__content col-12 col-md-9 col-lg-6 pb-20px">
       <slot></slot>
       <!-- <div class="b-tutorial__content__btns">
         <a :href="prevUrl">
@@ -40,7 +40,7 @@
     <div class="b-tutorial__sticky-btn">
       <a
         class="btn rounded secondary margin-bottom-70px"
-        alt="edit this doc"
+        alt="discord link"
         target="_blank"
         href="https://discord.com/invite/polygon"
       >
@@ -299,15 +299,25 @@ export default {
   z-index: 100;
   height: calc(100vh - 4rem);
   overflow-y: scroll;
+  display: none;
   &::-webkit-scrollbar {
     width: 3px;
   }
   &::-webkit-scrollbar-thumb {
     background: #e4dddd;
   }
+
+  @media (min-width: 768px){
+    display: block;
+  }
 }
 .b-tutorial__content {
-  padding-left: 40px;
+  padding: 15px 5px;
+  overflow-x: hidden;
+
+  @media (min-width: 768px){
+  padding: 20px 40px;
+  }
 }
 .b-tutorial__content__btns {
   display: flex;
@@ -321,8 +331,8 @@ export default {
 }
 .b-tutorial__sticky-btn {
   position: fixed;
-  right: 0;
-  bottom: 20px;
+  right: 10px;
+  bottom: 10px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -332,6 +342,10 @@ export default {
     border-radius: 50%;
     margin-bottom: 10px;
     padding: 0;
+    display:flex; 
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
   }
 }
 .ad-container {
