@@ -4,7 +4,7 @@ const { getPOSClient, from } = require('../utils');
 const execute = async () => {
     const client = await getPOSClient();
 
-    const isDeposited = await client.isDeposited('0xc67599f5c967f2040786d5924ec55d37bf943c009bdd23f3b50e5ae66efde258');
+    const isDeposited = await client.isDeposited('0x48fe1e4f8c915d01ef13ccd7ac1e7cb6db1db15ea1d1df2e6fd8e957fe980dab');
 
     console.log("isDeposited", isDeposited);
 }

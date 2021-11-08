@@ -3,9 +3,9 @@ const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
   const client = await getPOSClient();
-  const erc20Token = client.erc20(pos.child.weth);
+  const erc721Token = client.erc721(pos.parent.erc721, true);
 
-  const result = await erc20Token.withdrawStart(10);
+  const result = await erc721Token.approveAll();
 
   const txHash = await result.getTransactionHash();
   console.log("txHash", txHash);

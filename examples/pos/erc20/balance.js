@@ -3,9 +3,9 @@ const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
   const client = await getPOSClient();
-  const erc720Token = client.erc20(pos.child.erc20);
+  const erc20Token = client.erc20(pos.child.erc20);
 
-  const result = await erc720Token.getBalance(from);
+  const result = await erc20Token.getBalance(from);
 
   console.log("result", result);
 

@@ -3,15 +3,9 @@ const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
   const client = await getPOSClient();
-  const erc721Token = client.erc721(pos.child.erc721);
+  const erc721Token = client.erc721(pos.parent.erc721, true);
 
-  const result = await erc721Token.withdrawStart('801', {
-    // nonce: 11793,
-    // returnTransaction: true,
-    gasPrice: '4000000000',
-  })
-
-  console.log(result);
+  const result = await erc721Token.withdrawExitMany('0x54f47c891b460369661e22e27eeb4afbbb5dd792c7c8b48cab758892c14ffe85');
 
   const txHash = await result.getTransactionHash();
   console.log("txHash", txHash);

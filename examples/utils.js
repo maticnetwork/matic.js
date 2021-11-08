@@ -1,11 +1,15 @@
 const bn = require('bn.js')
 const HDWalletProvider = require('@truffle/hdwallet-provider')
 const config = require('./config')
-const { POSClient, PlasmaClient, use } = require('@maticnetwork/maticjs')
+const { POSClient, PlasmaClient, setProofApi, use } = require('@maticnetwork/maticjs')
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 use(Web3ClientPlugin);
+
+if(config.proofApi) {
+  setProofApi(config.proofApi);
+}
 
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
