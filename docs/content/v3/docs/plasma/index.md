@@ -4,12 +4,22 @@ Keywords: 'maticjs, plasma client, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-# PlasmaClient
+# Plasma Bridge
 
-`maticjs` provides `plasmaClient` to interact with **Plasma** Bridge.
+Plasma bridge functionality is available in [seperate repository](https://github.com/maticnetwork/maticjs-plasma). So in order to use `plasma` bridge, you need to install seperate package.
+
+## Installation
 
 ```
-import { PlasmaClient } from "@maticnetwork/maticjs"
+npm i @maticnetwork/maticjs-plasma
+```
+
+## Setup
+
+`PlasmaClient` can be used to interact with **Plasma** Bridge.
+
+```
+import { PlasmaClient } from "@maticnetwork/maticjs-web3"
 
 const plasmaClient = new PlasmaClient({
     network: 'testnet',
