@@ -1,6 +1,6 @@
 <template>
   <div class="row b-tutorial">
-    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links">
+    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links" :class="{show:isMenuOpened}">
       <input
         class="textbox b-tutorial__links__search"
         type="text"
@@ -62,7 +62,7 @@
   </div>
 </template>
 <script  >
-import { copyToClipboard } from '@/utils'
+import { copyToClipboard, bus } from '@/utils'
 import FlexSearch from 'flexsearch'
 import Links from './links.vue'
 
@@ -79,6 +79,23 @@ export default {
       worker: false,
       cache: false,
     })
+
+    // adding event listener for resize
+    if(process.browser){
+      window.addEventListener("resize", this.onResize);
+    }
+
+    // this event checks for menu onclick
+    bus.$on('menuClicked', ()=> {
+      this.toggleMenu();
+    })
+
+    this.onResize();
+  },
+  destroyed() {
+    if(process.browser){
+      window.removeEventListener("resize", this.onResize);
+    }
   },
   head() {
     return {
@@ -188,6 +205,8 @@ export default {
       searchText: '',
       childDepth: 0,
       isRouteWithIndex: false,
+      isMenuOpened: true,
+      width: '',
     }
   },
   fetch() {
@@ -284,6 +303,20 @@ export default {
         path: this.getLink(delta),
       })
     },
+    onResize(e) {
+      if(process.browser){
+        this.width = window.innerWidth;
+      }
+
+      if(this.width < 768){
+        this.isMenuOpened = false;
+      } else {
+        this.isMenuOpened = true;
+      }
+    },
+    toggleMenu(){
+      this.isMenuOpened = !this.isMenuOpened;
+    }
   },
 }
 </script>
@@ -292,14 +325,23 @@ export default {
   padding: 10px 10px 0 10px;
 }
 .b-tutorial__links {
-  padding: 0 30px 30px 0;
+  box-sizing: border-box;
+  padding: 20px 30px 30px 0;
   border-right: 1px solid #e9ecef;
-  position: sticky;
+  position: fixed;
   top: 4rem;
-  z-index: 100;
+  z-index: 1100;
   height: calc(100vh - 4rem);
   overflow-y: scroll;
-  display: none;
+  background-color: white; 
+  transform: translateX(-100%);
+  transition: 0.3s ease;
+  max-width: 260px;
+
+  &.show{
+    transform: translateX(0);
+  }
+
   &::-webkit-scrollbar {
     width: 3px;
   }
@@ -308,7 +350,7 @@ export default {
   }
 
   @media (min-width: 768px){
-    display: block;
+    position: sticky;
   }
 }
 .b-tutorial__content {
