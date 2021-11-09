@@ -45,6 +45,8 @@
   </div>
 </template>
 <script>
+import { bus } from '@/utils';
+
 export default {
   created() {
     this.repoUrl = 'maticnetwork/matic.js'
@@ -83,7 +85,7 @@ export default {
   },
   methods: {
     onMenuBtnClick() {
-      this.$emit('menu_click')
+      bus.$emit('menuClicked');
     },
 
     onVersionChange() {
