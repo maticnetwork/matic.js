@@ -6,7 +6,7 @@ Description: 'Get started with maticjs'
 
 # withdrawExit
 
-`withdrawExit` method can be used to exit the withdraw process once challenge period has been completed.
+In plasma withdaw process can be exited by anyone using `withdrawExit` method. The exit process will work only after challenge period has been completed.
 
 ```
 const result = plasmaClient.withdrawExit(<token | tokens[]>);

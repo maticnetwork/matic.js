@@ -160,6 +160,10 @@ module.exports = [
         url: 'is-check-pointed',
       },
       {
+        text: 'isDeposited',
+        url: 'is-deposited',
+      },
+      {
         text: 'depositEther',
         url: 'deposit-ether',
       },
@@ -253,6 +257,10 @@ module.exports = [
             url: 'transfer',
           },
         ],
+      },
+      {
+        text: 'isDeposited',
+        url: 'is-deposited',
       },
       {
         text: 'isCheckPointed',
