@@ -93,6 +93,8 @@ export default {
     this.onResize();
   },
   destroyed() {
+    bus.$off('menuClicked');
+    
     if(process.browser){
       window.removeEventListener("resize", this.onResize);
     }
