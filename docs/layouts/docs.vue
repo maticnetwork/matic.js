@@ -1,6 +1,6 @@
 <template>
   <div class="row b-tutorial">
-    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links">
+    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links" :class="{show:isMenuOpened}">
       <input
         class="textbox b-tutorial__links__search"
         type="text"
@@ -25,7 +25,7 @@
         :relative="relativeUrl"
       />
     </div>
-    <div class="b-tutorial__content col-sm-8 col-md-9 col-lg-6 pb-20px">
+    <div class="b-tutorial__content col-12 col-md-9 col-lg-6 pb-20px">
       <slot></slot>
       <!-- <div class="b-tutorial__content__btns">
         <a :href="prevUrl">
@@ -40,7 +40,7 @@
     <div class="b-tutorial__sticky-btn">
       <a
         class="btn rounded secondary margin-bottom-70px"
-        alt="edit this doc"
+        alt="discord link"
         target="_blank"
         href="https://discord.com/invite/polygon"
       >
@@ -62,7 +62,7 @@
   </div>
 </template>
 <script  >
-import { copyToClipboard } from '@/utils'
+import { copyToClipboard, bus } from '@/utils'
 import FlexSearch from 'flexsearch'
 import Links from './links.vue'
 
@@ -79,6 +79,25 @@ export default {
       worker: false,
       cache: false,
     })
+
+    // adding event listener for resize
+    if(process.browser){
+      window.addEventListener("resize", this.onResize);
+    }
+
+    // this event checks for menu onclick
+    bus.$on('menuClicked', ()=> {
+      this.toggleMenu();
+    })
+
+    this.onResize();
+  },
+  destroyed() {
+    bus.$off('menuClicked');
+    
+    if(process.browser){
+      window.removeEventListener("resize", this.onResize);
+    }
   },
   head() {
     return {
@@ -188,6 +207,8 @@ export default {
       searchText: '',
       childDepth: 0,
       isRouteWithIndex: false,
+      isMenuOpened: true,
+      width: '',
     }
   },
   fetch() {
@@ -284,6 +305,20 @@ export default {
         path: this.getLink(delta),
       })
     },
+    onResize(e) {
+      if(process.browser){
+        this.width = window.innerWidth;
+      }
+
+      if(this.width < 768){
+        this.isMenuOpened = false;
+      } else {
+        this.isMenuOpened = true;
+      }
+    },
+    toggleMenu(){
+      this.isMenuOpened = !this.isMenuOpened;
+    }
   },
 }
 </script>
@@ -292,22 +327,41 @@ export default {
   padding: 10px 10px 0 10px;
 }
 .b-tutorial__links {
-  padding: 0 30px 30px 0;
+  box-sizing: border-box;
+  padding: 20px 30px 30px 0;
   border-right: 1px solid #e9ecef;
-  position: sticky;
+  position: fixed;
   top: 4rem;
-  z-index: 100;
+  z-index: 1100;
   height: calc(100vh - 4rem);
   overflow-y: scroll;
+  background-color: white; 
+  transform: translateX(-100%);
+  transition: 0.3s ease;
+  max-width: 260px;
+
+  &.show{
+    transform: translateX(0);
+  }
+
   &::-webkit-scrollbar {
     width: 3px;
   }
   &::-webkit-scrollbar-thumb {
     background: #e4dddd;
   }
+
+  @media (min-width: 768px){
+    position: sticky;
+  }
 }
 .b-tutorial__content {
-  padding-left: 40px;
+  padding: 15px 5px;
+  overflow-x: hidden;
+
+  @media (min-width: 768px){
+  padding: 20px 40px;
+  }
 }
 .b-tutorial__content__btns {
   display: flex;
@@ -321,8 +375,8 @@ export default {
 }
 .b-tutorial__sticky-btn {
   position: fixed;
-  right: 0;
-  bottom: 20px;
+  right: 10px;
+  bottom: 10px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -332,6 +386,10 @@ export default {
     border-radius: 50%;
     margin-bottom: 10px;
     padding: 0;
+    display:flex; 
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
   }
 }
 .ad-container {

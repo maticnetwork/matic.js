@@ -23,7 +23,7 @@ There are primarily two bridges to move assets between Ethereum and Matic.
 1. [POS](https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/)
 2. [Plasma](https://docs.matic.today/docs/develop/ethereum-matic/plasma/getting-started)
 
-You can read more about Bridge here - https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/
+You can read more about Bridge [here](https://docs.matic.today/docs/develop/ethereum-matic/pos/getting-started/)
 
 Matic.js provides you respective client to use these bridges
 

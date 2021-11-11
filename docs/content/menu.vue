@@ -1,49 +1,52 @@
 <template>
   <div class="b-menu row">
-    <template v-if="shouldShowMenuIcon">
-      <button @click="onMenuBtnClick" class="b-menu__hamburger" style="color: white; padding-right: 10px">
+    <div class="row col-6 col-sm-4 b-menu__left">
+      <button v-if="shouldShowMenuIcon" @click="onMenuBtnClick" class="b-menu__left__hamburger">
         <i class="material-icons">menu</i>
       </button>
-      <a class="row b-menu__icon content-v-center" href="" title="JsStore Index Page">
+      <a class="row b-menu__left__icon content-v-center" href="" title="JsStore Index Page">
         <img :src="'logo.svg' | imgPath" alt="MaticJs Logo" />
         <span class="ml-10px">Matic.js</span>
       </a>
-    </template>
-    <div v-else></div>
-    <div id="b-menu__github-info" class="row content-v-center">
-      <div>
-        <a title="star jsstore" :href="githubUrl">
-          <i class="fab fa-github"></i>
-          Star
-          <span class="star-count" v-if="starCount">{{ starCount }}</span>
-        </a>
-      </div>
-      <div class="ml-10px mr-10px">|</div>
-      <a title="fork on github" :href="forkUrl">
-        <svg
-          version="1.1"
-          width="10"
-          height="18"
-          style="fill: white; vertical-align: sub"
-          viewBox="0 0 10 16"
-          class="octicon octicon-repo-forked"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"
-          />
-        </svg>
-        Fork
+    </div>
+    <div id="b-menu__github-info" class="col-6 col-sm-8 row content-v-center b-menu__github-info">
+      <a class="b-menu__github-info__item" title="star jsstore" :href="githubUrl">
+        <i class="fab fa-github"></i>
+        Star
+        <span class="star-count" v-if="starCount">{{ starCount }}</span>
       </a>
+      <span class="b-menu__github-info__item hide-on-mobile">
+        <span class="ml-10px mr-10px">|</span>
+        <a title="fork on github" :href="forkUrl">
+          <svg
+            version="1.1"
+            width="10"
+            height="18"
+            style="fill: white; vertical-align: sub"
+            viewBox="0 0 10 16"
+            class="octicon octicon-repo-forked"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"
+            />
+          </svg>
+          Fork
+        </a>
+      </span>
+      <span class="b-menu__github-info__item hide-on-mobile">
       <template v-if="release">
-        <div class="ml-10px mr-10px">|</div>
+        <span class="ml-10px mr-10px">|</span>
         <a target="_blank" :href="release.url">{{ release.tag }}</a>
       </template>
+      </span>
     </div>
   </div>
 </template>
 <script>
+import { bus } from '@/utils';
+
 export default {
   created() {
     this.repoUrl = 'maticnetwork/matic.js'
@@ -82,7 +85,7 @@ export default {
   },
   methods: {
     onMenuBtnClick() {
-      this.$emit('menu_click')
+      bus.$emit('menuClicked');
     },
 
     onVersionChange() {
@@ -104,6 +107,7 @@ export default {
 <style lang="scss" scoped>
 .b-menu {
   justify-content: space-between;
+  align-items: center;
   background: var(--primary-color);
   padding: 0 10px;
   height: 64px;
@@ -111,29 +115,54 @@ export default {
   position: sticky;
   z-index: 1001;
   top: 0;
+
+  &__left{
+    &__icon{
+      img{
+        height: 22px;
+      }
+    }
+
+    &__hamburger{
+       background-color: transparent;
+      outline: none;
+      border: 0;
+      color: white;
+      height: 64px;
+      margin-right: 10px;
+    }
+
+    /* for bigger devices */
+    @media (min-width: 768px){
+      &__icon{
+        img{
+          height: 30px;
+        }
+      }
+
+      &__hamburger{
+        display: none;
+      }
+    }
+  }
 }
 
 a {
   color: var(--primary-contrast-color);
 }
 
-.b-menu__icon {
-  img {
-    height: 50px;
-  }
-}
+.b-menu__github-info{
+  justify-content: flex-end;
 
-@media (min-width: 768px) {
-  .b-menu__hamburger {
-    display: none;
-  }
-
-  .b-menu__icon {
-    img {
-      height: unset;
+  &__item{
+    @media (max-width: 576px){
+      &.hide-on-mobile{
+        display:none;
+      }
     }
   }
 }
+
 #selectVersions {
   -webkit-appearance: menulist;
   background-color: white;

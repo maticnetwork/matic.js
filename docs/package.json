@@ -36,6 +36,7 @@
     "flexsearch": "^0.6.32",
     "front-matter": "^4.0.2",
     "fs-extra": "^10.0.0",
+    "node-sass": "^4.14.1",
     "nuxt": "^2.15.4",
     "sass": "^1.32.12",
     "sass-loader": "^8.0.0",
