@@ -89,7 +89,8 @@ export default {
     bus.$on('menuClicked', ()=> {
       this.toggleMenu();
     })
-
+  },
+  mounted(){
     this.onResize();
   },
   destroyed() {
