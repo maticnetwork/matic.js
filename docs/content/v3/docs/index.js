@@ -203,12 +203,12 @@ module.exports = [
             url: 'withdraw-start',
           },
           {
-            text: 'withdrawChallenge',
-            url: 'withdraw-challenge',
+            text: 'withdrawConfirm',
+            url: 'withdraw-confirm',
           },
           {
-            text: 'withdrawChallengeFaster',
-            url: 'withdraw-challenge-faster',
+            text: 'withdrawConfirmFaster',
+            url: 'withdraw-confirm-faster',
           },
           {
             text: 'withdrawExit',
@@ -241,12 +241,12 @@ module.exports = [
             url: 'withdraw-start',
           },
           {
-            text: 'withdrawChallenge',
-            url: 'withdraw-challenge',
+            text: 'withdrawConfirm',
+            url: 'withdraw-confirm',
           },
           {
-            text: 'withdrawChallengeFaster',
-            url: 'withdraw-challenge-faster',
+            text: 'withdrawConfirmFaster',
+            url: 'withdraw-confirm-faster',
           },
           {
             text: 'withdrawExit',
