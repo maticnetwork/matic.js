@@ -6,9 +6,11 @@ Description: 'Get started with maticjs'
 
 # withdrawExitFasterMany
 
-`withdrawExitFasterMany` method can be used to approve all tokens.
+`withdrawExitFasterMany` method can be used to exit the withdraw process by using the txHash from `withdrawStartMany` method.
 
-It is fast because it generates proof in backend. The backend can be configured with dedicated private rpc.
+<div class="highlight mb-20px mt-20px">
+It is fast because it generates proof in backend. You need to configure <a href="v3/docs/set-proof-api">setProofAPI</a>
+</div>
 
 **Note**- withdrawStart transaction must be checkpointed in order to exit the withdraw.
 
