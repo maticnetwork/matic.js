@@ -75,7 +75,7 @@ describe('ERC20', () => {
         });
         expect(result).to.have.not.property('maxFeePerGas')
         expect(result).to.have.not.property('maxPriorityFeePerGas')
-        expect(result).to.have.property('gasPrice')
+        // expect(result).to.have.property('gasPrice')
         expect(result['gasPrice']).to.be.an('number').gt(0);
         expect(result).to.have.property('chainId', 80001);
         expect(result['chainId']).to.be.an('number');

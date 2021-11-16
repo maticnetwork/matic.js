@@ -2,9 +2,10 @@ const { setProofApi, POSClient, use } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const { user1, rpc, pos } = require("./config");
+const { user1, rpc, pos, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
+const to = user2.address;
 
 const execute = async () => {
   const privateKey = user1.privateKey;
@@ -58,14 +59,17 @@ const execute = async () => {
   //   // returnTransaction: true
   // });
 
-  var tx = await goerliERC20Token.getAllowance(from, {
-    // returnTransaction: true
-  });
+  // var tx = await goerliERC20Token.getAllowance(from, {
+  //   // returnTransaction: true
+  // });
 
-  return console.log('tx', tx);
+  // return console.log('tx', tx);
 
 
-  var tx = await goerliERC20Token.approveMax({
+  // var tx = await goerliERC20Token.approveMax({
+  //   // returnTransaction: true
+  // });
+  var tx = await mumbaiERC20Token.transfer(10,to,{
     // returnTransaction: true
   });
   // setProofApi("https://apis.matic.network")

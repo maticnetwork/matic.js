@@ -205,27 +205,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 txConfig.gasLimit = Number(gasLimit);
                 txConfig.nonce = nonce;
                 txConfig.chainId = chainId;
-
-                return (() => {
-                    if (isEIP1559Supported && isMaxFeeProvided) {
-                        client.logger.log("tx config created for EIP1559");
-                        // txConfig.type = '0x2';
-                        txConfig.maxFeePerGas = maxFeePerGas;
-                        txConfig.maxPriorityFeePerGas = maxPriorityFeePerGas;
-                        return promiseResolve(null);
-                    }
-                    else {
-                        client.logger.log("tx config created for legacy");
-                        return (!txConfig.gasPrice ? client.getGasPrice() :
-                            promiseResolve(txConfig.gasPrice)
-                        ).then(gasPrice => {
-                            client.logger.log('gas price calculated', gasPrice);
-                            txConfig.gasPrice = Number(gasPrice);
-                        });
-                    }
-                })().then(_ => {
-                    return txConfig;
-                });
+                return txConfig;
             });
         }
         return promiseResolve<ITransactionRequestConfig>(txConfig);
