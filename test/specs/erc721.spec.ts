@@ -51,6 +51,9 @@ describe('ERC721', () => {
     it('transfer return tx', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         const targetToken = allTokensFrom[0];
+
+
+
         const result = await erc721Child.transfer(targetToken, from, to, {
             returnTransaction: true
         });
@@ -118,7 +121,7 @@ describe('ERC721', () => {
         expect(txReceipt).to.be.an('object');
         expect(txReceipt.from).equal(from);
         expect(txReceipt.to.toLowerCase()).equal(erc721.child.toLowerCase());
-        expect(txReceipt.type).equal('0x0');
+        expect(txReceipt.type).equal(0);
         expect(txReceipt.gasUsed).to.be.an('number').gt(0);
         expect(txReceipt.cumulativeGasUsed).to.be.an('number').gt(0);
 
