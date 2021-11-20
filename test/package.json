@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.spec.js",
   "scripts": {
+    "test:jest": "cross-env NODE_ENV=test jest --runInBand",
     "link:lib": "npm link @maticnetwork/maticjs",
     "debug": "dotenv node debug.js",
     "install:lib": "node install_lib.js",
@@ -24,6 +25,7 @@
     "cross-env-file": "^1.0.0",
     "dotenv": "^10.0.0",
     "dotenv-cli": "^4.0.0",
+    "jest": "^27.3.1",
     "karma": "^6.3.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -32,7 +34,8 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^4.0.2",
     "mocha": "^8.2.1",
-    "puppeteer": "^5.5.0",
+    "puppeteer": "^11.0.0",
+    "ts-jest": "^27.0.7",
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {

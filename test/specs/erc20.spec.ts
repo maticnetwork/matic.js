@@ -1,6 +1,6 @@
 import { erc20, from, posClient, posClientForTo, to } from "./client";
 import { expect } from 'chai'
-import { ABIManager, setProofApi } from '@maticnetwork/maticjs'
+import { ABIManager, setProofApi, service, utils, ITransactionRequestConfig } from '@maticnetwork/maticjs'
 import BN from "bn.js";
 
 
@@ -133,7 +133,7 @@ describe('ERC20', () => {
     });
 
     it('withdrawExit return tx', async () => {
-        const result: ITransactionConfig = await erc20Parent.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+        const result: ITransactionRequestConfig = await erc20Parent.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
             returnTransaction: true
         }) as any;
 
@@ -161,8 +161,25 @@ describe('ERC20', () => {
         }
     });
 
+    // it('call getBlockIncluded', async () => {
+
+    //     setProofApi("https://apis.matic.network");
+    //     try {
+    //         // const result = await service.network.getBlockIncluded("testnet", 1000);
+    //         // console.log("result", result);
+    //         // expect(result.end).to.be.an('string');
+    //         // expect(result.start).to.be.an('string');
+    //         // expect(utils.BN.isBN(result.headerBlockNumber)).equal(true);
+
+    //     } catch (error) {
+    //         console.error('error', error, error.stack);
+    //     }
+
+    // });
+
     it('withdrawExitFaster return tx', async () => {
         setProofApi("https://apis.matic.network");
+        
         const result = await erc20Parent.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
             returnTransaction: true
         });
@@ -170,6 +187,7 @@ describe('ERC20', () => {
         const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
         expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
     });
+
 
 
 

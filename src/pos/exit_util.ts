@@ -5,18 +5,14 @@ import { IBlockWithTransaction, ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseBigNumber, BaseWeb3Client } from "../abstracts";
 import { ErrorHelper } from "../utils/error_helper";
-import { ERROR_TYPE, IBaseClientConfig, utils } from "..";
+import { ERROR_TYPE, IBaseClientConfig, IRootBlockInfo, utils } from "..";
 
 interface IChainBlockInfo {
     lastChildBlock: string;
     txBlockNumber: number;
 }
 
-interface IRootBlockInfo {
-    start: string;
-    end: string;
-    blockNumber: BaseBigNumber;
-}
+
 
 export class ExitUtil {
     private maticClient_: BaseWeb3Client;
@@ -109,7 +105,7 @@ export class ExitUtil {
             return method.read<IRootBlockInfo>();
         }).then(rootBlockInfo => {
             return {
-                blockNumber: rootBlockNumber,
+                headerBlockNumber: rootBlockNumber,
                 end: rootBlockInfo.end.toString(),
                 start: rootBlockInfo.start.toString(),
             } as IRootBlockInfo;
@@ -214,7 +210,7 @@ export class ExitUtil {
             );
 
             return this.encodePayload_(
-                rootBlockInfo.blockNumber.toNumber(),
+                rootBlockInfo.headerBlockNumber.toNumber(),
                 blockProof,
                 txBlockNumber,
                 block.timestamp,

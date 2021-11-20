@@ -1,4 +1,4 @@
-const { setProofApi, POSClient, use } = require("@maticnetwork/maticjs");
+const { setProofApi, POSClient, use, service } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
@@ -69,10 +69,15 @@ const execute = async () => {
   // var tx = await goerliERC20Token.approveMax({
   //   // returnTransaction: true
   // });
-  var tx = await mumbaiERC20Token.transfer(10,to,{
-    // returnTransaction: true
-  });
-  // setProofApi("https://apis.matic.network")
+  // var tx = await mumbaiERC20Token.transfer(10,to,{
+  //   // returnTransaction: true
+  // });
+  setProofApi("https://apis.matic.network")
+
+  var result = await service.network.getBlockIncluded("testnet", 1000);
+
+  return console.log("result", result);
+
   // const tx = await goerliERC20Token.withdrawExitFaster(
   //   '0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
   //   returnTransaction: true

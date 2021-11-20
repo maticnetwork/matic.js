@@ -16,3 +16,4 @@ export * from "./map_promise_option";
 export * from "./base_client_config";
 export * from "./error";
 export * from "./pos_contracts";
+export * from "./root_block_info";

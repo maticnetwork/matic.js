@@ -6,5 +6,5 @@ export const setProofApi = (url: string) => {
         url += '/';
     }
     url += 'api/v1/';
-    service.network = new NetworkService(url) as any;
+    service.network = new NetworkService(url);
 };
