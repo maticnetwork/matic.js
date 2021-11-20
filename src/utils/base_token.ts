@@ -1,8 +1,7 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig } from "../interfaces";
+import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig, ITransactionWriteResult } from "../interfaces";
 import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { Converter, merge } from "../utils";
-import { ContractWriteResult } from "../helpers";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { TYPE_AMOUNT } from "../types";
@@ -44,7 +43,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         });
     }
 
-    protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ContractWriteResult> {
+    protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ITransactionWriteResult> {
         this.validateTxOption_(option);
 
         this.client.logger.log("process write");
@@ -65,12 +64,11 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 const methodResult = method.write(
                     config,
                 );
-                return new ContractWriteResult(methodResult);
-
+                return methodResult;
             });
     }
 
-    protected sendTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+    protected sendTransaction(option: ITransactionOption = {}): Promise<ITransactionWriteResult> {
         this.validateTxOption_(option);
 
         const isParent = this.contractParam.isParent;
@@ -91,12 +89,11 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 const methodResult = client.write(
                     config,
                 );
-                return new ContractWriteResult(methodResult);
-
+                return methodResult;
             });
     }
 
-    protected readTransaction(option: ITransactionOption = {}): Promise<ContractWriteResult> {
+    protected readTransaction(option: ITransactionOption = {}): Promise<ITransactionWriteResult> {
         this.validateTxOption_(option);
         const isParent = this.contractParam.isParent;
         const client = this.getClient(isParent);
