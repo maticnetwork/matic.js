@@ -22,4 +22,4 @@ const txReceipt = await result.getReceipt();
 
 ```
 
-Once the transaction is complete & checkpoint is completed - amount will be deposited to root chain.
+Once the transaction is complete & checkpoint is completed, amount will be deposited to root chain.

@@ -4,9 +4,9 @@ Keywords: 'maticjs, introduction, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-The `@matic.js` is a javascript library which helps to interact with the various components of Matic Network.
+The `@matic.js` is a javascript library which helps in interacting with the various components of Matic Network.
 
-In this get started tutorial - we will learn about how we can setup and interact with POS bridge.
+In this Get Started tutorial - we will learn about how we can setup and interact with the POS bridge.
 
 ## Installation
 
@@ -32,11 +32,11 @@ import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 use(Web3ClientPlugin)
 ```
 
-In the above code we are intiating maticjs with `web3js` but you can similarly initiate with [ethers](v3/docs/setup/ethers).
+In the above code we are initiating maticjs with `web3js` but you can also similarly initiate with [ethers](v3/docs/setup/ethers).
 
 ## POS client
 
-`POSClient` help us to interact with POS Bridge.
+`POSClient` helps us to interact with POS Bridge.
 
 ```
 import { POSClient,use } from "@maticnetwork/maticjs"
@@ -66,7 +66,7 @@ await posClient.init();
 
 ```
 
-After `POSClient` is initiated, we need to initiate required token type like - `erc20`, `erc721` etc.
+After `POSClient` is initiated, we need to initiate all the required token types like - `erc20`, `erc721` etc.
 
 Let's initiate `erc20` -
 
@@ -85,9 +85,9 @@ const erc20ParentToken = posClient.erc20(<token address>, true);
 
 ```
 
-Once erc20 is initaited, you can call various methods available like - `getBalance`, `approve`, `deposit` , `withdraw` etc.
+Once erc20 is initaited, you can call various methods that are available, like - `getBalance`, `approve`, `deposit` , `withdraw` etc.
 
-Let's see some of the api example -
+Let's see some of the API examples -
 
 #### get balance
 
@@ -111,7 +111,7 @@ const txReceipt = await approveResult.getReceipt();
 
 <div class="mt-20px mb-20px top-border"></div>
 
-As you can see maticjs makes very easy to interact with maticjs bridge with its simple APIS. **Let's create something awesome.**
+As you can see, with its simple APIs maticjs makes it very easy to interact with maticjs bridge. **Let's get started with creating something awesome**
 
 ### Some important links
 

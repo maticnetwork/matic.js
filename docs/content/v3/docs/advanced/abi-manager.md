@@ -6,9 +6,9 @@ Description: 'matic.js internally use `ABIManager` for handling abi management f
 
 # ABIManager
 
-`matic.js` internally use `ABIManager` for handling abi management for you.
+`matic.js` internally uses `ABIManager` for handling abi management for you.
 
-Sometimes you required to change the ABI particularly when you are developing a contract. You can do so by using `ABIManager`.
+Sometimes you are required to change the ABI, particularly when you are developing a contract. You can do so by using `ABIManager`.
 
 **Syntax**
 
@@ -28,7 +28,7 @@ manager.setABI(<contract name>,<bridge type>, <abi value>);
 manager.getABI(<contract name>,<bridge type>);
 ```
 
-The network name, contract name, bridge name etc can be get from our [official static repo](https://github.com/maticnetwork/static/tree/master/network).
+The network name, contract name, bridge name etc can be taken from our [official static repo](https://github.com/maticnetwork/static/tree/master/network).
 
 **Example**
 
