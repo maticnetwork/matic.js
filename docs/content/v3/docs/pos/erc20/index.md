@@ -6,9 +6,9 @@ Description: 'Get started with maticjs'
 
 # ERC20
 
-`POSClient` provides `erc20` method which helps you to interact with a erc20 token.
+`POSClient` provides `erc20` method which helps you to interact with an erc20 token.
 
-The method returns an object which has various methods.
+The method returns an object which has other various methods.
 
 ```
 const erc20token = posClient.erc20(<token address>,<isRoot>);
@@ -24,7 +24,7 @@ const childERC20Token = posClient.erc20(<child token address>);
 
 ## Parent token
 
-Token on ethereum can be initiated by providing second parameter value as `true`.
+Token on ethereum can be initiated by providing the second parameter value as `true`.
 
 ```
 const parentERC20Token = posClient.erc20(<parent token address>, true);
