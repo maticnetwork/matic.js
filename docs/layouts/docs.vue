@@ -1,6 +1,6 @@
 <template>
   <div class="row b-tutorial">
-    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links" :class="{show:isMenuOpened}">
+    <div class="col-sm-4 col-md-3 col-lg-3 b-tutorial__links" :class="{ show: isMenuOpened }">
       <input
         class="textbox b-tutorial__links__search"
         type="text"
@@ -61,7 +61,7 @@
     </div>
   </div>
 </template>
-<script  >
+<script>
 import { copyToClipboard, bus } from '@/utils'
 import FlexSearch from 'flexsearch'
 import Links from './links.vue'
@@ -81,23 +81,20 @@ export default {
     })
 
     // adding event listener for resize
-    if(process.browser){
-      window.addEventListener("resize", this.onResize);
+    if (process.browser) {
+      window.addEventListener('resize', this.onResize)
     }
 
     // this event checks for menu onclick
-    bus.$on('menuClicked', ()=> {
-      this.toggleMenu();
+    bus.$on('menuClicked', () => {
+      this.toggleMenu()
     })
   },
-  mounted(){
-    this.onResize();
-  },
   destroyed() {
-    bus.$off('menuClicked');
-    
-    if(process.browser){
-      window.removeEventListener("resize", this.onResize);
+    bus.$off('menuClicked')
+
+    if (process.browser) {
+      window.removeEventListener('resize', this.onResize)
     }
   },
   head() {
@@ -217,6 +214,7 @@ export default {
     this.savedLinks = links
   },
   mounted() {
+    this.onResize()
     hljs.highlightAll()
     const copyHtml = `Copy <i class="margin-left-10px far fa-copy"></i>`
     document.querySelectorAll('pre code').forEach(el => {
@@ -233,6 +231,9 @@ export default {
         }, 1000)
       }
     })
+
+    // focus on active elements
+    document.querySelector('.b-tutorial__links__item--active').focus()
     this.addLinksToFinder()
   },
   methods: {
@@ -307,19 +308,19 @@ export default {
       })
     },
     onResize(e) {
-      if(process.browser){
-        this.width = window.innerWidth;
+      if (process.browser) {
+        this.width = window.innerWidth
       }
 
-      if(this.width < 768){
-        this.isMenuOpened = false;
+      if (this.width < 768) {
+        this.isMenuOpened = false
       } else {
-        this.isMenuOpened = true;
+        this.isMenuOpened = true
       }
     },
-    toggleMenu(){
-      this.isMenuOpened = !this.isMenuOpened;
-    }
+    toggleMenu() {
+      this.isMenuOpened = !this.isMenuOpened
+    },
   },
 }
 </script>
@@ -336,12 +337,12 @@ export default {
   z-index: 1100;
   height: calc(100vh - 4rem);
   overflow-y: scroll;
-  background-color: white; 
+  background-color: white;
   transform: translateX(-100%);
   transition: 0.3s ease;
   max-width: 260px;
 
-  &.show{
+  &.show {
     transform: translateX(0);
   }
 
@@ -352,7 +353,7 @@ export default {
     background: #e4dddd;
   }
 
-  @media (min-width: 768px){
+  @media (min-width: 768px) {
     position: sticky;
   }
 }
@@ -360,8 +361,8 @@ export default {
   padding: 15px 5px;
   overflow-x: hidden;
 
-  @media (min-width: 768px){
-  padding: 20px 40px;
+  @media (min-width: 768px) {
+    padding: 20px 40px;
   }
 }
 .b-tutorial__content__btns {
@@ -387,7 +388,7 @@ export default {
     border-radius: 50%;
     margin-bottom: 10px;
     padding: 0;
-    display:flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
