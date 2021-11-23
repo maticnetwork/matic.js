@@ -6,7 +6,7 @@ Description: 'Get started with maticjs'
 
 # approve
 
-`approve` method can be used to approve required amount on root token.
+`approve` method can be used to approve required amount on the root token.
 
 approve is required in order to deposit amount on polygon chain.
 

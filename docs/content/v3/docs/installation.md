@@ -13,15 +13,14 @@ maticjs has two parts -
 
 ### Main library
 
-Main library has core logic and provides different apis. The user interact mostly with this library.
-
+The Main library has the core logic and provides different APIs. The user interacts mostly with this library.
 ```
 npm i @maticnetwork/maticjs
 ```
 
 ### Ethereum library
 
-Ethereum library allows us to use any favourite ether library. It is injected into maticjs using plugin.
+Ethereum library allows us to use any favourite ether library. It is injected into maticjs using plugins.
 
 matic.js supports two popular library -
 

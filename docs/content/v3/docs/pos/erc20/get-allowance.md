@@ -6,7 +6,7 @@ Description: 'Get started with maticjs'
 
 # getAllowance
 
-`getAllowance` method can be used to get the approved amount for user.
+`getAllowance` method can be used to get the approved amount for the user.
 
 ```
 const erc20Token = posClient.erc20(<token address>, true);

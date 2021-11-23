@@ -6,9 +6,9 @@ Description: 'Get started with maticjs'
 
 # withdrawConfirm
 
-`withdrawConfirm` method is 2nd step in plasma withdraw process. In this step - proof of your burn transaction (1st transaction) is submitted and an erc721 token of equivalent value will be created.
+`withdrawConfirm` method is the second step in plasma withdraw process. In this step - proof of your burn transaction (first  transaction) is submitted and an erc721 token of equivalent value is created.
 
-After the process success - challenge period is started and upon completion of the period, user can get back the withdrawn amount in their account on root chain.
+After this process is successful - challenge period is started and upon completion of the the challenge period, user can get back the withdrawn amount to their account on the root chain.
 
 The challenge period is 7 days for mainnet.
 
