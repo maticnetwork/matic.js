@@ -44,10 +44,10 @@ const execute = async () => {
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  const balance = await mumbaiERC20Token.getBalance(
-    from
-  );
-  return console.log("balance", balance);
+  // const balance = await goerliERC20Token.getBalance(
+  //   from
+  // );
+  // return console.log("balance", balance);
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from
@@ -66,17 +66,17 @@ const execute = async () => {
   // return console.log('tx', tx);
 
 
-  // var tx = await goerliERC20Token.approveMax({
-  //   // returnTransaction: true
-  // });
+  var tx = await goerliERC20Token.deposit(1000000000, from, {
+    // returnTransaction: true
+  });
   // var tx = await mumbaiERC20Token.transfer(10,to,{
   //   // returnTransaction: true
   // });
-  setProofApi("https://apis.matic.network")
+  // setProofApi("https://apis.matic.network")
 
-  var result = await service.network.getBlockIncluded("testnet", 1000);
+  // var result = await service.network.getBlockIncluded("testnet", 1000);
 
-  return console.log("result", result);
+  // return console.log("result", result);
 
   // const tx = await goerliERC20Token.withdrawExitFaster(
   //   '0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
