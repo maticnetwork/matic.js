@@ -12,13 +12,12 @@ describe('ERC20', () => {
     const abiManager = new ABIManager("testnet", "mumbai");
     before(() => {
         return Promise.all([
-            posClient.init(),
             abiManager.init()
         ]);
     });
 
     it('get balance child', async () => {
-        console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+        console.log('process.env.NODE_ENV', process.env.NODE_ENV, posClient.client);
 
         const balance = await erc20Child.getBalance(from);
         console.log('balance', balance);
@@ -179,7 +178,7 @@ describe('ERC20', () => {
 
     it('withdrawExitFaster return tx', async () => {
         setProofApi("https://apis.matic.network");
-        
+
         const result = await erc20Parent.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
             returnTransaction: true
         });
@@ -231,7 +230,6 @@ describe('ERC20', () => {
 
 
         //transfer money back to user
-        await posClientForTo.init();
         const erc20ChildToken = posClientForTo.erc20(erc20.child);
 
         result = await erc20ChildToken.transfer(amount, to);

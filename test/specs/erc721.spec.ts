@@ -11,7 +11,6 @@ describe('ERC721', () => {
     const abiManager = new ABIManager("testnet", "mumbai");
     before(() => {
         return Promise.all([
-            posClient.init(),
             abiManager.init()
         ]);
     });
@@ -132,8 +131,6 @@ describe('ERC721', () => {
         const newAllTokensTo = await erc721Child.getAllTokens(to);
         // console.log('newAllTokensTo', newAllTokensTo);
         expect(newAllTokensTo.length).equal(allTokensTo.length + 1);
-
-        await posClientForTo.init();
 
         const erc721ChildToken = posClientForTo.erc721(erc721.child);
 

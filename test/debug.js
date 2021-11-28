@@ -12,7 +12,10 @@ const execute = async () => {
   const mumbaiERC20 = pos.child.erc20;
   const goerliERC20 = pos.parent.erc20;
 
-  const client = new POSClient({
+  const client = new POSClient();
+
+
+  await client.init({
     log: true,
     network: 'testnet',
     version: 'mumbai',
@@ -29,9 +32,6 @@ const execute = async () => {
       }
     }
   });
-
-
-  await client.init();
   console.log("init called");
 
   const mumbaiERC20Token = client.erc20(mumbaiERC20);
@@ -44,10 +44,10 @@ const execute = async () => {
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  // const balance = await mumbaiERC20Token.getBalance(
-  //   from
-  // );
-  // return console.log("balance", balance);
+  const balance = await mumbaiERC20Token.getBalance(
+    from
+  );
+  return console.log("balance", balance);
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from

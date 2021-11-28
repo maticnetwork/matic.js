@@ -4,11 +4,7 @@ import { BaseToken, utils } from "..";
 
 export class BridgeClient<T> {
 
-    protected client: Web3SideChainClient<T>;
-
-    constructor(config: T) {
-        this.client = new Web3SideChainClient(config as any);
-    }
+    client: Web3SideChainClient<T> = new Web3SideChainClient();
 
     exitUtil: ExitUtil;
 

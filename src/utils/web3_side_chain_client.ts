@@ -14,7 +14,7 @@ export class Web3SideChainClient<T_CONFIG> {
 
     logger = new Logger();
 
-    constructor(config: IBaseClientConfig) {
+    init(config: IBaseClientConfig) {
         config = config || {} as any;
         config.parent.defaultConfig = config.parent.defaultConfig || {} as any;
         config.child.defaultConfig = config.child.defaultConfig || {} as any;
@@ -31,15 +31,13 @@ export class Web3SideChainClient<T_CONFIG> {
         this.child = new (Web3Client as any)(config.child.provider, this.logger);
 
         this.logger.enableLog(config.log);
-    }
 
-    init() {
-        const config = this.config as any as IBaseClientConfig;
         const network = config.network;
         const version = config.version;
-        const abiHelper = this.abiManager = new ABIManager(network, version);
-        this.logger.log("init called", abiHelper);
-        return abiHelper.init().catch(err => {
+        const abiManager = this.abiManager =
+            new ABIManager(network, version);
+        this.logger.log("init called", abiManager);
+        return abiManager.init().catch(err => {
             throw new Error(`network ${network} - ${version} is not supported`);
         });
     }

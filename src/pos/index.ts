@@ -15,21 +15,16 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
 
     rootChainManager: RootChainManager;
 
-    constructor(config: IPOSClientConfig) {
-        super(config);
-    }
-
-    init() {
+    init(config: IPOSClientConfig) {
         const client = this.client;
-        let config: IPOSClientConfig = client.config;
 
-        return client.init().then(_ => {
-            const mainPOSContracts = this.client.mainPOSContracts;
+        return client.init(config).then(_ => {
+            const mainPOSContracts = client.mainPOSContracts;
             client.config = config = Object.assign(
                 {
 
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
-                    rootChain: this.client.mainPlasmaContracts.RootChainProxy
+                    rootChain: client.mainPlasmaContracts.RootChainProxy
                 } as IPOSClientConfig,
                 config
             );
