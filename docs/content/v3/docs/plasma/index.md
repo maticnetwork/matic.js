@@ -21,7 +21,9 @@ npm i @maticnetwork/maticjs-plasma
 ```
 import { PlasmaClient } from "@maticnetwork/maticjs-web3"
 
-const plasmaClient = new PlasmaClient({
+const plasmaClient = new PlasmaClient();
+
+await plasmaClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -31,8 +33,6 @@ const plasmaClient = new PlasmaClient({
       provider: <child provider>
     }
 });
-
-await plasmaClient.init();
 
 ```
 
