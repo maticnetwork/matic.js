@@ -1,218 +1,298 @@
 module.exports = [
   {
-    text: 'Introduction',
-    url: 'introduction',
+    text: 'Get Started',
+    url: 'get-started',
   },
   {
-    text: 'Basics',
-    url: 'basics',
-    expand: true,
+    text: 'Installation',
+    url: 'installation',
+  },
+  {
+    text: 'Setup',
+    url: 'setup',
+    // expand: true,
     children: [
       {
-        text: 'Installation',
-        url: 'installation',
+        text: 'Web3.js',
+        url: 'web3js',
       },
       {
-        text: 'How it works',
-        url: 'how-it-works',
+        text: 'Ethers',
+        url: 'ethers',
       },
     ],
   },
   {
-    text: 'Plasma',
-    url: 'plasma',
-    expand: true,
+    text: 'API Architecture',
+    url: 'api-architecture',
+  },
+  {
+    text: 'POS',
+    url: 'pos',
     children: [
-      {
-        text: 'Initialize Plasma client',
-        url: 'initialize',
-      },
       {
         text: 'ERC20',
         url: 'erc20',
-        expand: true,
+
         children: [
           {
-            text: 'Balance of erc20',
-            url: 'balanceOfERC20',
+            text: 'getBalance',
+            url: 'get-balance',
           },
           {
-            text: 'Approve ERC20',
-            url: 'approveERC20TokensForDeposit',
+            text: 'approve',
+            url: 'approve',
           },
           {
-            text: 'Deposit ERC20',
-            url: 'depositERC20ForUser',
+            text: 'approveMax',
+            url: 'approve-max',
           },
           {
-            text: 'Transfer ERC20',
-            url: 'transferERC20Tokens',
+            text: 'getAllowance',
+            url: 'get-allowance',
           },
           {
-            text: 'Start Withdraw',
-            url: 'startWithdraw',
+            text: 'deposit',
+            url: 'deposit',
           },
           {
-            text: 'Withdraw ERC20',
-            url: 'withdraw',
+            text: 'transfer',
+            url: 'transfer',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'withdrawExitFaster',
+            url: 'withdraw-exit-faster',
+          },
+          {
+            text: 'isWithdrawExited',
+            url: 'is-withdraw-exited',
           },
         ],
       },
       {
         text: 'ERC721',
         url: 'erc721',
-        expand: true,
         children: [
           {
-            text: 'Balance Of ERC721',
-            url: 'balanceOfERC721',
+            text: 'getTokensCount',
+            url: 'get-tokens-count',
           },
           {
-            text: 'Safe Deposit ERC721',
-            url: 'safeDepositERC721Tokens',
+            text: 'getTokenIdAtIndexForUser',
+            url: 'get-token-id-at-index-for-user',
           },
           {
-            text: 'Token Of Owner By Index ERC721',
-            url: 'tokenOfOwnerByIndexERC721',
+            text: 'getAllTokens',
+            url: 'get-all-tokens',
           },
           {
-            text: 'Start Withdraw For NFT',
-            url: 'startWithdrawForNFT',
+            text: 'isApproved',
+            url: 'is-approved',
           },
           {
-            text: 'Withdraw ERC721',
-            url: 'withdrawNFT',
+            text: 'isApprovedAll',
+            url: 'is-approved-all',
           },
           {
-            text: 'Transfer ERC721',
-            url: 'transferERC721Tokens',
+            text: 'approve',
+            url: 'approve',
+          },
+          {
+            text: 'approveAll',
+            url: 'approve-all',
+          },
+          {
+            text: 'deposit',
+            url: 'deposit',
+          },
+          {
+            text: 'depositMany',
+            url: 'deposit-many',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawStartMany',
+            url: 'withdraw-start-many',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'withdrawExitMany',
+            url: 'withdraw-exit-many',
+          },
+          {
+            text: 'withdrawExitFaster',
+            url: 'withdraw-exit-faster',
+          },
+          {
+            text: 'withdrawExitFasterMany',
+            url: 'withdraw-exit-faster-many',
+          },
+          {
+            text: 'isWithdrawExited',
+            url: 'is-withdraw-exited',
+          },
+          {
+            text: 'isWithdrawExitedMany',
+            url: 'is-withdraw-exited-many',
+          },
+          {
+            text: 'transfer',
+            url: 'transfer',
           },
         ],
       },
       {
-        text: 'Deposit Ethers',
-        url: 'depositEthers',
+        text: 'isCheckPointed',
+        url: 'is-check-pointed',
       },
       {
-        text: 'Deposit Status From TxHash',
-        url: 'depositStatusFromTxHash',
+        text: 'isDeposited',
+        url: 'is-deposited',
       },
       {
-        text: 'Get Transfer Signature',
-        url: 'getTransferSignature',
-      },
-      {
-        text: 'Transfer with Signature',
-        url: 'transferWithSignature',
-      },
-      {
-        text: 'Process Exit',
-        url: 'processExits',
-      },
-      {
-        text: 'Withdraw Manager',
-        url: 'WithdrawManager',
-        expand: true,
-        children: [
-          {
-            text: 'Exit Mintable Burnt Tokens',
-            url: 'startExitForMintableBurntToken',
-          },
-          {
-            text: 'Exit Metadata Mintable Burnt Tokens',
-            url: 'startExitForMetadataMintableBurntToken',
-          },
-        ],
+        text: 'depositEther',
+        url: 'deposit-ether',
       },
     ],
   },
   {
-    text: 'POS API',
-    url: 'pos',
-    expand: true,
+    text: 'Plasma',
+    url: 'plasma',
     children: [
       {
-        text: 'Initialize POS client',
-        url: 'initialize',
-      },
-      {
         text: 'ERC20',
-        url: 'ERC20',
-        expand: true,
+        url: 'erc20',
 
         children: [
           {
-            text: 'Approve ERC20 Deposit',
-            url: 'approveERC20ForDeposit',
+            text: 'getBalance',
+            url: 'get-balance',
           },
           {
-            text: 'Deposit ERC20',
-            url: 'depositERC20ForUser',
+            text: 'approve',
+            url: 'approve',
           },
           {
-            text: 'Burn ERC20',
-            url: 'burnERC20',
+            text: 'approveMax',
+            url: 'approve-max',
           },
           {
-            text: 'Exit ERC20',
-            url: 'exitERC20',
+            text: 'getAllowance',
+            url: 'get-allowance',
+          },
+          {
+            text: 'transfer',
+            url: 'transfer',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawConfirm',
+            url: 'withdraw-confirm',
+          },
+          {
+            text: 'withdrawConfirmFaster',
+            url: 'withdraw-confirm-faster',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
           },
         ],
       },
       {
         text: 'ERC721',
-        url: 'ERC721',
-        expand: true,
+        url: 'erc721',
+        children: [
+          {
+            text: 'getTokensCount',
+            url: 'get-tokens-count',
+          },
+          {
+            text: 'getTokenIdAtIndexForUser',
+            url: 'get-token-id-at-index-for-user',
+          },
+          {
+            text: 'getAllTokens',
+            url: 'get-all-tokens',
+          },
+          {
+            text: 'safeDeposit',
+            url: 'safe-deposit',
+          },
+          {
+            text: 'withdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'withdrawConfirm',
+            url: 'withdraw-confirm',
+          },
+          {
+            text: 'withdrawConfirmFaster',
+            url: 'withdraw-confirm-faster',
+          },
+          {
+            text: 'withdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'transfer',
+            url: 'transfer',
+          },
+        ],
+      },
+      {
+        text: 'isDeposited',
+        url: 'is-deposited',
+      },
+      {
+        text: 'isCheckPointed',
+        url: 'is-check-pointed',
+      },
+      {
+        text: 'withdrawExit',
+        url: 'withdraw-exit',
+      },
+      {
+        text: 'depositEther',
+        url: 'deposit-ether',
+      },
+    ],
+  },
+  {
+    text: 'setProofApi',
+    url: 'set-proof-api',
+  },
+  {
+    text: 'Advanced',
+    url: 'advanced',
+    expand: true,
 
-        children: [
-          {
-            text: 'Approve ERC721 Deposit',
-            url: 'approveERC721ForDeposit',
-          },
-          {
-            text: 'Deposit ERC721',
-            url: 'depositERC721ForUser',
-          },
-          {
-            text: 'Burn ERC721',
-            url: 'burnERC721',
-          },
-          {
-            text: 'Exit ERC721',
-            url: 'exitERC721',
-          },
-        ],
+    children: [
+      {
+        text: 'ABIManager',
+        url: 'abi-manager',
       },
       {
-        text: 'ERC1155',
-        url: 'ERC1155',
-        expand: true,
-        children: [
-          {
-            text: 'Approve ERC1155 Deposit',
-            url: 'approveERC1155ForDeposit',
-          },
-          {
-            text: 'Deposit ERC1155',
-            url: 'depositERC1155ForUser',
-          },
-          {
-            text: 'Burn ERC1155',
-            url: 'burnERC1155',
-          },
-          {
-            text: 'Exit ERC1155',
-            url: 'exitERC1155',
-          },
-          {
-            text: 'Transfer ERC1155',
-            url: 'transferERC1155',
-          },
-        ],
-      },
-      {
-        text: 'Deposit Ethers',
-        url: 'depositEtherForUser',
+        text: 'Plugin',
+        url: 'plugin',
       },
     ],
   },

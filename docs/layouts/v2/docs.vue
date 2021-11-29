@@ -1,5 +1,5 @@
 <template>
-  <Docs :propLinks="savedLinks" relativeUrl="/v3/docs/" :title="title" :description="description" :keywords="keywords">
+  <Docs :propLinks="savedLinks" relativeUrl="/v2/docs/" :title="title" :description="description" :keywords="keywords">
     <slot></slot>
   </Docs>
 </template>
@@ -21,7 +21,7 @@ export default {
     }
   },
   fetch() {
-    const links = require('../../content/v3/docs')
+    const links = require('../../content/v2/docs')
     this.savedLinks = links
   },
 }

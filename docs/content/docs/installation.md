@@ -14,6 +14,7 @@ maticjs has two parts -
 ### Main library
 
 The Main library has the core logic and provides different APIs. The user interacts mostly with this library.
+
 ```
 npm i @maticnetwork/maticjs
 ```

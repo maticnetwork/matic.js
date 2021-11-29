@@ -11,8 +11,8 @@
 // @import "flexboot/src/header.scss";
 
 :root {
-  --primary-color: #42a5f5;
-  --secondary-color: #f59242;
+  --primary-color: #8247e5;
+  --secondary-color: #f37b0f;
   --link-color: #000;
 }
 
@@ -30,8 +30,7 @@ h4,
 }
 
 body {
-  font-family: 'Jost', -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, 'Noto Sans',
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family: 'Nunito', sans-serif;
   line-height: 1.5;
 }
 

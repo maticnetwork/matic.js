@@ -3,7 +3,7 @@
 <script>
 export default {
   mounted() {
-    this.$router.replace('docs/introduction')
+    this.$router.replace('docs/get-started')
   },
 }
 </script>
