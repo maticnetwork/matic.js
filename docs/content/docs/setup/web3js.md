@@ -35,7 +35,8 @@ import HDWalletProvider from "@truffle/hdwallet-provider"
 // install web3 plugin
 use(Web3ClientPlugin);
 
-const posClient = new POSClient({
+const posClient = new POSClient();
+await posClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -51,6 +52,5 @@ const posClient = new POSClient({
       }
     }
 });
-await posClient.init();
 
 ```

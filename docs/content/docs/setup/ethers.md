@@ -39,7 +39,8 @@ use(Web3ClientPlugin);
 const parentProvider = new providers.JsonRpcProvider(rpc.parent);
 const childProvider = new providers.JsonRpcProvider(rpc.child);
 
-const posClient = new POSClient({
+const posClient = new POSClient();
+await posClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -55,6 +56,5 @@ const posClient = new POSClient({
       }
     }
 });
-await posClient.init();
 
 ```
