@@ -11,7 +11,9 @@ Description: 'Get started with maticjs'
 ```
 import { POSClient,use } from "@maticnetwork/maticjs"
 
-const posClient = new POSClient({
+const posClient = new POSClient();
+
+await posClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -21,8 +23,6 @@ const posClient = new POSClient({
       provider: <child provider>
     }
 });
-
-await posClient.init();
 
 ```
 
