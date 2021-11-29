@@ -83,12 +83,12 @@ module.exports = {
       },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Jost&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Nunito&display=swap',
       },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Jost:wght@700&display=swap',
-      },
+      // {
+      //   rel: 'stylesheet',
+      //   href: 'https://fonts.googleapis.com/css2?family=Jost:wght@700&display=swap',
+      // },
       {
         rel: 'stylesheet',
         href: '//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css',
