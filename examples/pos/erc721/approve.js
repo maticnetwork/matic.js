@@ -1,18 +1,21 @@
-const { getMaticPOSClient, pos, from } = require('../../utils')
-
-const token = pos.parent.erc721
-const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
+const { pos } = require('../../config');
+const { getPOSClient, from } = require('../../utils');
 
 const execute = async () => {
-  try {
-    const tx = await getMaticPOSClient().approveERC721ForDeposit(token, tokenId, {
-      from: from,
-      gasPrice: '500000000000',
-      gas: 2500000,
-    })
-    console.log(tx.transactionHash) // eslint-disable-line
-  } catch (e) {
-    console.error(e) // eslint-disable-line
-  }
+  const client = await getPOSClient();
+  const erc721Token = client.erc721(pos.parent.erc721, true);
+
+  const result = await erc721Token.approve('800');
+
+  const txHash = await result.getTransactionHash();
+  console.log("txHash", txHash);
+  const receipt = await result.getReceipt();
+  console.log("receipt", receipt);
+
 }
-execute().then(() => process.exit(0))
+execute().then(() => {
+}).catch(err => {
+  console.error("err", err);
+}).finally(_ => {
+  process.exit(0);
+})

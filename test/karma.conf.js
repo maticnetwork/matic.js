@@ -1,9 +1,9 @@
 const webpackConfig = require('./webpack.config.test')
 process.env.CHROME_BIN = require('puppeteer').executablePath()
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha'],
     // plugins: ['karma-chai'],
     files: [
       // "src/**/*.ts",
@@ -40,6 +40,6 @@ module.exports = function(config) {
     autoWatch: false,
     singleRun: true,
     concurrency: Infinity,
-    browserNoActivityTimeout: 40000,
+    browserNoActivityTimeout: 60000,
   })
 }
