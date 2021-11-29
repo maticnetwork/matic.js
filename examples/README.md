@@ -9,7 +9,7 @@ This folder contains different example for different cases. All example are node
 
 ### 1. Set configuration
 
-Open `config.js` and set the keys like `privateKey`, `address` in user1, parent rpc etc.
+You need to configure your environment variables now. Copy `.env.example` and rename as `.env`. Now provide values for the keys mentioned there.
 
 There are some prefilled data in `config.js` but feel free to change anything as per your needs.
 

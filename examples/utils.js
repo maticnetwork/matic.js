@@ -1,58 +1,43 @@
 const bn = require('bn.js')
 const HDWalletProvider = require('@truffle/hdwallet-provider')
 const config = require('./config')
-const Network = require('@maticnetwork/meta/network')
-const MaticPlasmaClient = require('@maticnetwork/maticjs').default
-const { MaticPOSClient } = require('@maticnetwork/maticjs')
+const { POSClient, PlasmaClient, setProofApi, use } = require('@maticnetwork/maticjs')
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
+const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
+
+use(Web3ClientPlugin);
+
+if(config.proofApi) {
+  setProofApi(config.proofApi);
+}
 
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
 
-async function getMaticPlasmaClient(network = 'testnet', version = 'mumbai') {
-  const networkInstance = new Network(network, version)
-  const from = config.user1.address
-  const matic = new MaticPlasmaClient({
+const getPOSClient = (network = 'testnet', version = 'mumbai') => {
+  const posClient = new POSClient({
+    log: true,
     network: network,
     version: version,
-    parentProvider: new HDWalletProvider(privateKey, config.parent.rpc),
-    maticProvider: new HDWalletProvider(privateKey, config.child.rpc),
-    parentDefaultOptions: { from: userAddress },
-    maticDefaultOptions: { from: userAddress },
-
-    // rootChain: config.plasma.rootChainAddress,
-    // registry: config.plasma.registryAddress,
-    // depositManager: config.plasma.depositManagerAddress,
-    // withdrawManager: config.plasma.withdrawManagerAddress,
-    // childChain: config.plasma.childChainAddress,
+    child: {
+      provider: new HDWalletProvider(privateKey, config.child.rpc),
+      defaultConfig: {
+        from: userAddress
+      }
+    },
+    parent: {
+      provider: new HDWalletProvider(privateKey, config.parent.rpc),
+      defaultConfig: {
+        from: userAddress
+      }
+    }
   })
-  await matic.initialize()
-  return { matic, network: networkInstance }
-}
-
-const getMaticPOSClient = () => {
-  return new MaticPOSClient({
-    network: 'testnet', // For mainnet change this to mainnet
-    version: 'mumbai', // For mainnet change this to v1
-    parentProvider: new HDWalletProvider(privateKey, config.parent.rpc),
-    maticProvider: new HDWalletProvider(privateKey, config.child.rpc),
-    parentDefaultOptions: { from: userAddress },
-    maticDefaultOptions: { from: userAddress },
-
-    //posRootChainManager: config.pos.parent.chainManagerAddress,
-    // optional, required only if working with ERC20 tokens
-    // posERC20Predicate: config.pos.parent.erc20Predicate,
-    // // optional, required only if working with ERC721 tokens
-    // posERC721Predicate: config.pos.parent.erc721Predicate,
-    // // optional, required only if working with ERC71155 tokens
-    // posERC1155Predicate: config.pos.parent.erc1155Predicate,
-  })
+  return posClient.init();
 }
 
 module.exports = {
   SCALING_FACTOR,
-  getMaticPlasmaClient: getMaticPlasmaClient,
-  getMaticPOSClient: getMaticPOSClient,
+  getPOSClient: getPOSClient,
   child: config.child,
   plasma: config.plasma,
   pos: config.pos,

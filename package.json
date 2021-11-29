@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "2.0.45",
+  "version": "3.0.0-beta.15",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -16,17 +16,18 @@
     "clean": "rimraf lib dist",
     "build": "npm run build:dev",
     "build:link": "npm run build && npm link",
-    "build:webpack": "npm run lint && webpack",
-    "build:pack": "npm run build:dev && npm pack",
+    "build:webpack": "npm run lint && webpack --config webpack/webpack.all.config.js",
+    "build:pack": "npm run clean && npm run build:dev && npm pack",
     "build:dev": "cross-env NODE_ENV=development npm run build:webpack",
     "build:prod": "cross-env NODE_ENV=production npm run build:webpack",
-    "deploy": "npm run build:dev && npm run build:prod",
+    "deploy": "npm run clean && npm run build:dev && npm run build:prod",
     "prepublishOnly": "npm run deploy",
-    "lint": "eslint --ext .ts src",
-    "lint:fix": "eslint --ext .ts src --fix",
+    "lint": "tslint src/**/*.ts",
+    "lint:fix": "tslint src/**/*.ts --fix",
     "test": "npm run build:pack && cd test && npm run install:lib:test",
     "debug": "npm run build:pack && cd test && npm run install:lib:debug",
-    "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
+    "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000",
+    "install:example": "cd examples && npm i ../maticnetwork-maticjs-3.0.0-beta.2.tgz --no-save"
   },
   "repository": {
     "type": "git",
@@ -45,46 +46,29 @@
   },
   "homepage": "https://github.com/maticnetwork/matic.js#readme",
   "dependencies": {
-    "@maticnetwork/meta": "^2.4.16",
-    "axios": "^0.21.1",
-    "bn.js": "5.0.0",
-    "debug": "^4.1.1",
     "eth-sig-util": "^2.5.3",
     "ethereumjs-block": "2.2.0",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-util": "^5.2.0",
     "merkle-patricia-tree": "2.3.2",
-    "query-string": "6.8.1",
-    "web3": "^1.3.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "@truffle/hdwallet-provider": "^1.2.0",
-    "@types/bn.js": "4.11.5",
-    "@types/chai": "^4.2.18",
-    "@types/mocha": "^8.2.2",
-    "@types/web3": "1.0.19",
+    "@types/ethereumjs-util": "^6.1.0",
+    "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
-    "chai": "3.5.0",
     "copy-webpack-plugin": "^6.1.1",
     "cross-env": "^7.0.3",
-    "eslint": "5.16.0",
-    "eslint-loader": "2.1.2",
-    "eth-lib": "0.2.7",
-    "ganache-cli": "^6.12.1",
     "husky": "2.4.1",
     "lint-staged": "8.2.1",
-    "mocha": "^8.2.1",
-    "mochapack": "^2.1.2",
-    "prettier": "^1.19.1",
-    "rimraf": "2.6.3",
+    "smart-banner-webpack-plugin": "^3.0.1",
     "ts-loader": "^7.0.1",
-    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
     "typescript": "^3.8.3",
-    "typings": "^2.1.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^4.2.0",
-    "yargs": "^16.2.0"
+    "webpack-merge": "^4.2.2"
   },
   "browserslist": [
     "> 1%",
@@ -96,7 +80,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsc --p src/tsconfig.json && lint-staged"
+      "pre-commit": "npm run build"
     }
   }
 }
