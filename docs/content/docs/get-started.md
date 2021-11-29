@@ -4,6 +4,8 @@ Keywords: 'maticjs, introduction, contract, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# Get Started
+
 The `@matic.js` is a javascript library which helps in interacting with the various components of Matic Network.
 
 In this Get Started tutorial - we will learn about how we can setup and interact with the POS bridge.
@@ -32,7 +34,7 @@ import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 use(Web3ClientPlugin)
 ```
 
-In the above code we are initiating maticjs with `web3js` but you can also similarly initiate with [ethers](v3/docs/setup/ethers).
+In the above code we are initiating maticjs with `web3js` but you can also similarly initiate with [ethers](docs/setup/ethers).
 
 ## POS client
 
@@ -46,7 +48,8 @@ import HDWalletProvider from "@truffle/hdwallet-provider"
 // install web3 plugin
 use(Web3ClientPlugin);
 
-const posClient = new POSClient({
+const posClient = new POSClient();
+await posClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
@@ -62,11 +65,10 @@ const posClient = new POSClient({
       }
     }
 });
-await posClient.init();
 
 ```
 
-After `POSClient` is initiated, we need to initiate all the required token types like - `erc20`, `erc721` etc.
+After `POSClient` is initiated, we need to initiate the required token types like - `erc20`, `erc721` etc.
 
 Let's initiate `erc20` -
 

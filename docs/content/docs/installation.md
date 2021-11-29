@@ -4,7 +4,7 @@ Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-## Installation
+# Installation
 
 maticjs has two parts -
 
