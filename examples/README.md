@@ -17,7 +17,7 @@ There are some prefilled data in `config.js` but feel free to change anything as
 
 ### 2. Install package
 
-install related package by runing command -
+install related package by running command -
 
 ```
 npm i
