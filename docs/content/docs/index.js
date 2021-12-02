@@ -277,6 +277,10 @@ module.exports = [
     ],
   },
   {
+    text: 'FxPortal',
+    url: 'fx-portal',
+  },
+  {
     text: 'setProofApi',
     url: 'set-proof-api',
   },

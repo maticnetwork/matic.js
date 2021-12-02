@@ -11,7 +11,7 @@ Description: 'Transfer erc20 POS tokens'
 ```
 const erc20Token = posClient.erc20(<token address>);
 
-const result = await erc20Token.transfer(<to>,<amount>);
+const result = await erc20Token.transfer(<amount>,<to>);
 
 const txHash = await result.getTransactionHash();
 

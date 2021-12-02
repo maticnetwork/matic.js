@@ -19,3 +19,5 @@ const txHash = await result.getTransactionHash();
 const txReceipt = await result.getReceipt();
 
 ```
+
+It might take some time to reflect the deposited amount on polygon chain. You can use [isDeposited](docs/pos/is-deposited) method for checking status.

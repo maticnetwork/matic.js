@@ -4,7 +4,7 @@ Keywords: 'plasma client, erc721, transfer, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-# transfer
+# Transfer
 
 `transfer` method transfer tokens from one user to another user.
 
