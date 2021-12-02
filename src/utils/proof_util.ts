@@ -8,6 +8,8 @@ const rlp = ethUtils.rlp;
 import EthereumBlock from 'ethereumjs-block/from-rpc';
 import { Converter, promiseResolve, utils } from "..";
 
+// Implementation adapted from Tom French's `matic-proofs` library used under MIT License
+// https://github.com/TomAFrench/matic-proofs
 
 export class ProofUtil {
 
