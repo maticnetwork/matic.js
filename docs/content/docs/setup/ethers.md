@@ -4,9 +4,13 @@ Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
-## Setup ethers
+# Ether.js
 
-In order to use ethers, you need to first install ethers plugin.
+The [ethers.js](https://docs.ethers.io/) library aims to be a complete and compact library for interacting with the Ethereum Blockchain and its ecosystem.
+
+## Setup ether.js
+
+ether.js support is available via seperate package as a plugin for matic.js.
 
 ### Installation
 
@@ -58,3 +62,7 @@ await posClient.init({
 });
 
 ```
+
+## Examples
+
+The examples for different cases are available on [ethers plugin repo](https://github.com/maticnetwork/maticjs-ethers).

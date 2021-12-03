@@ -4,9 +4,13 @@ Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
 
+# Web3.js
+
+[web3.js](https://web3js.readthedocs.io/) is a collection of libraries that allow you to interact with a local or remote ethereum node using HTTP, IPC or WebSocket.
+
 ## Setup web3.js
 
-In order to use web3.js, you need to first install web3js plugin.
+web3.js support is available via seperate package as a plugin for matic.js.
 
 ### Installation
 
@@ -25,7 +29,7 @@ import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
 use(Web3ClientPlugin)
 ```
 
-Let's see one example of creating `POSClient` using web3 -
+Let's see an example of creating `POSClient` using web3 -
 
 ```
 import { POSClient,use } from "@maticnetwork/maticjs"
@@ -54,3 +58,7 @@ await posClient.init({
 });
 
 ```
+
+## Examples
+
+The examples for different cases are available in [web3 plugin repo](https://github.com/maticnetwork/maticjs-web3)
