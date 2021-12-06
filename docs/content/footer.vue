@@ -5,7 +5,7 @@
         <div class="col-sm-12 col-lg-4">
           <h5>Versions</h5>
           <div>
-            <a href="/v2/docs/introduction">version 2</a>
+            <a href="v2/docs/introduction">version 2</a>
           </div>
         </div>
         <div class="col-sm-12 col-lg-4">
