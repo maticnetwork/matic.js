@@ -2,7 +2,7 @@
   <div>
     <Menu />
     <nuxt />
-    <AppFooter />
+    <AppFooter v-if="isPageLoaded" />
   </div>
 </template>
 
@@ -17,7 +17,15 @@ Vue.filter('imgPath', val => {
 
 export default {
   components: { Menu, AppFooter },
+  data() {
+    return {
+      isPageLoaded: false,
+    }
+  },
   mounted() {
+     setTimeout(() => {
+      this.isPageLoaded = true
+    }, 100)
     document.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(el => {
       if (!el.id) return
       const link = document.createElement('a')
@@ -75,10 +83,12 @@ export default {
         tab.click()
       }
     })
+
+   
   },
 }
 </script>
- <style>
+<style>
 .code-copy {
   z-index: 1000;
   cursor: pointer;

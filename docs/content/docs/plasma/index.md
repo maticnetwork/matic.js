@@ -19,7 +19,7 @@ npm i @maticnetwork/maticjs-plasma
 `PlasmaClient` can be used to interact with **Plasma** Bridge.
 
 ```
-import { PlasmaClient } from "@maticnetwork/maticjs-web3"
+import { PlasmaClient } from "@maticnetwork/maticjs-plasma"
 
 const plasmaClient = new PlasmaClient();
 
