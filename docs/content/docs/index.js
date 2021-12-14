@@ -298,6 +298,10 @@ module.exports = [
         text: 'Plugin',
         url: 'plugin',
       },
+      {
+        text: 'ExitUtil',
+        url: 'exit-util',
+      },
     ],
   },
 ]
