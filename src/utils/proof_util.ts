@@ -177,12 +177,16 @@ export class ProofUtil {
                         parentNodes: stack.map(s => s.raw),
                         root: ProofUtil.getRawHeader(block).receiptTrie,
                         path: rlp.encode(receipt.transactionIndex),
-                        value: rlp.decode(rawReceiptNode.value),
+                        value: ProofUtil.isTypedReceipt(receipt) ? rawReceiptNode.value : rlp.decode(rawReceiptNode.value)
                     };
                     resolve(prf);
                 });
             });
         });
+    }
+
+    static isTypedReceipt(receipt) {
+        return receipt.status !== undefined && receipt.status !== null && receipt.type !== "0x0" && receipt.type !== "0x";
     }
 
     // getStateSyncTxHash returns block's tx hash for state-sync receipt
@@ -219,9 +223,8 @@ export class ProofUtil {
                 ];
             }),
         ]);
-        const hexType = Converter.toHex(receipt.type);
-        if (receipt.status != null && hexType !== '0x0' && hexType !== '0x') {
-            encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData]);
+        if (ProofUtil.isTypedReceipt(receipt)) {
+            encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData]);     
         }
         return encodedData;
     }
