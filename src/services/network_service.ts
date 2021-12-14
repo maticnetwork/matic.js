@@ -20,7 +20,11 @@ export class NetworkService {
             end: string;
             headerBlockNumber: BaseBigNumber;
         }>(url).then(result => {
-            result.headerBlockNumber = new utils.BN(result.headerBlockNumber);
+            const headerBlockNumber = result.headerBlockNumber as any as string;
+            const decimalHeaderBlockNumber = headerBlockNumber.slice(0, 2) === '0x' ? parseInt(
+                headerBlockNumber, 16
+            ) : headerBlockNumber;
+            result.headerBlockNumber = new utils.BN(decimalHeaderBlockNumber);
             return result;
         });
     }

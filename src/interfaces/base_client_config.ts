@@ -1,13 +1,13 @@
 export interface IBaseClientConfig {
     network: string;
     version: string;
-    parent: {
+    parent?: {
         provider: any;
         defaultConfig: {
             from: string;
         }
     };
-    child: {
+    child?: {
         provider: any;
         defaultConfig: {
             from: string;
