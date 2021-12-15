@@ -5,3 +5,5 @@ src
 build_helper
 test
 docs
+*.env
+examples
