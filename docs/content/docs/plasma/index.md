@@ -27,10 +27,16 @@ await plasmaClient.init({
     network: 'testnet',
     version: 'mumbai',
     parent: {
-      provider: <parent provider>
+      provider: <parent provider>,
+      defaultConfig: {
+            from: <from address>
+      }
     },
     child: {
-      provider: <child provider>
+      provider: <child provider>,
+      defaultConfig: {
+            from: <from address>
+      }
     }
 });
 
