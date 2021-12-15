@@ -185,8 +185,9 @@ export class ProofUtil {
         });
     }
 
-    static isTypedReceipt(receipt) {
-        return receipt.status !== undefined && receipt.status !== null && receipt.type !== "0x0" && receipt.type !== "0x";
+    static isTypedReceipt(receipt: ITransactionReceipt) {
+        const hexType = Converter.toHex(receipt.type);
+        return receipt.status != null && hexType !== "0x0" && hexType !== "0x";
     }
 
     // getStateSyncTxHash returns block's tx hash for state-sync receipt
@@ -224,7 +225,7 @@ export class ProofUtil {
             }),
         ]);
         if (ProofUtil.isTypedReceipt(receipt)) {
-            encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData]);     
+            encodedData = Buffer.concat([ethUtils.toBuffer(receipt.type), encodedData]);
         }
         return encodedData;
     }
