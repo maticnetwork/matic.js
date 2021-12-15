@@ -120,7 +120,7 @@ describe('ERC721', () => {
         expect(txReceipt).to.be.an('object');
         expect(txReceipt.from).equal(from);
         expect(txReceipt.to.toLowerCase()).equal(erc721.child.toLowerCase());
-        expect(txReceipt.type).equal(0);
+        expect(txReceipt.type).equal(2);
         expect(txReceipt.gasUsed).to.be.an('number').gt(0);
         expect(txReceipt.cumulativeGasUsed).to.be.an('number').gt(0);
 
