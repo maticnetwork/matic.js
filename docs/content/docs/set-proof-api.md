@@ -8,7 +8,9 @@ Description: 'Get started with maticjs'
 
 You will see some of the APIs with **faster** suffix, which makes a process faster. It does so by using the backend resources and faster rpc.
 
-For making `faster apis` to work - you will have to host a [proof api](https://github.com/maticnetwork/proof-generation-api) at your expense.
+For making `faster apis` to work - you will have to host a **[proof api](https://github.com/maticnetwork/proof-generation-api)** at your expense.
+
+Here is proof api repo link - [https://github.com/maticnetwork/proof-generation-api](https://github.com/maticnetwork/proof-generation-api)
 
 After you have deployed the api, you can set the api url in matic.js by using `setProofApi`.
 
