@@ -1,0 +1,49 @@
+{
+  "name": "doc-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch:doc": "nodemon src/builder/index.js",
+    "dev": "concurrently \"npm run watch:doc\" \"npm run dev:nuxt\"",
+    "dev:nuxt": "nuxt --config-file src/nuxt.config.js",
+    "build": "node build.js && nuxt build",
+    "start": "node build.js && nuxt start",
+    "deploy": "npm run generate && nuxt generate --config-file src/nuxt.config.js",
+    "generate": "node src/builder"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "content/*",
+      "docs/*"
+    ],
+    "ext": "md",
+    "delay": 2000
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ujjwalguptaofficial/doc-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ujjwalguptaofficial/doc-template/issues"
+  },
+  "homepage": "https://github.com/ujjwalguptaofficial/doc-template#readme",
+  "dependencies": {
+    "@nuxtjs/google-analytics": "^2.4.0",
+    "flexboot": "^1.0.3",
+    "flexsearch": "^0.6.32",
+    "front-matter": "^4.0.2",
+    "fs-extra": "^10.0.0",
+    "node-sass": "^4.14.1",
+    "nuxt": "^2.15.8",
+    "sass": "^1.32.12",
+    "sass-loader": "^8.0.0",
+    "showdown": "^1.9.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12"
+  }
+}

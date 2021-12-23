@@ -3,7 +3,8 @@ var { readdirSync, writeFileSync, readFileSync, statSync, ensureDirSync, existsS
 var { getVueComponent } = require('./vue_helper')
 const path = require('path')
 
-const workingDir = process.cwd()
+let workingDir = process.cwd()
+workingDir = workingDir.replace(/[\\$'"]/g, "\\$&");
 const contentDir = path.join(workingDir, 'content')
 const srcDir = path.join(workingDir, 'src')
 const pagesDir = path.join(srcDir, 'pages')

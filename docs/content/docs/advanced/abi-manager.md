@@ -1,7 +1,7 @@
 ---
 Title: 'ABIManager'
 Keywords: 'abi manager, api type, read, write, polygon'
-Description: 'matic.js internally use `ABIManager` for handling abi management for you'
+Description: 'matic.js internally use ABIManager for handling abi management for you'
 ---
 
 # ABIManager

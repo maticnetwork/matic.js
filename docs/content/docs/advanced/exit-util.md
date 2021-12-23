@@ -1,12 +1,12 @@
 ---
 Title: 'ExitUtil'
 Keywords: 'exit util, api type, read, write, polygon'
-Description: 'matic.js internally use `ABIManager` for handling abi management for you'
+Description: 'matic.js internally use ExitUtil for generating proof'
 ---
 
 # ExitUtil
 
-`matic.js` internally uses `ExitUtil` for generating proof. It is a class which has different methods for helping with exit utilities.
+`matic.js` internally use `ExitUtil` for generating proof. It is a class which has different methods for helping with exit utilities.
 
 ## buildPayloadForExit
 
