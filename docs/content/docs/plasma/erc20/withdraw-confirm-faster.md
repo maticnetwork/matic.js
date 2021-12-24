@@ -19,6 +19,10 @@ It is fast because it generates proof in the backend. You need to configure <a h
 **Note**- withdrawStart transaction must be checkpointed in order to challenge the withdraw.
 
 ```
+import { setProofApi } from '@maticnetwork/maticjs'
+
+setProofApi("https://apis.matic.network/");
+
 const erc20Token = plasmaClient.erc20(<token address>, true);
 
 // start withdraw process for 100 amount

@@ -15,6 +15,10 @@ It is generally fast because it generates proof in the backend. You need to conf
 **Note**- withdrawStart transaction must be checkpointed in order to exit the withdraw.
 
 ```
+import { setProofApi } from '@maticnetwork/maticjs'
+
+setProofApi("https://apis.matic.network/");
+
 const erc20RootToken = posClient.erc20(<root token address>, true);
 
 // start withdraw process for 100 amount
