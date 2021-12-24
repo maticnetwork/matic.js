@@ -6,7 +6,7 @@ Description: 'Config proof api'
 
 # setProofApi
 
-You will see some of the APIs with **faster** suffix, which makes the process faster. It does so by using proof generation api which can be hosted by anyone.
+You will see some of the APIs with **faster** suffix, which makes the process faster. It does so by using proof generation api in the backend which can be hosted by anyone.
 
 Polygon has hosted the proof generation api which can be used by anyone. The API url is - [https://apis.matic.network/](https://apis.matic.network/)
 
