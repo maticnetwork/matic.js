@@ -1,4 +1,4 @@
-import { erc721, from, posClient, posClientForTo, privateKey, RPC, to, toPrivateKey } from "./client";
+import { from, posClient, posClientForTo, privateKey, RPC, to, toPrivateKey } from "./client";
 import { expect } from 'chai'
 import { ABIManager } from '@maticnetwork/maticjs'
 import { providers, Wallet } from "ethers";

@@ -1,5 +1,5 @@
 import { BaseToken, Web3SideChainClient, promiseResolve } from "../utils";
-import { IContractInitParam, IPOSClientConfig } from "../interfaces";
+import { IContractInitParam, IPOSClientConfig, ITransactionOption } from "../interfaces";
 import { IPOSContracts } from "../interfaces";
 
 export class POSToken extends BaseToken<IPOSClientConfig> {
@@ -56,6 +56,18 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(
                 exitHash
+            );
+        });
+    }
+
+    protected withdrawExitPOS(burnTxHash: string, eventSignature: string, isFast: boolean, option: ITransactionOption) {
+        return this.exitUtil.buildPayloadForExit(
+            burnTxHash,
+            eventSignature,
+            isFast
+        ).then(payload => {
+            return this.rootChainManager.exit(
+                payload, option
             );
         });
     }

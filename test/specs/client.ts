@@ -16,8 +16,10 @@ export const erc721 = {
     parent: pos.parent.erc721,
     child: pos.child.erc721
 }
-
-
+export const erc1155 = {
+    parent: pos.parent.erc1155,
+    child: pos.child.erc1155
+}
 
 export const posClient = new POSClient();
 
