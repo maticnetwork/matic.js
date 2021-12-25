@@ -4,7 +4,7 @@ import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
 import { Converter, merge } from "../utils";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
-import { TYPE_AMOUNT } from "../types";
+import { POSERC1155TransferParam, TYPE_AMOUNT } from "../types";
 import { ErrorHelper } from "./error_helper";
 
 export interface ITransactionConfigParam {
@@ -228,6 +228,22 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 from,
                 to,
                 tokenId
+            );
+            return this.processWrite(
+                method, option
+            );
+        });
+    }
+
+    protected transferERC1155(param: POSERC1155TransferParam, option: ITransactionOption) {
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "safeTransferFrom",
+                param.from,
+                param.to,
+                Converter.toHex(param.tokenId),
+                Converter.toHex(param.amount),
+                param.data || '0x'
             );
             return this.processWrite(
                 method, option
