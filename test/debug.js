@@ -52,10 +52,22 @@ const execute = async () => {
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  const balance = await goerliERC1155Token.getBalance(
-    from,123
-  );
-  return console.log("balance", balance);
+  // var tx = await goerliERC1155Token.isApprovedAll(from);
+  // return console.log('isapp', tx);
+  var tx = await goerliERC1155Token.deposit({
+    amount: 10,
+    tokenId: 123,
+    userAddress: from
+  }, {
+    returnTransaction: true
+  });
+
+  return console.log('tx', tx);
+
+  console.log("hash", await tx.getTransactionHash());
+  console.log("receipt", await tx.getReceipt());
+
+  return;
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from

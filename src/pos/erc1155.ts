@@ -9,7 +9,9 @@ export class ERC1155 extends POSToken {
 
     mintablePredicateAddress: string;
 
-    addressConfig: IPOSERC1155Address;
+    get addressConfig(): IPOSERC1155Address {
+        return this.client.config.erc1155 || {};
+    }
 
     constructor(
         tokenAddress: string,
@@ -24,7 +26,6 @@ export class ERC1155 extends POSToken {
             bridgeType: 'pos'
         }, client, getContracts);
 
-        this.addressConfig = client.config.erc1155 || {};
     }
 
     private getAddress_(value: string) {
@@ -138,7 +139,7 @@ export class ERC1155 extends POSToken {
             tokenIds: [param.tokenId],
             userAddress: param.userAddress,
             data: param.data
-        });
+        }, option);
     }
 
     /**
@@ -151,12 +152,14 @@ export class ERC1155 extends POSToken {
      */
     depositMany(param: POSERC1155DepositBatchParam, option?: ITransactionOption) {
         this.checkForRoot("depositMany");
+
         const { tokenIds, amounts, data, userAddress } = param;
+        const emptyHex = Converter.toHex(0);
         const amountInABI = this.client.parent.encodeParameters(
             [
                 tokenIds.map(t => Converter.toHex(t)),
                 amounts.map(a => Converter.toHex(a)),
-                data || '0x0'
+                data || emptyHex
             ],
             ['uint256[]', 'uint256[]', 'bytes'],
         );
@@ -179,7 +182,7 @@ export class ERC1155 extends POSToken {
      * @return {*} 
      * @memberof ERC1155
      */
-    withdrawStart(tokenId: string, amount: TYPE_AMOUNT, option?: ITransactionOption) {
+    withdrawStart(tokenId: TYPE_AMOUNT, amount: TYPE_AMOUNT, option?: ITransactionOption) {
         this.checkForChild("withdrawStart");
 
         return this.getContract().then(contract => {
