@@ -5,4 +5,4 @@ export const defaultExport = {
     utils: utils,
     use,
     POSClient,
-}
+};
