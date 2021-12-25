@@ -1,11 +1,12 @@
 import { ERC20 } from "./erc20";
 import { RootChainManager } from "./root_chain_manager";
-import { BaseToken, BridgeClient, Web3SideChainClient } from "../utils";
+import { BridgeClient } from "../utils";
 import { IPOSClientConfig, IPOSContracts, ITransactionOption } from "../interfaces";
 import { ExitUtil } from "./exit_util";
 import { RootChain } from "./root_chain";
 import { ERC721 } from "./erc721";
 import { TYPE_AMOUNT } from "../types";
+import { ERC1155 } from "./erc1155";
 
 export * from "./exit_util";
 export * from "./root_chain_manager";
@@ -59,6 +60,15 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
 
     erc721(tokenAddress, isParent?: boolean) {
         return new ERC721(
+            tokenAddress,
+            isParent,
+            this.client,
+            this.getContracts_.bind(this)
+        );
+    }
+
+    erc1155(tokenAddress, isParent?: boolean) {
+        return new ERC1155(
             tokenAddress,
             isParent,
             this.client,

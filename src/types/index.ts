@@ -1,5 +1,6 @@
-import { BaseBigNumber } from "..";
+import { BaseBigNumber } from "../abstracts";
 
-// export * from "./side_chain_client_option";
+export * from "./pos_erc1155_deposit_param";
+export * from "./pos_erc1155_transfer_param";
 
 export type TYPE_AMOUNT = BaseBigNumber | string | number;
