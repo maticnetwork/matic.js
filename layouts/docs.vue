@@ -49,7 +49,7 @@
       <a
         alt="edit this doc"
         target="_blank"
-        :href="`https://github.com/maticnetwork/matic.js/edit/docs/docs//content${currentUrl}.md`"
+        :href="`https://github.com/maticnetwork/matic.js/edit/docs/content${currentUrl}.md`"
         class="btn secondary"
         fixed
         bottom
