@@ -14,6 +14,8 @@ The method returns an object which has other various methods.
 const erc20token = posClient.erc20(<token address>,<isRoot>);
 ```
 
+Passing second arguments for `isRoot` is optional.
+
 ## Child token
 
 Token on polygon can be initiated by using this syntax -

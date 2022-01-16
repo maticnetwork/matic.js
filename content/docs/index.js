@@ -156,6 +156,44 @@ module.exports = [
         ],
       },
       {
+        text: 'ERC1155',
+        url: 'erc1155',
+        children: [
+          {
+            text: 'GetBalance',
+            url: 'get-balance',
+          },
+          {
+            text: 'ApproveAll',
+            url: 'approve-all',
+          },
+          {
+            text: 'ApproveAllForMintable',
+            url: 'approve-all-for-mintable',
+          },
+          {
+            text: 'isApprovedAll',
+            url: 'is-approved-all',
+          },
+          {
+            text: 'Deposit',
+            url: 'deposit',
+          },
+          {
+            text: 'DepositMany',
+            url: 'deposit-many',
+          },
+          {
+            text: 'WithdrawStart',
+            url: 'withdraw-start',
+          },
+          {
+            text: 'WithdrawStartMany',
+            url: 'withdraw-start-many',
+          },
+        ]
+      },
+      {
         text: 'isCheckPointed',
         url: 'is-check-pointed',
       },
