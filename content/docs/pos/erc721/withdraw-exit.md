@@ -6,15 +6,15 @@ Description: 'Get started with maticjs'
 
 # withdrawExit
 
-`withdrawExit` method can be used to approve all tokens.
+`withdrawExit` method can be used to exit the withdraw process by using the txHash from `withdrawStart` method.
 
 ```
 const erc721RootToken = posClient.erc721(<root token address>, true);
 
-const approveResult = await erc721RootToken.withdrawExit(<burn tx hash>);
+const result = await erc721RootToken.withdrawExit(<burn tx hash>);
 
-const txHash = await approveResult.getTransactionHash();
+const txHash = await result.getTransactionHash();
 
-const txReceipt = await approveResult.getReceipt();
+const txReceipt = await result.getReceipt();
 
 ```

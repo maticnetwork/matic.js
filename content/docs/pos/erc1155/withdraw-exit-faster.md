@@ -1,7 +1,7 @@
 ---
-Title: 'withdrawExitFaster erc721 POS  '
-Keywords: 'pos client, erc721, withdrawExitFaster, polygon, sdk'
-Description: 'Get started with maticjs'
+Title: 'withdrawExitFaster erc1155 POS  '
+Keywords: 'pos client, erc1155, withdrawExitFaster, polygon, sdk'
+Description: 'withdrawExitFaster method can be used to exit the withdraw process by using the txHash from withdrawStart method.'
 ---
 
 # withdrawExitFaster
@@ -15,9 +15,9 @@ It is fast because it generates proof in backend. You need to configure <a href=
 **Note**- withdrawStart transaction must be checkpointed in order to exit the withdraw.
 
 ```
-const erc721RootToken = posClient.erc721(<root token address>, true);
+const erc1155RootToken = posClient.erc1155(<root token address>, true);
 
-const result = await erc721RootToken.withdrawExitFaster(<burn tx hash>);
+const result = await erc1155RootToken.withdrawExitFaster(<burn tx hash>);
 
 const txHash = await result.getTransactionHash();
 

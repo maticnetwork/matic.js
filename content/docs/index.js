@@ -191,6 +191,30 @@ module.exports = [
             text: 'WithdrawStartMany',
             url: 'withdraw-start-many',
           },
+          {
+            text: 'WithdrawExit',
+            url: 'withdraw-exit',
+          },
+          {
+            text: 'WithdrawExitFaster',
+            url: 'withdraw-exit-faster',
+          },
+          {
+            text: 'WithdrawExitMany',
+            url: 'withdraw-exit-many',
+          },
+          {
+            text: 'WithdrawExitFasterMany',
+            url: 'withdraw-exit-faster-many',
+          },
+          {
+            text: 'IsWithdrawExited',
+            url: 'is-withdraw-exited',
+          },
+          {
+            text: 'IsWithdrawExitedMany',
+            url: 'is-withdraw-exited-many',
+          },
         ]
       },
       {
