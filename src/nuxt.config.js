@@ -35,7 +35,7 @@ module.exports = {
     baseUrl: process.env.BASE_URL || `http://${host}:${port}`,
   },
   generate: {
-    dir: '../build',
+    dir: './build',
   },
   head: {
     title: 'Matic.js - Javascript developer library to interact with Matic Network',
