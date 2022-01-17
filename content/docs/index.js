@@ -160,15 +160,15 @@ module.exports = [
         url: 'erc1155',
         children: [
           {
-            text: 'GetBalance',
+            text: 'getBalance',
             url: 'get-balance',
           },
           {
-            text: 'ApproveAll',
+            text: 'approveAll',
             url: 'approve-all',
           },
           {
-            text: 'ApproveAllForMintable',
+            text: 'approveAllForMintable',
             url: 'approve-all-for-mintable',
           },
           {
@@ -176,44 +176,48 @@ module.exports = [
             url: 'is-approved-all',
           },
           {
-            text: 'Deposit',
+            text: 'deposit',
             url: 'deposit',
           },
           {
-            text: 'DepositMany',
+            text: 'depositMany',
             url: 'deposit-many',
           },
           {
-            text: 'WithdrawStart',
+            text: 'withdrawStart',
             url: 'withdraw-start',
           },
           {
-            text: 'WithdrawStartMany',
+            text: 'withdrawStartMany',
             url: 'withdraw-start-many',
           },
           {
-            text: 'WithdrawExit',
+            text: 'withdrawExit',
             url: 'withdraw-exit',
           },
           {
-            text: 'WithdrawExitFaster',
+            text: 'withdrawExitFaster',
             url: 'withdraw-exit-faster',
           },
           {
-            text: 'WithdrawExitMany',
+            text: 'withdrawExitMany',
             url: 'withdraw-exit-many',
           },
           {
-            text: 'WithdrawExitFasterMany',
+            text: 'withdrawExitFasterMany',
             url: 'withdraw-exit-faster-many',
           },
           {
-            text: 'IsWithdrawExited',
+            text: 'isWithdrawExited',
             url: 'is-withdraw-exited',
           },
           {
-            text: 'IsWithdrawExitedMany',
+            text: 'isWithdrawExitedMany',
             url: 'is-withdraw-exited-many',
+          },
+          {
+            text: 'transfer',
+            url: 'transfer',
           },
         ]
       },
