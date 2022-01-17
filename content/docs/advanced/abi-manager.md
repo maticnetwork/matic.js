@@ -6,7 +6,9 @@ Description: 'matic.js internally use ABIManager for handling abi management for
 
 # ABIManager
 
-`matic.js` internally uses `ABIManager` for handling abi management for you.
+`matic.js` internally uses `ABIManager` for handling ABI management, configuration for you. All of the ABI and config are taken from [static repo](https://github.com/maticnetwork/static).
+
+## Change ABI
 
 Sometimes you are required to change the ABI, particularly when you are developing a contract. You can do so by using `ABIManager`.
 
@@ -47,3 +49,7 @@ manager.setABI('ERC20PredicateProxy','pos', 'abi value');
 
 manager.getABI('ERC20PredicateProxy','pos');
 ```
+
+
+
+

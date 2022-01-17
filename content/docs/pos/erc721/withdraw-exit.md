@@ -18,3 +18,7 @@ const txHash = await result.getTransactionHash();
 const txReceipt = await result.getReceipt();
 
 ```
+
+<div class="highlight">
+This method does multiple RPC calls to generate the proof and process exit. So it is recommended to use withdrawExitFaster method.
+</div>

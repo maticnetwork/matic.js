@@ -1,7 +1,7 @@
 ---
 Title: 'PlasmaClient'
 Keywords: 'maticjs, plasma client, contract, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'PlasmaClient allows you to interact with POS Bridge.'
 ---
 
 # Plasma Bridge
@@ -24,8 +24,8 @@ import { PlasmaClient } from "@maticnetwork/maticjs-plasma"
 const plasmaClient = new PlasmaClient();
 
 await plasmaClient.init({
-    network: 'testnet',
-    version: 'mumbai',
+    network: <network name>,  // 'testnet' or 'mainnet'
+    version: <network version>, // 'mumbai' or 'v1'
     parent: {
       provider: <parent provider>,
       defaultConfig: {

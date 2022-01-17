@@ -1,7 +1,7 @@
 ---
 Title: 'POSClient'
 Keywords: 'maticjs, pos client, contract, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'POSClient allows you to interact with POS Bridge.'
 ---
 
 # POSClient
@@ -14,8 +14,8 @@ import { POSClient,use } from "@maticnetwork/maticjs"
 const posClient = new POSClient();
 
 await posClient.init({
-    network: 'testnet',
-    version: 'mumbai',
+    network: <network name>,  // 'testnet' or 'mainnet'
+    version: <network version>, // 'mumbai' or 'v1'
     parent: {
       provider: <parent provider>,
       defaultConfig: {
