@@ -17,3 +17,6 @@ dist
 config.json
 config.js
 build
+.nuxt
+
+pages
