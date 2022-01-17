@@ -1,7 +1,7 @@
 ---
 Title: 'isCheckPointed POS '
-Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
-Description: 'Get started with maticjs'
+Keywords: 'pos client, isCheckPointed, polygon, sdk'
+Description: 'isCheckPointed method can be used to know if a transaction has been checkpointed.'
 ---
 
 # isCheckPointed

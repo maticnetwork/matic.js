@@ -1,12 +1,12 @@
 ---
 Title: 'POS ERC20'
 Keywords: 'pos client, erc20, contract, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'POSClient provides erc20 method which helps you to interact with an erc20 token.'
 ---
 
 # ERC20
 
-`POSClient` provides `erc20` method which helps you to interact with an erc20 token.
+`POSClient` provides `erc20` method which helps you to interact with an **ERC20** token.
 
 The method returns an object which has other various methods.
 

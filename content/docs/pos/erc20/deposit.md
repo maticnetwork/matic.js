@@ -1,7 +1,7 @@
 ---
 Title: 'deposit ERC20 POS '
 Keywords: 'pos client, erc20, approveMax, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'deposit method can be used to deposit required amount from root token to child token.'
 ---
 
 # deposit

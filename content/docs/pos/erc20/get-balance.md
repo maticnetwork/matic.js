@@ -1,7 +1,7 @@
 ---
 Title: 'getBalance ERC20 POS  '
 Keywords: 'pos client, erc20, getBalance, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'getBalance method can be used to get the balance of user.'
 ---
 
 # getBalance

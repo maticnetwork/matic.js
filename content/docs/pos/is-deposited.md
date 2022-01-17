@@ -1,7 +1,7 @@
 ---
 Title: 'isDeposited POS '
-Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
-Description: 'Get started with maticjs'
+Keywords: 'pos client, isDeposited, polygon, sdk'
+Description: 'isDeposited method can be used to know if a deposit has been completed.'
 ---
 
 # isDeposited

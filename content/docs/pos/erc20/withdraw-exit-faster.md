@@ -1,7 +1,7 @@
 ---
 Title: 'withdraw exit faster ERC20 POS '
-Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
-Description: 'Get started with maticjs'
+Keywords: 'pos client, erc20, withdrawExitFaster, polygon, sdk'
+Description: 'withdrawExitFaster method can be used to exit the withdraw process faster by using the txHash from withdrawStart method.'
 ---
 
 # withdrawExitFaster

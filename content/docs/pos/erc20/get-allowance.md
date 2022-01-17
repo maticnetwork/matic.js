@@ -1,7 +1,7 @@
 ---
 Title: 'getAllowance ERC20 POS  '
 Keywords: 'pos client, erc20, getAllowance, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'getAllowance method can be used to get the approved amount for the user.'
 ---
 
 # getAllowance

@@ -1,7 +1,7 @@
 ---
 Title: 'withdraw start ERC20 POS '
-Keywords: 'pos client, erc20, approveMax, polygon, sdk'
-Description: 'Get started with maticjs'
+Keywords: 'pos client, erc20, withdrawStart, polygon, sdk'
+Description: 'withdrawStart method can be used to initiate the withdraw process which will burn the specified amount on polygon chain.'
 ---
 
 # withdrawStart
@@ -20,4 +20,5 @@ const txReceipt = await result.getReceipt();
 
 ```
 
-store the txHash which will be used to [exit the withdraw process]().
+The received transaction hash will be used to exit the withdraw process. So we recommend to store it.
+

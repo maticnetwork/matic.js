@@ -1,7 +1,7 @@
 ---
 Title: 'approve ERC20 POS  '
 Keywords: 'pos client, erc20, approve, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'approve method can be used to approve required amount on the root token.'
 ---
 
 # approve

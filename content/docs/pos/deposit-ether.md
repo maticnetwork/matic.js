@@ -1,7 +1,7 @@
 ---
 Title: 'deposit ether POS'
 Keywords: 'pos client, depositEther, polygon, sdk'
-Description: 'Get started with maticjs'
+Description: 'depositEther method can be used to deposit required amount of ether from ethereum to polygon.'
 ---
 
 # depositEther
@@ -9,7 +9,7 @@ Description: 'Get started with maticjs'
 `depositEther` method can be used to deposit required amount of **ether** from ethereum to polygon.
 
 ```
-const result = await posClient.depositEther(100);
+const result = await posClient.depositEther(<amount>);
 
 const txHash = await result.getTransactionHash();
 
