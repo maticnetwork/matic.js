@@ -205,6 +205,19 @@ export class ERC721 extends POSToken {
         });
     }
 
+    withdrawStartWithMetaData(tokenId: TYPE_AMOUNT, option?: ITransactionOption) {
+        this.checkForChild("withdrawStartWithMetaData");
+
+
+        return this.getContract().then(contract => {
+            const method = contract.method(
+                "withdrawWithMetadata",
+                Converter.toHex(tokenId)
+            );
+            return this.processWrite(method, option);
+        });
+    }
+
     withdrawStartMany(tokenIds: TYPE_AMOUNT[], option?: ITransactionOption) {
         this.checkForChild("withdrawStartMany");
 

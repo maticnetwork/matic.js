@@ -101,6 +101,14 @@ describe('ERC721', () => {
         expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
     })
 
+    it('withdrawStartWithMetaData return tx', async () => {
+        const allTokens = await erc721Child.getAllTokens(from);
+        const result = await erc721Child.withdrawStartWithMetaData(allTokens[0], {
+            returnTransaction: true
+        });
+        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+    })
+
     it('transfer write', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         // console.log('allTokensFrom', allTokensFrom);
