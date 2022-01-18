@@ -153,6 +153,10 @@ module.exports = [
             text: 'transfer',
             url: 'transfer',
           },
+          {
+            text: 'withdrawStartWithMetaData',
+            url: 'withdraw-start-with-meta-data',
+          },
         ],
       },
       {
