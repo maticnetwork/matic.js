@@ -40,5 +40,5 @@ module.exports = {
   user2: {
     address: process.env.USER2_FROM
   },
-  proofApi: process.env.PROOF_API
+  proofApi: process.env.PROOF_API || 'https://apis.matic.network/'
 }

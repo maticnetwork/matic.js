@@ -44,4 +44,5 @@ module.exports = {
   from: config.user1.address,
   privateKey: config.user1.privateKey,
   to: config.user2.address,
+  proofApi: config.proofApi
 }
