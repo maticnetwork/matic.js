@@ -247,6 +247,21 @@ export class ERC721 extends POSToken {
         });
     }
 
+    withdrawExitWithMetadata(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot("withdrawExitWithMetadata");
+
+
+        return this.exitUtil.buildPayloadForExit(
+            burnTransactionHash,
+            Log_Event_Signature.Erc721TransferWithMetadata,
+            false
+        ).then(payload => {
+            return this.rootChainManager.exit(
+                payload, option
+            );
+        });
+    }
+
     withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot("withdrawExitMany");
 
@@ -295,6 +310,12 @@ export class ERC721 extends POSToken {
     isWithdrawExited(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721Transfer
+        );
+    }
+
+    isWithdrawWithMetadaExited(txHash: string) {
+        return this.isWithdrawn(
+            txHash, Log_Event_Signature.Erc721TransferWithMetadata
         );
     }
 
