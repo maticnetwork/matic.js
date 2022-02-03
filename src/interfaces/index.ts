@@ -17,3 +17,5 @@ export * from "./base_client_config";
 export * from "./error";
 export * from "./pos_contracts";
 export * from "./root_block_info";
+export * from "./allowance_transaction_option";
+export * from "./approve_transaction_option";

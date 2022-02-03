@@ -45,4 +45,4 @@ jobs:
       - name: TEST
         run: |
           # echo "$USER1_FROM",
-          npm run test
+          npm run build:test

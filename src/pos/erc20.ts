@@ -3,11 +3,10 @@ import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { Log_Event_Signature } from "../enums";
-import { IPOSClientConfig, MAX_AMOUNT } from "..";
+import { IAllowanceTransactionOption, IApproveTransactionOption, IPOSClientConfig, MAX_AMOUNT, promiseResolve } from "..";
 import { IPOSContracts } from "../interfaces/pos_contracts";
 
 export class ERC20 extends POSToken {
-
 
     constructor(
         tokenAddress: string,
@@ -41,9 +40,12 @@ export class ERC20 extends POSToken {
      * @returns
      * @memberof ERC20
      */
-    getAllowance(userAddress: string, option?: ITransactionOption) {
+    getAllowance(userAddress: string, option: IAllowanceTransactionOption = {}) {
+        const spenderAddress = option.spenderAddress;
+        const predicatePromise = spenderAddress ?
+            this.getPredicateAddress() : promiseResolve(spenderAddress);
 
-        return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
+        return Promise.all([predicatePromise, this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
             const method = contract.method(
                 "allowance",
@@ -54,10 +56,12 @@ export class ERC20 extends POSToken {
         });
     }
 
-    approve(amount: TYPE_AMOUNT, option?: ITransactionOption) {
-        this.checkForRoot("approve");
+    approve(amount: TYPE_AMOUNT, option?: IApproveTransactionOption) {
+        const spenderAddress = option.spenderAddress;
+        const predicatePromise = spenderAddress ?
+            this.getPredicateAddress() : promiseResolve(spenderAddress);
 
-        return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
+        return Promise.all([predicatePromise, this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
             const method = contract.method(
                 "approve",
@@ -86,7 +90,6 @@ export class ERC20 extends POSToken {
      */
     deposit(amount: TYPE_AMOUNT, userAddress: string, option?: ITransactionOption) {
         this.checkForRoot("deposit");
-
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(amount)],

@@ -47,11 +47,11 @@ describe('ERC721', () => {
         expect(isExited).equal(true);
     })
 
-    // it('isDeposited for deposit many', async () => {
-    //     const depositTxhash = '0x2ae0f5073e0c0f96f622268ef8bc61ecec7349ffc97c61412e4f5cc157cb418e';
-    //     const isExited = await erc721Parent.isDeposited(depositTxhash);
-    //     expect(isExited).equal(true);
-    // })
+    it('isDeposited for deposit many', async () => {
+        const depositTxhash = '0x2ae0f5073e0c0f96f622268ef8bc61ecec7349ffc97c61412e4f5cc157cb418e';
+        const isExited = await posClient.isDeposited(depositTxhash);
+        expect(isExited).equal(true);
+    })
 
     it('transfer return tx', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
@@ -123,10 +123,11 @@ describe('ERC721', () => {
 
     it('withdrawExitWithMetaData return tx', async () => {
         const txHash = `0x0600732ea675d8e63a4fed0a267a261a9e0d1728e805fda4884adb7c75454e7b`
-        const result = await erc721Child.withdrawExitWithMetaData(txHash, {
+        const result = await erc721Parent.withdrawExitWithMetaData(txHash, {
             returnTransaction: true
         });
-        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
     })
 
     it('transfer write', async () => {

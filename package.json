@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -24,7 +24,8 @@
     "prepublishOnly": "npm run deploy",
     "lint": "tslint src/**/*.ts",
     "lint:fix": "tslint src/**/*.ts --fix",
-    "test": "npm run build:pack && cd test && npm run install:lib:test",
+    "build:test": "npm run build:pack && npm run test",
+    "test": "cd test && npm run install:lib:test",
     "debug": "npm run build:pack && cd test && npm run install:lib:debug",
     "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000",
     "install:example": "cd examples && npm i ../maticnetwork-maticjs-3.0.0-beta.2.tgz --no-save"
