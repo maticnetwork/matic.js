@@ -2,7 +2,7 @@ import { ITransactionOption } from "../interfaces";
 import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
-import { Log_Event_Signature } from "../enums";
+import { ERROR_TYPE, Log_Event_Signature } from "../enums";
 import { IAllowanceTransactionOption, IApproveTransactionOption, IPOSClientConfig, MAX_AMOUNT, promiseResolve } from "..";
 import { IPOSContracts } from "../interfaces/pos_contracts";
 
@@ -42,8 +42,8 @@ export class ERC20 extends POSToken {
      */
     getAllowance(userAddress: string, option: IAllowanceTransactionOption = {}) {
         const spenderAddress = option.spenderAddress;
-        const predicatePromise = spenderAddress ?
-            this.getPredicateAddress() : promiseResolve(spenderAddress);
+
+        const predicatePromise = spenderAddress ? promiseResolve(spenderAddress) : this.getPredicateAddress();
 
         return Promise.all([predicatePromise, this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
@@ -56,10 +56,14 @@ export class ERC20 extends POSToken {
         });
     }
 
-    approve(amount: TYPE_AMOUNT, option?: IApproveTransactionOption) {
+    approve(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
         const spenderAddress = option.spenderAddress;
-        const predicatePromise = spenderAddress ?
-            this.getPredicateAddress() : promiseResolve(spenderAddress);
+
+        if (!spenderAddress && !this.contractParam.isParent) {
+            this.client.logger.error(ERROR_TYPE.NullSpenderAddress).throw();
+        }
+
+        const predicatePromise = spenderAddress ? promiseResolve(spenderAddress) : this.getPredicateAddress();
 
         return Promise.all([predicatePromise, this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;

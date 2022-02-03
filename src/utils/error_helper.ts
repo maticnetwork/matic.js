@@ -39,6 +39,9 @@ export class ErrorHelper implements IError {
             case ERROR_TYPE.EIP1559NotSupported:
                 errMsg = `${info ? 'Root' : 'Child'} chain doesn't support eip-1559`;
                 break;
+            case ERROR_TYPE.NullSpenderAddress:
+                errMsg = `Please provide spender address.`;
+                break;
             default:
                 if (!this.type) {
                     this.type = ERROR_TYPE.Unknown;
