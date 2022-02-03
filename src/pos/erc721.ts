@@ -247,9 +247,8 @@ export class ERC721 extends POSToken {
         });
     }
 
-    withdrawExitWithMetadata(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("withdrawExitWithMetadata");
-
+    withdrawExitWithMetaData(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot("withdrawExitWithMetaData");
 
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
@@ -307,13 +306,27 @@ export class ERC721 extends POSToken {
         });
     }
 
+    withdrawExitFasterWithMetaData(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot("withdrawExitFasterWithMetaData");
+
+        return this.exitUtil.buildPayloadForExit(
+            burnTransactionHash,
+            Log_Event_Signature.Erc721TransferWithMetadata,
+            true
+        ).then(payload => {
+            return this.rootChainManager.exit(
+                payload, option
+            );
+        });
+    }
+
     isWithdrawExited(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721Transfer
         );
     }
 
-    isWithdrawWithMetadaExited(txHash: string) {
+    isWithdrawWithMetaDataExited(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721TransferWithMetadata
         );
