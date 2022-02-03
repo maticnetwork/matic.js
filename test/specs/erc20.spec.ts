@@ -32,8 +32,14 @@ describe('ERC20', () => {
         expect(Number(balance)).gte(0);
     })
 
-    it('get allowance', async () => {
+    it('get allowance parent', async () => {
         const allowance = await erc20Parent.getAllowance(from);
+        expect(allowance).to.be.an('string');
+        expect(Number(allowance)).gte(0);
+    })
+
+    it('get allowance child', async () => {
+        const allowance = await erc20Child.getAllowance(from);
         expect(allowance).to.be.an('string');
         expect(Number(allowance)).gte(0);
     })

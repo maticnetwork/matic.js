@@ -93,6 +93,13 @@ describe('ERC1155', () => {
         expect(result['to'].toLowerCase()).equal(erc1155.child.toLowerCase());
     })
 
+    it('withdrawStartMany return tx', async () => {
+        const result = await erc1155Child.withdrawStartMany([123], [10], {
+            returnTransaction: true
+        });
+        expect(result['to'].toLowerCase()).equal(erc1155.child.toLowerCase());
+    })
+
 
     it('transfer write', async () => {
         const targetToken = 123;

@@ -52,8 +52,8 @@ const execute = async () => {
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  // var tx = await goerliERC1155Token.isApprovedAll(from);
-  // return console.log('isapp', tx);
+  var tx = await mumbaiERC20Token.getAllowance(from);
+  return console.log('isapp', tx);
   var tx = await goerliERC1155Token.deposit({
     amount: 10,
     tokenId: 123,

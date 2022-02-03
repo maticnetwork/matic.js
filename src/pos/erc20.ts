@@ -1,9 +1,7 @@
 import { ITransactionOption } from "../interfaces";
-import { RootChainManager } from "./root_chain_manager";
 import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
-import { ExitUtil } from "./exit_util";
 import { Log_Event_Signature } from "../enums";
 import { IPOSClientConfig, MAX_AMOUNT } from "..";
 import { IPOSContracts } from "../interfaces/pos_contracts";
@@ -44,7 +42,6 @@ export class ERC20 extends POSToken {
      * @memberof ERC20
      */
     getAllowance(userAddress: string, option?: ITransactionOption) {
-        this.checkForRoot("getAllowance");
 
         return Promise.all([this.getPredicateAddress(), this.getContract()]).then(result => {
             const [predicateAddress, contract] = result;
