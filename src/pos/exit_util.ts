@@ -90,6 +90,17 @@ export class ExitUtil {
         });
     }
 
+    /**
+     * returns info about block number existance on parent chain
+     * 1. root block number, 
+     * 2. start block number, 
+     * 3. end block number 
+     *
+     * @private
+     * @param {number} txBlockNumber - transaction block number on child chain
+     * @return {*} 
+     * @memberof ExitUtil
+     */
     private getRootBlockInfo(txBlockNumber: number) {
         // find in which block child was included in parent
         let rootBlockNumber: BaseBigNumber;
@@ -105,8 +116,12 @@ export class ExitUtil {
             return method.read<IRootBlockInfo>();
         }).then(rootBlockInfo => {
             return {
+                // header block number - root block number in which child block exist 
                 headerBlockNumber: rootBlockNumber,
+                // range of block
+                // end - block end number
                 end: rootBlockInfo.end.toString(),
+                // start - block start number
                 start: rootBlockInfo.start.toString(),
             } as IRootBlockInfo;
         });
@@ -178,26 +193,31 @@ export class ExitUtil {
                 );
             }
 
+            // step 1 - Get Block number from transaction hash
             txBlockNumber = blockInfo.txBlockNumber;
+            // step 2-  get transaction receipt from txhash and 
+            // block information from block number
             return Promise.all([
                 this.maticClient_.getTransactionReceipt(burnTxHash),
                 this.maticClient_.getBlockWithTransaction(txBlockNumber)
             ]);
         }).then(result => {
             [receipt, block] = result;
+            // step  3 - get information about block saved in parent chain 
             return (
                 isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
                     this.getRootBlockInfo(txBlockNumber)
             );
         }).then(rootBlockInfoResult => {
             rootBlockInfo = rootBlockInfoResult;
-            // build block proof
+            // step 4 - build block proof
             return (
                 isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
                     this.getBlockProof(txBlockNumber, rootBlockInfo)
             );
         }).then(blockProofResult => {
             blockProof = blockProofResult;
+            // step 5- create receipt proof
             return ProofUtil.getReceiptProof(
                 receipt,
                 block,
@@ -208,7 +228,7 @@ export class ExitUtil {
             const logIndex = this.getLogIndex_(
                 logEventSig, receipt
             );
-
+            // step 6 - encode payload, convert into hex
             return this.encodePayload_(
                 rootBlockInfo.headerBlockNumber.toNumber(),
                 blockProof,
