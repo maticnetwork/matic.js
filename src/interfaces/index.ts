@@ -19,3 +19,4 @@ export * from "./pos_contracts";
 export * from "./root_block_info";
 export * from "./allowance_transaction_option";
 export * from "./approve_transaction_option";
+export * from "./exit_transaction_option";

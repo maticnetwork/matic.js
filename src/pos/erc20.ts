@@ -3,8 +3,8 @@ import { Converter, Web3SideChainClient } from "../utils";
 import { POSToken } from "./pos_token";
 import { TYPE_AMOUNT } from "../types";
 import { ERROR_TYPE, Log_Event_Signature } from "../enums";
-import { IAllowanceTransactionOption, IApproveTransactionOption, IPOSClientConfig, MAX_AMOUNT, promiseResolve } from "..";
-import { IPOSContracts } from "../interfaces/pos_contracts";
+import { MAX_AMOUNT, promiseResolve } from "..";
+import { IAllowanceTransactionOption, IApproveTransactionOption, IExitTransactionOption, IPOSClientConfig, IPOSContracts } from "../interfaces";
 
 export class ERC20 extends POSToken {
 
@@ -138,6 +138,21 @@ export class ERC20 extends POSToken {
         });
     }
 
+    private withdrawExit_(burnTransactionHash: string, isFast: boolean, option: IExitTransactionOption = {}) {
+        const eventSignature = option.burnEventSignature ?
+            option.burnEventSignature : Log_Event_Signature.Erc20Transfer;
+
+        return this.exitUtil.buildPayloadForExit(
+            burnTransactionHash,
+            eventSignature,
+            false
+        ).then(payload => {
+            return this.rootChainManager.exit(
+                payload, option
+            );
+        });
+    }
+
     /**
      * complete withdraw process after checkpoint has been submitted for the block containing burn tx.
      *
@@ -146,18 +161,10 @@ export class ERC20 extends POSToken {
      * @returns
      * @memberof ERC20
      */
-    withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+    withdrawExit(burnTransactionHash: string, option?: IExitTransactionOption) {
         this.checkForRoot("withdrawExit");
 
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc20Transfer,
-            false
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
+        return this.withdrawExit_(burnTransactionHash, false, option);
     }
 
     /**
@@ -170,19 +177,10 @@ export class ERC20 extends POSToken {
      * @returns
      * @memberof ERC20
      */
-    withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
+    withdrawExitFaster(burnTransactionHash: string, option?: IExitTransactionOption) {
         this.checkForRoot("withdrawExitFaster");
 
-
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc20Transfer,
-            true
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
+        return this.withdrawExit_(burnTransactionHash, true, option);
     }
 
     /**
