@@ -11,7 +11,7 @@ Description: 'approveMax method can be used to approve max amount on the root to
 ```
 const erc20RootToken = posClient.erc20(<root token address>, true);
 
-const approveResult = await erc20Token.approveMax();
+const approveResult = await erc20RootToken.approveMax();
 
 const txHash = await approveResult.getTransactionHash();
 
