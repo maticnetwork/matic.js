@@ -4,8 +4,10 @@ const config = require('./config')
 const { POSClient, setProofApi, use } = require('@maticnetwork/maticjs')
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
+const { UnstoppableDomainsClientPlugin } = require("@unstoppabledomains/maticjs-resolution");
 
 use(Web3ClientPlugin);
+use(UnstoppableDomainsClientPlugin);
 
 if (config.proofApi) {
   setProofApi(config.proofApi);

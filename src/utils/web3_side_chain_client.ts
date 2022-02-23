@@ -13,6 +13,7 @@ export class Web3SideChainClient<T_CONFIG> {
     abiManager: ABIManager;
 
     logger = new Logger();
+    resolution: {};
 
     init(config: IBaseClientConfig) {
         config = config || {} as any;
@@ -25,6 +26,10 @@ export class Web3SideChainClient<T_CONFIG> {
 
         if (!Web3Client) {
             throw new Error("Web3Client is not set");
+        }
+
+        if (utils.UnstoppableDomains) {
+            this.resolution = utils.UnstoppableDomains;
         }
 
         this.parent = new (Web3Client as any)(config.parent.provider, this.logger);
