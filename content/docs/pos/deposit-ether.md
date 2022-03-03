@@ -9,7 +9,7 @@ Description: 'depositEther method can be used to deposit required amount of ethe
 `depositEther` method can be used to deposit required amount of **ether** from ethereum to polygon.
 
 ```
-const result = await posClient.depositEther(<amount>);
+const result = await posClient.depositEther(<amount>, <userAddress>);
 
 const txHash = await result.getTransactionHash();
 
