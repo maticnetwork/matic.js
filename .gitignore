@@ -14,3 +14,5 @@ dist
 
 *.tgz
 config.json
+.nuxt
+docs
