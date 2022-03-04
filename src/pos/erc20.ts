@@ -76,7 +76,7 @@ export class ERC20 extends POSToken {
         });
     }
 
-    approveMax(option?: ITransactionOption) {
+    approveMax(option: IApproveTransactionOption = {}) {
         return this.approve(
             MAX_AMOUNT
             , option
