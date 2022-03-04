@@ -265,6 +265,10 @@ module.exports = [
             url: 'get-allowance',
           },
           {
+            text: 'deposit',
+            url: 'deposit',
+          },
+          {
             text: 'transfer',
             url: 'transfer',
           },
