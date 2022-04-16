@@ -22,5 +22,6 @@ export * from "./not_implemented";
 export const utils = {
     converter: Converter,
     Web3Client: BaseWeb3Client,
-    BN: EmptyBigNumber
+    BN: EmptyBigNumber,
+    UnstoppableDomains: Object
 };
