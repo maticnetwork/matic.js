@@ -43,11 +43,11 @@ const execute = async () => {
 
   // setProofApi("https://apis.matic.network");
 
-  // var result = await goerliERC20Token.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
-  //   returnTransaction: true
-  // });
+  var result = await goerliERC20Token.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+    returnTransaction: true
+  });
 
-  // return console.log('result', result);
+  return console.log('result', result);
 
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
