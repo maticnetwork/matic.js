@@ -220,9 +220,11 @@ export class ProofUtil {
     static getStateSyncTxHash(block): Buffer {
         return keccak256(
             Buffer.concat([
-                toBuffer(
-                    Converter.toHex('matic-bor-receipt-')
-                ), // prefix for bor receipt
+                // prefix for bor receipt
+                // toBuffer(
+                //     Converter.toHex('matic-bor-receipt-')
+                // ), 
+                Buffer.from('matic-bor-receipt-', 'utf-8'),
                 setLengthLeft(toBuffer(block.number), 8), // 8 bytes of block number (BigEndian)
                 toBuffer(block.hash), // block hash
             ])
@@ -253,18 +255,8 @@ export class ProofUtil {
     }
 
     static getRawHeader(_block) {
-        // if (typeof _block.difficulty !== 'string') {
-        //     _block.difficulty = '0x' + _block.difficulty.toString(16);
-        // }
         _block.difficulty = Converter.toHex(_block.difficulty);
-        // console.log('_block', _block);
-        // const block = EthereumBlock.fromBlockData({
-        //     transactions: _block.transactions,
-        //     // uncleHeaders:
-        // });
-        // block.header.receiptTrie
         const rawHeader = BlockHeader.fromHeaderData(_block);
-        console.log(`block header`, rawHeader.receiptTrie);
         return rawHeader;
     }
 }

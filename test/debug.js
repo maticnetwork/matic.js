@@ -1,13 +1,23 @@
-const { setProofApi, POSClient, use, service } = require("@maticnetwork/maticjs");
+const { setProofApi, POSClient, use, Converter } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+const { toBuffer } = require("ethereumjs-util");
 const { user1, rpc, pos, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 const to = user2.address;
 
+
+
 const execute = async () => {
+  // return console.log(
+  //   Converter.toHex('matic-bor-receipt-'),
+  //   Buffer.from('matic-bor-receipt-', 'utf-8'),
+  //   toBuffer(Converter.toHex('matic-bor-receipt-'))
+  // )
+
+
   const privateKey = user1.privateKey;
   const mumbaiERC20 = pos.child.erc20;
   const goerliERC20 = pos.parent.erc20;
@@ -43,9 +53,12 @@ const execute = async () => {
 
   // setProofApi("https://apis.matic.network");
 
-  var result = await goerliERC20Token.isWithdrawExited('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+  var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
     returnTransaction: true
   });
+  // var result = await goerliERC20Token.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
+  //   returnTransaction: true
+  // });
 
   return console.log('result', result);
 
