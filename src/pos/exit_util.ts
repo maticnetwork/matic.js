@@ -1,6 +1,6 @@
 import { RootChain } from "./root_chain";
 import { Converter, ProofUtil, Web3SideChainClient } from "../utils";
-import ethUtils from "ethereumjs-util";
+import { bufferToHex, rlp } from "ethereumjs-util";
 import { IBlockWithTransaction, ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseBigNumber, BaseWeb3Client } from "../abstracts";
@@ -256,17 +256,17 @@ export class ExitUtil {
         path,
         logIndex
     ) {
-        return ethUtils.bufferToHex(
-            ethUtils.rlp.encode([
+        return bufferToHex(
+            rlp.encode([
                 headerNumber,
                 buildBlockProof,
                 blockNumber,
                 timestamp,
-                ethUtils.bufferToHex(transactionsRoot),
-                ethUtils.bufferToHex(receiptsRoot),
-                ethUtils.bufferToHex(receipt),
-                ethUtils.bufferToHex(ethUtils.rlp.encode(receiptParentNodes)),
-                ethUtils.bufferToHex(Buffer.concat([Buffer.from('00', 'hex'), path])),
+                bufferToHex(transactionsRoot),
+                bufferToHex(receiptsRoot),
+                bufferToHex(receipt),
+                bufferToHex(rlp.encode(receiptParentNodes)),
+                bufferToHex(Buffer.concat([Buffer.from('00', 'hex'), path])),
                 logIndex,
             ])
         );
@@ -306,7 +306,7 @@ export class ExitUtil {
             });
 
             return this.maticClient_.etheriumSha3(
-                receipt.blockNumber, ethUtils.bufferToHex(Buffer.concat(nibbleArr)), logIndex
+                receipt.blockNumber, bufferToHex(Buffer.concat(nibbleArr)), logIndex
             );
         });
     }
