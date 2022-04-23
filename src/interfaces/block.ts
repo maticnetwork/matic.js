@@ -17,6 +17,7 @@ export interface IBaseBlock {
     gasLimit: number;
     gasUsed: number;
     timestamp: number | string;
+    baseFeePerGas?: string;
 }
 
 export interface IBlock extends IBaseBlock {

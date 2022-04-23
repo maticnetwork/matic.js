@@ -6,9 +6,10 @@ import { mapPromise } from "./map_promise";
 // const TRIE = require('merkle-patricia-tree');
 import { BaseTrie as TRIE } from 'merkle-patricia-tree';
 // import EthereumBlock from 'ethereumjs-block/from-rpc';
-import { Block as EthereumBlock, BlockHeader } from '@ethereumjs/block';
+import { BlockHeader } from '@ethereumjs/block';
 import { Converter, promiseResolve, utils } from "..";
 // const rlp = ethUtils.rlp;
+import Common, { Chain, Hardfork } from '@ethereumjs/common';
 
 // Implementation adapted from Tom French's `matic-proofs` library used under MIT License
 // https://github.com/TomAFrench/matic-proofs
@@ -255,8 +256,13 @@ export class ProofUtil {
     }
 
     static getRawHeader(_block) {
-        _block.difficulty = Converter.toHex(_block.difficulty);
-        const rawHeader = BlockHeader.fromHeaderData(_block);
+        _block.difficulty = Converter.toHex(_block.difficulty) as any;
+        const common = new Common({
+            chain: Chain.Mainnet, hardfork: Hardfork.London
+        });
+        const rawHeader = BlockHeader.fromHeaderData(_block, {
+            common: common
+        });
         return rawHeader;
     }
 }
