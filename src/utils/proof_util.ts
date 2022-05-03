@@ -3,12 +3,9 @@ import { MerkleTree } from "./merkle_tree";
 import { bufferToHex, keccak256, rlp, setLengthLeft, toBuffer } from "ethereumjs-util";
 import { ITransactionReceipt, IBlock, IBlockWithTransaction } from "../interfaces";
 import { mapPromise } from "./map_promise";
-// const TRIE = require('merkle-patricia-tree');
 import { BaseTrie as TRIE } from 'merkle-patricia-tree';
-// import EthereumBlock from 'ethereumjs-block/from-rpc';
 import { BlockHeader } from '@ethereumjs/block';
 import { Converter, promiseResolve, utils } from "..";
-// const rlp = ethUtils.rlp;
 import Common, { Chain, Hardfork } from '@ethereumjs/common';
 
 // Implementation adapted from Tom French's `matic-proofs` library used under MIT License
@@ -153,43 +150,10 @@ export class ProofUtil {
                     const path = rlp.encode(siblingReceipt.transactionIndex);
                     const rawReceipt = ProofUtil.getReceiptBytes(siblingReceipt);
                     return receiptsTrie.put(path, rawReceipt);
-                    // return new Promise((resolve, reject) => {
-                    //     receiptsTrie.put(path, rawReceipt, err => {
-                    //         if (err) {
-                    //             reject(err);
-                    //         } else {
-                    //             resolve({});
-                    //         }
-                    //     });
-                    // });
                 })
             );
         }).then(_ => {
             return receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), true);
-            // promise
-            // return new Promise((resolve, reject) => {
-            //     receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), true).then(result => {
-            //         result.node.value
-            //     })
-            //     receiptsTrie.findPath(rlp.encode(receipt.transactionIndex), (err, rawReceiptNode, reminder, stack) => {
-            //         if (err) {
-            //             return reject(err);
-            //         }
-
-            //         if (reminder.length > 0) {
-            //             return reject(new Error('Node does not contain the key'));
-            //         }
-
-            //         const prf = {
-            //             blockHash: toBuffer(receipt.blockHash),
-            //             parentNodes: stack.map(s => s.raw),
-            //             root: ProofUtil.getRawHeader(block).receiptTrie,
-            //             path: rlp.encode(receipt.transactionIndex),
-            //             value: ProofUtil.isTypedReceipt(receipt) ? rawReceiptNode.value : rlp.decode(rawReceiptNode.value)
-            //         };
-            //         resolve(prf);
-            //     });
-            // });
         }).then(result => {
             if (result.remaining.length > 0) {
                 throw new Error('Node does not contain the key');
@@ -222,9 +186,6 @@ export class ProofUtil {
         return keccak256(
             Buffer.concat([
                 // prefix for bor receipt
-                // toBuffer(
-                //     Converter.toHex('matic-bor-receipt-')
-                // ), 
                 Buffer.from('matic-bor-receipt-', 'utf-8'),
                 setLengthLeft(toBuffer(block.number), 8), // 8 bytes of block number (BigEndian)
                 toBuffer(block.hash), // block hash
