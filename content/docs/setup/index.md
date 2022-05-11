@@ -8,7 +8,8 @@ Description: 'Get started with maticjs'
 
 In order to support multiple web3 libraries - maticjs provides plugins.
 
-Currently two libraries are supported -
+Currently three libraries are supported -
 
 1. Web3.js
 2. Ethers
+3. Unstoppable Domains

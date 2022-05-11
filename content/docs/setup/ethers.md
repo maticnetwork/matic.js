@@ -1,5 +1,5 @@
 ---
-Title: 'Web3js setup'
+Title: 'Ethers setup'
 Keywords: 'pos client, erc20, withdrawExit, polygon, sdk'
 Description: 'Get started with maticjs'
 ---
@@ -10,7 +10,7 @@ The [ethers.js](https://docs.ethers.io/) library aims to be a complete and compa
 
 ## Setup ether.js
 
-ether.js support is available via seperate package as a plugin for matic.js.
+ether.js support is available via a separate package as a plugin for matic.js.
 
 ### Installation
 

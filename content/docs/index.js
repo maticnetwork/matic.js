@@ -20,6 +20,10 @@ module.exports = [
         text: 'Ethers',
         url: 'ethers',
       },
+      {
+        text: 'Unstoppable Domains',
+        url: 'unstoppable-domains',
+      },
     ],
   },
   {

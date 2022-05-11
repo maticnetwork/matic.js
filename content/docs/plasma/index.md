@@ -6,7 +6,7 @@ Description: 'PlasmaClient allows you to interact with POS Bridge.'
 
 # Plasma Bridge
 
-Plasma bridge functionality is available in [seperate repository](https://github.com/maticnetwork/maticjs-plasma). So in order to use `plasma` bridge, you need to install seperate package.
+Plasma bridge functionality is available in [separate repository](https://github.com/maticnetwork/maticjs-plasma). So in order to use `plasma` bridge, you need to install separate package.
 
 ## Installation
 

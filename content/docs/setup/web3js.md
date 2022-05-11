@@ -10,7 +10,7 @@ Description: 'Get started with maticjs'
 
 ## Setup web3.js
 
-web3.js support is available via seperate package as a plugin for matic.js.
+web3.js support is available via a separate package as a plugin for matic.js.
 
 ### Installation
 
