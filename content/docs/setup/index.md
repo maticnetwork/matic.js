@@ -12,3 +12,5 @@ Currently two libraries are supported -
 
 1. Web3.js
 2. Ethers
+
+> You can also use the [Unstoppable Domains resolution plugin](https://github.com/unstoppabledomains/maticjs-resolution) from the maticjs `utils` namespace.
