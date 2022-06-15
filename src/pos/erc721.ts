@@ -298,12 +298,6 @@ export class ERC721 extends POSToken {
         );
     }
 
-    isWithdrawWithMetaDataExited(txHash: string) {
-        return this.isWithdrawn(
-            txHash, Log_Event_Signature.Erc721TransferWithMetadata
-        );
-    }
-
     isWithdrawExitedMany(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721BatchTransfer

@@ -115,21 +115,6 @@ describe('ERC721', () => {
         expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
     })
 
-    it('iswithdrawExitWithMetaData return tx', async () => {
-        const txHash = `0x0600732ea675d8e63a4fed0a267a261a9e0d1728e805fda4884adb7c75454e7b`
-        const result = await erc721Child.isWithdrawWithMetaDataExited(txHash);
-        expect(result).equal(false);
-    })
-
-    it('withdrawExitWithMetaData return tx', async () => {
-        const txHash = `0x0600732ea675d8e63a4fed0a267a261a9e0d1728e805fda4884adb7c75454e7b`
-        const result = await erc721Parent.withdrawExitWithMetaData(txHash, {
-            returnTransaction: true
-        });
-        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
-        expect(result['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
-    })
-
     it('transfer write', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         // console.log('allTokensFrom', allTokensFrom);
