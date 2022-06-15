@@ -346,7 +346,7 @@ export class ExitUtil {
           const logIndices = this.getAllLogIndices_(
               logEventSig, receipt
           );
-          const payloads = [];
+          const payloads:string[] = [];
 
           // step 6 - encode payloads, convert into hex
           for (const logIndex of logIndices){

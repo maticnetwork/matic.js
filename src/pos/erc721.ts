@@ -250,17 +250,15 @@ export class ERC721 extends POSToken {
     withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot("withdrawExitMany");
 
-
         return this.exitUtil.buildMultiplePayloadsForExit(
             burnTransactionHash,
             Log_Event_Signature.Erc721BatchTransfer,
             false
         ).then(payloads => {
-          for (const payload of payloads) {
-            this.rootChainManager.exit(
+            return payloads.map(payload => this.rootChainManager.exit(
               payload, option
+            )
           );
-          }
         });
     }
 
