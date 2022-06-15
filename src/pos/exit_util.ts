@@ -61,6 +61,43 @@ export class ExitUtil {
         return logIndex;
     }
 
+    private getAllLogIndices_(logEventSig: string, receipt: ITransactionReceipt) {
+      let logIndices = [];
+
+      switch (logEventSig) {
+          case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+          case '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14':
+            logIndices = receipt.logs.reduce(
+                  (_, log, index) =>
+                      ((log.topics[0].toLowerCase() === logEventSig.toLowerCase() &&
+                      log.topics[2].toLowerCase() === '0x0000000000000000000000000000000000000000000000000000000000000000') &&
+                      logIndices.push(index), logIndices), []
+              );
+              break;
+
+          case '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62':
+          case '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb':
+              logIndices = receipt.logs.reduce(
+                (_, log, index) =>
+                    ((log.topics[0].toLowerCase() === logEventSig.toLowerCase() &&
+                    log.topics[3].toLowerCase() === '0x0000000000000000000000000000000000000000000000000000000000000000') &&
+                    logIndices.push(index), logIndices), []
+            );
+            break;
+
+          default:
+            logIndices = receipt.logs.reduce(
+              (_, log, index) =>
+                  ((log.topics[0].toLowerCase() === logEventSig.toLowerCase()) &&
+                  logIndices.push(index), logIndices), []
+          );
+      }
+      if (logIndices.length === 0) {
+          throw new Error("Log not found in receipt");
+      }
+      return logIndices;
+  }
+
     getChainBlockInfo(burnTxHash: string) {
         return Promise.all([
             this.rootChain.getLastChildBlock(),
