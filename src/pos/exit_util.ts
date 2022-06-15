@@ -281,6 +281,86 @@ export class ExitUtil {
         });
     }
 
+    buildMultiplePayloadsForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+
+      if (isFast && !service.network) {
+          new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
+      }
+
+      let txBlockNumber: number,
+          rootBlockInfo: IRootBlockInfo,
+          receipt: ITransactionReceipt,
+          block: IBlockWithTransaction,
+          blockProof;
+
+      return this.getChainBlockInfo(
+          burnTxHash
+      ).then(blockInfo => {
+          if (!this.isCheckPointed_(blockInfo)) {
+              throw new Error(
+                  'Burn transaction has not been checkpointed as yet'
+              );
+          }
+
+          // step 1 - Get Block number from transaction hash
+          txBlockNumber = blockInfo.txBlockNumber;
+          // step 2-  get transaction receipt from txhash and 
+          // block information from block number
+          return Promise.all([
+              this.maticClient_.getTransactionReceipt(burnTxHash),
+              this.maticClient_.getBlockWithTransaction(txBlockNumber)
+          ]);
+      }).then(result => {
+          [receipt, block] = result;
+          // step  3 - get information about block saved in parent chain 
+          return (
+              isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
+                  this.getRootBlockInfo(txBlockNumber)
+          );
+      }).then(rootBlockInfoResult => {
+          rootBlockInfo = rootBlockInfoResult;
+          // step 4 - build block proof
+          return (
+              isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
+                  this.getBlockProof(txBlockNumber, rootBlockInfo)
+          );
+      }).then(blockProofResult => {
+          blockProof = blockProofResult;
+          // step 5- create receipt proof
+          return ProofUtil.getReceiptProof(
+              receipt,
+              block,
+              this.maticClient_,
+              this.requestConcurrency
+          );
+      }).then((receiptProof: any) => {
+          const logIndices = this.getAllLogIndices_(
+              logEventSig, receipt
+          );
+          const payloads = [];
+
+          // step 6 - encode payloads, convert into hex
+          for (const logIndex of logIndices){
+            payloads.push(
+              this.encodePayload_(
+                rootBlockInfo.headerBlockNumber.toNumber(),
+                blockProof,
+                txBlockNumber,
+                block.timestamp,
+                Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+                Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+                ProofUtil.getReceiptBytes(receipt), // rlp encoded
+                receiptProof.parentNodes,
+                receiptProof.path,
+                logIndex
+              )
+            );
+          }
+
+          return payloads;
+      });
+  }
+
     private encodePayload_(
         headerNumber,
         buildBlockProof,
