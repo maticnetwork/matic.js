@@ -255,10 +255,13 @@ export class ERC721 extends POSToken {
             Log_Event_Signature.Erc721BatchTransfer,
             false
         ).then(payloads => {
-            return payloads.map(payload => this.rootChainManager.exit(
-              payload, option
-            )
-          );
+            return Promise.all(
+                payloads.map(payload => {
+                    return this.rootChainManager.exit(
+                        payload, option
+                    );
+                })
+            );
         });
     }
 
