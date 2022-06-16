@@ -52,13 +52,26 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
             throw new Error(`txHash not provided`);
         }
         return this.exitUtil.getExitHash(
-            txHash, eventSignature
+            txHash, 0, eventSignature
         ).then(exitHash => {
             return this.rootChainManager.isExitProcessed(
                 exitHash
             );
         });
     }
+
+    protected isWithdrawnOnIndex(txHash: string, index: number, eventSignature: string) {
+      if (!txHash) {
+          throw new Error(`txHash not provided`);
+      }
+      return this.exitUtil.getExitHash(
+          txHash, index, eventSignature
+      ).then(exitHash => {
+          return this.rootChainManager.isExitProcessed(
+              exitHash
+          );
+      });
+  }
 
     protected withdrawExitPOS(burnTxHash: string, eventSignature: string, isFast: boolean, option: ITransactionOption) {
         return this.exitUtil.buildPayloadForExit(

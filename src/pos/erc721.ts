@@ -284,7 +284,6 @@ export class ERC721 extends POSToken {
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot("withdrawExitFaster");
 
-
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
             0,
@@ -321,6 +320,12 @@ export class ERC721 extends POSToken {
     isWithdrawExitedMany(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721BatchTransfer
+        );
+    }
+
+    isWithdrawExitedOnIndex(txHash: string, index: number) {
+        return this.isWithdrawnOnIndex(
+            txHash, index, Log_Event_Signature.Erc721Transfer
         );
     }
 

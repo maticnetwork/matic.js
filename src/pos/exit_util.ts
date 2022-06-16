@@ -429,7 +429,7 @@ export class ExitUtil {
         );
     }
 
-    getExitHash(burnTxHash, logEventSig) {
+    getExitHash(burnTxHash, index, logEventSig) {
         let lastChildBlock: string,
             receipt: ITransactionReceipt,
             block: IBlockWithTransaction;
@@ -455,12 +455,19 @@ export class ExitUtil {
                 this.requestConcurrency
             );
         }).then((receiptProof: any) => {
-            const logIndex = this.getLogIndex_(logEventSig, receipt);
+            let logIndex;
             const nibbleArr = [];
             receiptProof.path.forEach(byte => {
                 nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'));
                 nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'));
             });
+
+            if(index > 0) {
+              const logIndices = this.getAllLogIndices_(logEventSig, receipt);
+              logIndex = logIndices[index];
+            }
+
+            logIndex = this.getLogIndex_(logEventSig, receipt);
 
             return this.maticClient_.etheriumSha3(
                 receipt.blockNumber, bufferToHex(Buffer.concat(nibbleArr)), logIndex

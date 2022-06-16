@@ -1,3 +1,7 @@
+//
+// This function is only supported till Matic.js v3.3.0
+//
+
 const { pos } = require('../../config')
 const { getPOSClient, from } = require('../../utils')
 
