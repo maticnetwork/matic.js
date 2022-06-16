@@ -218,10 +218,14 @@ export class ExitUtil {
         });
     }
 
-    buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+    buildPayloadForExit(burnTxHash: string, index: number, logEventSig: string, isFast: boolean) {
 
         if (isFast && !service.network) {
             new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
+        }
+
+        if (index < 0) {
+          throw new Error('Index must not be a negative integer');
         }
 
         let txBlockNumber: number,
@@ -271,10 +275,37 @@ export class ExitUtil {
                 this.requestConcurrency
             );
         }).then((receiptProof: any) => {
+            // step 6 - encode payload, convert into hex
+
+            // when token index is not 0
+            if(index > 0) {
+              const logIndices = this.getAllLogIndices_(
+                logEventSig, receipt
+              );
+
+              if(index >= logIndices.length) {
+                throw new Error('Index is grater than the number of tokens in this transaction');
+              }
+
+              return this.encodePayload_(
+                rootBlockInfo.headerBlockNumber.toNumber(),
+                blockProof,
+                txBlockNumber,
+                block.timestamp,
+                Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+                Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+                ProofUtil.getReceiptBytes(receipt), // rlp encoded
+                receiptProof.parentNodes,
+                receiptProof.path,
+                logIndices[index]
+              );
+            }
+
+            // when token index is 0
             const logIndex = this.getLogIndex_(
                 logEventSig, receipt
             );
-            // step 6 - encode payload, convert into hex
+
             return this.encodePayload_(
                 rootBlockInfo.headerBlockNumber.toNumber(),
                 blockProof,
