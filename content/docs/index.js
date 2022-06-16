@@ -134,6 +134,10 @@ module.exports = [
             url: 'withdraw-exit',
           },
           {
+            text: 'withdrawExitOnIndex',
+            url: 'withdraw-exit-on-index',
+          },
+          {
             text: 'withdrawExitMany',
             url: 'withdraw-exit-many',
           },
@@ -148,6 +152,10 @@ module.exports = [
           {
             text: 'isWithdrawExited',
             url: 'is-withdraw-exited',
+          },
+          {
+            text: 'isWithdrawExitedOnIndex',
+            url: 'is-withdraw-exited-on-index',
           },
           {
             text: 'isWithdrawExitedMany',
@@ -227,7 +235,7 @@ module.exports = [
             text: 'transfer',
             url: 'transfer',
           },
-        ]
+        ],
       },
       {
         text: 'isCheckPointed',
