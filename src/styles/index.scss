@@ -1,0 +1,165 @@
+@import 'flexboot/src/index.scss';
+// @import "flexboot/src/flex.scss";
+// @import "flexboot/src/button.scss";
+// @import "flexboot/src/grid.scss";
+// @import "flexboot/src/grid-xxl.scss";
+// @import "flexboot/src/effect.scss";
+// @import "flexboot/src/margin.scss";
+// @import "flexboot/src/padding.scss";
+// @import "flexboot/src/list.scss";
+// @import "flexboot/src/border.scss";
+// @import "flexboot/src/header.scss";
+
+:root {
+  --primary-color: #8247e5;
+  --secondary-color: #f37b0f;
+  --link-color: #000;
+}
+
+h1,
+h2,
+h3,
+h4,
+.h1,
+.h2,
+.h3,
+.h4 {
+  margin: 2rem 0 1rem;
+  font-weight: 700;
+  scroll-margin-top: 64px;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mr-10px {
+  margin-right: 10px;
+}
+
+pre {
+  margin: 2rem 0;
+}
+
+pre,
+code {
+  font-family: sfmono-regular, menlo, monaco, consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  // direction: ltr
+  //     /* rtl:ignore;; */
+  // ;
+  // unicode-bidi: bidi-override;
+}
+
+pre code {
+  padding: 1.25rem 1.5rem !important;
+  // color: #1d2d35;
+}
+
+code {
+  background: #e6e0d7;
+  padding: 2px 10px;
+}
+
+// pre code {
+//     display: block;
+//     overflow-x: auto;
+//     line-height: 1.5;
+//     padding: 1.25rem 1.5rem;
+//     -moz-tab-size: 4;
+//     -o-tab-size: 4;
+//     tab-size: 4;
+//     scrollbar-width: thin;
+//     scrollbar-color: transparent transparent
+// }
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+ul {
+  @extend .list;
+  list-style-type: disc;
+}
+
+ol {
+  @extend .list;
+  list-style-type: decimal;
+}
+
+ul,
+ol {
+  padding-left: 40px;
+}
+
+.top-border {
+  border-top: 2px solid #e9ecef;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+div {
+  :hover {
+    .anchor {
+      visibility: visible;
+      text-decoration: none;
+    }
+  }
+}
+
+.anchor {
+  visibility: hidden;
+  padding-left: 0.5rem;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  // border: 1px solid;
+  // background: var(--secondary-color);
+  width: max-content;
+
+  .tabs__names {
+    display: flex;
+
+    .tabs__names__item {
+      padding: 5px 20px;
+      border: 1px solid;
+      cursor: pointer;
+      border: 1px solid var(--secondary-color);
+      margin-right: 5px;
+
+      &.active {
+        color: var(--primary-contrast-color);
+        border: none;
+        background: var(--primary-color);
+      }
+    }
+  }
+
+  .tabs__content {
+    margin-top: 5px;
+    // background-color: #e4dddd;
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    // border-right: 1px solid;
+    padding: 5px;
+  }
+}
