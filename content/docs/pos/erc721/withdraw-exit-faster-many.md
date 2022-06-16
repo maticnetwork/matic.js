@@ -6,6 +6,11 @@ Description: 'Get started with maticjs'
 
 # withdrawExitFasterMany
 
+```diff
+- 📌 Deprecation Notice
+- This method is depricated and not supported in v3.4.0 and later
+```
+
 `withdrawExitFasterMany` method can be used to exit the withdraw process by using the txHash from `withdrawStartMany` method.
 
 <div class="highlight mb-20px mt-20px">
