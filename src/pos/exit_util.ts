@@ -61,6 +61,52 @@ export class ExitUtil {
         return logIndex;
     }
 
+    private getAllLogIndices_(logEventSig: string, receipt: ITransactionReceipt) {
+      let logIndices = [];
+
+      switch (logEventSig) {
+          case '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef':
+          case '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14':
+            logIndices = receipt.logs.reduce(
+                  (_, log, index) =>
+                      ((log.topics[0].toLowerCase() === logEventSig.toLowerCase() &&
+                      log.topics[2].toLowerCase() === '0x0000000000000000000000000000000000000000000000000000000000000000') &&
+                      logIndices.push(index), logIndices), []
+              );
+              break;
+
+          case '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62':
+          case '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb':
+              logIndices = receipt.logs.reduce(
+                (_, log, index) =>
+                    ((log.topics[0].toLowerCase() === logEventSig.toLowerCase() &&
+                    log.topics[3].toLowerCase() === '0x0000000000000000000000000000000000000000000000000000000000000000') &&
+                    logIndices.push(index), logIndices), []
+            );
+            break;
+          
+          case '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df':
+              logIndices = receipt.logs.reduce(
+                (_, log, index) =>
+                    ((log.topics[0].toLowerCase() === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' &&
+                    log.topics[2].toLowerCase() === '0x0000000000000000000000000000000000000000000000000000000000000000') &&
+                    logIndices.push(index), logIndices), []
+            );
+            break;
+
+          default:
+            logIndices = receipt.logs.reduce(
+              (_, log, index) =>
+                  ((log.topics[0].toLowerCase() === logEventSig.toLowerCase()) &&
+                  logIndices.push(index), logIndices), []
+          );
+      }
+      if (logIndices.length === 0) {
+          throw new Error("Log not found in receipt");
+      }
+      return logIndices;
+  }
+
     getChainBlockInfo(burnTxHash: string) {
         return Promise.all([
             this.rootChain.getLastChildBlock(),
@@ -172,10 +218,14 @@ export class ExitUtil {
         });
     }
 
-    buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+    buildPayloadForExit(burnTxHash: string, index: number, logEventSig: string, isFast: boolean) {
 
         if (isFast && !service.network) {
             new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
+        }
+
+        if (index < 0) {
+          throw new Error('Index must not be a negative integer');
         }
 
         let txBlockNumber: number,
@@ -225,10 +275,37 @@ export class ExitUtil {
                 this.requestConcurrency
             );
         }).then((receiptProof: any) => {
+            // step 6 - encode payload, convert into hex
+
+            // when token index is not 0
+            if(index > 0) {
+              const logIndices = this.getAllLogIndices_(
+                logEventSig, receipt
+              );
+
+              if(index >= logIndices.length) {
+                throw new Error('Index is grater than the number of tokens in this transaction');
+              }
+
+              return this.encodePayload_(
+                rootBlockInfo.headerBlockNumber.toNumber(),
+                blockProof,
+                txBlockNumber,
+                block.timestamp,
+                Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+                Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+                ProofUtil.getReceiptBytes(receipt), // rlp encoded
+                receiptProof.parentNodes,
+                receiptProof.path,
+                logIndices[index]
+              );
+            }
+
+            // when token index is 0
             const logIndex = this.getLogIndex_(
                 logEventSig, receipt
             );
-            // step 6 - encode payload, convert into hex
+
             return this.encodePayload_(
                 rootBlockInfo.headerBlockNumber.toNumber(),
                 blockProof,
@@ -243,6 +320,86 @@ export class ExitUtil {
             );
         });
     }
+
+    buildMultiplePayloadsForExit(burnTxHash: string, logEventSig: string, isFast: boolean) {
+
+      if (isFast && !service.network) {
+          new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
+      }
+
+      let txBlockNumber: number,
+          rootBlockInfo: IRootBlockInfo,
+          receipt: ITransactionReceipt,
+          block: IBlockWithTransaction,
+          blockProof;
+
+      return this.getChainBlockInfo(
+          burnTxHash
+      ).then(blockInfo => {
+          if (!this.isCheckPointed_(blockInfo)) {
+              throw new Error(
+                  'Burn transaction has not been checkpointed as yet'
+              );
+          }
+
+          // step 1 - Get Block number from transaction hash
+          txBlockNumber = blockInfo.txBlockNumber;
+          // step 2-  get transaction receipt from txhash and 
+          // block information from block number
+          return Promise.all([
+              this.maticClient_.getTransactionReceipt(burnTxHash),
+              this.maticClient_.getBlockWithTransaction(txBlockNumber)
+          ]);
+      }).then(result => {
+          [receipt, block] = result;
+          // step  3 - get information about block saved in parent chain 
+          return (
+              isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
+                  this.getRootBlockInfo(txBlockNumber)
+          );
+      }).then(rootBlockInfoResult => {
+          rootBlockInfo = rootBlockInfoResult;
+          // step 4 - build block proof
+          return (
+              isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
+                  this.getBlockProof(txBlockNumber, rootBlockInfo)
+          );
+      }).then(blockProofResult => {
+          blockProof = blockProofResult;
+          // step 5- create receipt proof
+          return ProofUtil.getReceiptProof(
+              receipt,
+              block,
+              this.maticClient_,
+              this.requestConcurrency
+          );
+      }).then((receiptProof: any) => {
+          const logIndices = this.getAllLogIndices_(
+              logEventSig, receipt
+          );
+          const payloads:string[] = [];
+
+          // step 6 - encode payloads, convert into hex
+          for (const logIndex of logIndices){
+            payloads.push(
+              this.encodePayload_(
+                rootBlockInfo.headerBlockNumber.toNumber(),
+                blockProof,
+                txBlockNumber,
+                block.timestamp,
+                Buffer.from(block.transactionsRoot.slice(2), 'hex'),
+                Buffer.from(block.receiptsRoot.slice(2), 'hex'),
+                ProofUtil.getReceiptBytes(receipt), // rlp encoded
+                receiptProof.parentNodes,
+                receiptProof.path,
+                logIndex
+              )
+            );
+          }
+
+          return payloads;
+      });
+  }
 
     private encodePayload_(
         headerNumber,
@@ -272,7 +429,7 @@ export class ExitUtil {
         );
     }
 
-    getExitHash(burnTxHash, logEventSig) {
+    getExitHash(burnTxHash, index, logEventSig) {
         let lastChildBlock: string,
             receipt: ITransactionReceipt,
             block: IBlockWithTransaction;
@@ -298,12 +455,19 @@ export class ExitUtil {
                 this.requestConcurrency
             );
         }).then((receiptProof: any) => {
-            const logIndex = this.getLogIndex_(logEventSig, receipt);
+            let logIndex;
             const nibbleArr = [];
             receiptProof.path.forEach(byte => {
                 nibbleArr.push(Buffer.from('0' + (byte / 0x10).toString(16), 'hex'));
                 nibbleArr.push(Buffer.from('0' + (byte % 0x10).toString(16), 'hex'));
             });
+
+            if(index > 0) {
+              const logIndices = this.getAllLogIndices_(logEventSig, receipt);
+              logIndex = logIndices[index];
+            }
+
+            logIndex = this.getLogIndex_(logEventSig, receipt);
 
             return this.maticClient_.etheriumSha3(
                 receipt.blockNumber, bufferToHex(Buffer.concat(nibbleArr)), logIndex

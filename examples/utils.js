@@ -3,12 +3,12 @@ const HDWalletProvider = require('@truffle/hdwallet-provider')
 const config = require('./config')
 const { POSClient, setProofApi, use } = require('@maticnetwork/maticjs')
 const SCALING_FACTOR = new bn(10).pow(new bn(18))
-const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
+const { Web3ClientPlugin } = require('@maticnetwork/maticjs-web3')
 
-use(Web3ClientPlugin);
+use(Web3ClientPlugin)
 
 if (config.proofApi) {
-  setProofApi(config.proofApi);
+  setProofApi(config.proofApi)
 }
 
 const privateKey = config.user1.privateKey
@@ -23,16 +23,16 @@ const getPOSClient = (network = 'testnet', version = 'mumbai') => {
     child: {
       provider: new HDWalletProvider(privateKey, config.child.rpc),
       defaultConfig: {
-        from: userAddress
-      }
+        from: userAddress,
+      },
     },
     parent: {
       provider: new HDWalletProvider(privateKey, config.parent.rpc),
       defaultConfig: {
-        from: userAddress
-      }
-    }
-  });
+        from: userAddress,
+      },
+    },
+  })
 }
 
 module.exports = {
@@ -44,5 +44,5 @@ module.exports = {
   from: config.user1.address,
   privateKey: config.user1.privateKey,
   to: config.user2.address,
-  proofApi: config.proofApi
+  proofApi: config.proofApi,
 }

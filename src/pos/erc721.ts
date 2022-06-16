@@ -235,9 +235,9 @@ export class ERC721 extends POSToken {
     withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot("withdrawExit");
 
-
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
+            0,
             Log_Event_Signature.Erc721Transfer,
             false
         ).then(payload => {
@@ -247,41 +247,46 @@ export class ERC721 extends POSToken {
         });
     }
 
-    withdrawExitWithMetaData(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("withdrawExitWithMetaData");
+    withdrawExitOnIndex(burnTransactionHash: string, index: number, option?: ITransactionOption) {
+      this.checkForRoot("withdrawExit");
 
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc721TransferWithMetadata,
-            false
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
+      return this.exitUtil.buildPayloadForExit(
+          burnTransactionHash,
+          index,
+          Log_Event_Signature.Erc721Transfer,
+          false
+      ).then(payload => {
+          return this.rootChainManager.exit(
+              payload, option
+          );
+      });
     }
 
-    withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("withdrawExitMany");
+    // async withdrawExitMany(burnTransactionHash: string, option?: ITransactionOption) {
+    //     this.checkForRoot("withdrawExitMany");
 
-
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc721BatchTransfer,
-            false
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
-    }
+    //     return this.exitUtil.buildMultiplePayloadsForExit(
+    //         burnTransactionHash,
+    //         Log_Event_Signature.Erc721BatchTransfer,
+    //         false
+    //     ).then(async payloads => {
+    //         const exitTxs = [];
+    //         if()
+    //         for(const i in payloads) {
+    //           exitTxs.push(this.rootChainManager.exit(
+    //             payloads[i], option
+    //         ));
+    //         }
+    //         return Promise.all(exitTxs);
+    //         });
+    // }
 
     withdrawExitFaster(burnTransactionHash: string, option?: ITransactionOption) {
         this.checkForRoot("withdrawExitFaster");
 
-
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
+            0,
             Log_Event_Signature.Erc721Transfer,
             true
         ).then(payload => {
@@ -291,34 +296,20 @@ export class ERC721 extends POSToken {
         });
     }
 
-    withdrawExitFasterMany(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("withdrawExitFasterMany");
+    // withdrawExitFasterMany(burnTransactionHash: string, option?: ITransactionOption) {
+    //     this.checkForRoot("withdrawExitFasterMany");
 
 
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc721BatchTransfer,
-            true
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
-    }
-
-    withdrawExitFasterWithMetaData(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("withdrawExitFasterWithMetaData");
-
-        return this.exitUtil.buildPayloadForExit(
-            burnTransactionHash,
-            Log_Event_Signature.Erc721TransferWithMetadata,
-            true
-        ).then(payload => {
-            return this.rootChainManager.exit(
-                payload, option
-            );
-        });
-    }
+    //     return this.exitUtil.buildPayloadForExit(
+    //         burnTransactionHash,
+    //         Log_Event_Signature.Erc721BatchTransfer,
+    //         true
+    //     ).then(payload => {
+    //         return this.rootChainManager.exit(
+    //             payload, option
+    //         );
+    //     });
+    // }
 
     isWithdrawExited(txHash: string) {
         return this.isWithdrawn(
@@ -326,15 +317,15 @@ export class ERC721 extends POSToken {
         );
     }
 
-    isWithdrawWithMetaDataExited(txHash: string) {
-        return this.isWithdrawn(
-            txHash, Log_Event_Signature.Erc721TransferWithMetadata
-        );
-    }
-
     isWithdrawExitedMany(txHash: string) {
         return this.isWithdrawn(
             txHash, Log_Event_Signature.Erc721BatchTransfer
+        );
+    }
+
+    isWithdrawExitedOnIndex(txHash: string, index: number) {
+        return this.isWithdrawnOnIndex(
+            txHash, index, Log_Event_Signature.Erc721Transfer
         );
     }
 
