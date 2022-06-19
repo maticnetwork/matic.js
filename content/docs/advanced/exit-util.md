@@ -91,3 +91,39 @@ const proof = await posClient.exitUtil.buildPayloadForExit(
     <isFast>
 )
 ```
+
+### Example to generate batch proofs and exit
+
+Every bridge client including **POSClient**, **PlasmaClient** exposes `exitUtil` property.
+
+```
+import { POSClient,use } from "@maticnetwork/maticjs"
+import { Web3ClientPlugin } from '@maticnetwork/maticjs-web3'
+import HDWalletProvider from "@truffle/hdwallet-provider"
+// install web3 plugin
+use(Web3ClientPlugin);
+const posClient = new POSClient();
+await posClient.init({
+    network: 'testnet',
+    version: 'mumbai',
+    parent: {
+      provider: new HDWalletProvider(privateKey, mainRPC),
+      defaultConfig: {
+        from : fromAddress
+      }
+    },
+    child: {
+      provider: new HDWalletProvider(privateKey, childRPC),
+      defaultConfig: {
+        from : fromAddress
+      }
+    }
+});
+const payloads = await posClient.exitUtil.buildMultiplePayloadsForExit(
+    <burn tx hash>,
+    <log event signature>
+)
+for(payload of paylaods) {
+    const result = await posClient.rootChainManager.exit(payload)
+}
+```
