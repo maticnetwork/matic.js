@@ -12,7 +12,7 @@ This library will help developers to move assets from Ethereum chain to Matic ch
 
 ## Docs
 
-https://maticnetwork.github.io/matic.js
+https://docs.polygon.technology/docs/develop/ethereum-polygon/matic-js/get-started
 
 ## Support
 
