@@ -8,8 +8,11 @@
 
 <script>
 export default {
-  mounted() {
-    this.$router.replace('docs/get-started')
+  // mounted() {
+  //   this.$router.push('')
+  // },
+  beforeCreate() {
+    window.location.href = 'https://docs.polygon.technology/docs/develop/ethereum-polygon/matic-js/get-started'
   },
 }
 </script>
