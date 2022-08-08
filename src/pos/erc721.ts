@@ -237,7 +237,6 @@ export class ERC721 extends POSToken {
 
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
-            0,
             Log_Event_Signature.Erc721Transfer,
             false
         ).then(payload => {
@@ -252,9 +251,9 @@ export class ERC721 extends POSToken {
 
       return this.exitUtil.buildPayloadForExit(
           burnTransactionHash,
-          index,
           Log_Event_Signature.Erc721Transfer,
-          false
+          false,
+          index
       ).then(payload => {
           return this.rootChainManager.exit(
               payload, option
@@ -286,7 +285,6 @@ export class ERC721 extends POSToken {
 
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
-            0,
             Log_Event_Signature.Erc721Transfer,
             true
         ).then(payload => {

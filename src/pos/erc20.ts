@@ -144,7 +144,6 @@ export class ERC20 extends POSToken {
 
         return this.exitUtil.buildPayloadForExit(
             burnTransactionHash,
-            0,
             eventSignature,
             isFast
         ).then(payload => {
