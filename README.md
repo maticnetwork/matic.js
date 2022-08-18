@@ -20,7 +20,7 @@ Our [Discord](https://discord.gg/s2NPJNUvyc) is the best way to reach us ✨.
 
 ## Contributors
 
-You are very welcome to contribute, please see contributing guidelines - [[Contribute](CONTRIBUTING.MD)].
+You are very welcome to contribute, please see contributing guidelines - [[Contribute](CONTRIBUTING.md)].
 
 Thank you to all the people who already contributed to matic.js!
 
