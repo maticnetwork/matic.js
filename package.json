@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "3.4.0-beta.0",
+  "version": "3.4.0",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -13,7 +13,7 @@
     "types"
   ],
   "scripts": {
-    "clean": "rimraf lib dist",
+    "clean": "del dist",
     "build": "npm run build:dev",
     "build:link": "npm run build && npm link",
     "build:webpack": "npm run lint && webpack --config webpack/webpack.all.config.js",
@@ -58,6 +58,7 @@
     "@typescript-eslint/parser": "^2.16.0",
     "copy-webpack-plugin": "^6.1.1",
     "cross-env": "^7.0.3",
+    "del-cli": "^5.0.0",
     "husky": "2.4.1",
     "lint-staged": "8.2.1",
     "smart-banner-webpack-plugin": "^3.0.1",
