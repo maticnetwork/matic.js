@@ -76,7 +76,6 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
     protected withdrawExitPOS(burnTxHash: string, eventSignature: string, isFast: boolean, option: ITransactionOption) {
         return this.exitUtil.buildPayloadForExit(
             burnTxHash,
-            0,
             eventSignature,
             isFast
         ).then(payload => {

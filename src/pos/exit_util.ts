@@ -218,7 +218,7 @@ export class ExitUtil {
         });
     }
 
-    buildPayloadForExit(burnTxHash: string, index: number, logEventSig: string, isFast: boolean) {
+    buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean, index = 0) {
 
         if (isFast && !service.network) {
             new ErrorHelper(ERROR_TYPE.ProofAPINotSet).throw();
