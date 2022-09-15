@@ -6,7 +6,7 @@ export abstract class BaseContractMethod {
 
     }
     abstract get address(): string;
-    abstract read<T>(tx?: ITransactionRequestConfig,): Promise<T>;
+    abstract read<T>(tx?: ITransactionRequestConfig, defaultBlock?: number | string): Promise<T>;
     abstract write(tx: ITransactionRequestConfig,): ITransactionWriteResult;
     abstract estimateGas(tx: ITransactionRequestConfig,): Promise<number>;
     abstract encodeABI(): any;

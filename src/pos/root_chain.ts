@@ -21,7 +21,7 @@ export class RootChain extends BaseToken<IPOSClientConfig> {
 
     getLastChildBlock() {
         return this.method("getLastChildBlock").then(method => {
-            return method.read<string>();
+            return method.read<string>({}, "finalized");
         });
     }
 
