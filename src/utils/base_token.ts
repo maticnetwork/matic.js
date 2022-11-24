@@ -17,6 +17,7 @@ export interface ITransactionConfigParam {
 export class BaseToken<T_CLIENT_CONFIG> {
 
     private contract_: BaseContract;
+    private chainId_: number;
 
     constructor(
         protected contractParam: IContractInitParam,
@@ -41,6 +42,17 @@ export class BaseToken<T_CLIENT_CONFIG> {
             });
             return this.contract_;
         });
+    }
+
+    getChainId(): Promise<number> {
+        if (this.chainId_) {
+            return promiseResolve<number>(this.chainId_ as any);
+        }
+        const client = this.getClient(this.contractParam.isParent);
+        return client.getChainId().then(chainId => {
+            this.chainId_ = chainId;
+            return this.chainId_;
+        })
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ITransactionWriteResult> {
@@ -176,34 +188,35 @@ export class BaseToken<T_CLIENT_CONFIG> {
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
-            const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
-            const isEIP1559Supported = this.client.isEIP1559Supported(isParent);
-            const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
-
-            if (!isEIP1559Supported && isMaxFeeProvided) {
-                client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
-            }
-            // const [gasLimit, nonce, chainId] = 
-            return Promise.all([
-                !(txConfig.gasLimit)
-                    ? estimateGas({
-                        from: txConfig.from, value: txConfig.value
-                    })
-                    : txConfig.gasLimit,
-                !txConfig.nonce ?
-                    client.getTransactionCount(txConfig.from, 'pending')
-                    : txConfig.nonce,
-                !txConfig.chainId ?
-                    client.getChainId() : txConfig.chainId
-            ]).then(result => {
-                const [gasLimit, nonce, chainId] = result;
-                client.logger.log("options filled");
-
-                txConfig.gasLimit = Number(gasLimit);
-                txConfig.nonce = nonce;
-                txConfig.chainId = chainId;
-                return txConfig;
-            });
+            return this.getChainId().then(clientChainId => {
+                const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
+            
+                const isEIP1559Supported = this.client.isEIP1559Supported(clientChainId);
+                const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
+                txConfig.chainId = txConfig.chainId || clientChainId;
+    
+                if (!isEIP1559Supported && isMaxFeeProvided) {
+                    client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
+                }
+                // const [gasLimit, nonce] = 
+                return Promise.all([
+                    !(txConfig.gasLimit)
+                        ? estimateGas({
+                            from: txConfig.from, value: txConfig.value
+                        })
+                        : txConfig.gasLimit,
+                    !txConfig.nonce ?
+                        client.getTransactionCount(txConfig.from, 'pending')
+                        : txConfig.nonce
+                ]).then(result => {
+                    const [gasLimit, nonce] = result;
+                    client.logger.log("options filled");
+    
+                    txConfig.gasLimit = Number(gasLimit);
+                    txConfig.nonce = nonce;
+                    return txConfig;
+                });
+            })
         }
         return promiseResolve<ITransactionRequestConfig>(txConfig);
     }

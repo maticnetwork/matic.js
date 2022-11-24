@@ -4,6 +4,14 @@ import { ABIManager } from "../utils";
 import { Logger } from "./logger";
 import { utils } from "..";
 
+const chainIdToConfigPath = {
+    1: 'Main',
+    5: 'Main',
+    137: 'Matic',
+    80001: 'Matic',
+    1402: 'Hermez'
+}
+
 export class Web3SideChainClient<T_CONFIG> {
     parent: BaseWeb3Client;
     child: BaseWeb3Client;
@@ -63,9 +71,16 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.getConfig("Main.POSContracts");
     }
 
-    isEIP1559Supported(isParent: boolean): boolean {
-        return isParent ? this.getConfig("Main.SupportsEIP1559") :
-            this.getConfig("Matic.SupportsEIP1559");
+    get mainHermezContracts() {
+        return this.getConfig("Main.HermezContracts");
+    }
+
+    get hermezContracts() {
+        return this.getConfig("Hermez.Contracts");
+    }
+
+    isEIP1559Supported(chainId: number): boolean {
+        return this.getConfig(`${chainIdToConfigPath[chainId]}.SupportsEIP1559`);
     }
 
 
