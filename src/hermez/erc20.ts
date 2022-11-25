@@ -173,8 +173,8 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    exit(burnTransactionHash: string, option?: ITransactionOption) {
-        this.checkForRoot("exit");
+    withdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot("withdrawExit");
         return this.childBridge.networkID().then(networkId => {
             return this.bridgeUtil.buildPayloadForClaim(
                 burnTransactionHash, false, networkId

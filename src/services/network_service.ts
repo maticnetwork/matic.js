@@ -41,4 +41,11 @@ export class NetworkService {
             return result.proof;
         })
     }
+
+    getBridgeTransactionDetails(networkID: number, depositCount: number) {
+        const url = `/bridge?net_id=${networkID}&deposit_cnt=${depositCount}`;
+        return this.httpRequest.get<any>(url).then(result => {
+            return result.deposit;
+        })
+    }
 }

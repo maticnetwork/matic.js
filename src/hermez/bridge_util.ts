@@ -88,6 +88,10 @@ export class BridgeUtil {
         });
     }
 
+    getBridgeLogData(transactionHash: string, isParent: boolean) {
+        return this.getBridgeLogData_(transactionHash, isParent);
+    }
+
     buildPayloadForClaim(transactionHash: string, isParent: boolean, networkId: number) {
         return this.getBridgeLogData_(transactionHash, isParent).then(data => {
             const {

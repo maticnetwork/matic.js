@@ -10,9 +10,6 @@ export * from "./bridge_util";
 
 export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
 
-    rootChainBridge: Bridge;
-    childChainBridge: Bridge;
-
     init(config: IHermezClientConfig) {
         const client = this.client;
 
