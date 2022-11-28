@@ -26,7 +26,7 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         destinationNetwork: number,
         destinationAddress: string,
         amount: TYPE_AMOUNT,
-        permitData: string = '0x',
+        permitData = '0x',
         option?: ITransactionOption
     ) {
         return this.method(
@@ -108,7 +108,7 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         return this.method(
             "wrappedTokenToTokenInfo", wrappedToken
         ).then(method => {
-            return this.processRead<[number, String]>(method);
+            return this.processRead<[number, string]>(method);
         });
     }
 

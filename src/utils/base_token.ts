@@ -25,6 +25,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
     ) {
     }
 
+    get contractAddress() {
+        return this.contractParam.address;
+    }
 
     getContract(): Promise<BaseContract> {
         if (this.contract_) {
@@ -52,7 +55,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         return client.getChainId().then(chainId => {
             this.chainId_ = chainId;
             return this.chainId_;
-        })
+        });
     }
 
     protected processWrite(method: BaseContractMethod, option: ITransactionOption = {}): Promise<ITransactionWriteResult> {
@@ -216,7 +219,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                     txConfig.nonce = nonce;
                     return txConfig;
                 });
-            })
+            });
         }
         return promiseResolve<ITransactionRequestConfig>(txConfig);
     }

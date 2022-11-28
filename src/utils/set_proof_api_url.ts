@@ -9,7 +9,7 @@ export const setProofApi = (url: string) => {
     service.network = new NetworkService(url);
 };
 
-export const setHermezProofApi = (url: string, override: boolean = true) => {
+export const setHermezProofApi = (url: string, override = true) => {
     const urlLength = url.length;
     if (url[urlLength - 1] !== '/') {
         url += '/';
@@ -17,4 +17,4 @@ export const setHermezProofApi = (url: string, override: boolean = true) => {
     if (!service.network || override) {
         service.network = new NetworkService(url);
     }
-}
+};

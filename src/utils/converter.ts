@@ -19,4 +19,14 @@ export class Converter {
             throw new Error(`Invalid value ${amount}, value is not a number.`);
         }
     }
+
+    static toBytes(amount: BaseBigNumber | string | number) {
+        const hexString = this.toHex(amount) as string;
+        hexString.slice(2).padStart(32, "0");
+        return '0x' + hexString;
+    }
+
+    static hexToNumber(hexString: string) {
+        return (new utils.BN(hexString.slice(2))).toNumber();
+    }
 }

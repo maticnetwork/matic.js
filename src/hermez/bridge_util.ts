@@ -4,39 +4,39 @@ import { IBaseClientConfig } from "..";
 import { TYPE_AMOUNT } from '../types';
 
 interface IBridgeEventInfo {
-    originNetwork: number,
-    originTokenAddress: string,
-    destinationNetwork: number,
-    destinationAddress: string,
-    amount: TYPE_AMOUNT,
-    metadata: string,
-    depositCount: number
+    originNetwork: number;
+    originTokenAddress: string;
+    destinationNetwork: number;
+    destinationAddress: string;
+    amount: TYPE_AMOUNT;
+    metadata: string;
+    depositCount: number;
 }
 
 interface IMerkleProof {
-    merkle_proof: string[],
-    exit_root_num: string,
-    l2_exit_root_num: string,
-    main_exit_root: string,
-    rollup_exit_root: string
+    merkle_proof: string[];
+    exit_root_num: string;
+    l2_exit_root_num: string;
+    main_exit_root: string;
+    rollup_exit_root: string;
 }
 
 interface IClaimPayload {
-    smtProof: string[],
-    index: number,
-    mainnetExitRoot: string,
-    rollupExitRoot: string,
-    originNetwork: number,
-    originTokenAddress: string,
-    destinationNetwork: number,
-    destinationAddress: string,
-    amount: TYPE_AMOUNT,
-    metadata: string,
+    smtProof: string[];
+    index: number;
+    mainnetExitRoot: string;
+    rollupExitRoot: string;
+    originNetwork: number;
+    originTokenAddress: string;
+    destinationNetwork: number;
+    destinationAddress: string;
+    amount: TYPE_AMOUNT;
+    metadata: string;
 }
 
 export class BridgeUtil {
-    private client_: Web3SideChainClient<IBaseClientConfig>
-    private BRIDGE_TOPIC: string = "0xf0b963192bdc6349c23af9bd17294b4c7b9b5a73a2a9939610ea18ffd1c5dc2a";
+    private client_: Web3SideChainClient<IBaseClientConfig>;
+    private BRIDGE_TOPIC = "0xf0b963192bdc6349c23af9bd17294b4c7b9b5a73a2a9939610ea18ffd1c5dc2a";
 
     constructor(client: Web3SideChainClient<IBaseClientConfig>) {
         this.client_ = client;
@@ -50,7 +50,7 @@ export class BridgeUtil {
                 throw new Error("Data not decoded");
             }
             const decodedData = client.decodeParameters(data, types[0].inputs);
-            const [originNetwork, originTokenAddress, destinationNetwork, destinationAddress, amount, metadata, depositCount] = decodedData
+            const [originNetwork, originTokenAddress, destinationNetwork, destinationAddress, amount, metadata, depositCount] = decodedData;
             return {
                 originNetwork,
                 originTokenAddress,
@@ -60,21 +60,21 @@ export class BridgeUtil {
                 metadata,
                 depositCount,
             } as IBridgeEventInfo;
-        })
+        });
     }
 
     private getBridgeLogData_(transactionHash: string, isParent: boolean) {
         const client = isParent ? this.client_.parent : this.client_.child;
         return client.getTransactionReceipt(transactionHash)
             .then(receipt => {
-                const logs = receipt.logs.filter(log => { log.topics[0].toLowerCase() === this.BRIDGE_TOPIC });
+                const logs = receipt.logs.filter(log => log.topics[0].toLowerCase() === this.BRIDGE_TOPIC);
                 if (!logs.length) {
                     throw new Error("Log not found in receipt");
                 }
 
                 const data = logs[0].data;
                 return this.decodedBridgeData_(data, isParent);
-            })
+            });
     }
 
     private getProof_(networkId: number, depositCount: number) {
@@ -114,8 +114,8 @@ export class BridgeUtil {
                 payload.destinationAddress = destinationAddress;
                 payload.amount = amount;
                 payload.metadata = metadata;
-                return payload
-            })
-        })
+                return payload;
+            });
+        });
     }
 }

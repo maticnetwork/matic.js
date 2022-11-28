@@ -24,12 +24,24 @@ export abstract class BaseWeb3Client {
 
     abstract getBlock(blockHashOrBlockNumber): Promise<IBlock>;
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
+    abstract getAccounts(): Promise<string[]>;
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
             jsonrpc: '2.0',
             method: 'eth_getRootHash',
             params: [Number(startBlock), Number(endBlock)],
+            id: new Date().getTime()
+        }).then(payload => {
+            return String(payload.result);
+        });
+    }
+
+    signTypedData?(signer: string, typedData: string) {
+        return this.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_signTypedData_v3',
+            params: [signer, typedData],
             id: new Date().getTime()
         }).then(payload => {
             return String(payload.result);

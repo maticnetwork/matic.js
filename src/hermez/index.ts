@@ -38,9 +38,9 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
 
             this.bridgeUtil = new BridgeUtil(
                 this.client
-            )
+            );
 
-            setHermezProofApi(urlConfig.hermezBridgeService, false)
+            setHermezProofApi(urlConfig.hermezBridgeService, false);
 
             return this;
         });

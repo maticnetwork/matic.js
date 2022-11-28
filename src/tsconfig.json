@@ -11,7 +11,7 @@
         "module": "ESNext",
         "outDir": "../dist/ts",
         "lib": [
-            "es2015",
+            "es2021",
             "dom",
             "webworker",
             "ES5",
