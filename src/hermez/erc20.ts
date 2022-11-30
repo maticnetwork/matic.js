@@ -22,6 +22,17 @@ export class ERC20 extends HermezToken {
             bridgeType: 'pos'
         }, client, getContracts);
     }
+
+    /**
+     * get bridge for that token
+     *
+     * @returns
+     * @memberof ERC20
+     */
+    getBridgeAddress() {
+        const bridge = this.contractParam.isParent ? this.parentBridge : this.childBridge;
+        return bridge.contractAddress;
+    }
     
     /**
      * get token balance of user

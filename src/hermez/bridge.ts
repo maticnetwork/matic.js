@@ -85,6 +85,16 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
+    claimNullifier(
+        index: number,
+    ) {
+        return this.method(
+            "claimNullifier", index
+        ).then(method => {
+            return this.processRead<string>(method);
+        });
+    }
+
     precalculatedWrapperAddress(
         originNetwork: number,
         originTokenAddress: string

@@ -46,6 +46,15 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
         });
     }
 
+    /**
+     * creates instance of ERC20 token
+     *
+     * @param {string} tokenAddress
+     * @param {boolean} isParent
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     erc20(tokenAddress: string, isParent?: boolean) {
         return new ERC20(
             tokenAddress,

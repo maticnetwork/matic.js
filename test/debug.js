@@ -28,13 +28,13 @@ const execute = async () => {
     network: 'testnet',
     version: 'mumbai',
     parent: {
-      provider: new HDWalletProvider(privateKey, rpc.parent),
+      provider: new HDWalletProvider(privateKey, rpc.pos.parent),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, rpc.child),
+      provider: new HDWalletProvider(privateKey, rpc.pos.child),
       defaultConfig: {
         from
       }
@@ -159,13 +159,13 @@ const executeHermez = async () => {
     network: 'testnet',
     version: 'mumbai',
     parent: {
-      provider: new HDWalletProvider(privateKey, rpc.parent),
+      provider: new HDWalletProvider(privateKey, rpc.hermez.parent),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, rpc.child),
+      provider: new HDWalletProvider(privateKey, rpc.hermez.child),
       defaultConfig: {
         from
       }
@@ -185,12 +185,20 @@ const executeHermez = async () => {
   // var result = await client.isDepositClaimable('0x6c8d9bb18c6d01f75a4900f0e46ed4179c04f96bfce1e8286313ab659c59cade');
   // return console.log('result', result);
 
+  // // isDeposited
+  // var result = await client.isDeposited('0x6c8d9bb18c6d01f75a4900f0e46ed4179c04f96bfce1e8286313ab659c59cade');
+  // return console.log('result', result);
+
   // // isWithdrawExitable
   // var result = await client.isWithdrawExitable('0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60');
   // return console.log('result', result);
 
+  // // isExited
+  // var result = await client.isExited('0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60');
+  // return console.log('result', result);
+
   // // getTokenWrappedAddress
-  // var result = await client.childChainBridge.getTokenWrappedAddress("0", "0x5C221E77624690fff6dd741493D735a17716c26B");
+  // var result = await client.childChainBridge.getTokenWrappedAddress("0", '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733');
   // return console.log('result', result);
 
   // // wrappedTokenToTokenInfo
@@ -214,44 +222,44 @@ const executeHermez = async () => {
   // return console.log('result', result);
 
   // // approve
-  // var tx = await goerliERC20Token.approve("22000000000000000000", {returnTransaction: false});
+  // var tx = await goerliERC20Token.approve("10", {returnTransaction: false});
   // return console.log("hash", await tx.getTransactionHash());
 
   // // deposit Ether
-  // var tx = await goerliEtherToken.deposit("220000000000", from, {returnTransaction: false});
-  // return console.log("hash", await tx.getTransactionHash());
+  // var tx = await goerliEtherToken.deposit("220000000000", from, {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // claim Ether
   // var tx = await litchiEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: false});
   // return console.log("hash", await tx.getTransactionHash());
 
   // // deposit ERC20
-  // var tx = await goerliERC20Token.deposit("220000000000", from, {returnTransaction: false});
-  // return console.log("hash", await tx.getTransactionHash());
+  // var tx = await goerliERC20Token.deposit("10", from, {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // deposit claim ERC20
-  // var tx = await litchiERC20Token.depositClaim("0x81594c5e9a73e195c6fb13db1b25e9388407611ad4649b01f61d85c27eb86049", {returnTransaction: false});
-  // return console.log("hash",  await tx.getTransactionHash());
+  // var tx = await litchiERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: false});
+  // return console.log("hash", await tx.getTransactionHash());
 
   // // withdraw Ether
-  // var tx = await litchiEtherToken.withdraw("22000000000", from, {returnTransaction: false});
-  // return console.log("hash",  await tx.getTransactionHash());
+  // var tx = await litchiEtherToken.withdraw("1", from, {returnTransaction: true});
+  // return console.log("hash",  tx);
 
   // // withdraw ERC20
-  // var tx = await litchiERC20Token.withdraw("22000000000", from, {returnTransaction: false});
-  // return console.log("hash",  await tx.getTransactionHash());
+  // var tx = await litchiERC20Token.withdraw("1", from, {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // Get Permit Data
   // var tx = await goerliERC20Token.getPermitData('2000000000000000000', {returnTransaction: false});
   // return console.log("hash", tx);
 
-  // deposit with Permit
-  var tx = await goerliERC20Token.depositWithPermit("2000000000000000000", from, {returnTransaction: false});
-  return console.log("hash", await tx.getTransactionHash());
+  // // deposit with Permit
+  // var tx = await goerliERC20Token.depositWithPermit("10", from, {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // withdraw exit ERC20
-  // var tx = await goerliERC20Token.withdrawExit("0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60", {returnTransaction: false});
-  // return console.log("hash",  await tx.getTransactionHash());
+  // var tx = await goerliERC20Token.withdrawExit("0x2df7caedb9a28b3110a43d5380c19d8f7d3a177aad4c8c11a07cbc46ce377654", {returnTransaction: true});
+  // return console.log("hash",  tx);
 
 
   // console.log("hash", await tx.getTransactionHash());

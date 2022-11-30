@@ -43,4 +43,34 @@ export class HermezBridgeClient<T> {
         });
     }
 
+    /**
+     * check whether deposit is completed
+     *
+     * @param {string} txHash
+     * @returns
+     * @memberof HermezBridgeClient
+     */
+    isDeposited(txHash: string) {
+        return this.bridgeUtil.getBridgeLogData(
+            txHash, true
+        ).then(result => {
+            return this.childChainBridge.claimNullifier(result.depositCount);
+        });
+    }
+
+    /**
+     * check whether deposit is completed
+     *
+     * @param {string} txHash
+     * @returns
+     * @memberof HermezBridgeClient
+     */
+    isExited(txHash: string) {
+        return this.bridgeUtil.getBridgeLogData(
+            txHash, false
+        ).then(result => {
+            return this.rootChainBridge.claimNullifier(result.depositCount);
+        });
+    }
+
 }
