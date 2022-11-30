@@ -22,7 +22,15 @@ export class ERC20 extends HermezToken {
             bridgeType: 'pos'
         }, client, getContracts);
     }
-
+    
+    /**
+     * get token balance of user
+     *
+     * @param {string} userAddress
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     getBalance(userAddress: string, option?: ITransactionOption) {
         if (this.contractAddress === ADDRESS_ZERO) {
             const client = this.contractParam.isParent ? this.client.parent : this.client.child;
@@ -62,6 +70,14 @@ export class ERC20 extends HermezToken {
         });
     }
 
+    /**
+     * Approve given amount of tokens for user
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {IApproveTransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     approve(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
         this.checkForNonNative("approve");
         const spenderAddress = option.spenderAddress ? option.spenderAddress : (
@@ -77,6 +93,13 @@ export class ERC20 extends HermezToken {
         });
     }
 
+    /**
+     * Approve max amount of tokens for user
+     *
+     * @param {IApproveTransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
     approveMax(option: IApproveTransactionOption = {}) {
         this.checkForNonNative("approveMax");
         return this.approve(
@@ -291,6 +314,12 @@ export class ERC20 extends HermezToken {
         return this.transferERC20(to, amount, option);
     }
 
+    /**
+     * get permitType of the token
+     *
+     * @returns
+     * @memberof ERC20
+     */
     private getPermit() {
         let contract: BaseContract;
         return this.getContract().then(contractInstance => {
@@ -330,6 +359,19 @@ export class ERC20 extends HermezToken {
         });
     }
 
+    /**
+     * get typedData for signing
+     * @param {string} permitType
+     * @param {string} account
+     * @param {number} chainId
+     * @param {string} name
+     * @param {string} nonce
+     * @param {string} spenderAddress
+     * @param {string} amount
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     private getTypedData_(permitType: string, account: string, chainId: number, name: string, nonce: string, spenderAddress: string, amount: string) {
         console.log("chainId", chainId, name, this.contractAddress);
         const typedData = {
@@ -396,6 +438,14 @@ export class ERC20 extends HermezToken {
         return typedData;
     }
 
+    /**
+     * get {r, s, v} from signature
+     * @param {BaseWeb3Client} client
+     * @param {string} signature
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     private getSignatureParameters_(client: BaseWeb3Client, signature: string) {
         if (!isHexString(signature)) {
             throw new Error(
@@ -420,6 +470,19 @@ export class ERC20 extends HermezToken {
         };
     }
 
+    /**
+     * encode permit function data
+     * @param {BaseContract} contract
+     * @param {string} permitType
+     * @param {any} signatureParams
+     * @param {string} spenderAddress
+     * @param {string} account
+     * @param {string} nonce
+     * @param {string} amount
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     private encodePermitFunctionData_(contract: BaseContract, permitType: string, signatureParams: any, spenderAddress: string, account: string, nonce: string, amount: string) {
         const { r, s, v } = signatureParams;
         let method: BaseContractMethod;
@@ -455,6 +518,14 @@ export class ERC20 extends HermezToken {
         return method.encodeABI();
     }
 
+    /**
+     * Get permit data for given spender for given amount
+     * @param {TYPE_AMOUNT} amount
+     * @param {string} spenderAddress
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     private getPermitData_(amount: TYPE_AMOUNT, spenderAddress: string) {
 
         const amountInABI = this.client.parent.encodeParameters(
@@ -491,6 +562,14 @@ export class ERC20 extends HermezToken {
         });
     }
 
+    /**
+     * Get permit data for given amount
+     * @param {TYPE_AMOUNT} amount
+     * @param {IApproveTransactionOption} option
+     * 
+     * @returns
+     * @memberof ERC20
+     */
     getPermitData(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
         this.checkForNonNative("getPermitData");
 

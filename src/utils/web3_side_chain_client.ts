@@ -83,6 +83,4 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.getConfig(`${chainIdToConfigPath[chainId]}.SupportsEIP1559`);
     }
 
-
 }
-
