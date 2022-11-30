@@ -24,7 +24,8 @@ export abstract class BaseWeb3Client {
 
     abstract getBlock(blockHashOrBlockNumber): Promise<IBlock>;
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
-    abstract getAccounts(): Promise<string[]>;
+    abstract hexToNumber(value: any): number;
+
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
@@ -37,14 +38,36 @@ export abstract class BaseWeb3Client {
         });
     }
 
-    signTypedData?(signer: string, typedData: string) {
+    signTypedData?(signer: string, typedData: object) {
         return this.sendRPCRequest({
             jsonrpc: '2.0',
-            method: 'eth_signTypedData_v3',
+            method: 'eth_signTypedData_v4',
             params: [signer, typedData],
-            id: new Date().getTime()
+            id: 1
         }).then(payload => {
             return String(payload.result);
+        });
+    }
+
+    getBalance?(address: string) {
+        return this.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_getBalance',
+            params: [address, "latest"],
+            id: new Date().getTime()
+        }).then(payload => {
+            return this.hexToNumber(payload.result);
+        });
+    }
+
+    getAccounts?() {
+        return this.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_accounts',
+            params: [],
+            id: new Date().getTime()
+        }).then(payload => {
+            return payload.result;
         });
     }
 

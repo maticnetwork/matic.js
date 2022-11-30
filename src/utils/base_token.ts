@@ -6,6 +6,7 @@ import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { POSERC1155TransferParam, TYPE_AMOUNT } from "../types";
 import { ErrorHelper } from "./error_helper";
+import { ADDRESS_ZERO } from '../constant';
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionRequestConfig;
@@ -193,11 +194,11 @@ export class BaseToken<T_CLIENT_CONFIG> {
         if (isWrite) {
             return this.getChainId().then(clientChainId => {
                 const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
-            
+
                 const isEIP1559Supported = this.client.isEIP1559Supported(clientChainId);
                 const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
                 txConfig.chainId = txConfig.chainId || clientChainId;
-    
+
                 if (!isEIP1559Supported && isMaxFeeProvided) {
                     client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
                 }
@@ -214,7 +215,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 ]).then(result => {
                     const [gasLimit, nonce] = result;
                     client.logger.log("options filled");
-    
+
                     txConfig.gasLimit = Number(gasLimit);
                     txConfig.nonce = nonce;
                     return txConfig;
@@ -249,6 +250,12 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method, option
             );
         });
+    }
+
+    protected checkForNonNative(methodName) {
+        if (this.contractParam.address === ADDRESS_ZERO) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnNonNativeTokens, methodName).throw();
+        }
     }
 
     protected checkForRoot(methodName) {

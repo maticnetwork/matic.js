@@ -72,11 +72,11 @@ export class Web3SideChainClient<T_CONFIG> {
     }
 
     get mainHermezContracts() {
-        return this.getConfig("Main.HermezContracts");
+        return this.getConfig("Main.zkEVMContracts");
     }
 
     get hermezContracts() {
-        return this.getConfig("Hermez.Contracts");
+        return this.getConfig("zkEVM.Contracts");
     }
 
     isEIP1559Supported(chainId: number): boolean {

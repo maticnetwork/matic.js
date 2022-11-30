@@ -36,14 +36,14 @@ export class NetworkService {
     }
 
     getMerkleProofForHermez(networkID: number, depositCount: number) {
-        const url = `/merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`;
+        const url = `merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`;
         return this.httpRequest.get<any>(url).then(result => {
             return result.proof;
         });
     }
 
     getBridgeTransactionDetails(networkID: number, depositCount: number) {
-        const url = `/bridge?net_id=${networkID}&deposit_cnt=${depositCount}`;
+        const url = `bridge?net_id=${networkID}&deposit_cnt=${depositCount}`;
         return this.httpRequest.get<any>(url).then(result => {
             return result.deposit;
         });

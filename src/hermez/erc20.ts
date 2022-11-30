@@ -1,10 +1,10 @@
-import utils from 'ethereumjs-util';
+import { isHexString } from 'ethereumjs-util';
 import { ITransactionOption } from "../interfaces";
 import { Converter, Web3SideChainClient } from "../utils";
 import { HermezToken } from "./hermez_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
-import { MAX_AMOUNT, NULL_ADDRESS, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract } from "..";
+import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client } from "..";
 import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IHermezClientConfig, IHermezContracts } from "../interfaces";
 
 export class ERC20 extends HermezToken {
@@ -19,18 +19,24 @@ export class ERC20 extends HermezToken {
             isParent,
             address: tokenAddress,
             name: 'ChildERC20',
-            bridgeType: 'hermez'
+            bridgeType: 'pos'
         }, client, getContracts);
     }
 
     getBalance(userAddress: string, option?: ITransactionOption) {
-        return this.getContract().then(contract => {
-            const method = contract.method(
-                "balanceOf",
-                userAddress
-            );
-            return this.processRead<string>(method, option);
-        });
+        if (this.contractAddress === ADDRESS_ZERO) {
+            const client = this.contractParam.isParent ? this.client.parent : this.client.child;
+            return client.getBalance(userAddress);
+        } else {
+            return this.getContract().then(contract => {
+                const method = contract.method(
+                    "balanceOf",
+                    userAddress
+                );
+                return this.processRead<string>(method, option);
+            });
+        }
+
     }
 
     /**
@@ -42,6 +48,7 @@ export class ERC20 extends HermezToken {
      * @memberof ERC20
      */
     getAllowance(userAddress: string, option: IAllowanceTransactionOption = {}) {
+        this.checkForNonNative("getAllowance");
         const spenderAddress = option.spenderAddress ? option.spenderAddress : (
             this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
 
@@ -56,6 +63,7 @@ export class ERC20 extends HermezToken {
     }
 
     approve(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
+        this.checkForNonNative("approve");
         const spenderAddress = option.spenderAddress ? option.spenderAddress : (
             this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
 
@@ -70,6 +78,7 @@ export class ERC20 extends HermezToken {
     }
 
     approveMax(option: IApproveTransactionOption = {}) {
+        this.checkForNonNative("approveMax");
         return this.approve(
             MAX_AMOUNT,
             option
@@ -94,6 +103,10 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
+        if (this.contractParam.address === ADDRESS_ZERO) {
+            option.value = Converter.toHex(amount);
+        }
+
         return this.childBridge.networkID().then(networkId => {
             return this.parentBridge.bridgeAsset(
                 this.contractParam.address,
@@ -115,15 +128,16 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    depositWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IBridgeTransactionOption) {
+    depositWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IApproveTransactionOption) {
         this.checkForRoot("deposit");
+        this.checkForNonNative("depositWithPermit");
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(amount)],
             ['uint256'],
         );
 
-        return this.getPermitData().then(permitData => {
+        return this.getPermitData(amountInABI, option).then(permitData => {
             return this.childBridge.networkID().then(networkId => {
                 return this.parentBridge.bridgeAsset(
                     this.contractParam.address,
@@ -186,6 +200,10 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
+        if (this.contractParam.address === ADDRESS_ZERO) {
+            option.value = Converter.toHex(amount);
+        }
+
         return this.parentBridge.networkID().then(networkId => {
             return this.childBridge.bridgeAsset(
                 this.contractParam.address,
@@ -207,7 +225,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    withdrawWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IBridgeTransactionOption) {
+    withdrawWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IApproveTransactionOption) {
         this.checkForChild("withdraw");
 
         const amountInABI = this.client.parent.encodeParameters(
@@ -215,7 +233,7 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
-        return this.getPermitData().then(permitData => {
+        return this.getPermitData(amountInABI, option).then(permitData => {
             return this.parentBridge.networkID().then(networkId => {
                 return this.childBridge.bridgeAsset(
                     this.contractParam.address,
@@ -273,13 +291,6 @@ export class ERC20 extends HermezToken {
         return this.transferERC20(to, amount, option);
     }
 
-    getPermitData(option: IApproveTransactionOption = {}) {
-        const spenderAddress = option.spenderAddress ? option.spenderAddress : (
-            this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
-
-        return this.getPermitData_(spenderAddress);
-    }
-
     private getPermit() {
         let contract: BaseContract;
         return this.getContract().then(contractInstance => {
@@ -319,35 +330,24 @@ export class ERC20 extends HermezToken {
         });
     }
 
-    private getTypedData_(permitType: string, account: string, chainId: number, name: string, nonce: string, spenderAddress: string) {
+    private getTypedData_(permitType: string, account: string, chainId: number, name: string, nonce: string, spenderAddress: string, amount: string) {
+        console.log("chainId", chainId, name, this.contractAddress);
         const typedData = {
             types: {
                 EIP712Domain: [
-                    {
-                        name: 'name',
-                        type: 'string',
-                    },
-                    {
-                        name: 'version',
-                        type: 'string',
-                    },
-                    {
-                        name: 'verifyingContract',
-                        type: 'address',
-                    },
-                    {
-                        name: 'salt',
-                        type: 'bytes32',
-                    },
+                    { name: 'name', type: 'string' },
+                    { name: 'version', type: 'string' },
+                    { name: 'chainId', type: 'uint256' },
+                    { name: 'verifyingContract', type: 'address' }
                 ],
                 Permit: []
             },
             primaryType: "Permit",
             domain: {
                 name,
-                version: '1',
+                version: "1",
+                chainId,
                 verifyingContract: this.contractAddress,
-                salt: Converter.toBytes(chainId)
             },
             message: {}
         };
@@ -369,26 +369,35 @@ export class ERC20 extends HermezToken {
                 };
             case Permit.EIP_2612:
             case Permit.UNISWAP:
+
+                if (permitType === Permit.UNISWAP) {
+                    typedData.types.EIP712Domain = [
+                        { name: 'name', type: 'string' },
+                        { name: 'chainId', type: 'uint256' },
+                        { name: 'verifyingContract', type: 'address' }
+                    ];
+                    delete typedData.domain.version;
+                }
                 typedData.types.Permit = [
-                    { name: "owner", type: "address" },
-                    { name: "spender", type: "address" },
-                    { name: "value", type: "uint256" },
-                    { name: "nonce", type: "uint256" },
-                    { name: "deadline", type: "uint256" },
+                    { name: 'owner', type: 'address' },
+                    { name: 'spender', type: 'address' },
+                    { name: 'value', type: 'uint256' },
+                    { name: 'nonce', type: 'uint256' },
+                    { name: 'deadline', type: 'uint256' }
                 ];
                 typedData.message = {
                     owner: account,
                     spender: spenderAddress,
-                    value: MAX_AMOUNT,
-                    nonce,
+                    value: amount,
+                    nonce: nonce,
                     deadline: MAX_AMOUNT,
                 };
         }
         return typedData;
     }
 
-    private getSignatureParameters_(signature: string) {
-        if (!utils.isHexString(signature)) {
+    private getSignatureParameters_(client: BaseWeb3Client, signature: string) {
+        if (!isHexString(signature)) {
             throw new Error(
                 'Given value "'.concat(signature, '" is not a valid hex string.'),
             );
@@ -400,7 +409,7 @@ export class ERC20 extends HermezToken {
 
         const r = signature.slice(0, 66);
         const s = '0x'.concat(signature.slice(66, 130));
-        let v = Converter.hexToNumber('0x'.concat(signature.slice(130, 132)));
+        let v = client.hexToNumber('0x'.concat(signature.slice(130, 132)));
         if (![27, 28].includes(v as any)) {
             v += 27;
         }
@@ -411,7 +420,7 @@ export class ERC20 extends HermezToken {
         };
     }
 
-    private encodePermitFunctionData_(contract: BaseContract, permitType: string, signatureParams: any, spenderAddress: string, account: string) {
+    private encodePermitFunctionData_(contract: BaseContract, permitType: string, signatureParams: any, spenderAddress: string, account: string, nonce: string, amount: string) {
         const { r, s, v } = signatureParams;
         let method: BaseContractMethod;
         switch (permitType) {
@@ -420,12 +429,14 @@ export class ERC20 extends HermezToken {
                     "permit",
                     account,
                     spenderAddress,
+                    nonce,
                     MAX_AMOUNT,
-                    1,
+                    true,
                     v,
                     r,
                     s,
                 );
+                break;
 
             case Permit.EIP_2612:
             case Permit.UNISWAP:
@@ -433,46 +444,60 @@ export class ERC20 extends HermezToken {
                     "permit",
                     account,
                     spenderAddress,
+                    amount,
                     MAX_AMOUNT,
-                    1,
                     v,
                     r,
                     s,
                 );
+                break;
         }
         return method.encodeABI();
     }
 
-    private getPermitData_(spenderAddress: string) {
-        if (this.contractParam.address === NULL_ADDRESS) {
-            throw Error("Native currency does't require permit");
-        }
+    private getPermitData_(amount: TYPE_AMOUNT, spenderAddress: string) {
+
+        const amountInABI = this.client.parent.encodeParameters(
+            [Converter.toHex(amount)],
+            ['uint256'],
+        );
 
         const client = this.contractParam.isParent ? this.client.parent : this.client.child;
         let account: string;
         let chainId: number;
         let permitType: string;
         let contract: BaseContract;
+        let nonce: string;
+
         return Promise.all([client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
             account = result[0][0];
             contract = result[1];
             chainId = result[2];
             permitType = result[3];
             const nameMethod = contract.method("name");
-            const nonceMethod = contract.method("nonce", account);
+            const nonceMethod = contract.method("nonces", account);
             return Promise.all([this.processRead<string>(nameMethod), this.processRead<string>(nonceMethod)]);
         }).then(data => {
             const name = data[0];
-            const nonce = data[1];
-            return this.getTypedData_(permitType, account, chainId, name, nonce, spenderAddress);
+            nonce = data[1];
+            return this.getTypedData_(permitType, account, chainId, name, nonce, spenderAddress, amountInABI);
         }).then(typedData => {
-            return client.signTypedData(account, JSON.stringify(typedData));
+            return client.signTypedData(account, typedData);
         }).then(signature => {
-            const signatureParameters = this.getSignatureParameters_(signature);
+            const signatureParameters = this.getSignatureParameters_(client, signature);
             return this.encodePermitFunctionData_(
-                contract, permitType, signatureParameters, spenderAddress, account
+                contract, permitType, signatureParameters, spenderAddress, account, nonce, amountInABI
             );
         });
+    }
+
+    getPermitData(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
+        this.checkForNonNative("getPermitData");
+
+        const spenderAddress = option.spenderAddress ? option.spenderAddress : (
+            this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
+
+        return this.getPermitData_(amount, spenderAddress);
     }
 
 }

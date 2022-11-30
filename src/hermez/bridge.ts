@@ -30,7 +30,7 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         option?: ITransactionOption
     ) {
         return this.method(
-            "bridgeAsset",
+            "bridge",
             token,
             destinationNetwork,
             destinationAddress,
@@ -55,7 +55,7 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         option: ITransactionOption
     ) {
         return this.method(
-            "claimAsset",
+            "claim",
             smtProof,
             index,
             mainnetExitRoot,
@@ -93,14 +93,6 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
             "precalculatedWrapperAddress", originNetwork, originTokenAddress
         ).then(method => {
             return this.processRead<string>(method);
-        });
-    }
-
-    isExitProcessed(exitHash: string) {
-        return this.method(
-            "processedExits", exitHash
-        ).then(method => {
-            return this.processRead<boolean>(method);
         });
     }
 
