@@ -1,9 +1,8 @@
-const { pos } = require('../../config');
-const { getPOSClient, from } = require('../../utils_pos');
+const { getHermezClient, hermez, from } = require('../../utils_hermez');
 
 const execute = async () => {
-  const client = await getPOSClient();
-  const erc20Token = client.erc20(pos.child.erc20);
+  const client = await getHermezClient();
+  const erc20Token = client.erc20(hermez.child.erc20);
 
   const result = await erc20Token.getBalance(from);
 

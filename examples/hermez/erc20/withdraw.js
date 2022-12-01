@@ -1,11 +1,10 @@
-const { pos } = require('../../config');
-const { getPOSClient, from } = require('../../utils_pos');
+const { getHermezClient, hermez, from } = require('../../utils_hermez');
 
 const execute = async () => {
-  const client = await getPOSClient();
-  const erc20Token = client.erc20(pos.parent.erc20, true);
+  const client = await getHermezClient();
+  const erc20Token = client.erc20(hermez.child.erc20);
 
-  const result = await erc20Token.approveMax();
+  const result = await erc20Token.withdraw(10, from);
 
   const txHash = await result.getTransactionHash();
   console.log("txHash", txHash);

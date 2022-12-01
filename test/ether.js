@@ -1,19 +1,20 @@
-const { use, EthersPlugin, PlasmaClient, POSClient, ProofUtil } = require("@maticnetwork/maticjs");
+const { POSClient, HermezClient, use, Converter } = require("@maticnetwork/maticjs");
+const { Web3ClientPlugin } = require("@maticnetwork/maticjs-ethers");
 
-const { user1, plasma, rpc, pos } = require("./config");
+
 const { providers, Wallet } = require("ethers");
-
-use(EthersPlugin);
-
+const { user1, rpc, pos, hermez, user2 } = require("./config");
+use(Web3ClientPlugin);
 const from = user1.address;
+const to = user2.address;
 
 const execute = async () => {
     const privateKey = user1.privateKey;
     const mumbaiERC720 = pos.child.erc20;
     const goerliERC720 = pos.parent.erc20;
 
-    const parentPrivder = new providers.JsonRpcProvider(rpc.parent);
-    const childProvider = new providers.JsonRpcProvider(rpc.child);
+    const parentPrivder = new providers.JsonRpcProvider(rpc.pos.parent);
+    const childProvider = new providers.JsonRpcProvider(rpc.pos.child);
 
 
     const posClient = new POSClient({
@@ -57,7 +58,131 @@ const execute = async () => {
     // console.log("txReceipt", await tx.getReceipt());
 }
 
-execute().then(_ => {
+const executeHermez = async () => {
+    const privateKey = user1.privateKey;
+    const litchiERC20 = hermez.child.erc20;
+    const goerliERC20 = hermez.parent.erc20;
+
+    const litchiEther = hermez.child.ether;
+    const goerliEther = hermez.parent.ether;
+
+    const parentPrivder = new providers.JsonRpcProvider(rpc.hermez.parent);
+    const childProvider = new providers.JsonRpcProvider(rpc.hermez.child);
+
+    const client = new HermezClient();
+
+    await client.init({
+        log: true,
+        network: 'testnet',
+        version: 'litchi',
+        parent: {
+            provider: new Wallet(privateKey, parentPrivder),
+            defaultConfig: {
+                from
+            }
+        },
+        child: {
+            provider: new Wallet(privateKey, childProvider),
+            defaultConfig: {
+                from
+            }
+        }
+    });
+    console.log("init called");
+
+    const litchiERC20Token = client.erc20(litchiERC20);
+    const goerliERC20Token = client.erc20(goerliERC20, true);
+
+    const litchiEtherToken = client.erc20(litchiEther);
+    const goerliEtherToken = client.erc20(goerliEther, true);
+
+    // setProofApi("https://bridge-api.public.zkevm-test.net/");
+
+    // // isDepositClaimable
+    // var result = await client.isDepositClaimable('0x6c8d9bb18c6d01f75a4900f0e46ed4179c04f96bfce1e8286313ab659c59cade');
+    // return console.log('result', result);
+
+    // // isDeposited
+    // var result = await client.isDeposited('0x6c8d9bb18c6d01f75a4900f0e46ed4179c04f96bfce1e8286313ab659c59cade');
+    // return console.log('result', result);
+
+    // // isWithdrawExitable
+    // var result = await client.isWithdrawExitable('0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60');
+    // return console.log('result', result);
+
+    // // isExited
+    // var result = await client.isExited('0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60');
+    // return console.log('result', result);
+
+    // // getTokenWrappedAddress
+    // var result = await client.childChainBridge.getTokenWrappedAddress("0", goerliERC20);
+    // return console.log('result', result);
+
+    // // wrappedTokenToTokenInfo
+    // var result = await client.childChainBridge.wrappedTokenToTokenInfo(litchiERC20);
+    // return console.log('result', result);
+
+    // // getBalance on goerli
+    // var result = await goerliERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+    // return console.log('result', result);
+
+    // // getEtherBalance on goerli
+    // var result = await goerliEtherToken.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+    // return console.log('result', result);
+
+    // // getBalance on litchi
+    // var result = await litchiERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+    // return console.log('result', result);
+
+    // // getAllowance
+    // var result = await goerliERC20Token.getAllowance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+    // return console.log('result', result);
+
+    // // approve
+    // var tx = await goerliERC20Token.approve("10", {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // deposit Ether
+    // var tx = await goerliEtherToken.deposit("220000000000", from, {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // claim Ether
+    // var tx = await litchiEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // deposit ERC20
+    // var tx = await goerliERC20Token.deposit("10", from, {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // deposit claim ERC20
+    // var tx = await litchiERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // Get Permit Data
+    // var tx = await goerliERC20Token.getPermitData('2000000000000000000', {returnTransaction: false});
+    // return console.log("hash", tx);
+
+    // // deposit with Permit
+    // var tx = await goerliERC20Token.depositWithPermit("10", from, {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // withdraw Ether
+    // var tx = await litchiEtherToken.withdraw("1", from, {returnTransaction: true});
+    // return console.log("hash",  tx);
+
+    // // withdraw ERC20
+    // var tx = await litchiERC20Token.withdraw("1", from, {returnTransaction: true});
+    // return console.log("hash", tx);
+
+    // // withdraw exit ERC20
+    // var tx = await goerliERC20Token.withdrawExit("0x2df7caedb9a28b3110a43d5380c19d8f7d3a177aad4c8c11a07cbc46ce377654", {returnTransaction: true});
+    // return console.log("hash",  tx);
+
+    // console.log("hash", await tx.getTransactionHash());
+    // console.log("receipt", await tx.getReceipt());
+}
+
+executeHermez().then(_ => {
     process.exit(0)
 }).catch(err => {
     console.error(err);

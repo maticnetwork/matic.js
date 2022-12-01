@@ -1,12 +1,11 @@
-const { pos } = require('../../config');
-const { getPOSClient, from } = require('../../utils_pos');
+const { getHermezClient, hermez, from } = require('../../utils_hermez');
 
 const execute = async () => {
-  const client = await getPOSClient();
-  const erc20Token = client.erc20(pos.parent.erc20, true);
+  const client = await getHermezClient();
+  const erc20Token = client.erc20(hermez.parent.erc20, true);
 
   const result = await erc20Token.deposit(10, from, {
-    from, 
+    from,
     gasLimit: 300000,
     gasPrice: 50000000000,
     // maxPriorityFeePerGas: 6000000000, 

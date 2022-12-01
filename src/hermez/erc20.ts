@@ -384,7 +384,6 @@ export class ERC20 extends HermezToken {
      * @memberof ERC20
      */
     private getTypedData_(permitType: string, account: string, chainId: number, name: string, nonce: string, spenderAddress: string, amount: string) {
-        console.log("chainId", chainId, name, this.contractAddress);
         const typedData = {
             types: {
                 EIP712Domain: [
