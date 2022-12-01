@@ -12,7 +12,7 @@ describe('ERC20', () => {
     let etherChild = hermezClient.erc20(ether.child);
     let etherParent = hermezClient.erc20(ether.parent, true);
 
-    const abiManager = new ABIManager("testnet", "mumbai");
+    const abiManager = new ABIManager("testnet", "litchi");
     before(() => {
         return Promise.all([
             abiManager.init()
@@ -185,7 +185,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("Main.zkEVMContracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(Number(result['value'])).eq(10);
         expect(result).to.have.property('data');
@@ -196,7 +196,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("Main.zkEVMContracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -206,7 +206,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("Main.zkEVMContracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -216,7 +216,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -227,7 +227,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -237,7 +237,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(Number(result['value'])).eq(1);
         expect(result).to.have.property('data');
@@ -251,7 +251,7 @@ describe('ERC20', () => {
         expect(result['data']).equal(
             exitData
         );
-        const bridge = await abiManager.getConfig("Main.zkEVMContracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });

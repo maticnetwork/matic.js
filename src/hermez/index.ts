@@ -14,12 +14,12 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
         const client = this.client;
 
         return client.init(config).then(_ => {
-            const mainHermezContracts = client.mainHermezContracts;
+            const mainHermezContracts = client.mainContracts;
             const hermezContracts = client.hermezContracts;
             client.config = config = Object.assign(
                 {
                     parentBridge: mainHermezContracts.BridgeProxy,
-                    childBridge: hermezContracts.BridgeProxy,
+                    childBridge: hermezContracts.Bridge,
                 } as IHermezClientConfig,
                 config
             );

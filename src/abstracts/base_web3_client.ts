@@ -25,7 +25,8 @@ export abstract class BaseWeb3Client {
     abstract getBlock(blockHashOrBlockNumber): Promise<IBlock>;
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
     abstract hexToNumber(value: any): number;
-
+    abstract hexToNumberString(value: any): string;
+    abstract getBalance(address: string): string;
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
@@ -46,17 +47,6 @@ export abstract class BaseWeb3Client {
             id: 1
         }).then(payload => {
             return String(payload.result);
-        });
-    }
-
-    getBalance?(address: string) {
-        return this.sendRPCRequest({
-            jsonrpc: '2.0',
-            method: 'eth_getBalance',
-            params: [address, "latest"],
-            id: new Date().getTime()
-        }).then(payload => {
-            return this.hexToNumber(payload.result);
         });
     }
 

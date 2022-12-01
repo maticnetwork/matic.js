@@ -157,7 +157,7 @@ const executeHermez = async () => {
   await client.init({
     log: true,
     network: 'testnet',
-    version: 'mumbai',
+    version: 'litchi',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.hermez.parent),
       defaultConfig: {
@@ -198,11 +198,11 @@ const executeHermez = async () => {
   // return console.log('result', result);
 
   // // getTokenWrappedAddress
-  // var result = await client.childChainBridge.getTokenWrappedAddress("0", '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733');
+  // var result = await client.childChainBridge.getTokenWrappedAddress("0", goerliERC20);
   // return console.log('result', result);
 
   // // wrappedTokenToTokenInfo
-  // var result = await client.childChainBridge.wrappedTokenToTokenInfo("0x270969e59d170fB576cBB5E254493e9bfB13684f");
+  // var result = await client.childChainBridge.wrappedTokenToTokenInfo(litchiERC20);
   // return console.log('result', result);
 
   // // getBalance on goerli
@@ -222,31 +222,23 @@ const executeHermez = async () => {
   // return console.log('result', result);
 
   // // approve
-  // var tx = await goerliERC20Token.approve("10", {returnTransaction: false});
-  // return console.log("hash", await tx.getTransactionHash());
+  // var tx = await goerliERC20Token.approve("10", {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // deposit Ether
   // var tx = await goerliEtherToken.deposit("220000000000", from, {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // claim Ether
-  // var tx = await litchiEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: false});
-  // return console.log("hash", await tx.getTransactionHash());
+  // var tx = await litchiEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
+  // return console.log("hash", tx);
 
   // // deposit ERC20
   // var tx = await goerliERC20Token.deposit("10", from, {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // deposit claim ERC20
-  // var tx = await litchiERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: false});
-  // return console.log("hash", await tx.getTransactionHash());
-
-  // // withdraw Ether
-  // var tx = await litchiEtherToken.withdraw("1", from, {returnTransaction: true});
-  // return console.log("hash",  tx);
-
-  // // withdraw ERC20
-  // var tx = await litchiERC20Token.withdraw("1", from, {returnTransaction: true});
+  // var tx = await litchiERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // Get Permit Data
@@ -257,10 +249,17 @@ const executeHermez = async () => {
   // var tx = await goerliERC20Token.depositWithPermit("10", from, {returnTransaction: true});
   // return console.log("hash", tx);
 
+  // // withdraw Ether
+  // var tx = await litchiEtherToken.withdraw("1", from, {returnTransaction: true});
+  // return console.log("hash",  tx);
+
+  // // withdraw ERC20
+  // var tx = await litchiERC20Token.withdraw("1", from, {returnTransaction: true});
+  // return console.log("hash", tx);
+
   // // withdraw exit ERC20
   // var tx = await goerliERC20Token.withdrawExit("0x2df7caedb9a28b3110a43d5380c19d8f7d3a177aad4c8c11a07cbc46ce377654", {returnTransaction: true});
   // return console.log("hash",  tx);
-
 
   // console.log("hash", await tx.getTransactionHash());
   // console.log("receipt", await tx.getReceipt());

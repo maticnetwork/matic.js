@@ -1,6 +1,6 @@
 import { isHexString } from 'ethereumjs-util';
 import { ITransactionOption } from "../interfaces";
-import { Converter, Web3SideChainClient } from "../utils";
+import { Converter, Web3SideChainClient, promiseAny } from "../utils";
 import { HermezToken } from "./hermez_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
@@ -18,8 +18,8 @@ export class ERC20 extends HermezToken {
         super({
             isParent,
             address: tokenAddress,
-            name: 'ChildERC20',
-            bridgeType: 'pos'
+            name: 'ERC20',
+            bridgeType: 'zkevm'
         }, client, getContracts);
     }
 
@@ -347,7 +347,7 @@ export class ERC20 extends HermezToken {
                 case EIP_2612_PERMIT_TYPEHASH: {
                     const DOMAIN_TYPEHASH = contract.method("DOMAIN_TYPEHASH");
                     const EIP712DOMAIN_HASH = contract.method("EIP712DOMAIN_HASH");
-                    return Promise.any([this.processRead<string>(DOMAIN_TYPEHASH), this.processRead<string>(EIP712DOMAIN_HASH)]).then(
+                    return promiseAny([this.processRead<string>(DOMAIN_TYPEHASH), this.processRead<string>(EIP712DOMAIN_HASH)]).then(
                         (domainTypehash) => {
                             switch (domainTypehash) {
                                 case EIP_2612_DOMAIN_TYPEHASH: {

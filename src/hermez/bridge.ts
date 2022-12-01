@@ -10,7 +10,7 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         super({
             address: address,
             name: 'Bridge',
-            bridgeType: 'hermez',
+            bridgeType: 'zkevm',
             isParent: isParent
         }, client_);
     }

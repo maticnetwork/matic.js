@@ -44,7 +44,7 @@ export class BridgeUtil {
 
     private decodedBridgeData_(data: string, isParent: boolean) {
         const client = isParent ? this.client_.parent : this.client_.child;
-        return this.client_.getABI("Bridge", "hermez").then(abi => {
+        return this.client_.getABI("Bridge", "zkevm").then(abi => {
             const types = abi.filter(event => event.name === "BridgeEvent");
             if (!types.length) {
                 throw new Error("Data not decoded");

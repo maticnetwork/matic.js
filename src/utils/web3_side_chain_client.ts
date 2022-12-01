@@ -63,7 +63,7 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.abiManager.getConfig(path);
     }
 
-    get mainPlasmaContracts() {
+    get mainContracts() {
         return this.getConfig("Main.Contracts");
     }
 
