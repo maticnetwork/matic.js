@@ -3,6 +3,7 @@ import { ITransactionRequestConfig, ITransactionReceipt, ITransactionData, IBloc
 import { Logger } from "../utils";
 
 export abstract class BaseWeb3Client {
+    abstract name: string;
 
     constructor(public logger: Logger) {
 
@@ -38,6 +39,17 @@ export abstract class BaseWeb3Client {
             id: new Date().getTime()
         }).then(payload => {
             return String(payload.result);
+        });
+    }
+
+    getAccounts_() {
+        return this.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_accounts',
+            params: [],
+            id: new Date().getTime()
+        }).then(payload => {
+            return payload.result;
         });
     }
 

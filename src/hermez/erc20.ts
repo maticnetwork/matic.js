@@ -550,7 +550,7 @@ export class ERC20 extends HermezToken {
         let contract: BaseContract;
         let nonce: string;
 
-        return Promise.all([client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
+        return Promise.all([client.name === 'WEB3' ? client.getAccounts_() : client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
             account = result[0][0];
             contract = result[1];
             chainId = result[2];
