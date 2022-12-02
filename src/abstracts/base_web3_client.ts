@@ -27,6 +27,8 @@ export abstract class BaseWeb3Client {
     abstract hexToNumber(value: any): number;
     abstract hexToNumberString(value: any): string;
     abstract getBalance(address: string): string;
+    abstract getAccounts(): string[];
+    abstract signTypedData(signer: string, typedData: object): string;
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
@@ -36,28 +38,6 @@ export abstract class BaseWeb3Client {
             id: new Date().getTime()
         }).then(payload => {
             return String(payload.result);
-        });
-    }
-
-    signTypedData?(signer: string, typedData: object) {
-        return this.sendRPCRequest({
-            jsonrpc: '2.0',
-            method: 'eth_signTypedData_v4',
-            params: [signer, typedData],
-            id: 1
-        }).then(payload => {
-            return String(payload.result);
-        });
-    }
-
-    getAccounts?() {
-        return this.sendRPCRequest({
-            jsonrpc: '2.0',
-            method: 'eth_accounts',
-            params: [],
-            id: new Date().getTime()
-        }).then(payload => {
-            return payload.result;
         });
     }
 
