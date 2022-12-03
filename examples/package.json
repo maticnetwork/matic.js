@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@maticnetwork/maticjs": "^3.4.0",
-    "@maticnetwork/maticjs-web3": "^0.8.0",
+    "@maticnetwork/maticjs-web3": "^1.0.4",
     "@truffle/hdwallet-provider": "^1.5.1-alpha.1",
     "dotenv": "^10.0.0"
   }

@@ -180,7 +180,7 @@ describe('ERC20', () => {
 
     // APPROVE
     it('approve parent return tx', async () => {
-        const result = await erc20Parent.approve('10', {
+        const result = await erc20Parent.approve('10000', {
             returnTransaction: true
         });
 

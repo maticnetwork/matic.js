@@ -56,14 +56,14 @@ describe('ERC721', () => {
     it('transfer return tx', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         const targetToken = allTokensFrom[0];
+        if (targetToken) {
+            const result = await erc721Child.transfer(targetToken, from, to, {
+                returnTransaction: true
+            });
+            // console.log(result);
+            expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        }
 
-
-
-        const result = await erc721Child.transfer(targetToken, from, to, {
-            returnTransaction: true
-        });
-        // console.log(result);
-        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
     })
 
     it('approve return tx', async () => {
@@ -83,36 +83,45 @@ describe('ERC721', () => {
 
     it('deposit return tx', async () => {
         const allTokens = await erc721Parent.getAllTokens(from);
-        const tx = await erc721Parent.deposit(allTokens[0], from, {
-            returnTransaction: true
-        });
-        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
-        expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+        if (allTokens && allTokens[0]) {
+            const tx = await erc721Parent.deposit(allTokens[0], from, {
+                returnTransaction: true
+            });
+            const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+            expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+        }
     })
 
     it('depositMany return tx', async () => {
         const allTokens = await erc721Parent.getAllTokens(from);
-        const tx = await erc721Parent.depositMany(allTokens, from, {
-            returnTransaction: true
-        });
-        const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
-        expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+        if (allTokens && allTokens.length) {
+            const tx = await erc721Parent.depositMany(allTokens, from, {
+                returnTransaction: true
+            });
+            const rootChainManager = await abiManager.getConfig("Main.POSContracts.RootChainManagerProxy")
+            expect(tx['to'].toLowerCase()).equal(rootChainManager.toLowerCase());
+        }
+
     })
 
     it('withdrawStart return tx', async () => {
         const allTokens = await erc721Child.getAllTokens(from);
-        const result = await erc721Child.withdrawStart(allTokens[0], {
-            returnTransaction: true
-        });
-        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        if (allTokens && allTokens.length) {
+            const result = await erc721Child.withdrawStart(allTokens[0], {
+                returnTransaction: true
+            });
+            expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        }
     })
 
     it('withdrawStartWithMetaData return tx', async () => {
         const allTokens = await erc721Child.getAllTokens(from);
-        const result = await erc721Child.withdrawStartWithMetaData(allTokens[0], {
-            returnTransaction: true
-        });
-        expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        if (allTokens && allTokens.length) {
+            const result = await erc721Child.withdrawStartWithMetaData(allTokens[0], {
+                returnTransaction: true
+            });
+            expect(result['to'].toLowerCase()).equal(erc721.child.toLowerCase());
+        }
     })
 
     it('transfer write', async () => {
@@ -122,43 +131,45 @@ describe('ERC721', () => {
         // console.log('allTokensTo', allTokensTo);
 
         const targetToken = allTokensFrom[0];
-        let result = await erc721Child.transfer(targetToken, from, to);
+        if (targetToken) {
+            let result = await erc721Child.transfer(targetToken, from, to);
 
-        let txHash = await result.getTransactionHash();
-        expect(txHash).to.be.an('string');
-        // console.log('txHash', txHash);
-        let txReceipt = await result.getReceipt();
-        // console.log("txReceipt", txReceipt);
+            let txHash = await result.getTransactionHash();
+            expect(txHash).to.be.an('string');
+            // console.log('txHash', txHash);
+            let txReceipt = await result.getReceipt();
+            // console.log("txReceipt", txReceipt);
 
-        expect(txReceipt.transactionHash).equal(txHash);
-        expect(txReceipt).to.be.an('object');
-        expect(txReceipt.from).equal(from);
-        expect(txReceipt.to.toLowerCase()).equal(erc721.child.toLowerCase());
-        expect(txReceipt.type).equal(2);
-        expect(txReceipt.gasUsed).to.be.an('number').gt(0);
-        expect(txReceipt.cumulativeGasUsed).to.be.an('number').gt(0);
-
-
-        const newAllTokensFrom = await erc721Child.getAllTokens(from);
-        // console.log('newAllTokensFrom', newAllTokensFrom);
-        expect(newAllTokensFrom.length).equal(allTokensFrom.length - 1);
-        const newAllTokensTo = await erc721Child.getAllTokens(to);
-        // console.log('newAllTokensTo', newAllTokensTo);
-        expect(newAllTokensTo.length).equal(allTokensTo.length + 1);
-
-        const erc721ChildToken = posClientForTo.erc721(erc721.child);
+            expect(txReceipt.transactionHash).equal(txHash);
+            expect(txReceipt).to.be.an('object');
+            expect(txReceipt.from).equal(from);
+            expect(txReceipt.to.toLowerCase()).equal(erc721.child.toLowerCase());
+            expect(txReceipt.type).equal(2);
+            expect(txReceipt.gasUsed).to.be.an('number').gt(0);
+            expect(txReceipt.cumulativeGasUsed).to.be.an('number').gt(0);
 
 
-        // transfer token back to sender
-        result = await erc721ChildToken.transfer(targetToken, to, from);
-        txHash = await result.getTransactionHash();
-        txReceipt = await result.getReceipt();
+            const newAllTokensFrom = await erc721Child.getAllTokens(from);
+            // console.log('newAllTokensFrom', newAllTokensFrom);
+            expect(newAllTokensFrom.length).equal(allTokensFrom.length - 1);
+            const newAllTokensTo = await erc721Child.getAllTokens(to);
+            // console.log('newAllTokensTo', newAllTokensTo);
+            expect(newAllTokensTo.length).equal(allTokensTo.length + 1);
 
-        const newFromCount = await erc721Child.getTokensCount(from);
-        const newToCount = await erc721Child.getTokensCount(to);
+            const erc721ChildToken = posClientForTo.erc721(erc721.child);
 
-        expect(newFromCount).equal(allTokensFrom.length);
-        expect(newToCount).equal(allTokensTo.length);
+
+            // transfer token back to sender
+            result = await erc721ChildToken.transfer(targetToken, to, from);
+            txHash = await result.getTransactionHash();
+            txReceipt = await result.getReceipt();
+
+            const newFromCount = await erc721Child.getTokensCount(from);
+            const newToCount = await erc721Child.getTokensCount(to);
+
+            expect(newFromCount).equal(allTokensFrom.length);
+            expect(newToCount).equal(allTokensTo.length);
+        }
 
     })
 
@@ -166,9 +177,12 @@ describe('ERC721', () => {
 
     it('approve', async () => {
         const allTokens = await erc721Parent.getAllTokens(from);
-        const result = await erc721Parent.approve(allTokens[0], {
-            returnTransaction: true
-        });
-        expect(result['to'].toLowerCase()).equal(erc721.parent.toLowerCase());
+        if (allTokens && allTokens[0]) {
+            const result = await erc721Parent.approve(allTokens[0], {
+                returnTransaction: true
+            });
+            expect(result['to'].toLowerCase()).equal(erc721.parent.toLowerCase());
+        }
+
     })
 });
