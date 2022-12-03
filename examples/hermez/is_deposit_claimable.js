@@ -3,9 +3,9 @@ const { getHermezClient, from, hermez } = require('../utils_hermez');
 const execute = async () => {
     const client = await getHermezClient();
 
-    const isDeposited = await client.isDepositClaimable('0x48fe1e4f8c915d01ef13ccd7ac1e7cb6db1db15ea1d1df2e6fd8e957fe980dab');
+    const isDepositClaimable = await client.isDepositClaimable('0x4cd97048e77215b93bbfeb1e5ee7eadef74cccba13de7cd286e55f17726385c2');
 
-    console.log("isDeposited", isDeposited);
+    console.log("isDepositClaimable", isDepositClaimable);
 }
 execute().then(() => {
 }).catch(err => {

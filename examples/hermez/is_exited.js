@@ -3,9 +3,9 @@ const { getHermezClient, from, hermez } = require('../utils_hermez');
 const execute = async () => {
     const client = await getHermezClient();
 
-    const isDeposited = await client.isExited('0x48fe1e4f8c915d01ef13ccd7ac1e7cb6db1db15ea1d1df2e6fd8e957fe980dab');
+    const isExited = await client.isExited('0x3ce9d872a615ee7c1e78a528d9c3a75bbd4969ce5c4329e665736331fd307f15');
 
-    console.log("isDeposited", isDeposited);
+    console.log("isExited", isExited);
 }
 execute().then(() => {
 }).catch(err => {

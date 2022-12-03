@@ -10,11 +10,11 @@ if (env.error) {
 
 module.exports = {
   rpc: {
-    hermez: {
+    pos: {
       parent: process.env.GOERLI_ROOT_RPC,
       child: process.env.MATIC_RPC || 'https://rpc-mumbai.matic.today',
     },
-    pos: {
+    hermez: {
       parent: process.env.GOERLI_ROOT_RPC,
       child: process.env.HERMEZ_RPC || 'https://rpc.public.zkevm-test.net',
     },

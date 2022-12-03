@@ -5,10 +5,7 @@ const execute = async () => {
   const erc20Token = client.erc20(hermez.parent.erc20, true);
 
   const result = await erc20Token.deposit(10, from, {
-    from,
-    gasLimit: 300000,
-    gasPrice: 50000000000,
-    // maxPriorityFeePerGas: 6000000000, 
+    from
   });
 
   const txHash = await result.getTransactionHash();
