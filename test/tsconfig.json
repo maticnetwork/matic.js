@@ -3,7 +3,7 @@
   "compilerOptions": {
     "lib": ["es2021", "dom"],
     "target": "es5",
-    "rootDir": "test",
+    "rootDir": "",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",

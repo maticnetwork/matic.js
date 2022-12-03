@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
-const path = require('path');
-dotenv.config({
-    path: path.join(__dirname, '.env')
-});
+// const dotenv = require('dotenv').config();
+// const path = require('path');
+// dotenv.config({
+//     path: path.join(__dirname, '.env')
+// });
 module.exports = {
     rpc: {
         pos: {

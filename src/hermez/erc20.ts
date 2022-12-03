@@ -128,7 +128,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    deposit(amount: TYPE_AMOUNT, userAddress: string, option?: IBridgeTransactionOption) {
+    deposit(amount: TYPE_AMOUNT, userAddress: string, option: IBridgeTransactionOption = {}) {
         this.checkForRoot("deposit");
         const permitData = option.permitData || '0x';
 
@@ -162,7 +162,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    depositWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IApproveTransactionOption) {
+    depositWithPermit(amount: TYPE_AMOUNT, userAddress: string, option: IApproveTransactionOption = {}) {
         this.checkForRoot("deposit");
         this.checkForNonNative("depositWithPermit");
 
@@ -225,7 +225,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    withdraw(amount: TYPE_AMOUNT, userAddress: string, option?: IBridgeTransactionOption) {
+    withdraw(amount: TYPE_AMOUNT, userAddress: string, option: IBridgeTransactionOption = {}) {
         this.checkForChild("withdraw");
         const permitData = option.permitData || '0x';
 
@@ -259,7 +259,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    withdrawWithPermit(amount: TYPE_AMOUNT, userAddress: string, option?: IApproveTransactionOption) {
+    withdrawWithPermit(amount: TYPE_AMOUNT, userAddress: string, option: IApproveTransactionOption = {}) {
         this.checkForChild("withdraw");
 
         const amountInABI = this.client.parent.encodeParameters(
