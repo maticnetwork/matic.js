@@ -179,6 +179,12 @@ describe('ERC20', () => {
     });
 
     // APPROVE
+    it('approval needed', async () => {
+        const isApprovalNeeded = await erc20Parent.isApprovalNeeded();
+        console.log('isApprovalNeeded', isApprovalNeeded);
+        expect(isApprovalNeeded).to.be.an('boolean').equal(true);
+    });
+
     it('approve parent return tx', async () => {
         const result = await erc20Parent.approve('10000', {
             returnTransaction: true

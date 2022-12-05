@@ -33,7 +33,7 @@ export class ERC20 extends HermezToken {
         const bridge = this.contractParam.isParent ? this.parentBridge : this.childBridge;
         return bridge.contractAddress;
     }
-    
+
     /**
      * get token balance of user
      *
@@ -43,7 +43,7 @@ export class ERC20 extends HermezToken {
      * @memberof ERC20
      */
     getBalance(userAddress: string, option?: ITransactionOption) {
-        if (this.contractAddress === ADDRESS_ZERO) {
+        if (this.contractParam.address === ADDRESS_ZERO) {
             const client = this.contractParam.isParent ? this.client.parent : this.client.child;
             return client.getBalance(userAddress);
         } else {
@@ -59,6 +59,25 @@ export class ERC20 extends HermezToken {
     }
 
     /**
+     * is Approval needed to bridge tokens to other chains
+     *
+     * @returns
+     * @memberof ERC20
+     */
+    isApprovalNeeded() {
+        if (this.contractParam.address === ADDRESS_ZERO) {
+            return false;
+        }
+
+        const bridge = this.contractParam.isParent ? this.parentBridge : this.childBridge;
+
+        return bridge.wrappedTokenToTokenInfo(this.contractParam.address)
+            .then(tokenInfo => {
+                return tokenInfo[1] === ADDRESS_ZERO;
+            });
+    }
+
+    /**
      * get allowance of user
      *
      * @param {string} userAddress
@@ -68,8 +87,7 @@ export class ERC20 extends HermezToken {
      */
     getAllowance(userAddress: string, option: IAllowanceTransactionOption = {}) {
         this.checkForNonNative("getAllowance");
-        const spenderAddress = option.spenderAddress ? option.spenderAddress : (
-            this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
+        const spenderAddress = option.spenderAddress ? option.spenderAddress : this.getBridgeAddress();
 
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -91,8 +109,7 @@ export class ERC20 extends HermezToken {
      */
     approve(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
         this.checkForNonNative("approve");
-        const spenderAddress = option.spenderAddress ? option.spenderAddress : (
-            this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
+        const spenderAddress = option.spenderAddress ? option.spenderAddress : this.getBridgeAddress();
 
         return this.getContract().then(contract => {
             const method = contract.method(
@@ -399,7 +416,7 @@ export class ERC20 extends HermezToken {
                 name,
                 version: "1",
                 chainId,
-                verifyingContract: this.contractAddress,
+                verifyingContract: this.contractParam.address,
             },
             message: {}
         };
@@ -583,8 +600,7 @@ export class ERC20 extends HermezToken {
     getPermitData(amount: TYPE_AMOUNT, option: IApproveTransactionOption = {}) {
         this.checkForNonNative("getPermitData");
 
-        const spenderAddress = option.spenderAddress ? option.spenderAddress : (
-            this.contractParam.isParent ? this.parentBridge.contractAddress : this.childBridge.contractAddress);
+        const spenderAddress = option.spenderAddress ? option.spenderAddress : this.getBridgeAddress();
 
         return this.getPermitData_(amount, spenderAddress);
     }
