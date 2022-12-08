@@ -9,12 +9,12 @@ export const setProofApi = (url: string) => {
     service.network = new NetworkService(url);
 };
 
-export const setHermezProofApi = (url: string, override = true) => {
+export const setHermezProofApi = (url: string) => {
     const urlLength = url.length;
     if (url[urlLength - 1] !== '/') {
         url += '/';
     }
-    if (!service.network || override) {
+    if (!service.network) {
         service.network = new NetworkService(url);
     }
 };

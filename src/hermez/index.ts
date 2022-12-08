@@ -4,6 +4,7 @@ import { BridgeUtil } from "./bridge_util";
 import { HermezBridgeClient, setHermezProofApi } from "../utils";
 import { IHermezClientConfig, IHermezContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
+import { service, NetworkService } from "../services";
 
 export * from "./hermez_bridge";
 export * from "./bridge_util";
@@ -40,7 +41,12 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
                 this.client
             );
 
-            setHermezProofApi(urlConfig.hermezBridgeService, false);
+            if (!service.network) {
+                if (urlConfig.hermezBridgeService[urlConfig.hermezBridgeService.length - 1] !== '/') {
+                    urlConfig.hermezBridgeService += '/';
+                }
+                service.network = new NetworkService(urlConfig.hermezBridgeService);
+            }
 
             return this;
         });
