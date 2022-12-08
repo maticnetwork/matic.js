@@ -2,7 +2,7 @@ import { BaseToken, Web3SideChainClient, Converter, promiseResolve } from "../ut
 import { IHermezClientConfig, ITransactionOption } from "../interfaces";
 import { TYPE_AMOUNT } from "../types";
 
-export class Bridge extends BaseToken<IHermezClientConfig> {
+export class HermezBridge extends BaseToken<IHermezClientConfig> {
 
     networkID_: number;
 
@@ -21,6 +21,19 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
+    /**
+     * bridge function to be called on that network from where token is to be transferred to a different network
+     *
+     * @param {string} token Token address
+     * @param {number} destinationNetwork Network at which tokens will be bridged
+     * @param {string} destinationAddress Address to which tokens will be bridged
+     * @param {TYPE_AMOUNT} amountamount amount of tokens
+     * @param {string} [permitData] Permit data to avoid approve call
+     * @param {ITransactionOption} [option] 
+     * 
+     * @returns
+     * @memberof HermezBridge
+     */
     bridgeAsset(
         token: string,
         destinationNetwork: number,
@@ -41,6 +54,23 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
+    /**
+     * Claim function to be called on the destination network
+     *
+     * @param {string[]} smtProof Merkle Proof
+     * @param {number} index Deposit Index
+     * @param {string} mainnetExitRoot Mainnet Exit Root
+     * @param {string} rollupExitRoot RollUP Exit Root
+     * @param {number} originNetwork Network at which token was initially deployed
+     * @param {string} originTokenAddress Address of token at network where token was initially deployed
+     * @param {string} destinationAddress Address to which tokens will be bridged
+     * @param {TYPE_AMOUNT} amount amount of tokens
+     * @param {string} [metadata] Metadata of token
+     * @param {ITransactionOption} [option]
+     * 
+     * @returns
+     * @memberof HermezBridge
+     */
     claimAsset(
         smtProof: string[],
         index: number,
@@ -74,7 +104,15 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
-    getTokenWrappedAddress(
+    /**
+     * get the address of token which is created by the bridge contract on the non origin chain
+     *
+     * @param {number} originNetwork Network at which the token was initially deployed
+     * @param {string} originTokenAddress Address at the network where token was initially deployed
+     * @returns
+     * @memberof HermezBridge
+     */
+    getMappedTokenInfo(
         originNetwork: number,
         originTokenAddress: string
     ) {
@@ -85,6 +123,13 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
+    /**
+     * Tells if claim has already happed or not based on the deposit index
+     *
+     * @param {number} index
+     * @returns
+     * @memberof HermezBridge
+     */
     claimNullifier(
         index: number,
     ) {
@@ -95,7 +140,15 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
-    precalculatedWrapperAddress(
+    /**
+     * Even if the wrapped contract is not deployed on the destination chain, it will tell us the address which is going to be.
+     *
+     * @param {number} originNetwork Network at which the token was initially deployed
+     * @param {string} originTokenAddress Address at the network where token was initially deployed
+     * @returns
+     * @memberof HermezBridge
+     */
+    precalculatedMappedTokenInfo(
         originNetwork: number,
         originTokenAddress: string
     ) {
@@ -106,7 +159,14 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
-    wrappedTokenToTokenInfo(wrappedToken: string) {
+    /**
+     * get the address and network of the wrapped token where it was emerged initially
+     *
+     * @param {number} wrappedToken
+     * @returns
+     * @memberof HermezBridge
+     */
+    getOriginTokenInfo(wrappedToken: string) {
         return this.method(
             "wrappedTokenToTokenInfo", wrappedToken
         ).then(method => {
@@ -114,6 +174,12 @@ export class Bridge extends BaseToken<IHermezClientConfig> {
         });
     }
 
+    /**
+     * get the network ID for chain in which the bridge contract is deployed
+     *
+     * @returns
+     * @memberof HermezBridge
+     */
     networkID() {
         if (this.networkID_) {
             return promiseResolve<number>(this.networkID_ as any);

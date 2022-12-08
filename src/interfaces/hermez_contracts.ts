@@ -1,7 +1,7 @@
-import { Bridge, BridgeUtil } from "../hermez";
+import { HermezBridge, BridgeUtil } from "../hermez";
 
 export interface IHermezContracts {
-    parentBridge: Bridge;
-    childBridge: Bridge;
+    parentBridge: HermezBridge;
+    childBridge: HermezBridge;
     bridgeUtil: BridgeUtil;
 }

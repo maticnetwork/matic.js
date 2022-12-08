@@ -42,7 +42,7 @@ export abstract class BaseWeb3Client {
         });
     }
 
-    getAccounts_() {
+    getAccountsUsingRPC_() {
         return this.sendRPCRequest({
             jsonrpc: '2.0',
             method: 'eth_accounts',

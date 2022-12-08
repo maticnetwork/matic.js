@@ -1,11 +1,11 @@
 import { ERC20 } from "./erc20";
-import { Bridge } from "./bridge";
+import { HermezBridge } from "./hermez_bridge";
 import { BridgeUtil } from "./bridge_util";
 import { HermezBridgeClient, setHermezProofApi } from "../utils";
 import { IHermezClientConfig, IHermezContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
 
-export * from "./bridge";
+export * from "./hermez_bridge";
 export * from "./bridge_util";
 
 export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
@@ -24,13 +24,13 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
                 config
             );
 
-            this.rootChainBridge = new Bridge(
+            this.rootChainBridge = new HermezBridge(
                 this.client,
                 config.parentBridge,
                 true
             );
 
-            this.childChainBridge = new Bridge(
+            this.childChainBridge = new HermezBridge(
                 this.client,
                 config.childBridge,
                 false

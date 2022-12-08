@@ -34,6 +34,10 @@ export class ERC20 extends HermezToken {
         return bridge.contractAddress;
     }
 
+    isEtherToken() {
+        return this.contractParam.address === ADDRESS_ZERO;
+    }
+
     /**
      * get token balance of user
      *
@@ -43,7 +47,7 @@ export class ERC20 extends HermezToken {
      * @memberof ERC20
      */
     getBalance(userAddress: string, option?: ITransactionOption) {
-        if (this.contractParam.address === ADDRESS_ZERO) {
+        if (this.isEtherToken()) {
             const client = this.contractParam.isParent ? this.client.parent : this.client.child;
             return client.getBalance(userAddress);
         } else {
@@ -65,13 +69,13 @@ export class ERC20 extends HermezToken {
      * @memberof ERC20
      */
     isApprovalNeeded() {
-        if (this.contractParam.address === ADDRESS_ZERO) {
+        if (this.isEtherToken()) {
             return false;
         }
 
         const bridge = this.contractParam.isParent ? this.parentBridge : this.childBridge;
 
-        return bridge.wrappedTokenToTokenInfo(this.contractParam.address)
+        return bridge.getOriginTokenInfo(this.contractParam.address)
             .then(tokenInfo => {
                 return tokenInfo[1] === ADDRESS_ZERO;
             });
@@ -154,7 +158,7 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
-        if (this.contractParam.address === ADDRESS_ZERO) {
+        if (this.isEtherToken()) {
             option.value = Converter.toHex(amount);
         }
 
@@ -251,7 +255,7 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
-        if (this.contractParam.address === ADDRESS_ZERO) {
+        if (this.isEtherToken()) {
             option.value = Converter.toHex(amount);
         }
 
@@ -567,7 +571,7 @@ export class ERC20 extends HermezToken {
         let contract: BaseContract;
         let nonce: string;
 
-        return Promise.all([client.name === 'WEB3' ? client.getAccounts_() : client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
+        return Promise.all([client.name === 'WEB3' ? client.getAccountsUsingRPC_() : client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
             account = result[0][0];
             contract = result[1];
             chainId = result[2];

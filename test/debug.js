@@ -197,12 +197,12 @@ const executeHermez = async () => {
   // var result = await client.isExited('0xc3567e692b7f2ad1f3da019c97c6b01483330f5b2cb022ae0d8fdccd4d1c0d60');
   // return console.log('result', result);
 
-  // // getTokenWrappedAddress
-  // var result = await client.childChainBridge.getTokenWrappedAddress("0", goerliERC20);
+  // // getMappedTokenInfo
+  // var result = await client.childChainBridge.getMappedTokenInfo("0", goerliERC20);
   // return console.log('result', result);
 
-  // // wrappedTokenToTokenInfo
-  // var result = await client.childChainBridge.wrappedTokenToTokenInfo(litchiERC20);
+  // // getOriginTokenInfo
+  // var result = await client.childChainBridge.getOriginTokenInfo(litchiERC20);
   // return console.log('result', result);
 
   // // getBalance on goerli

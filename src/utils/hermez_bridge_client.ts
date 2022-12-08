@@ -1,13 +1,13 @@
 import { Web3SideChainClient } from "../utils";
-import { BridgeUtil, Bridge } from "../hermez";
+import { BridgeUtil, HermezBridge } from "../hermez";
 import { service } from "../services";
 
 export class HermezBridgeClient<T> {
 
     client: Web3SideChainClient<T> = new Web3SideChainClient();
     bridgeUtil: BridgeUtil;
-    rootChainBridge: Bridge;
-    childChainBridge: Bridge;
+    rootChainBridge: HermezBridge;
+    childChainBridge: HermezBridge;
 
     /**
      * check whether a txHash is synced with child chain 
