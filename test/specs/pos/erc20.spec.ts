@@ -55,8 +55,8 @@ describe('ERC20', () => {
         expect(isExited).to.be.an('boolean').equal(true);
     })
 
-    it('child transfer returnTransaction with erp1159', async () => {
-        const amount = 10;
+    it('child transfer returnTransaction with eip1159', async () => {
+        const amount = 1;
         try {
             const result = await erc20Child.transfer(amount, to, {
                 maxFeePerGas: 10,
@@ -74,7 +74,7 @@ describe('ERC20', () => {
     });
 
     it('child transfer returnTransaction', async () => {
-        const amount = 10;
+        const amount = 1;
         const result = await erc20Child.transfer(amount, to, {
             returnTransaction: true
         });
@@ -86,8 +86,8 @@ describe('ERC20', () => {
         expect(result['chainId']).to.be.an('number');
     });
 
-    it('parent transfer returnTransaction with erp1159', async () => {
-        const amount = 10;
+    it('parent transfer returnTransaction with eip1159', async () => {
+        const amount = 1;
         const result = await erc20Parent.transfer(amount, to, {
             maxFeePerGas: 20,
             maxPriorityFeePerGas: 20,
@@ -109,7 +109,7 @@ describe('ERC20', () => {
 
     it('withdrawstart return tx', async () => {
 
-        const result = await erc20Child.withdrawStart('10', {
+        const result = await erc20Child.withdrawStart('1', {
             returnTransaction: true
         });
 
@@ -119,7 +119,7 @@ describe('ERC20', () => {
     });
 
     it('approve parent return tx', async () => {
-        const result = await erc20Parent.approve('10', {
+        const result = await erc20Parent.approve('1', {
             returnTransaction: true
         });
 
@@ -130,7 +130,7 @@ describe('ERC20', () => {
 
     it('approve parent return tx with spender address', async () => {
         const spenderAddress = await erc20Parent.getPredicateAddress();
-        const result = await erc20Parent.approve('10', {
+        const result = await erc20Parent.approve('1', {
             spenderAddress: spenderAddress,
             returnTransaction: true
         });
@@ -142,7 +142,7 @@ describe('ERC20', () => {
 
     it('approve child return tx without spender address', async () => {
         try {
-            const result = await erc20Child.approve('10');
+            const result = await erc20Child.approve('1');
             expect(result['to'].toLowerCase()).equal(erc20.child.toLowerCase());
             expect(result).to.have.property('data');
         } catch (error) {
@@ -155,7 +155,7 @@ describe('ERC20', () => {
     });
 
     it('deposit return tx', async () => {
-        const result = await erc20Parent.deposit(10, from, {
+        const result = await erc20Parent.deposit(1, from, {
             returnTransaction: true
         });
 
@@ -227,7 +227,7 @@ describe('ERC20', () => {
     it('child transfer', async () => {
         const oldBalance = await erc20Child.getBalance(to);
         console.log('oldBalance', oldBalance);
-        const amount = 10000000;
+        const amount = 1;
         let result = await erc20Child.transfer(amount, to);
         let txHash = await result.getTransactionHash();
         expect(txHash).to.be.an('string');
@@ -285,7 +285,7 @@ describe('ERC20', () => {
     });
 
     it('deposit', async () => {
-        const result = await erc20Parent.deposit('10', from);
+        const result = await erc20Parent.deposit('1', from);
 
         const txHash = await result.getTransactionHash();
         expect(txHash).to.be.an('string');

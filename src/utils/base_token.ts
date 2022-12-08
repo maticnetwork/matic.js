@@ -1,11 +1,12 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
-import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IPOSClientConfig, IBaseClientConfig, ITransactionWriteResult } from "../interfaces";
-import { BaseContractMethod, BaseContract, BaseWeb3Client } from "../abstracts";
+import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IBaseClientConfig, ITransactionWriteResult } from "../interfaces";
+import { BaseContractMethod, BaseContract } from "../abstracts";
 import { Converter, merge } from "../utils";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { POSERC1155TransferParam, TYPE_AMOUNT } from "../types";
 import { ErrorHelper } from "./error_helper";
+import { ADDRESS_ZERO } from '../constant';
 
 export interface ITransactionConfigParam {
     txConfig: ITransactionRequestConfig;
@@ -17,6 +18,7 @@ export interface ITransactionConfigParam {
 export class BaseToken<T_CLIENT_CONFIG> {
 
     private contract_: BaseContract;
+    private chainId_: number;
 
     constructor(
         protected contractParam: IContractInitParam,
@@ -24,6 +26,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
     ) {
     }
 
+    get contractAddress() {
+        return this.contractParam.address;
+    }
 
     getContract(): Promise<BaseContract> {
         if (this.contract_) {
@@ -40,6 +45,17 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 tokenAddress: contractParam.address
             });
             return this.contract_;
+        });
+    }
+
+    getChainId(): Promise<number> {
+        if (this.chainId_) {
+            return promiseResolve<number>(this.chainId_ as any);
+        }
+        const client = this.getClient(this.contractParam.isParent);
+        return client.getChainId().then(chainId => {
+            this.chainId_ = chainId;
+            return this.chainId_;
         });
     }
 
@@ -176,33 +192,34 @@ export class BaseToken<T_CLIENT_CONFIG> {
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
-            const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
-            const isEIP1559Supported = this.client.isEIP1559Supported(isParent);
-            const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
+            return this.getChainId().then(clientChainId => {
+                const { maxFeePerGas, maxPriorityFeePerGas } = txConfig;
 
-            if (!isEIP1559Supported && isMaxFeeProvided) {
-                client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
-            }
-            // const [gasLimit, nonce, chainId] = 
-            return Promise.all([
-                !(txConfig.gasLimit)
-                    ? estimateGas({
-                        from: txConfig.from, value: txConfig.value
-                    })
-                    : txConfig.gasLimit,
-                !txConfig.nonce ?
-                    client.getTransactionCount(txConfig.from, 'pending')
-                    : txConfig.nonce,
-                !txConfig.chainId ?
-                    client.getChainId() : txConfig.chainId
-            ]).then(result => {
-                const [gasLimit, nonce, chainId] = result;
-                client.logger.log("options filled");
+                const isEIP1559Supported = this.client.isEIP1559Supported(clientChainId);
+                const isMaxFeeProvided = (maxFeePerGas || maxPriorityFeePerGas);
+                txConfig.chainId = txConfig.chainId || clientChainId;
 
-                txConfig.gasLimit = Number(gasLimit);
-                txConfig.nonce = nonce;
-                txConfig.chainId = chainId;
-                return txConfig;
+                if (!isEIP1559Supported && isMaxFeeProvided) {
+                    client.logger.error(ERROR_TYPE.EIP1559NotSupported, isParent).throw();
+                }
+                // const [gasLimit, nonce] = 
+                return Promise.all([
+                    !(txConfig.gasLimit)
+                        ? estimateGas({
+                            from: txConfig.from, value: txConfig.value
+                        })
+                        : txConfig.gasLimit,
+                    !txConfig.nonce ?
+                        client.getTransactionCount(txConfig.from, 'pending')
+                        : txConfig.nonce
+                ]).then(result => {
+                    const [gasLimit, nonce] = result;
+                    client.logger.log("options filled");
+
+                    txConfig.gasLimit = Number(gasLimit);
+                    txConfig.nonce = nonce;
+                    return txConfig;
+                });
             });
         }
         return promiseResolve<ITransactionRequestConfig>(txConfig);
@@ -233,6 +250,12 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 method, option
             );
         });
+    }
+
+    protected checkForNonNative(methodName) {
+        if (this.contractParam.address === ADDRESS_ZERO) {
+            this.client.logger.error(ERROR_TYPE.AllowedOnNonNativeTokens, methodName).throw();
+        }
     }
 
     protected checkForRoot(methodName) {

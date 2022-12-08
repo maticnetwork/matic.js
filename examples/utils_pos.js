@@ -21,13 +21,13 @@ const getPOSClient = (network = 'testnet', version = 'mumbai') => {
     network: network,
     version: version,
     child: {
-      provider: new HDWalletProvider(privateKey, config.child.rpc),
+      provider: new HDWalletProvider(privateKey, config.rpc.pos.child),
       defaultConfig: {
         from: userAddress,
       },
     },
     parent: {
-      provider: new HDWalletProvider(privateKey, config.parent.rpc),
+      provider: new HDWalletProvider(privateKey, config.rpc.pos.parent),
       defaultConfig: {
         from: userAddress,
       },
@@ -38,7 +38,6 @@ const getPOSClient = (network = 'testnet', version = 'mumbai') => {
 module.exports = {
   SCALING_FACTOR,
   getPOSClient: getPOSClient,
-  child: config.child,
   plasma: config.plasma,
   pos: config.pos,
   from: config.user1.address,

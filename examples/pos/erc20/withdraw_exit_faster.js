@@ -1,6 +1,6 @@
 const { setProofApi } = require("@maticnetwork/maticjs");
 const { pos } = require('../../config');
-const { getPOSClient, proofApi } = require('../../utils');
+const { getPOSClient, proofApi } = require('../../utils_pos');
 
 setProofApi(proofApi);
 
