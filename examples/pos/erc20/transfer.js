@@ -1,5 +1,5 @@
 const { pos } = require('../../config');
-const { getPOSClient, to } = require('../../utils');
+const { getPOSClient, to } = require('../../utils_pos');
 
 const execute = async () => {
     const client = await getPOSClient();

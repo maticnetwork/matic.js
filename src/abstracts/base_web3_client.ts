@@ -3,6 +3,7 @@ import { ITransactionRequestConfig, ITransactionReceipt, ITransactionData, IBloc
 import { Logger } from "../utils";
 
 export abstract class BaseWeb3Client {
+    abstract name: string;
 
     constructor(public logger: Logger) {
 
@@ -24,6 +25,11 @@ export abstract class BaseWeb3Client {
 
     abstract getBlock(blockHashOrBlockNumber): Promise<IBlock>;
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
+    abstract hexToNumber(value: any): number;
+    abstract hexToNumberString(value: any): string;
+    abstract getBalance(address: string): string;
+    abstract getAccounts(): string[];
+    abstract signTypedData(signer: string, typedData: object): string;
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({
@@ -33,6 +39,17 @@ export abstract class BaseWeb3Client {
             id: new Date().getTime()
         }).then(payload => {
             return String(payload.result);
+        });
+    }
+
+    getAccountsUsingRPC_() {
+        return this.sendRPCRequest({
+            jsonrpc: '2.0',
+            method: 'eth_accounts',
+            params: [],
+            id: new Date().getTime()
+        }).then(payload => {
+            return payload.result;
         });
     }
 

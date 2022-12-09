@@ -8,3 +8,13 @@ export const setProofApi = (url: string) => {
     url += 'api/v1/';
     service.network = new NetworkService(url);
 };
+
+export const setHermezProofApi = (url: string) => {
+    const urlLength = url.length;
+    if (url[urlLength - 1] !== '/') {
+        url += '/';
+    }
+    if (!service.network) {
+        service.network = new NetworkService(url);
+    }
+};

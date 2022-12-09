@@ -25,7 +25,7 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
                 {
 
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
-                    rootChain: client.mainPlasmaContracts.RootChainProxy
+                    rootChain: client.mainContracts.RootChainProxy
                 } as IPOSClientConfig,
                 config
             );

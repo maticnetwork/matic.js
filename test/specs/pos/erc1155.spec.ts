@@ -67,7 +67,7 @@ describe('ERC1155', () => {
 
     it('deposit return tx', async () => {
         const tx = await erc1155Parent.deposit({
-            amount: 10,
+            amount: 1,
             tokenId: 123,
             userAddress: from
         }, {
