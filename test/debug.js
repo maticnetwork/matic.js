@@ -146,10 +146,10 @@ const execute = async () => {
 
 const executeHermez = async () => {
   const privateKey = user1.privateKey;
-  const litchiERC20 = hermez.child.erc20;
+  const mangoERC20 = hermez.child.erc20;
   const goerliERC20 = hermez.parent.erc20;
 
-  const litchiEther = hermez.child.ether;
+  const mangoEther = hermez.child.ether;
   const goerliEther = hermez.parent.ether;
 
   const client = new HermezClient();
@@ -157,7 +157,7 @@ const executeHermez = async () => {
   await client.init({
     log: true,
     network: 'testnet',
-    version: 'litchi',
+    version: 'mango',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.hermez.parent),
       defaultConfig: {
@@ -173,10 +173,10 @@ const executeHermez = async () => {
   });
   console.log("init called");
 
-  const litchiERC20Token = client.erc20(litchiERC20);
+  const mangoERC20Token = client.erc20(mangoERC20);
   const goerliERC20Token = client.erc20(goerliERC20, true);
 
-  const litchiEtherToken = client.erc20(litchiEther);
+  const mangoEtherToken = client.erc20(mangoEther);
   const goerliEtherToken = client.erc20(goerliEther, true);
 
   // setProofApi("https://bridge-api.public.zkevm-test.net/");
@@ -202,7 +202,7 @@ const executeHermez = async () => {
   // return console.log('result', result);
 
   // // getOriginTokenInfo
-  // var result = await client.childChainBridge.getOriginTokenInfo(litchiERC20);
+  // var result = await client.childChainBridge.getOriginTokenInfo(mangoERC20);
   // return console.log('result', result);
 
   // // getBalance on goerli
@@ -213,8 +213,8 @@ const executeHermez = async () => {
   // var result = await goerliEtherToken.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
   // return console.log('result', result);
 
-  // // getBalance on litchi
-  // var result = await litchiERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+  // // getBalance on mango
+  // var result = await mangoERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
   // return console.log('result', result);
 
   // // getAllowance
@@ -230,7 +230,7 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // claim Ether
-  // var tx = await litchiEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
+  // var tx = await mangoEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // deposit ERC20
@@ -238,7 +238,7 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // deposit claim ERC20
-  // var tx = await litchiERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
+  // var tx = await mangoERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // Get Permit Data
@@ -250,11 +250,11 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // withdraw Ether
-  // var tx = await litchiEtherToken.withdraw("1", from, {returnTransaction: true});
+  // var tx = await mangoEtherToken.withdraw("1", from, {returnTransaction: true});
   // return console.log("hash",  tx);
 
   // // withdraw ERC20
-  // var tx = await litchiERC20Token.withdraw("1", from, {returnTransaction: true});
+  // var tx = await mangoERC20Token.withdraw("1", from, {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // withdraw exit ERC20

@@ -19,8 +19,8 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
             const hermezContracts = client.hermezContracts;
             client.config = config = Object.assign(
                 {
-                    parentBridge: mainHermezContracts.BridgeProxy,
-                    childBridge: hermezContracts.Bridge,
+                    parentBridge: mainHermezContracts.PolygonZkEVMBridgeProxy,
+                    childBridge: hermezContracts.PolygonZkEVMBridge,
                 } as IHermezClientConfig,
                 config
             );

@@ -9,7 +9,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
     constructor(client_: Web3SideChainClient<IHermezClientConfig>, address: string, isParent: boolean) {
         super({
             address: address,
-            name: 'Bridge',
+            name: 'PolygonZkEVMBridge',
             bridgeType: 'zkevm',
             isParent: isParent
         }, client_);
@@ -43,7 +43,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
         option?: ITransactionOption
     ) {
         return this.method(
-            "bridge",
+            "bridgeAsset",
             token,
             destinationNetwork,
             destinationAddress,
@@ -85,7 +85,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
         option: ITransactionOption
     ) {
         return this.method(
-            "claim",
+            "claimAsset",
             smtProof,
             index,
             mainnetExitRoot,
@@ -130,11 +130,11 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @returns
      * @memberof HermezBridge
      */
-    claimNullifier(
+    isClaimed(
         index: number,
     ) {
         return this.method(
-            "claimNullifier", index
+            "isClaimed", index
         ).then(method => {
             return this.processRead<string>(method);
         });

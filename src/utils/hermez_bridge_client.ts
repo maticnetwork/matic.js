@@ -54,7 +54,7 @@ export class HermezBridgeClient<T> {
         return this.bridgeUtil.getBridgeLogData(
             txHash, true
         ).then(result => {
-            return this.childChainBridge.claimNullifier(result.depositCount);
+            return this.childChainBridge.isClaimed(result.depositCount);
         });
     }
 
@@ -69,7 +69,7 @@ export class HermezBridgeClient<T> {
         return this.bridgeUtil.getBridgeLogData(
             txHash, false
         ).then(result => {
-            return this.rootChainBridge.claimNullifier(result.depositCount);
+            return this.rootChainBridge.isClaimed(result.depositCount);
         });
     }
 
