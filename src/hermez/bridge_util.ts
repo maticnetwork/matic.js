@@ -79,7 +79,7 @@ export class BridgeUtil {
     }
 
     private getProof_(networkId: number, depositCount: number) {
-        return service.network.getMerkleProofForHermez(
+        return service.hermezNetwork.getMerkleProofForHermez(
             networkId,
             depositCount,
         ).then(proof => {

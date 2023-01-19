@@ -20,7 +20,7 @@ export class HermezBridgeClient<T> {
         return Promise.all([this.rootChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, true
         )]).then(result => {
-            return service.network.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.hermezNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
         }).then(details => {
             return details.ready_for_claim;
         });
@@ -37,7 +37,7 @@ export class HermezBridgeClient<T> {
         return Promise.all([this.childChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, false
         )]).then(result => {
-            return service.network.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.hermezNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
         }).then(details => {
             return details.ready_for_claim;
         });

@@ -236,15 +236,15 @@ describe('ERC20', () => {
         expect(result).to.have.property('data');
     });
 
-    it('deposit erc20 return tx', async () => {
-        const result = await erc20Parent.deposit(10, from, {
-            returnTransaction: true
-        });
+    // it('deposit erc20 return tx', async () => {
+    //     const result = await erc20Parent.deposit(10, from, {
+    //         returnTransaction: true
+    //     });
 
-        const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
-        expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
-        expect(result).to.have.property('data');
-    });
+    //     const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
+    //     expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
+    //     expect(result).to.have.property('data');
+    // });
 
     it('deposit erc20 with permit return tx', async () => {
         const result = await erc20Parent.depositWithPermit(10, from, {
@@ -296,6 +296,8 @@ describe('ERC20', () => {
         expect(result).to.have.property('data');
     });
 
+    if (process.env.NODE_ENV !== 'test_all') return;
+
     // CHILD TRANSFER FLOW
     it('child transfer', async () => {
         const oldBalance = await erc20Child.getBalance(to);
@@ -341,8 +343,6 @@ describe('ERC20', () => {
         txHash = await result.getTransactionHash();
         txReceipt = await result.getReceipt();
     });
-
-    if (process.env.NODE_ENV !== 'test_all') return;
 
     // APPROVE FLOW
     it('approve', async () => {

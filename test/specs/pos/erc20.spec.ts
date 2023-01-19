@@ -261,8 +261,6 @@ describe('ERC20', () => {
             oldBalanceBig.add(new BN(amount)).toString()
         )
 
-
-
         //transfer money back to user
         const erc20ChildToken = posClientForTo.erc20(erc20.child);
 
