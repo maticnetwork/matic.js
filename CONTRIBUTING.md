@@ -10,7 +10,7 @@ _Branch naming convention:_
 
 _Note: No strict convention while naming branch, but try to keep it meaningful for your team members to understand._
 
-3. Add files to be commited and then commit changes to your local machine `git commit -m <commit-message>`
+3. Add files to be committed and then commit changes to your local machine `git commit -m <commit-message>`
 
 _Commit message convention:_
 - Feature - `feat: integrate token balances`
@@ -23,4 +23,4 @@ _Note: Keep commit message meaningful for your team members to understand while 
 
 7. Create a merge/pull request against `master` branch.
 
-_Note: Dont push changes to `master` branch directly. Write proper description of the changes while creating merge/pull request_
+_Note: Don't push changes to `master` branch directly. Write proper description of the changes while creating merge/pull request_
