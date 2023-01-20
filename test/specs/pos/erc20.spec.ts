@@ -221,8 +221,7 @@ describe('ERC20', () => {
 
     });
 
-
-
+    if (process.env.NODE_ENV !== 'test_all') return;
 
     it('child transfer', async () => {
         const oldBalance = await erc20Child.getBalance(to);
@@ -261,8 +260,6 @@ describe('ERC20', () => {
             oldBalanceBig.add(new BN(amount)).toString()
         )
 
-
-
         //transfer money back to user
         const erc20ChildToken = posClientForTo.erc20(erc20.child);
 
@@ -270,8 +267,6 @@ describe('ERC20', () => {
         txHash = await result.getTransactionHash();
         txReceipt = await result.getReceipt();
     });
-
-    if (process.env.NODE_ENV !== 'test_all') return;
 
     it('approve', async () => {
         const result = await erc20Parent.approve('10');

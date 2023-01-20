@@ -6,6 +6,7 @@ export * from "./network_service";
 
 class Service {
     network: NetworkService;
+    hermezNetwork: NetworkService;
     abi: ABIService;
 }
 

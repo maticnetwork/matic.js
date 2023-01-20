@@ -1,7 +1,7 @@
 import { ERC20 } from "./erc20";
 import { HermezBridge } from "./hermez_bridge";
 import { BridgeUtil } from "./bridge_util";
-import { HermezBridgeClient, setHermezProofApi } from "../utils";
+import { HermezBridgeClient } from "../utils";
 import { IHermezClientConfig, IHermezContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
 import { service, NetworkService } from "../services";
@@ -19,8 +19,8 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
             const hermezContracts = client.hermezContracts;
             client.config = config = Object.assign(
                 {
-                    parentBridge: mainHermezContracts.BridgeProxy,
-                    childBridge: hermezContracts.Bridge,
+                    parentBridge: mainHermezContracts.PolygonZkEVMBridgeProxy,
+                    childBridge: hermezContracts.PolygonZkEVMBridge,
                 } as IHermezClientConfig,
                 config
             );
@@ -41,11 +41,11 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
                 this.client
             );
 
-            if (!service.network) {
+            if (!service.hermezNetwork) {
                 if (urlConfig.hermezBridgeService[urlConfig.hermezBridgeService.length - 1] !== '/') {
                     urlConfig.hermezBridgeService += '/';
                 }
-                service.network = new NetworkService(urlConfig.hermezBridgeService);
+                service.hermezNetwork = new NetworkService(urlConfig.hermezBridgeService);
             }
 
             return this;

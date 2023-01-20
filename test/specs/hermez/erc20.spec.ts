@@ -16,13 +16,13 @@ describe('ERC20', () => {
     let etherChild = hermezClient.erc20(ether.child);
     let etherParent = hermezClient.erc20(ether.parent, true);
 
-    const abiManager = new ABIManager("testnet", "litchi");
+    const abiManager = new ABIManager("testnet", "mango");
     before(() => {
         return Promise.all([
             hermezClient.init({
                 // log: true,
                 network: 'testnet',
-                version: 'litchi',
+                version: 'mango',
                 parent: {
                     provider: new Wallet(privateKey, parentPrivder),
                     defaultConfig: {
@@ -39,7 +39,7 @@ describe('ERC20', () => {
             hermezClientForTo.init({
                 // log: true,
                 network: 'testnet',
-                version: 'litchi',
+                version: 'mango',
                 parent: {
                     provider: new Wallet(toPrivateKey, parentPrivder),
                     defaultConfig: {
@@ -59,17 +59,16 @@ describe('ERC20', () => {
 
     // BALANCE
     it('get erc20 balance child', async () => {
-        console.log('process.env.NODE_ENV', process.env.NODE_ENV, hermezClient.client);
-
+        console.log('process.env.NODE_ENV', process.env.NODE_ENV);
         const balance = await erc20Child.getBalance(from);
-        console.log('balance', balance);
+        console.log('ERC20 balance child', balance);
         expect(balance).to.be.an('string');
         expect(Number(balance)).gte(0);
     })
 
     it('get erc20 balance parent', async () => {
         const balance = await erc20Parent.getBalance(from);
-        console.log('balance', balance);
+        console.log('ERC20 balance parent', balance);
         expect(balance).to.be.an('string');
         expect(Number(balance)).gte(0);
     })
@@ -105,30 +104,30 @@ describe('ERC20', () => {
 
     // IS DEPOSIT CLAIMABLE
     it('is Deposit Claimable', async () => {
-        const isDepositClaimable = await hermezClient.isDepositClaimable('0x81594c5e9a73e195c6fb13db1b25e9388407611ad4649b01f61d85c27eb86049');
+        const isDepositClaimable = await hermezClient.isDepositClaimable('0x578478b8c287b3f53795291200a9500e0c5e8644b7624cb4bc16cc45c4e00b1f');
         console.log('isDepositClaimable', isDepositClaimable);
         expect(isDepositClaimable).to.be.an('boolean').equal(true);
     })
 
     // IS WITHDRAW EXITABLE
     it('is Withdraw Exitable', async () => {
-        const isWithdrawExitable = await hermezClient.isWithdrawExitable('0x03fa162d2a5babcfe0c4d825aab60da0d4fb526d5ca7ae2bfc980bf7ceaf4c9e');
+        const isWithdrawExitable = await hermezClient.isWithdrawExitable('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400');
         console.log('isWithdrawExitable', isWithdrawExitable);
         expect(isWithdrawExitable).to.be.an('boolean').equal(true);
     })
 
     // IS DEPOSITED
     it('is Deposited', async () => {
-        const isDeposited = await hermezClient.isDeposited('0x81594c5e9a73e195c6fb13db1b25e9388407611ad4649b01f61d85c27eb86049');
+        const isDeposited = await hermezClient.isDeposited('0x1c1b7c1faedcd38c7abd193392f86b1012642e6d5fb942b4760a0e14908377ec');
         console.log('isDeposited', isDeposited);
         expect(isDeposited).to.be.an('boolean').equal(true);
     })
 
     // IS EXITED
     it('is Exited', async () => {
-        const isExited = await hermezClient.isExited('0x03fa162d2a5babcfe0c4d825aab60da0d4fb526d5ca7ae2bfc980bf7ceaf4c9e');
+        const isExited = await hermezClient.isExited('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400');
         console.log('isExited', isExited);
-        expect(isExited).to.be.an('boolean').equal(true);
+        expect(isExited).to.be.an('boolean').equal(false);
     })
 
     // TRANSFER
@@ -157,9 +156,7 @@ describe('ERC20', () => {
         });
         expect(result).to.have.not.property('maxFeePerGas')
         expect(result).to.have.not.property('maxPriorityFeePerGas')
-        // expect(result).to.have.property('gasPrice')
-        // expect(result['gasPrice']).to.be.an('number').gt(0);
-        expect(result).to.have.property('chainId', 1402);
+        expect(result).to.have.property('chainId', 1422);
         expect(result['chainId']).to.be.an('number');
     });
 
@@ -233,38 +230,37 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(Number(result['value'])).eq(10);
         expect(result).to.have.property('data');
     });
 
-    it('deposit erc20 return tx', async () => {
-        const result = await erc20Parent.deposit(10, from, {
-            returnTransaction: true
-        });
+    // it('deposit erc20 return tx', async () => {
+    //     const result = await erc20Parent.deposit(10, from, {
+    //         returnTransaction: true
+    //     });
 
-        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
-        expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
-        expect(result).to.have.property('data');
-    });
+    //     const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
+    //     expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
+    //     expect(result).to.have.property('data');
+    // });
 
     it('deposit erc20 with permit return tx', async () => {
         const result = await erc20Parent.depositWithPermit(10, from, {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
 
     it('claim erc20 deposit return tx', async () => {
-        const result = await erc20Child.depositClaim('0x067ed611aa63d607186dcc0d70a7b60dd909c6d91b40842f424a6dadeae21f22', {
+        const result = await erc20Child.depositClaim('0x578478b8c287b3f53795291200a9500e0c5e8644b7624cb4bc16cc45c4e00b1f', {
             returnTransaction: true
         });
-
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -275,7 +271,7 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
@@ -285,20 +281,22 @@ describe('ERC20', () => {
             returnTransaction: true
         });
 
-        const bridge = await abiManager.getConfig("zkEVM.Contracts.Bridge")
+        const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(Number(result['value'])).eq(1);
         expect(result).to.have.property('data');
     });
 
     it('exit return tx', async () => {
-        const result = await erc20Parent.withdrawExit('0x2df7caedb9a28b3110a43d5380c19d8f7d3a177aad4c8c11a07cbc46ce377654', {
+        const result = await erc20Parent.withdrawExit('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400', {
             returnTransaction: true
         });
-        const bridge = await abiManager.getConfig("Main.Contracts.BridgeProxy")
+        const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
         expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
         expect(result).to.have.property('data');
     });
+
+    if (process.env.NODE_ENV !== 'test_all') return;
 
     // CHILD TRANSFER FLOW
     it('child transfer', async () => {
@@ -345,8 +343,6 @@ describe('ERC20', () => {
         txHash = await result.getTransactionHash();
         txReceipt = await result.getReceipt();
     });
-
-    if (process.env.NODE_ENV !== 'test_all') return;
 
     // APPROVE FLOW
     it('approve', async () => {

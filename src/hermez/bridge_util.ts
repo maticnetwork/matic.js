@@ -36,7 +36,7 @@ interface IClaimPayload {
 
 export class BridgeUtil {
     private client_: Web3SideChainClient<IBaseClientConfig>;
-    private BRIDGE_TOPIC = "0xf0b963192bdc6349c23af9bd17294b4c7b9b5a73a2a9939610ea18ffd1c5dc2a";
+    private BRIDGE_TOPIC = "0x501781209a1f8899323b96b4ef08b168df93e0a90c673d1e4cce39366cb62f9b";
 
     constructor(client: Web3SideChainClient<IBaseClientConfig>) {
         this.client_ = client;
@@ -44,14 +44,15 @@ export class BridgeUtil {
 
     private decodedBridgeData_(data: string, isParent: boolean) {
         const client = isParent ? this.client_.parent : this.client_.child;
-        return this.client_.getABI("Bridge", "zkevm").then(abi => {
+        return this.client_.getABI("PolygonZkEVMBridge", "zkevm").then(abi => {
             const types = abi.filter(event => event.name === "BridgeEvent");
             if (!types.length) {
                 throw new Error("Data not decoded");
             }
             const decodedData = client.decodeParameters(data, types[0].inputs);
-            const [originNetwork, originTokenAddress, destinationNetwork, destinationAddress, amount, metadata, depositCount] = decodedData;
+            const [leafType, originNetwork, originTokenAddress, destinationNetwork, destinationAddress, amount, metadata, depositCount] = decodedData;
             return {
+                leafType,
                 originNetwork,
                 originTokenAddress,
                 destinationNetwork,
@@ -78,7 +79,7 @@ export class BridgeUtil {
     }
 
     private getProof_(networkId: number, depositCount: number) {
-        return service.network.getMerkleProofForHermez(
+        return service.hermezNetwork.getMerkleProofForHermez(
             networkId,
             depositCount,
         ).then(proof => {

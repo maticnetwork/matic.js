@@ -44,7 +44,7 @@ module.exports = {
             ether: '0x0000000000000000000000000000000000000000',
             // erc20: '0x270969e59d170fB576cBB5E254493e9bfB13684f', // WETH
             // erc20: '0x08bd5b6d0237FaAED3C5E04fB131de2f843aC756', // DAI
-            erc20: '0x73DeceDCa3d3aD2fFdB7FD5afd819a11dbc297f5' // Polygon
+            erc20: '0x20359119308a1527f36458be807248CE8Fc00441' // Polygon
         },
     },
     user1: {

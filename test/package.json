@@ -39,6 +39,7 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "@maticnetwork/maticjs": "file:../maticnetwork-maticjs-3.6.0-beta.1.tgz",
     "@maticnetwork/maticjs-ethers": "^1.0.3",
     "@maticnetwork/maticjs-web3": "^1.0.4",
     "@truffle/hdwallet-provider": "^1.5.1-alpha.1",
