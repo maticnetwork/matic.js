@@ -22,6 +22,8 @@ env:
     USER1_PRIVATE_KEY: ${{ secrets.USER1_PRIVATE_KEY }}
     USER2_PRIVATE_KEY: ${{ secrets.USER2_PRIVATE_KEY }}
     ROOT_RPC: ${{ secrets.ROOT_RPC }}
+    GOERLI_ROOT_RPC: ${{ secrets.GOERLI_ROOT_RPC }}
+    HERMEZ_RPC: ${{ secrets.HERMEZ_RPC }}
     MATIC_RPC: ${{ secrets.MATIC_RPC }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
