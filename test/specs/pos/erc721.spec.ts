@@ -124,6 +124,8 @@ describe('ERC721', () => {
         }
     })
 
+    if (process.env.NODE_ENV !== 'test_all') return;
+
     it('transfer write', async () => {
         const allTokensFrom = await erc721Child.getAllTokens(from);
         // console.log('allTokensFrom', allTokensFrom);
@@ -172,8 +174,6 @@ describe('ERC721', () => {
         }
 
     })
-
-    if (process.env.NODE_ENV !== 'test_all') return;
 
     it('approve', async () => {
         const allTokens = await erc721Parent.getAllTokens(from);

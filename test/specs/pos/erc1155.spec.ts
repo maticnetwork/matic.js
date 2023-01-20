@@ -100,6 +100,7 @@ describe('ERC1155', () => {
         expect(result['to'].toLowerCase()).equal(erc1155.child.toLowerCase());
     })
 
+    if (process.env.NODE_ENV !== 'test_all') return;
 
     it('transfer write', async () => {
         const targetToken = 123;
@@ -156,8 +157,6 @@ describe('ERC1155', () => {
         expect(newToCount).equal(allTokensTo);
 
     })
-
-    if (process.env.NODE_ENV !== 'test_all') return;
 
     it('approve', async () => {
         const result = await erc1155Parent.approveAll({
