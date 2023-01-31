@@ -63,7 +63,7 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.abiManager.getConfig(path);
     }
 
-    get mainContracts() {
+    get mainPlasmaContracts() {
         return this.getConfig("Main.Contracts");
     }
 
@@ -72,7 +72,7 @@ export class Web3SideChainClient<T_CONFIG> {
     }
 
     get mainHermezContracts() {
-        return this.getConfig("Main.zkEVMContracts");
+        return this.getConfig("Main.Contracts");
     }
 
     get hermezContracts() {
