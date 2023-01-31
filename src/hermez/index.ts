@@ -15,7 +15,7 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
         const client = this.client;
 
         return client.init(config).then(_ => {
-            const mainHermezContracts = client.mainContracts;
+            const mainHermezContracts = client.mainHermezContracts; 
             const hermezContracts = client.hermezContracts;
             client.config = config = Object.assign(
                 {

@@ -14,7 +14,5 @@ export const setHermezProofApi = (url: string) => {
     if (url[urlLength - 1] !== '/') {
         url += '/';
     }
-    if (!service.hermezNetwork) {
-        service.hermezNetwork = new NetworkService(url);
-    }
+    service.hermezNetwork = new NetworkService(url);
 };
