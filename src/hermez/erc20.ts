@@ -342,7 +342,7 @@ export class ERC20 extends HermezToken {
      * @returns
      * @memberof ERC20
      */
-    transfer(amount: TYPE_AMOUNT, to: string, option?: ITransactionOption) {
+    transfer(amount: TYPE_AMOUNT, to: string, option: ITransactionOption = {}) {
         if (this.contractParam.address === ADDRESS_ZERO) {
             option.to = to;
             option.value = Converter.toHex(amount);
