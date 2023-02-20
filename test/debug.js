@@ -179,6 +179,10 @@ const executeHermez = async () => {
   const mangoEtherToken = client.erc20(mangoEther);
   const goerliEtherToken = client.erc20(goerliEther, true);
 
+  // // transfer Ether
+  // var tx = await mangoEtherToken.transfer("1", from, {returnTransaction: true});
+  // return console.log("hash",  tx);
+
   // setProofApi("https://bridge-api.public.zkevm-test.net/");
 
   // // isDepositClaimable
