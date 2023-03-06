@@ -9,7 +9,7 @@ const chainIdToConfigPath = {
     5: 'Main',
     137: 'Matic',
     80001: 'Matic',
-    1422: 'Hermez'
+    1442: 'Hermez'
 };
 
 export class Web3SideChainClient<T_CONFIG> {

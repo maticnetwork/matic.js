@@ -16,13 +16,13 @@ describe('ERC20', () => {
     let etherChild = hermezClient.erc20(ether.child);
     let etherParent = hermezClient.erc20(ether.parent, true);
 
-    const abiManager = new ABIManager("testnet", "mango");
+    const abiManager = new ABIManager("testnet", "blueberry");
     before(() => {
         return Promise.all([
             hermezClient.init({
                 // log: true,
                 network: 'testnet',
-                version: 'mango',
+                version: 'blueberry',
                 parent: {
                     provider: new Wallet(privateKey, parentPrivder),
                     defaultConfig: {
@@ -39,7 +39,7 @@ describe('ERC20', () => {
             hermezClientForTo.init({
                 // log: true,
                 network: 'testnet',
-                version: 'mango',
+                version: 'blueberry',
                 parent: {
                     provider: new Wallet(toPrivateKey, parentPrivder),
                     defaultConfig: {
@@ -156,7 +156,7 @@ describe('ERC20', () => {
         });
         expect(result).to.have.not.property('maxFeePerGas')
         expect(result).to.have.not.property('maxPriorityFeePerGas')
-        expect(result).to.have.property('chainId', 1422);
+        expect(result).to.have.property('chainId', 1442);
         expect(result['chainId']).to.be.an('number');
     });
 
