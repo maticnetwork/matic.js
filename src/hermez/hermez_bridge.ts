@@ -35,19 +35,21 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @memberof HermezBridge
      */
     bridgeAsset(
-        token: string,
         destinationNetwork: number,
         destinationAddress: string,
         amount: TYPE_AMOUNT,
+        token: string,
+        forceUpdateGlobalExitRoot: boolean,
         permitData = '0x',
         option?: ITransactionOption
     ) {
         return this.method(
             "bridgeAsset",
-            token,
             destinationNetwork,
             destinationAddress,
             Converter.toHex(amount),
+            token,
+            forceUpdateGlobalExitRoot,
             permitData
         ).then(method => {
             return this.processWrite(method, option);
