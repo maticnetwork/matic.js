@@ -164,10 +164,11 @@ export class ERC20 extends HermezToken {
 
         return this.childBridge.networkID().then(networkId => {
             return this.parentBridge.bridgeAsset(
-                this.contractParam.address,
                 networkId,
                 userAddress,
                 amountInABI,
+                this.contractParam.address,
+                true,
                 permitData,
                 option
             );
@@ -195,10 +196,11 @@ export class ERC20 extends HermezToken {
         return this.getPermitData(amountInABI, option).then(permitData => {
             return this.childBridge.networkID().then(networkId => {
                 return this.parentBridge.bridgeAsset(
-                    this.contractParam.address,
                     networkId,
                     userAddress,
                     amountInABI,
+                    this.contractParam.address,
+                    true,
                     permitData,
                     option
                 );
@@ -261,10 +263,11 @@ export class ERC20 extends HermezToken {
 
         return this.parentBridge.networkID().then(networkId => {
             return this.childBridge.bridgeAsset(
-                this.contractParam.address,
                 networkId,
                 userAddress,
                 amountInABI,
+                this.contractParam.address,
+                true,
                 permitData,
                 option
             );
@@ -291,10 +294,11 @@ export class ERC20 extends HermezToken {
         return this.getPermitData(amountInABI, option).then(permitData => {
             return this.parentBridge.networkID().then(networkId => {
                 return this.childBridge.bridgeAsset(
-                    this.contractParam.address,
                     networkId,
                     userAddress,
                     amountInABI,
+                    this.contractParam.address,
+                    true,
                     permitData,
                     option
                 );

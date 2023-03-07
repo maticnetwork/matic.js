@@ -10,7 +10,7 @@ use(Web3ClientPlugin)
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
 
-const getHermezClient = (network = 'testnet', version = 'mango') => {
+const getHermezClient = (network = 'testnet', version = 'blueberry') => {
   const hermezClient = new HermezClient()
   return hermezClient.init({
     log: true,

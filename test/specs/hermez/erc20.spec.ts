@@ -16,13 +16,13 @@ describe('ERC20', () => {
     let etherChild = hermezClient.erc20(ether.child);
     let etherParent = hermezClient.erc20(ether.parent, true);
 
-    const abiManager = new ABIManager("testnet", "mango");
+    const abiManager = new ABIManager("testnet", "blueberry");
     before(() => {
         return Promise.all([
             hermezClient.init({
                 // log: true,
                 network: 'testnet',
-                version: 'mango',
+                version: 'blueberry',
                 parent: {
                     provider: new Wallet(privateKey, parentPrivder),
                     defaultConfig: {
@@ -39,7 +39,7 @@ describe('ERC20', () => {
             hermezClientForTo.init({
                 // log: true,
                 network: 'testnet',
-                version: 'mango',
+                version: 'blueberry',
                 parent: {
                     provider: new Wallet(toPrivateKey, parentPrivder),
                     defaultConfig: {
@@ -104,28 +104,28 @@ describe('ERC20', () => {
 
     // IS DEPOSIT CLAIMABLE
     it('is Deposit Claimable', async () => {
-        const isDepositClaimable = await hermezClient.isDepositClaimable('0x578478b8c287b3f53795291200a9500e0c5e8644b7624cb4bc16cc45c4e00b1f');
+        const isDepositClaimable = await hermezClient.isDepositClaimable('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe');
         console.log('isDepositClaimable', isDepositClaimable);
         expect(isDepositClaimable).to.be.an('boolean').equal(true);
     })
 
     // IS WITHDRAW EXITABLE
     it('is Withdraw Exitable', async () => {
-        const isWithdrawExitable = await hermezClient.isWithdrawExitable('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400');
+        const isWithdrawExitable = await hermezClient.isWithdrawExitable('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c');
         console.log('isWithdrawExitable', isWithdrawExitable);
         expect(isWithdrawExitable).to.be.an('boolean').equal(true);
     })
 
     // IS DEPOSITED
     it('is Deposited', async () => {
-        const isDeposited = await hermezClient.isDeposited('0x1c1b7c1faedcd38c7abd193392f86b1012642e6d5fb942b4760a0e14908377ec');
+        const isDeposited = await hermezClient.isDeposited('0xab0cdd96a5524a061ace48e4a91974fca3edcd1ad14ee8d6e7c9b468666b0bfd');
         console.log('isDeposited', isDeposited);
         expect(isDeposited).to.be.an('boolean').equal(true);
     })
 
     // IS EXITED
     it('is Exited', async () => {
-        const isExited = await hermezClient.isExited('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400');
+        const isExited = await hermezClient.isExited('0x27d52864c39601a722771acd89ec2f287905be84dd0678aca3cba00e59fa1982');
         console.log('isExited', isExited);
         expect(isExited).to.be.an('boolean').equal(false);
     })
@@ -156,7 +156,7 @@ describe('ERC20', () => {
         });
         expect(result).to.have.not.property('maxFeePerGas')
         expect(result).to.have.not.property('maxPriorityFeePerGas')
-        expect(result).to.have.property('chainId', 1422);
+        expect(result).to.have.property('chainId', 1442);
         expect(result['chainId']).to.be.an('number');
     });
 
@@ -236,15 +236,15 @@ describe('ERC20', () => {
         expect(result).to.have.property('data');
     });
 
-    // it('deposit erc20 return tx', async () => {
-    //     const result = await erc20Parent.deposit(10, from, {
-    //         returnTransaction: true
-    //     });
+    it('deposit erc20 return tx', async () => {
+        const result = await erc20Parent.deposit(1, from, {
+            returnTransaction: true
+        });
 
-    //     const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
-    //     expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
-    //     expect(result).to.have.property('data');
-    // });
+        const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
+        expect(result['to'].toLowerCase()).equal(bridge.toLowerCase());
+        expect(result).to.have.property('data');
+    });
 
     it('deposit erc20 with permit return tx', async () => {
         const result = await erc20Parent.depositWithPermit(10, from, {
@@ -257,7 +257,7 @@ describe('ERC20', () => {
     });
 
     it('claim erc20 deposit return tx', async () => {
-        const result = await erc20Child.depositClaim('0x578478b8c287b3f53795291200a9500e0c5e8644b7624cb4bc16cc45c4e00b1f', {
+        const result = await erc20Child.depositClaim('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
@@ -288,7 +288,7 @@ describe('ERC20', () => {
     });
 
     it('exit return tx', async () => {
-        const result = await erc20Parent.withdrawExit('0x062cee7145c9fc6b815ac475949c95d531c3ce49988701af07edd79e994bd400', {
+        const result = await erc20Parent.withdrawExit('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
