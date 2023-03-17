@@ -152,6 +152,7 @@ export class ERC20 extends HermezToken {
     deposit(amount: TYPE_AMOUNT, userAddress: string, option: IBridgeTransactionOption = {}) {
         this.checkForRoot("deposit");
         const permitData = option.permitData || '0x';
+        const forceUpdateGlobalExitRoot = option.forceUpdateGlobalExitRoot || true;
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(amount)],
@@ -168,7 +169,7 @@ export class ERC20 extends HermezToken {
                 userAddress,
                 amountInABI,
                 this.contractParam.address,
-                true,
+                forceUpdateGlobalExitRoot,
                 permitData,
                 option
             );
@@ -193,6 +194,8 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
+        const forceUpdateGlobalExitRoot = option.forceUpdateGlobalExitRoot || true;
+
         return this.getPermitData(amountInABI, option).then(permitData => {
             return this.childBridge.networkID().then(networkId => {
                 return this.parentBridge.bridgeAsset(
@@ -200,7 +203,7 @@ export class ERC20 extends HermezToken {
                     userAddress,
                     amountInABI,
                     this.contractParam.address,
-                    true,
+                    forceUpdateGlobalExitRoot,
                     permitData,
                     option
                 );
@@ -251,6 +254,7 @@ export class ERC20 extends HermezToken {
     withdraw(amount: TYPE_AMOUNT, userAddress: string, option: IBridgeTransactionOption = {}) {
         this.checkForChild("withdraw");
         const permitData = option.permitData || '0x';
+        const forceUpdateGlobalExitRoot = option.forceUpdateGlobalExitRoot || true;
 
         const amountInABI = this.client.parent.encodeParameters(
             [Converter.toHex(amount)],
@@ -267,7 +271,7 @@ export class ERC20 extends HermezToken {
                 userAddress,
                 amountInABI,
                 this.contractParam.address,
-                true,
+                forceUpdateGlobalExitRoot,
                 permitData,
                 option
             );
@@ -291,6 +295,8 @@ export class ERC20 extends HermezToken {
             ['uint256'],
         );
 
+        const forceUpdateGlobalExitRoot = option.forceUpdateGlobalExitRoot || true;
+
         return this.getPermitData(amountInABI, option).then(permitData => {
             return this.parentBridge.networkID().then(networkId => {
                 return this.childBridge.bridgeAsset(
@@ -298,7 +304,7 @@ export class ERC20 extends HermezToken {
                     userAddress,
                     amountInABI,
                     this.contractParam.address,
-                    true,
+                    forceUpdateGlobalExitRoot,
                     permitData,
                     option
                 );

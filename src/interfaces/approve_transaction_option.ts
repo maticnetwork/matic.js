@@ -11,4 +11,5 @@ export interface IApproveTransactionOption extends ITransactionOption {
      * @memberof IAllowanceTransactionOption
      */
     spenderAddress?: string;
+    forceUpdateGlobalExitRoot?: boolean;
 }
