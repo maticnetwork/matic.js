@@ -11,4 +11,5 @@ export interface IBridgeTransactionOption extends ITransactionOption {
      * @memberof IBridgeTransactionOption
      */
     permitData?: string;
+    forceUpdateGlobalExitRoot?: boolean;
 }
