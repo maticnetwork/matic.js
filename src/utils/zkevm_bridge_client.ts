@@ -1,26 +1,26 @@
-import { Web3SideChainClient } from "../utils";
-import { BridgeUtil, HermezBridge } from "../hermez";
+import { Web3SideChainClient } from ".";
+import { BridgeUtil, ZkEvmBridge } from "../zkevm";
 import { service } from "../services";
 
-export class HermezBridgeClient<T> {
+export class ZkEvmBridgeClient<T> {
 
     client: Web3SideChainClient<T> = new Web3SideChainClient();
     bridgeUtil: BridgeUtil;
-    rootChainBridge: HermezBridge;
-    childChainBridge: HermezBridge;
+    rootChainBridge: ZkEvmBridge;
+    childChainBridge: ZkEvmBridge;
 
     /**
      * check whether a txHash is synced with child chain 
      *
      * @param {string} txHash
      * @returns
-     * @memberof HermezBridgeClient
+     * @memberof ZkEvmBridgeClient
      */
     isDepositClaimable(txHash: string) {
         return Promise.all([this.rootChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, true
         )]).then(result => {
-            return service.hermezNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.zkEvmNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
         }).then(details => {
             return details.ready_for_claim;
         });
@@ -31,13 +31,13 @@ export class HermezBridgeClient<T> {
      *
      * @param {string} txHash
      * @returns
-     * @memberof HermezBridgeClient
+     * @memberof ZkEvmBridgeClient
      */
     isWithdrawExitable(txHash: string) {
         return Promise.all([this.childChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, false
         )]).then(result => {
-            return service.hermezNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.zkEvmNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
         }).then(details => {
             return details.ready_for_claim;
         });
@@ -48,7 +48,7 @@ export class HermezBridgeClient<T> {
      *
      * @param {string} txHash
      * @returns
-     * @memberof HermezBridgeClient
+     * @memberof ZkEvmBridgeClient
      */
     isDeposited(txHash: string) {
         return this.bridgeUtil.getBridgeLogData(
@@ -63,7 +63,7 @@ export class HermezBridgeClient<T> {
      *
      * @param {string} txHash
      * @returns
-     * @memberof HermezBridgeClient
+     * @memberof ZkEvmBridgeClient
      */
     isExited(txHash: string) {
         return this.bridgeUtil.getBridgeLogData(

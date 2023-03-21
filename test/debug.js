@@ -1,9 +1,9 @@
-const { setProofApi, POSClient, HermezClient, use, Converter } = require("@maticnetwork/maticjs");
+const { setProofApi, POSClient, ZkEvmClient, use, Converter } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { toBuffer } = require("ethereumjs-util");
-const { user1, rpc, pos, hermez, user2 } = require("./config");
+const { user1, rpc, pos, zkEvm, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 const to = user2.address;
@@ -144,28 +144,28 @@ const execute = async () => {
   // console.log("txReceipt", await tx.getReceipt());
 }
 
-const executeHermez = async () => {
+const executeZkEvm = async () => {
   const privateKey = user1.privateKey;
-  const blueberryERC20 = hermez.child.erc20;
-  const goerliERC20 = hermez.parent.erc20;
+  const blueberryERC20 = zkEvm.child.erc20;
+  const goerliERC20 = zkEvm.parent.erc20;
 
-  const blueberryEther = hermez.child.ether;
-  const goerliEther = hermez.parent.ether;
+  const blueberryEther = zkEvm.child.ether;
+  const goerliEther = zkEvm.parent.ether;
 
-  const client = new HermezClient();
+  const client = new ZkEvmClient();
 
   await client.init({
     log: true,
     network: 'testnet',
     version: 'blueberry',
     parent: {
-      provider: new HDWalletProvider(privateKey, rpc.hermez.parent),
+      provider: new HDWalletProvider(privateKey, rpc.zkEvm.parent),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, rpc.hermez.child),
+      provider: new HDWalletProvider(privateKey, rpc.zkEvm.child),
       defaultConfig: {
         from
       }
@@ -269,7 +269,7 @@ const executeHermez = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-executeHermez().then(_ => {
+executeZkEvm().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);

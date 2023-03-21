@@ -1,12 +1,12 @@
 import { BaseToken, Web3SideChainClient, Converter, promiseResolve } from "../utils";
-import { IHermezClientConfig, ITransactionOption } from "../interfaces";
+import { IZkEvmClientConfig, ITransactionOption } from "../interfaces";
 import { TYPE_AMOUNT } from "../types";
 
-export class HermezBridge extends BaseToken<IHermezClientConfig> {
+export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
 
     networkID_: number;
 
-    constructor(client_: Web3SideChainClient<IHermezClientConfig>, address: string, isParent: boolean) {
+    constructor(client_: Web3SideChainClient<IZkEvmClientConfig>, address: string, isParent: boolean) {
         super({
             address: address,
             name: 'PolygonZkEVMBridge',
@@ -32,7 +32,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @param {ITransactionOption} [option] 
      * 
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     bridgeAsset(
         destinationNetwork: number,
@@ -71,7 +71,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @param {ITransactionOption} [option]
      * 
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     claimAsset(
         smtProof: string[],
@@ -112,7 +112,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @param {number} originNetwork Network at which the token was initially deployed
      * @param {string} originTokenAddress Address at the network where token was initially deployed
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     getMappedTokenInfo(
         originNetwork: number,
@@ -130,7 +130,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      *
      * @param {number} index
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     isClaimed(
         index: number,
@@ -148,7 +148,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * @param {number} originNetwork Network at which the token was initially deployed
      * @param {string} originTokenAddress Address at the network where token was initially deployed
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     precalculatedMappedTokenInfo(
         originNetwork: number,
@@ -166,7 +166,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      *
      * @param {number} wrappedToken
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     getOriginTokenInfo(wrappedToken: string) {
         return this.method(
@@ -180,7 +180,7 @@ export class HermezBridge extends BaseToken<IHermezClientConfig> {
      * get the network ID for chain in which the bridge contract is deployed
      *
      * @returns
-     * @memberof HermezBridge
+     * @memberof ZkEvmBridge
      */
     networkID() {
         if (this.networkID_) {

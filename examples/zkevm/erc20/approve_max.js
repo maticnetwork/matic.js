@@ -1,17 +1,17 @@
-const { getHermezClient, hermez, from } = require('../../utils_hermez');
+const { getZkevmClient, zkEvm, from } = require('../../utils_zkevm');
 
 const execute = async () => {
-  const client = await getHermezClient();
-  const etherToken = client.erc20(hermez.parent.ether, true);
-  const result = await etherToken.deposit(100, from);
+  const client = await getZkevmClient();
+  const erc20Token = client.erc20(zkEvm.parent.erc20, true);
+
+  const result = await erc20Token.approveMax();
 
   const txHash = await result.getTransactionHash();
   console.log("txHash", txHash);
   const receipt = await result.getReceipt();
   console.log("receipt", receipt);
 
-};
-
+}
 execute().then(() => {
 }).catch(err => {
   console.error("err", err);
