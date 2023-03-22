@@ -11,16 +11,16 @@ async function execute() {
     const page = await browser.newPage();
 
 
-    await page.goto('https://apis.matic.network/api/v1/matic/block-included/100000/');
+    await page.goto('https://proof-generator.polygon.technology/api/v1/matic/block-included/100000/');
     await page.waitForTimeout(5000);
 
 
     const result = await page.evaluate(async () => {
         // debugger;
-        const result = await fetch("https://apis.matic.network/api/v1/matic/block-included/100000/", {
+        const result = await fetch("https://proof-generator.polygon.technology/api/v1/matic/block-included/100000/", {
             method: "GET",
             headers: {
-                // ':authority': 'apis.matic.network',
+                // ':authority': 'proof-generator.polygon.technology',
                 // ':method': 'GET',
                 // ':path': '/api/v1/matic/block-included/100000/',
                 // ':scheme': 'https',
