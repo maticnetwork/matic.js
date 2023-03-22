@@ -49,7 +49,7 @@ const execute = async () => {
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
 
-  // setProofApi("https://apis.matic.network");
+  // setProofApi("https://proof-generator.polygon.technology");
 
   var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
     returnTransaction: true
@@ -103,7 +103,7 @@ const execute = async () => {
   // var tx = await mumbaiERC20Token.transfer(10,to,{
   //   // returnTransaction: true
   // });
-  // setProofApi("https://apis.matic.network")
+  // setProofApi("https://proof-generator.polygon.technology")
 
   // var result = await service.network.getBlockIncluded("testnet", 1000);
 
@@ -115,7 +115,7 @@ const execute = async () => {
   // });
 
   console.log('tx', tx);
-  // // setProofApi("https://apis.matic.network")
+  // // setProofApi("https://proof-generator.polygon.technology")
   // // const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
   console.log("txHash", await tx.getTransactionHash());
   console.log("txReceipt", await tx.getReceipt());
