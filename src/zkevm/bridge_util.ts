@@ -79,7 +79,8 @@ export class BridgeUtil {
     }
 
     private getProof_(networkId: number, depositCount: number) {
-        return service.hermezNetwork.getMerkleProofForHermez(
+        return service.zkEvmNetwork.getMerkleProofForZkEvm(
+            this.client_.config.network,
             networkId,
             depositCount,
         ).then(proof => {

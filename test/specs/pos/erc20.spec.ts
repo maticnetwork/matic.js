@@ -107,7 +107,7 @@ describe('ERC20', () => {
         expect(isDeposited).to.be.an('boolean').equal(true);
     })
 
-    it('withdrawstart return tx', async () => {
+    it('withdraw start return tx', async () => {
 
         const result = await erc20Child.withdrawStart('1', {
             returnTransaction: true

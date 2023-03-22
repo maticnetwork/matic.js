@@ -1,19 +1,19 @@
 import { isHexString } from 'ethereumjs-util';
 import { ITransactionOption } from "../interfaces";
 import { Converter, Web3SideChainClient, promiseAny } from "../utils";
-import { HermezToken } from "./hermez_token";
+import { ZkEvmToken } from "./zkevm_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
 import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client } from "..";
-import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IHermezClientConfig, IHermezContracts } from "../interfaces";
+import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
 
-export class ERC20 extends HermezToken {
+export class ERC20 extends ZkEvmToken {
 
     constructor(
         tokenAddress: string,
         isParent: boolean,
-        client: Web3SideChainClient<IHermezClientConfig>,
-        getContracts: () => IHermezContracts
+        client: Web3SideChainClient<IZkEvmClientConfig>,
+        getContracts: () => IZkEvmContracts
     ) {
         super({
             isParent,

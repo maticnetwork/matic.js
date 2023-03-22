@@ -1,4 +1,4 @@
-import { erc20, ether, from, hermezClient, hermezClientForTo, to, RPC, privateKey, toPrivateKey } from "./client";
+import { erc20, ether, from, zkEvmClient, zkEvmClientForTo, to, RPC, privateKey, toPrivateKey } from "./client";
 import { expect } from 'chai'
 import { ABIManager } from '@maticnetwork/maticjs'
 import BN from "bn.js";
@@ -10,16 +10,16 @@ describe('ERC20', () => {
     const parentPrivder = new providers.JsonRpcProvider(RPC.parent);
     const childProvider = new providers.JsonRpcProvider(RPC.child);
 
-    let erc20Child = hermezClient.erc20(erc20.child);
-    let erc20Parent = hermezClient.erc20(erc20.parent, true);
+    let erc20Child = zkEvmClient.erc20(erc20.child);
+    let erc20Parent = zkEvmClient.erc20(erc20.parent, true);
 
-    let etherChild = hermezClient.erc20(ether.child);
-    let etherParent = hermezClient.erc20(ether.parent, true);
+    let etherChild = zkEvmClient.erc20(ether.child);
+    let etherParent = zkEvmClient.erc20(ether.parent, true);
 
     const abiManager = new ABIManager("testnet", "blueberry");
     before(() => {
         return Promise.all([
-            hermezClient.init({
+            zkEvmClient.init({
                 // log: true,
                 network: 'testnet',
                 version: 'blueberry',
@@ -36,7 +36,7 @@ describe('ERC20', () => {
                     }
                 }
             }),
-            hermezClientForTo.init({
+            zkEvmClientForTo.init({
                 // log: true,
                 network: 'testnet',
                 version: 'blueberry',
@@ -104,28 +104,28 @@ describe('ERC20', () => {
 
     // IS DEPOSIT CLAIMABLE
     it('is Deposit Claimable', async () => {
-        const isDepositClaimable = await hermezClient.isDepositClaimable('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe');
+        const isDepositClaimable = await zkEvmClient.isDepositClaimable('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe');
         console.log('isDepositClaimable', isDepositClaimable);
         expect(isDepositClaimable).to.be.an('boolean').equal(true);
     })
 
     // IS WITHDRAW EXITABLE
     it('is Withdraw Exitable', async () => {
-        const isWithdrawExitable = await hermezClient.isWithdrawExitable('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c');
+        const isWithdrawExitable = await zkEvmClient.isWithdrawExitable('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c');
         console.log('isWithdrawExitable', isWithdrawExitable);
         expect(isWithdrawExitable).to.be.an('boolean').equal(true);
     })
 
     // IS DEPOSITED
     it('is Deposited', async () => {
-        const isDeposited = await hermezClient.isDeposited('0xab0cdd96a5524a061ace48e4a91974fca3edcd1ad14ee8d6e7c9b468666b0bfd');
+        const isDeposited = await zkEvmClient.isDeposited('0xab0cdd96a5524a061ace48e4a91974fca3edcd1ad14ee8d6e7c9b468666b0bfd');
         console.log('isDeposited', isDeposited);
         expect(isDeposited).to.be.an('boolean').equal(true);
     })
 
     // IS EXITED
     it('is Exited', async () => {
-        const isExited = await hermezClient.isExited('0x27d52864c39601a722771acd89ec2f287905be84dd0678aca3cba00e59fa1982');
+        const isExited = await zkEvmClient.isExited('0x27d52864c39601a722771acd89ec2f287905be84dd0678aca3cba00e59fa1982');
         console.log('isExited', isExited);
         expect(isExited).to.be.an('boolean').equal(false);
     })
@@ -257,7 +257,7 @@ describe('ERC20', () => {
     });
 
     it('claim erc20 deposit return tx', async () => {
-        const result = await erc20Child.depositClaim('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe', {
+        const result = await erc20Child.depositClaim('0x27bbd4d96fc73c344bc1560ade28de1c4805802738beb772b995e14f41625623', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
@@ -288,7 +288,7 @@ describe('ERC20', () => {
     });
 
     it('exit return tx', async () => {
-        const result = await erc20Parent.withdrawExit('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c', {
+        const result = await erc20Parent.withdrawExit('0x27d52864c39601a722771acd89ec2f287905be84dd0678aca3cba00e59fa1982', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")
@@ -337,7 +337,7 @@ describe('ERC20', () => {
         )
 
         //transfer money back to user
-        const erc20ChildToken = hermezClientForTo.erc20(erc20.child);
+        const erc20ChildToken = zkEvmClientForTo.erc20(erc20.child);
 
         result = await erc20ChildToken.transfer(amount, to);
         txHash = await result.getTransactionHash();

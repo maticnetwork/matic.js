@@ -1,8 +1,8 @@
-const { getHermezClient, hermez, from } = require('../../utils_hermez');
+const { getZkEvmClient, zkEvm, from } = require('../../utils_zkevm');
 
 const execute = async () => {
-  const client = await getHermezClient();
-  const erc20Token = client.erc20(hermez.child.erc20);
+  const client = await getZkEvmClient();
+  const erc20Token = client.erc20(zkEvm.child.erc20);
 
   const result = await erc20Token.getBalance(from);
 

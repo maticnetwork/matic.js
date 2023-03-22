@@ -1,37 +1,37 @@
 import { ERC20 } from "./erc20";
-import { HermezBridge } from "./hermez_bridge";
+import { ZkEvmBridge } from "./zkevm_bridge";
 import { BridgeUtil } from "./bridge_util";
-import { HermezBridgeClient } from "../utils";
-import { IHermezClientConfig, IHermezContracts } from "../interfaces";
+import { ZkEvmBridgeClient } from "../utils";
+import { IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
 import { service, NetworkService } from "../services";
 
-export * from "./hermez_bridge";
+export * from "./zkevm_bridge";
 export * from "./bridge_util";
 
-export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
+export class ZkEvmClient extends ZkEvmBridgeClient {
 
-    init(config: IHermezClientConfig) {
+    init(config: IZkEvmClientConfig) {
         const client = this.client;
 
         return client.init(config).then(_ => {
-            const mainHermezContracts = client.mainHermezContracts; 
-            const hermezContracts = client.hermezContracts;
+            const mainZkEvmContracts = client.mainZkEvmContracts; 
+            const zkEvmContracts = client.zkEvmContracts;
             client.config = config = Object.assign(
                 {
-                    parentBridge: mainHermezContracts.PolygonZkEVMBridgeProxy,
-                    childBridge: hermezContracts.PolygonZkEVMBridge,
-                } as IHermezClientConfig,
+                    parentBridge: mainZkEvmContracts.PolygonZkEVMBridgeProxy,
+                    childBridge: zkEvmContracts.PolygonZkEVMBridge,
+                } as IZkEvmClientConfig,
                 config
             );
 
-            this.rootChainBridge = new HermezBridge(
+            this.rootChainBridge = new ZkEvmBridge(
                 this.client,
                 config.parentBridge,
                 true
             );
 
-            this.childChainBridge = new HermezBridge(
+            this.childChainBridge = new ZkEvmBridge(
                 this.client,
                 config.childBridge,
                 false
@@ -41,11 +41,12 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
                 this.client
             );
 
-            if (!service.hermezNetwork) {
-                if (urlConfig.hermezBridgeService[urlConfig.hermezBridgeService.length - 1] !== '/') {
-                    urlConfig.hermezBridgeService += '/';
+            if (!service.zkEvmNetwork) {
+                if (urlConfig.zkEvmBridgeService[urlConfig.zkEvmBridgeService.length - 1] !== '/') {
+                    urlConfig.zkEvmBridgeService += '/';
                 }
-                service.hermezNetwork = new NetworkService(urlConfig.hermezBridgeService);
+                urlConfig.zkEvmBridgeService += 'api/zkevm/';
+                service.zkEvmNetwork = new NetworkService(urlConfig.zkEvmBridgeService);
             }
 
             return this;
@@ -75,6 +76,6 @@ export class HermezClient extends HermezBridgeClient<IHermezClientConfig> {
             parentBridge: this.rootChainBridge,
             childBridge: this.childChainBridge,
             bridgeUtil: this.bridgeUtil
-        } as IHermezContracts;
+        } as IZkEvmContracts;
     }
 }

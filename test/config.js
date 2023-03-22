@@ -9,9 +9,9 @@ module.exports = {
             parent: process.env.GOERLI_ROOT_RPC,
             child: process.env.MATIC_RPC || 'https://rpc-mumbai.matic.today',
         },
-        hermez: {
+        zkEvm: {
             parent: process.env.GOERLI_ROOT_RPC,
-            child: process.env.HERMEZ_RPC || 'https://rpc.public.zkevm-test.net',
+            child: process.env.ZKEVM_RPC || 'https://rpc.public.zkevm-test.net',
         },
     },
     pos: {
@@ -31,7 +31,7 @@ module.exports = {
             erc1155: '0xA07e45A987F19E25176c877d98388878622623FA',
         },
     },
-    hermez: {
+    zkEvm: {
         parent: {
             ether: '0x0000000000000000000000000000000000000000',
             // erc20: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', // WETH
