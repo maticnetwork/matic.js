@@ -14,5 +14,6 @@ export const setZkEvmProofApi = (url: string) => {
     if (url[urlLength - 1] !== '/') {
         url += '/';
     }
+    url += 'api/zkevm/';
     service.zkEvmNetwork = new NetworkService(url);
 };

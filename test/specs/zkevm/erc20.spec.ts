@@ -257,7 +257,7 @@ describe('ERC20', () => {
     });
 
     it('claim erc20 deposit return tx', async () => {
-        const result = await erc20Child.depositClaim('0xeaa6af0ac116f3c7b20a583bd6187e1a0714a6be69e1738887ce1b380409eefe', {
+        const result = await erc20Child.depositClaim('0x27bbd4d96fc73c344bc1560ade28de1c4805802738beb772b995e14f41625623', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("zkEVM.Contracts.PolygonZkEVMBridge")
@@ -288,7 +288,7 @@ describe('ERC20', () => {
     });
 
     it('exit return tx', async () => {
-        const result = await erc20Parent.withdrawExit('0x45f96efb6e58d61aafa4727caa2dca4fcaf441cedf82b83d2db7b14aa6f9ca2c', {
+        const result = await erc20Parent.withdrawExit('0x27d52864c39601a722771acd89ec2f287905be84dd0678aca3cba00e59fa1982', {
             returnTransaction: true
         });
         const bridge = await abiManager.getConfig("Main.Contracts.PolygonZkEVMBridgeProxy")

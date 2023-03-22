@@ -9,7 +9,7 @@ import { service, NetworkService } from "../services";
 export * from "./zkevm_bridge";
 export * from "./bridge_util";
 
-export class ZkEvmClient extends ZkEvmBridgeClient<IZkEvmClientConfig> {
+export class ZkEvmClient extends ZkEvmBridgeClient {
 
     init(config: IZkEvmClientConfig) {
         const client = this.client;
@@ -45,6 +45,7 @@ export class ZkEvmClient extends ZkEvmBridgeClient<IZkEvmClientConfig> {
                 if (urlConfig.zkEvmBridgeService[urlConfig.zkEvmBridgeService.length - 1] !== '/') {
                     urlConfig.zkEvmBridgeService += '/';
                 }
+                urlConfig.zkEvmBridgeService += 'api/zkevm/';
                 service.zkEvmNetwork = new NetworkService(urlConfig.zkEvmBridgeService);
             }
 

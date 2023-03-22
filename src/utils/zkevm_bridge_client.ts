@@ -1,10 +1,11 @@
 import { Web3SideChainClient } from ".";
 import { BridgeUtil, ZkEvmBridge } from "../zkevm";
 import { service } from "../services";
+import { IBaseClientConfig } from "..";
 
-export class ZkEvmBridgeClient<T> {
+export class ZkEvmBridgeClient {
 
-    client: Web3SideChainClient<T> = new Web3SideChainClient();
+    client: Web3SideChainClient<IBaseClientConfig> = new Web3SideChainClient();
     bridgeUtil: BridgeUtil;
     rootChainBridge: ZkEvmBridge;
     childChainBridge: ZkEvmBridge;
@@ -20,7 +21,11 @@ export class ZkEvmBridgeClient<T> {
         return Promise.all([this.rootChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, true
         )]).then(result => {
-            return service.zkEvmNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.zkEvmNetwork.getBridgeTransactionDetails(
+                this.client.config.network,
+                result[0],
+                result[1].depositCount
+            );
         }).then(details => {
             return details.ready_for_claim;
         });
@@ -37,7 +42,11 @@ export class ZkEvmBridgeClient<T> {
         return Promise.all([this.childChainBridge.networkID(), this.bridgeUtil.getBridgeLogData(
             txHash, false
         )]).then(result => {
-            return service.zkEvmNetwork.getBridgeTransactionDetails(result[0], result[1].depositCount);
+            return service.zkEvmNetwork.getBridgeTransactionDetails(
+                this.client.config.network,
+                result[0],
+                result[1].depositCount
+            );
         }).then(details => {
             return details.ready_for_claim;
         });
