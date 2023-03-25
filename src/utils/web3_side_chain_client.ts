@@ -10,7 +10,7 @@ const chainIdToConfigPath = {
     137: 'Matic',
     80001: 'Matic',
     1442: 'zkEVM',
-    1100: 'zkEVM'
+    1101: 'zkEVM'
 };
 
 export class Web3SideChainClient<T_CONFIG> {
