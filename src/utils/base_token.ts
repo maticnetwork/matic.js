@@ -1,7 +1,7 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IBaseClientConfig, ITransactionWriteResult } from "../interfaces";
 import { BaseContractMethod, BaseContract } from "../abstracts";
-import { Converter, merge } from "../utils";
+import { Converter, merge, utils } from "../utils";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { POSERC1155TransferParam, TYPE_AMOUNT } from "../types";
@@ -187,8 +187,8 @@ export class BaseToken<T_CLIENT_CONFIG> {
             this.client.child;
         client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const estimateGas = async (config: ITransactionRequestConfig) => {
-            return method ? Number(await method.estimateGas(config) * 1.15) :
-                Number(await client.estimateGas(config) * 1.15);
+            const result = method ? await method.estimateGas(config) : await client.estimateGas(config);
+            return new utils.BN(Number(result) * 1.15).toString();
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
