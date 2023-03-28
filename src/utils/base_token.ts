@@ -186,9 +186,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
         const client = isParent ? this.client.parent :
             this.client.child;
         client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
-        const estimateGas = (config: ITransactionRequestConfig) => {
-            return method ? method.estimateGas(config) :
-                client.estimateGas(config);
+        const estimateGas = async (config: ITransactionRequestConfig) => {
+            return method ? Number(await method.estimateGas(config) * 1.15) :
+                Number(await client.estimateGas(config) * 1.15);
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
@@ -206,7 +206,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 return Promise.all([
                     !(txConfig.gasLimit)
                         ? estimateGas({
-                            from: txConfig.from, value: txConfig.value
+                            from: txConfig.from, value: txConfig.value, to: txConfig.to
                         })
                         : txConfig.gasLimit,
                     !txConfig.nonce ?
