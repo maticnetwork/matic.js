@@ -1,5 +1,4 @@
-
 export const config = {
-    abiStoreUrl: 'https://static.matic.network/network/',
-    zkEvmBridgeService: 'https://proof-generator.polygon.technology/'
-};
+  abiStoreUrl: 'https://static.polygon.technology/network/',
+  zkEvmBridgeService: 'https://proof-generator.polygon.technology/',
+}
