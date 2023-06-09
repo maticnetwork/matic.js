@@ -189,7 +189,10 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
         return this.method(
             "networkID"
         ).then(method => {
-            return this.processRead<number>(method);
+            return this.processRead<number>(method).then((networkId) => {
+                this.networkID_ = networkId;
+                return networkId;
+            });
         });
     }
 
