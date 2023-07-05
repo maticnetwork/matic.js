@@ -328,7 +328,7 @@ export class ERC721 extends POSToken {
     }
 
     /**
-     * tranfer to another user
+     * transfer to another user
      *
      * @param {string} tokenId
      * @param {string} from

@@ -333,7 +333,7 @@ export class ERC1155 extends POSToken {
     }
 
     /**
-     * transfer the required amount of a token to anothe user
+     * transfer the required amount of a token to another user
      *
      * @param {POSERC1155TransferParam} param
      * @param {ITransactionOption} [option]

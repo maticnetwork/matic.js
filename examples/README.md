@@ -13,7 +13,7 @@ You need to configure your environment variables now. Copy `.env.example` and re
 
 There are some prefilled data in `config.js` but feel free to change anything as per your needs.
 
-**Note:** - Be careful with your private key, Use a key you are comfortable with for development purpose. And try not to make it public by doing actions such as commiting to repo or referencing on any online site.
+**Note:** - Be careful with your private key, Use a key you are comfortable with for development purpose. And try not to make it public by doing actions such as committing to repo or referencing on any online site.
 
 ### 2. Install package
 

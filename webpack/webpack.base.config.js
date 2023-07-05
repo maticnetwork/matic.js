@@ -9,7 +9,7 @@ let mode = process.env.NODE_ENV
 const isProd = mode === 'production'
 exports.isProd = isProd;
 
-console.log('build runing for mode', mode);
+console.log('build running for mode', mode);
 exports.default = {
     mode,
     devtool: 'source-map',

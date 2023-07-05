@@ -10,7 +10,7 @@ _Branch naming convention:_
 
 _Note: No strict convention while naming branch, but try to keep it meaningful for your team members to understand._
 
-3. Add files to be commited and then commit changes to your local machine `git commit -m <commit-message>`
+3. Add files to be committed and then commit changes to your local machine `git commit -m <commit-message>`
 
 _Commit message convention:_
 - Feature - `feat: integrate token balances`
