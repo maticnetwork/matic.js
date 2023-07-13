@@ -9,4 +9,5 @@ export interface IPOSClientConfig extends IBaseClientConfig {
     rootChain?: string;
     erc1155?: IPOSERC1155Address;
     rootChainDefaultBlock?:string;
+    gasSwapper?: string;
 }
