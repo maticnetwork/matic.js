@@ -9,9 +9,9 @@ module.exports = {
             parent: process.env.GOERLI_ROOT_RPC,
             child: process.env.MATIC_RPC || 'https://rpc-mumbai.matic.today',
         },
-        hermez: {
+        zkEvm: {
             parent: process.env.GOERLI_ROOT_RPC,
-            child: process.env.HERMEZ_RPC || 'https://rpc.public.zkevm-test.net',
+            child: process.env.ZKEVM_RPC || 'https://rpc.public.zkevm-test.net',
         },
     },
     pos: {
@@ -31,20 +31,20 @@ module.exports = {
             erc1155: '0xA07e45A987F19E25176c877d98388878622623FA',
         },
     },
-    hermez: {
+    zkEvm: {
         parent: {
             ether: '0x0000000000000000000000000000000000000000',
-            // erc20: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', // WETH
-            // erc20: '0x5C221E77624690fff6dd741493D735a17716c26B' // DAI
-            // erc20: '0x27b4861cf36453b9478cd5416426ca6fbd06f67a', // DAI TEMP
-            // erc20: '0xe7e7ad60b75614829be79a3014c5c6aeb006e079', // UNI TEMP
-            erc20: '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733' // Polygon
+            // erc20: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', // WETH
+            // erc20: '0xD7E55eB808693D5Ff81a3391c59886C7E0449f35' // DAI
+            // erc20: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', // UNI
+            erc20: '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733' // MATIC
         },
         child: {
             ether: '0x0000000000000000000000000000000000000000',
-            // erc20: '0x270969e59d170fB576cBB5E254493e9bfB13684f', // WETH
-            // erc20: '0x08bd5b6d0237FaAED3C5E04fB131de2f843aC756', // DAI
-            erc20: '0x20359119308a1527f36458be807248CE8Fc00441' // Polygon
+            // erc20: '0x3ce1bab7b7bAE26775F81Ee3576a99f0EAd5B33C', // WETH
+            // erc20: '0x0cdA85ADE5C84C386B69b562d1722642748DD194', // DAI
+            // erc20: '0x378588D64A464d61c646e5e86F4DA5277e65802C', // UNI
+            erc20: '0x244f21e2cDB60e9B6C9aEbB96FFe04489831F881' // MATIC
         },
     },
     user1: {

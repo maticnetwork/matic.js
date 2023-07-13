@@ -9,7 +9,8 @@ const chainIdToConfigPath = {
     5: 'Main',
     137: 'Matic',
     80001: 'Matic',
-    1422: 'Hermez'
+    1442: 'zkEVM',
+    1101: 'zkEVM'
 };
 
 export class Web3SideChainClient<T_CONFIG> {
@@ -63,7 +64,7 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.abiManager.getConfig(path);
     }
 
-    get mainContracts() {
+    get mainPlasmaContracts() {
         return this.getConfig("Main.Contracts");
     }
 
@@ -71,11 +72,11 @@ export class Web3SideChainClient<T_CONFIG> {
         return this.getConfig("Main.POSContracts");
     }
 
-    get mainHermezContracts() {
-        return this.getConfig("Main.zkEVMContracts");
+    get mainZkEvmContracts() {
+        return this.getConfig("Main.Contracts");
     }
 
-    get hermezContracts() {
+    get zkEvmContracts() {
         return this.getConfig("zkEVM.Contracts");
     }
 

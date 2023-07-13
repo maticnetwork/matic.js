@@ -7,14 +7,17 @@ import { RootChain } from "./root_chain";
 import { ERC721 } from "./erc721";
 import { TYPE_AMOUNT } from "../types";
 import { ERC1155 } from "./erc1155";
+import { GasSwapper } from "./gas_swapper";
 
 export * from "./exit_util";
 export * from "./root_chain_manager";
 export * from "./root_chain";
+export * from "./gas_swapper";
 
 export class POSClient extends BridgeClient<IPOSClientConfig> {
 
     rootChainManager: RootChainManager;
+    gasSwapper: GasSwapper;
 
     init(config: IPOSClientConfig) {
         const client = this.client;
@@ -23,9 +26,9 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
             const mainPOSContracts = client.mainPOSContracts;
             client.config = config = Object.assign(
                 {
-
                     rootChainManager: mainPOSContracts.RootChainManagerProxy,
-                    rootChain: client.mainContracts.RootChainProxy
+                    rootChain: client.mainPlasmaContracts.RootChainProxy,
+                    gasSwapper: mainPOSContracts.GasSwapper
                 } as IPOSClientConfig,
                 config
             );
@@ -43,6 +46,11 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
             this.exitUtil = new ExitUtil(
                 this.client,
                 rootChain
+            );
+
+            this.gasSwapper = new GasSwapper(
+                this.client,
+                config.gasSwapper
             );
 
             return this;
@@ -86,7 +94,8 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
     private getContracts_() {
         return {
             exitUtil: this.exitUtil,
-            rootChainManager: this.rootChainManager
+            rootChainManager: this.rootChainManager,
+            gasSwapper: this.gasSwapper
         } as IPOSContracts;
     }
 }

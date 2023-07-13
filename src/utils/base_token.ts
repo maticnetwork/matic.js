@@ -1,7 +1,7 @@
 import { Web3SideChainClient } from "./web3_side_chain_client";
 import { ITransactionRequestConfig, ITransactionOption, IContractInitParam, IBaseClientConfig, ITransactionWriteResult } from "../interfaces";
 import { BaseContractMethod, BaseContract } from "../abstracts";
-import { Converter, merge } from "../utils";
+import { Converter, merge, utils } from "../utils";
 import { promiseResolve } from "./promise_resolve";
 import { ERROR_TYPE } from "../enums";
 import { POSERC1155TransferParam, TYPE_AMOUNT } from "../types";
@@ -186,9 +186,9 @@ export class BaseToken<T_CLIENT_CONFIG> {
         const client = isParent ? this.client.parent :
             this.client.child;
         client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
-        const estimateGas = (config: ITransactionRequestConfig) => {
-            return method ? method.estimateGas(config) :
-                client.estimateGas(config);
+        const estimateGas = async (config: ITransactionRequestConfig) => {
+            const result = method ? await method.estimateGas(config) : await client.estimateGas(config);
+            return new utils.BN(Number(result) * 1.15).toString();
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
@@ -206,7 +206,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
                 return Promise.all([
                     !(txConfig.gasLimit)
                         ? estimateGas({
-                            from: txConfig.from, value: txConfig.value
+                            from: txConfig.from, value: txConfig.value, to: txConfig.to
                         })
                         : txConfig.gasLimit,
                     !txConfig.nonce ?

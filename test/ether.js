@@ -1,9 +1,9 @@
-const { POSClient, HermezClient, use, Converter } = require("@maticnetwork/maticjs");
+const { POSClient, ZkEvmClient, use, Converter } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-ethers");
 
 
 const { providers, Wallet } = require("ethers");
-const { user1, rpc, pos, hermez, user2 } = require("./config");
+const { user1, rpc, pos, zkEvm, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 const to = user2.address;
@@ -58,23 +58,23 @@ const execute = async () => {
     // console.log("txReceipt", await tx.getReceipt());
 }
 
-const executeHermez = async () => {
+const executeZkEvm = async () => {
     const privateKey = user1.privateKey;
-    const mangoERC20 = hermez.child.erc20;
-    const goerliERC20 = hermez.parent.erc20;
+    const blueberryERC20 = zkEvm.child.erc20;
+    const goerliERC20 = zkEvm.parent.erc20;
 
-    const mangoEther = hermez.child.ether;
-    const goerliEther = hermez.parent.ether;
+    const blueberryEther = zkEvm.child.ether;
+    const goerliEther = zkEvm.parent.ether;
 
-    const parentPrivder = new providers.JsonRpcProvider(rpc.hermez.parent);
-    const childProvider = new providers.JsonRpcProvider(rpc.hermez.child);
+    const parentPrivder = new providers.JsonRpcProvider(rpc.zkEvm.parent);
+    const childProvider = new providers.JsonRpcProvider(rpc.zkEvm.child);
 
-    const client = new HermezClient();
+    const client = new ZkEvmClient();
 
     await client.init({
         log: true,
         network: 'testnet',
-        version: 'mango',
+        version: 'blueberry',
         parent: {
             provider: new Wallet(privateKey, parentPrivder),
             defaultConfig: {
@@ -90,10 +90,10 @@ const executeHermez = async () => {
     });
     console.log("init called");
 
-    const mangoERC20Token = client.erc20(mangoERC20);
+    const blueberryERC20Token = client.erc20(blueberryERC20);
     const goerliERC20Token = client.erc20(goerliERC20, true);
 
-    const mangoEtherToken = client.erc20(mangoEther);
+    const blueberryEtherToken = client.erc20(blueberryEther);
     const goerliEtherToken = client.erc20(goerliEther, true);
 
     // setProofApi("https://bridge-api.public.zkevm-test.net/");
@@ -119,7 +119,7 @@ const executeHermez = async () => {
     // return console.log('result', result);
 
     // // getOriginTokenInfo
-    // var result = await client.childChainBridge.getOriginTokenInfo(mangoERC20);
+    // var result = await client.childChainBridge.getOriginTokenInfo(blueberryERC20);
     // return console.log('result', result);
 
     // // getBalance on goerli
@@ -130,8 +130,8 @@ const executeHermez = async () => {
     // var result = await goerliEtherToken.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
     // return console.log('result', result);
 
-    // // getBalance on mango
-    // var result = await mangoERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+    // // getBalance on blueberry
+    // var result = await blueberryERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
     // return console.log('result', result);
 
     // // getAllowance
@@ -147,7 +147,7 @@ const executeHermez = async () => {
     // return console.log("hash", tx);
 
     // // claim Ether
-    // var tx = await mangoEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
+    // var tx = await blueberryEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
     // return console.log("hash", tx);
 
     // // deposit ERC20
@@ -155,7 +155,7 @@ const executeHermez = async () => {
     // return console.log("hash", tx);
 
     // // deposit claim ERC20
-    // var tx = await mangoERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
+    // var tx = await blueberryERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
     // return console.log("hash", tx);
 
     // // Get Permit Data
@@ -167,11 +167,11 @@ const executeHermez = async () => {
     // return console.log("hash", tx);
 
     // // withdraw Ether
-    // var tx = await mangoEtherToken.withdraw("1", from, {returnTransaction: true});
+    // var tx = await blueberryEtherToken.withdraw("1", from, {returnTransaction: true});
     // return console.log("hash",  tx);
 
     // // withdraw ERC20
-    // var tx = await mangoERC20Token.withdraw("1", from, {returnTransaction: true});
+    // var tx = await blueberryERC20Token.withdraw("1", from, {returnTransaction: true});
     // return console.log("hash", tx);
 
     // // withdraw exit ERC20
@@ -182,7 +182,7 @@ const executeHermez = async () => {
     // console.log("receipt", await tx.getReceipt());
 }
 
-executeHermez().then(_ => {
+executeZkEvm().then(_ => {
     process.exit(0)
 }).catch(err => {
     console.error(err);

@@ -18,6 +18,10 @@ export class POSToken extends BaseToken<IPOSClientConfig> {
         return this.getPOSContracts().rootChainManager;
     }
 
+    protected get gasSwapper() {
+        return this.getPOSContracts().gasSwapper;
+    }
+
     protected get exitUtil() {
         return this.getPOSContracts().exitUtil;
     }

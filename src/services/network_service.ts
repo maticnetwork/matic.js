@@ -12,6 +12,10 @@ export class NetworkService {
         return `${network === 'mainnet' ? 'matic' : 'mumbai'}${url}`;
     }
 
+    private createUrlForZkEvm(network: string, url: string) {
+        return `${network}/${url}`;
+    }
+
     getBlockIncluded(network: string, blockNumber: number) {
         const url = this.createUrlForPos(network, `/block-included/${blockNumber}`);
         return this.httpRequest.get<{
@@ -35,15 +39,15 @@ export class NetworkService {
         });
     }
 
-    getMerkleProofForHermez(networkID: number, depositCount: number) {
-        const url = `merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`;
+    getMerkleProofForZkEvm(network: string, networkID: number, depositCount: number) {
+        const url = this.createUrlForZkEvm(network, `merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.proof;
         });
     }
 
-    getBridgeTransactionDetails(networkID: number, depositCount: number) {
-        const url = `bridge?net_id=${networkID}&deposit_cnt=${depositCount}`;
+    getBridgeTransactionDetails(network: string, networkID: number, depositCount: number) {
+        const url = this.createUrlForZkEvm(network, `bridge?net_id=${networkID}&deposit_cnt=${depositCount}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.deposit;
         });

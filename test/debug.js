@@ -1,9 +1,9 @@
-const { setProofApi, POSClient, HermezClient, use, Converter } = require("@maticnetwork/maticjs");
+const { setProofApi, POSClient, ZkEvmClient, use, Converter } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { toBuffer } = require("ethereumjs-util");
-const { user1, rpc, pos, hermez, user2 } = require("./config");
+const { user1, rpc, pos, zkEvm, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 const to = user2.address;
@@ -49,36 +49,48 @@ const execute = async () => {
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
 
-  // setProofApi("https://apis.matic.network");
+  // setProofApi("https://proof-generator.polygon.technology");
 
-  var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
-    returnTransaction: true
-  });
+  // const tx = await goerliERC20Token.depositWithGas(
+  //   "9887",
+  //   "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
+  //   "1000000000000000",
+  //   "0xd9627aa4000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000000000000000000000000000261bad812e880a9e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0000000000000000000000007d1afa7b718fb893db30a3abc0cfc608aacfebb0869584cd000000000000000000000000dea904157bd08dae959a04dc7e5924b6e3cfe45000000000000000000000000000000000000000000000002ecac6fcd564a499d4", 
+  //   {
+  //   // maxPriorityFeePerGas: 2000000000,
+  //   returnTransaction: true
+  // });
+  // console.log(tx)
+  // return
+
+  // var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
+  //   returnTransaction: true
+  // });
   // var result = await goerliERC20Token.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
   //   returnTransaction: true
   // });
 
-  return console.log('result', result);
+  // return console.log('result', result);
 
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  var tx = await mumbaiERC20Token.getAllowance(from);
-  return console.log('isapp', tx);
-  var tx = await goerliERC1155Token.deposit({
-    amount: 10,
-    tokenId: 123,
-    userAddress: from
-  }, {
-    returnTransaction: true
-  });
+  // var tx = await mumbaiERC20Token.getAllowance(from);
+  // return console.log('isapp', tx);
+  // var tx = await goerliERC1155Token.deposit({
+  //   amount: 10,
+  //   tokenId: 123,
+  //   userAddress: from
+  // }, {
+  //   returnTransaction: true
+  // });
 
-  return console.log('tx', tx);
+  // return console.log('tx', tx);
 
-  console.log("hash", await tx.getTransactionHash());
-  console.log("receipt", await tx.getReceipt());
+  // console.log("hash", await tx.getTransactionHash());
+  // console.log("receipt", await tx.getReceipt());
 
-  return;
+  // return;
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from
@@ -97,13 +109,13 @@ const execute = async () => {
   // return console.log('tx', tx);
 
 
-  var tx = await goerliERC20Token.deposit(1000000000, from, {
-    // returnTransaction: true
-  });
+  // var tx = await goerliERC20Token.deposit(1000000000, from, {
+  //   // returnTransaction: true
+  // });
   // var tx = await mumbaiERC20Token.transfer(10,to,{
   //   // returnTransaction: true
   // });
-  // setProofApi("https://apis.matic.network")
+  // setProofApi("https://proof-generator.polygon.technology")
 
   // var result = await service.network.getBlockIncluded("testnet", 1000);
 
@@ -114,14 +126,14 @@ const execute = async () => {
   //   returnTransaction: true
   // });
 
-  console.log('tx', tx);
-  // // setProofApi("https://apis.matic.network")
+  // console.log('tx', tx);
+  // // setProofApi("https://proof-generator.polygon.technology")
   // // const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
-  console.log("txHash", await tx.getTransactionHash());
-  console.log("txReceipt", await tx.getReceipt());
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
 
   //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
-  const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
+  // const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
 
   // const tx = await (client['client_']).child.getTransactionCount(from, 'pending');
   // console.log("tx", tx);
@@ -144,28 +156,28 @@ const execute = async () => {
   // console.log("txReceipt", await tx.getReceipt());
 }
 
-const executeHermez = async () => {
+const executeZkEvm = async () => {
   const privateKey = user1.privateKey;
-  const mangoERC20 = hermez.child.erc20;
-  const goerliERC20 = hermez.parent.erc20;
+  const blueberryERC20 = zkEvm.child.erc20;
+  const goerliERC20 = zkEvm.parent.erc20;
 
-  const mangoEther = hermez.child.ether;
-  const goerliEther = hermez.parent.ether;
+  const blueberryEther = zkEvm.child.ether;
+  const goerliEther = zkEvm.parent.ether;
 
-  const client = new HermezClient();
+  const client = new ZkEvmClient();
 
   await client.init({
     log: true,
     network: 'testnet',
-    version: 'mango',
+    version: 'blueberry',
     parent: {
-      provider: new HDWalletProvider(privateKey, rpc.hermez.parent),
+      provider: new HDWalletProvider(privateKey, rpc.zkEvm.parent),
       defaultConfig: {
         from
       }
     },
     child: {
-      provider: new HDWalletProvider(privateKey, rpc.hermez.child),
+      provider: new HDWalletProvider(privateKey, rpc.zkEvm.child),
       defaultConfig: {
         from
       }
@@ -173,11 +185,15 @@ const executeHermez = async () => {
   });
   console.log("init called");
 
-  const mangoERC20Token = client.erc20(mangoERC20);
+  const blueberryERC20Token = client.erc20(blueberryERC20);
   const goerliERC20Token = client.erc20(goerliERC20, true);
 
-  const mangoEtherToken = client.erc20(mangoEther);
+  const blueberryEtherToken = client.erc20(blueberryEther);
   const goerliEtherToken = client.erc20(goerliEther, true);
+
+  // // transfer Ether
+  // var tx = await blueberryEtherToken.transfer("1", from, {returnTransaction: true});
+  // return console.log("hash",  tx);
 
   // setProofApi("https://bridge-api.public.zkevm-test.net/");
 
@@ -202,7 +218,7 @@ const executeHermez = async () => {
   // return console.log('result', result);
 
   // // getOriginTokenInfo
-  // var result = await client.childChainBridge.getOriginTokenInfo(mangoERC20);
+  // var result = await client.childChainBridge.getOriginTokenInfo(blueberryERC20);
   // return console.log('result', result);
 
   // // getBalance on goerli
@@ -213,8 +229,8 @@ const executeHermez = async () => {
   // var result = await goerliEtherToken.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
   // return console.log('result', result);
 
-  // // getBalance on mango
-  // var result = await mangoERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
+  // // getBalance on blueberry
+  // var result = await blueberryERC20Token.getBalance("0xFd71Dc9721d9ddCF0480A582927c3dCd42f3064C");
   // return console.log('result', result);
 
   // // getAllowance
@@ -230,7 +246,7 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // claim Ether
-  // var tx = await mangoEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
+  // var tx = await blueberryEtherToken.depositClaim("0xd2019abfdb978346cfc886525752b3d8a5798b8c474a46a8d18ed9b293bd5862", {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // deposit ERC20
@@ -238,7 +254,7 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // deposit claim ERC20
-  // var tx = await mangoERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
+  // var tx = await blueberryERC20Token.depositClaim("0x080b05623d70c2858cb1fc64fd76cd04bde52a0a344d3cb896d33833ef221b12", {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // Get Permit Data
@@ -250,11 +266,11 @@ const executeHermez = async () => {
   // return console.log("hash", tx);
 
   // // withdraw Ether
-  // var tx = await mangoEtherToken.withdraw("1", from, {returnTransaction: true});
+  // var tx = await blueberryEtherToken.withdraw("1", from, {returnTransaction: true});
   // return console.log("hash",  tx);
 
   // // withdraw ERC20
-  // var tx = await mangoERC20Token.withdraw("1", from, {returnTransaction: true});
+  // var tx = await blueberryERC20Token.withdraw("1", from, {returnTransaction: true});
   // return console.log("hash", tx);
 
   // // withdraw exit ERC20
@@ -265,7 +281,7 @@ const executeHermez = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-executeHermez().then(_ => {
+execute().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);

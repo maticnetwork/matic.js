@@ -9,12 +9,11 @@ export const setProofApi = (url: string) => {
     service.network = new NetworkService(url);
 };
 
-export const setHermezProofApi = (url: string) => {
+export const setZkEvmProofApi = (url: string) => {
     const urlLength = url.length;
     if (url[urlLength - 1] !== '/') {
         url += '/';
     }
-    if (!service.hermezNetwork) {
-        service.hermezNetwork = new NetworkService(url);
-    }
+    url += 'api/zkevm/';
+    service.zkEvmNetwork = new NetworkService(url);
 };

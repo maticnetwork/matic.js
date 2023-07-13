@@ -107,7 +107,7 @@ describe('ERC20', () => {
         expect(isDeposited).to.be.an('boolean').equal(true);
     })
 
-    it('withdrawstart return tx', async () => {
+    it('withdraw start return tx', async () => {
 
         const result = await erc20Child.withdrawStart('1', {
             returnTransaction: true
@@ -193,7 +193,7 @@ describe('ERC20', () => {
 
     // it('call getBlockIncluded', async () => {
 
-    //     setProofApi("https://apis.matic.network");
+    //     setProofApi("https://proof-generator.polygon.technology");
     //     try {
     //         // const result = await service.network.getBlockIncluded("testnet", 1000);
     //         // console.log("result", result);
@@ -208,7 +208,7 @@ describe('ERC20', () => {
     // });
 
     it('withdrawExitFaster return tx', async () => {
-        setProofApi("https://apis.matic.network");
+        setProofApi("https://proof-generator.polygon.technology");
 
         const result: ITransactionRequestConfig = await erc20Parent.withdrawExitFaster('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
             returnTransaction: true
