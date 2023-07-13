@@ -16,7 +16,7 @@ https://docs.polygon.technology/docs/develop/ethereum-polygon/matic-js/get-start
 
 ## Support
 
-Our [Discord](https://discord.gg/s2NPJNUvyc) is the best way to reach us ✨.
+Our [Discord](https://discord.gg/0xPolygonDevs) is the best way to reach us ✨.
 
 ## Contributors
 

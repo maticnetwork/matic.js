@@ -51,34 +51,46 @@ const execute = async () => {
 
   // setProofApi("https://proof-generator.polygon.technology");
 
-  var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
-    returnTransaction: true
-  });
+  // const tx = await goerliERC20Token.depositWithGas(
+  //   "9887",
+  //   "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
+  //   "1000000000000000",
+  //   "0xd9627aa4000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000000000000000000000000000261bad812e880a9e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0000000000000000000000007d1afa7b718fb893db30a3abc0cfc608aacfebb0869584cd000000000000000000000000dea904157bd08dae959a04dc7e5924b6e3cfe45000000000000000000000000000000000000000000000002ecac6fcd564a499d4", 
+  //   {
+  //   // maxPriorityFeePerGas: 2000000000,
+  //   returnTransaction: true
+  // });
+  // console.log(tx)
+  // return
+
+  // var result = await goerliERC1155Token.isWithdrawExited('0xbc48c0ccd9821141779a200586ef52033a3487c4e1419625fe7a0ea984521052', {
+  //   returnTransaction: true
+  // });
   // var result = await goerliERC20Token.withdrawExit('0x1c20c41b9d97d1026aa456a21f13725df63edec1b1f43aacb180ebcc6340a2d3', {
   //   returnTransaction: true
   // });
 
-  return console.log('result', result);
+  // return console.log('result', result);
 
   // return console.log(await client.isDeposited('0x05b6d0d2280557c04de48d395f1f4ea9deb498fabb9bb09b9aec929db5ce62fa'));
 
 
-  var tx = await mumbaiERC20Token.getAllowance(from);
-  return console.log('isapp', tx);
-  var tx = await goerliERC1155Token.deposit({
-    amount: 10,
-    tokenId: 123,
-    userAddress: from
-  }, {
-    returnTransaction: true
-  });
+  // var tx = await mumbaiERC20Token.getAllowance(from);
+  // return console.log('isapp', tx);
+  // var tx = await goerliERC1155Token.deposit({
+  //   amount: 10,
+  //   tokenId: 123,
+  //   userAddress: from
+  // }, {
+  //   returnTransaction: true
+  // });
 
-  return console.log('tx', tx);
+  // return console.log('tx', tx);
 
-  console.log("hash", await tx.getTransactionHash());
-  console.log("receipt", await tx.getReceipt());
+  // console.log("hash", await tx.getTransactionHash());
+  // console.log("receipt", await tx.getReceipt());
 
-  return;
+  // return;
 
   // const tokens = await goerliERC721Token.getAllTokens(
   //   from
@@ -97,9 +109,9 @@ const execute = async () => {
   // return console.log('tx', tx);
 
 
-  var tx = await goerliERC20Token.deposit(1000000000, from, {
-    // returnTransaction: true
-  });
+  // var tx = await goerliERC20Token.deposit(1000000000, from, {
+  //   // returnTransaction: true
+  // });
   // var tx = await mumbaiERC20Token.transfer(10,to,{
   //   // returnTransaction: true
   // });
@@ -114,14 +126,14 @@ const execute = async () => {
   //   returnTransaction: true
   // });
 
-  console.log('tx', tx);
+  // console.log('tx', tx);
   // // setProofApi("https://proof-generator.polygon.technology")
   // // const tx = await goerliERC20Token.withdrawExit('0xd6f7f4c6052611761946519076de28fbd091693af974e7d4abc1b17fd7926fd7');
-  console.log("txHash", await tx.getTransactionHash());
-  console.log("txReceipt", await tx.getReceipt());
+  // console.log("txHash", await tx.getTransactionHash());
+  // console.log("txReceipt", await tx.getReceipt());
 
   //txhash to plasma exit - 0x63aa095e0d6ee8698399b871daa202eb5522933e2d94c5929cf0fb86b6b0c628
-  const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
+  // const tokenId = '60399350241383852757821046101235634991156913804166740995010931519407953501076'
 
   // const tx = await (client['client_']).child.getTransactionCount(from, 'pending');
   // console.log("tx", tx);
@@ -269,7 +281,7 @@ const executeZkEvm = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-executeZkEvm().then(_ => {
+execute().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);

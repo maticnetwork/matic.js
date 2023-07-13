@@ -107,6 +107,40 @@ export class ERC20 extends POSToken {
         );
     }
 
+    /**
+     * Deposit given amount of token for user along with ETHER for gas token
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {string} userAddress
+     * @param {ITransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    depositWithGas(amount: TYPE_AMOUNT, userAddress: string, swapEthAmount: TYPE_AMOUNT, swapCallData: string, option?: ITransactionOption) {
+        this.checkForRoot("deposit");
+
+        return this.getChainId().then((chainId: number) => {
+            if (chainId !== 1) {
+                this.client.logger.error(ERROR_TYPE.AllowedOnMainnet).throw();
+            }
+            const amountInABI = this.client.parent.encodeParameters(
+                [Converter.toHex(amount)],
+                ['uint256'],
+            );
+
+            option.value = Converter.toHex(swapEthAmount);
+
+            return this.gasSwapper.depositWithGas(
+                this.contractParam.address,
+                amountInABI,
+                userAddress,
+                swapCallData,
+                option
+            );
+        });
+
+    }
+
     private depositEther_(amount: TYPE_AMOUNT, userAddress: string, option: ITransactionOption = {}) {
         this.checkForRoot("depositEther");
 

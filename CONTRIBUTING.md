@@ -23,4 +23,4 @@ _Note: Keep commit message meaningful for your team members to understand while 
 
 7. Create a merge/pull request against `master` branch.
 
-_Note: Dont push changes to `master` branch directly. Write proper description of the changes while creating merge/pull request_
+_Note: Don't push changes to `master` branch directly. Write proper description of the changes while creating merge/pull request_

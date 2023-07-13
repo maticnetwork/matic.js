@@ -1,6 +1,6 @@
 # Example
 
-This folder contains different example for different cases. All example are nodejs script, so can be easily run by `node` command.
+This folder contains different examples for different cases. All examples are nodejs scripts, so can be easily run by `node` command.
 
 - plasma - plasma folder contains examples related to plasma api
 - pos - pos folder contains examples related to pos api
@@ -13,7 +13,8 @@ You need to configure your environment variables now. Copy `.env.example` and re
 
 There are some prefilled data in `config.js` but feel free to change anything as per your needs.
 
-**Note:** - Be careful with your private key, Use a key you are comfortable with for development purpose. And try not to make it public by doing actions such as committing to repo or referencing on any online site.
+
+**Note:** - Be careful with your private key, Use a key you are comfortable with for development purposes. And try not to make it public by doing actions such as committing to repo or referencing on any online site.
 
 ### 2. Install package
 
