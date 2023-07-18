@@ -199,7 +199,7 @@ export class ERC20 extends ZkEvmToken {
                 this.contractParam.address,
                 amountInABI,
                 userAddress,
-                option.deadline || '3600',
+                Math.floor((Date.now() + 3600000)/1000).toString(),
                 option.v,
                 option.r,
                 option.s,
@@ -240,14 +240,14 @@ export class ERC20 extends ZkEvmToken {
                     this.contractParam.address,
                     amountInABI,
                     userAddress,
-                    option.deadline || '3600',
+                    Math.floor((Date.now() + 3600000)/1000).toString(),
                     signatureParams.v,
                     signatureParams.r,
                     signatureParams.s,
                     option
                 );
             }
-        )
+        );
     }
 
     /**
@@ -526,7 +526,7 @@ export class ERC20 extends ZkEvmToken {
                     holder: account,
                     spender: spenderAddress,
                     nonce,
-                    expiry: MAX_AMOUNT,
+                    expiry: Math.floor((Date.now() + 3600000)/1000),
                     allowed: true,
                 };
             case Permit.EIP_2612:
@@ -552,7 +552,7 @@ export class ERC20 extends ZkEvmToken {
                     spender: spenderAddress,
                     value: amount,
                     nonce: nonce,
-                    deadline: MAX_AMOUNT,
+                    deadline: Math.floor((Date.now() + 3600000)/1000),
                 };
         }
         return typedData;
@@ -613,7 +613,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     nonce,
-                    MAX_AMOUNT,
+                    Math.floor((Date.now() + 3600000)/1000),
                     true,
                     v,
                     r,
@@ -628,7 +628,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     amount,
-                    MAX_AMOUNT,
+                    Math.floor((Date.now() + 3600000)/1000),
                     v,
                     r,
                     s,

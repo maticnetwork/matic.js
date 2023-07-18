@@ -46,7 +46,7 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
             this.zkEVMWrapper = new ZkEVMWrapper(
                 this.client,
                 config.zkEVMWrapper
-            )
+            );
 
             this.bridgeUtil = new BridgeUtil(
                 this.client
