@@ -37,7 +37,8 @@ module.exports = {
             // erc20: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', // WETH
             // erc20: '0xD7E55eB808693D5Ff81a3391c59886C7E0449f35' // DAI
             // erc20: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', // UNI
-            erc20: '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733' // MATIC
+            erc20: '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733', // MATIC
+            erc20: '0xdac17f958d2ee523a2206206994597c13d831ec7' // USDT
         },
         child: {
             ether: '0x0000000000000000000000000000000000000000',

@@ -5,11 +5,16 @@ import { ZkEvmBridgeClient } from "../utils";
 import { IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
 import { service, NetworkService } from "../services";
+import { ZkEVMWrapper } from "./zkevm_wrapper";
+
 
 export * from "./zkevm_bridge";
 export * from "./bridge_util";
+export * from "./zkevm_wrapper";
 
 export class ZkEvmClient extends ZkEvmBridgeClient {
+
+    zkEVMWrapper: ZkEVMWrapper;
 
     init(config: IZkEvmClientConfig) {
         const client = this.client;
@@ -21,6 +26,7 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
                 {
                     parentBridge: mainZkEvmContracts.PolygonZkEVMBridgeProxy,
                     childBridge: zkEvmContracts.PolygonZkEVMBridge,
+                    zkEVMWrapper: mainZkEvmContracts.ZkEVMWrapper
                 } as IZkEvmClientConfig,
                 config
             );
@@ -35,6 +41,11 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
                 this.client,
                 config.childBridge,
                 false
+            );
+
+            this.zkEVMWrapper = new ZkEVMWrapper(
+                this.client,
+                config.zkEVMWrapper
             );
 
             this.bridgeUtil = new BridgeUtil(
@@ -75,7 +86,8 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
         return {
             parentBridge: this.rootChainBridge,
             childBridge: this.childChainBridge,
-            bridgeUtil: this.bridgeUtil
+            bridgeUtil: this.bridgeUtil,
+            zkEVMWrapper: this.zkEVMWrapper
         } as IZkEvmContracts;
     }
 }

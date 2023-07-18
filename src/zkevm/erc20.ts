@@ -177,6 +177,80 @@ export class ERC20 extends ZkEvmToken {
     }
 
     /**
+     * Deposit given amount of token for user along with ETH for gas token
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {string} userAddress
+     * @param {IBridgeTransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    depositWithGas(amount: TYPE_AMOUNT, userAddress: string, ethGasAmount: TYPE_AMOUNT, option: IBridgeTransactionOption = {}) {
+        this.checkForRoot("deposit");
+
+        const amountInABI = this.client.parent.encodeParameters(
+            [Converter.toHex(amount)],
+            ['uint256'],
+        );
+
+        option.value = Converter.toHex(ethGasAmount);
+        if (option.v && option.r && option.s){
+            return this.zkEVMWrapper.depositPermitWithGas(
+                this.contractParam.address,
+                amountInABI,
+                userAddress,
+                Math.floor((Date.now() + 3600000)/1000).toString(),
+                option.v,
+                option.r,
+                option.s,
+                option
+            );
+        }
+        return this.zkEVMWrapper.depositWithGas(
+            this.contractParam.address,
+            amountInABI,
+            userAddress,
+            option
+        );
+    }
+
+    /**
+     * Deposit given amount of token for user along with ETH for gas token
+     *
+     * @param {TYPE_AMOUNT} amount
+     * @param {string} userAddress
+     * @param {IBridgeTransactionOption} [option]
+     * @returns
+     * @memberof ERC20
+     */
+    depositPermitWithGas(amount: TYPE_AMOUNT, userAddress: string, ethGasAmount: TYPE_AMOUNT, option: IBridgeTransactionOption = {}) {
+        this.checkForRoot("deposit");
+        this.checkForNonNative("getPermitData");
+
+        const amountInABI = this.client.parent.encodeParameters(
+            [Converter.toHex(amount)],
+            ['uint256'],
+        );
+
+        option.value = Converter.toHex(ethGasAmount);
+
+        return this.getPermitSignatureParams_(amount, this.zkEVMWrapper.contractAddress).then(
+            signatureParams => {
+                return this.zkEVMWrapper.depositPermitWithGas(
+                    this.contractParam.address,
+                    amountInABI,
+                    userAddress,
+                    Math.floor((Date.now() + 3600000)/1000).toString(),
+                    signatureParams.v,
+                    signatureParams.r,
+                    signatureParams.s,
+                    option
+                );
+            }
+        );
+    }
+
+    /**
      * Deposit given amount of token for user with permit call
      *
      * @param {TYPE_AMOUNT} amount
@@ -452,7 +526,7 @@ export class ERC20 extends ZkEvmToken {
                     holder: account,
                     spender: spenderAddress,
                     nonce,
-                    expiry: MAX_AMOUNT,
+                    expiry: Math.floor((Date.now() + 3600000)/1000),
                     allowed: true,
                 };
             case Permit.EIP_2612:
@@ -478,7 +552,7 @@ export class ERC20 extends ZkEvmToken {
                     spender: spenderAddress,
                     value: amount,
                     nonce: nonce,
-                    deadline: MAX_AMOUNT,
+                    deadline: Math.floor((Date.now() + 3600000)/1000),
                 };
         }
         return typedData;
@@ -539,7 +613,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     nonce,
-                    MAX_AMOUNT,
+                    Math.floor((Date.now() + 3600000)/1000),
                     true,
                     v,
                     r,
@@ -554,7 +628,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     amount,
-                    MAX_AMOUNT,
+                    Math.floor((Date.now() + 3600000)/1000),
                     v,
                     r,
                     s,
@@ -562,6 +636,38 @@ export class ERC20 extends ZkEvmToken {
                 break;
         }
         return method.encodeABI();
+    }
+
+    private getPermitSignatureParams_(amount: TYPE_AMOUNT, spenderAddress: string) {
+        const amountInABI = this.client.parent.encodeParameters(
+            [Converter.toHex(amount)],
+            ['uint256'],
+        );
+
+        const client = this.contractParam.isParent ? this.client.parent : this.client.child;
+        let account: string;
+        let chainId: number;
+        let permitType: string;
+        let contract: BaseContract;
+        let nonce: string;
+
+        return Promise.all([client.name === 'WEB3' ? client.getAccountsUsingRPC_() : client.getAccounts(), this.getContract(), client.getChainId(), this.getPermit()]).then(result => {
+            account = result[0][0];
+            contract = result[1];
+            chainId = result[2];
+            permitType = result[3];
+            const nameMethod = contract.method("name");
+            const nonceMethod = contract.method("nonces", account);
+            return Promise.all([this.processRead<string>(nameMethod), this.processRead<string>(nonceMethod)]);
+        }).then(data => {
+            const name = data[0];
+            nonce = data[1];
+            return this.getTypedData_(permitType, account, chainId, name, nonce, spenderAddress, amountInABI);
+        }).then(typedData => {
+            return client.signTypedData(account, typedData);
+        }).then(signature => {
+            return this.getSignatureParameters_(client, signature);
+        });
     }
 
     /**

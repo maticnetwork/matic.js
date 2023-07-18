@@ -12,4 +12,7 @@ export interface IBridgeTransactionOption extends ITransactionOption {
      */
     permitData?: string;
     forceUpdateGlobalExitRoot?: boolean;
+    v?: number;
+    r?: string;
+    s?: string;
 }
