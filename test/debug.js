@@ -168,8 +168,8 @@ const executeZkEvm = async () => {
 
   await client.init({
     log: true,
-    network: 'testnet',
-    version: 'blueberry',
+    network: 'mainnet',
+    version: 'cherry',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.zkEvm.parent),
       defaultConfig: {
@@ -190,6 +190,17 @@ const executeZkEvm = async () => {
 
   const blueberryEtherToken = client.erc20(blueberryEther);
   const goerliEtherToken = client.erc20(goerliEther, true);
+
+  const tx = await goerliERC20Token.depositWithGas(
+    "9887",
+    "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
+    "1000000000000000",
+    {
+    // maxPriorityFeePerGas: 2000000000,
+    returnTransaction: true
+  });
+  console.log(tx)
+  return
 
   // // transfer Ether
   // var tx = await blueberryEtherToken.transfer("1", from, {returnTransaction: true});
@@ -281,7 +292,7 @@ const executeZkEvm = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-execute().then(_ => {
+executeZkEvm().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);
