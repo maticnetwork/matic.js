@@ -24,6 +24,14 @@ export class ZkEvmToken extends BaseToken<IZkEvmClientConfig> {
         return this.getZkEvmContracts().childBridge;
     }
 
+    protected get rootBridgeAdapter() {
+        return this.getZkEvmContracts().rootBridgeAdapter;
+    }
+
+    protected get childBridgeAdapter() {
+        return this.getZkEvmContracts().childBridgeAdapter;
+    }
+
     protected get bridgeUtil() {
         return this.getZkEvmContracts().bridgeUtil;
     }

@@ -2,6 +2,7 @@ import { Web3SideChainClient } from ".";
 import { BridgeUtil, ZkEvmBridge } from "../zkevm";
 import { service } from "../services";
 import { IBaseClientConfig } from "..";
+import { ZkEVMBridgeAdapter } from '../zkevm/zkevm_custom_bridge';
 
 export class ZkEvmBridgeClient {
 
@@ -9,9 +10,12 @@ export class ZkEvmBridgeClient {
     bridgeUtil: BridgeUtil;
     rootChainBridge: ZkEvmBridge;
     childChainBridge: ZkEvmBridge;
+    rootBridgeAdapter: ZkEVMBridgeAdapter;
+    childBridgeAdapter: ZkEVMBridgeAdapter;
+
 
     /**
-     * check whether a txHash is synced with child chain 
+     * check whether a txHash is synced with child chain
      *
      * @param {string} txHash
      * @returns

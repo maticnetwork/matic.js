@@ -107,6 +107,87 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
     }
 
     /**
+     * bridge function to be called on that network from where message is to be transferred to a different network
+     * @param {number} destinationNetwork Network at which tokens will be bridged
+     * @param {string} destinationAddress Address to which tokens will be bridged
+     * @param {boolean} forceUpdateGlobalExitRoot Indicates if the new global exit root is updated or not
+     * @param {string} [permitData] Permit data to avoid approve call
+     * @param {ITransactionOption} [option]
+     *
+     * @returns
+     * @memberof ZkEvmBridge
+     */
+    bridgeMessage(
+      destinationNetwork: number,
+      destinationAddress: string,
+      forceUpdateGlobalExitRoot: boolean,
+      permitData = '0x',
+      option?: ITransactionOption
+    ) {
+        return this.method(
+          "bridgeMessage",
+          destinationNetwork,
+          destinationAddress,
+          forceUpdateGlobalExitRoot,
+          permitData
+        ).then(method => {
+            return this.processWrite(method, option);
+        });
+    }
+
+
+    /**
+     * Claim Message function to be called on the destination network
+     * If the receiving address is an EOA, the call will result as a success
+     * Which means that the amount of ether will be transferred correctly, but the message
+     * will not trigger any execution
+     * @param {string[]} smtProof Merkle Proof
+     * @param {number} index Deposit Index
+     * @param {string} mainnetExitRoot Mainnet Exit Root
+     * @param {string} rollupExitRoot RollUP Exit Root
+     * @param {number} originNetwork Network at which token was initially deployed
+     * @param {string} originTokenAddress Address of token at network where token was initially deployed
+     * @param {string} destinationAddress Address to which tokens will be bridged
+     * @param {TYPE_AMOUNT} amount amount of tokens
+     * @param {string} [metadata] Metadata of token
+     * @param {ITransactionOption} [option]
+     *
+     * @returns
+     * @memberof ZkEvmBridge
+     */
+    claimMessage(
+        smtProof: string[],
+        index: number,
+        mainnetExitRoot: string,
+        rollupExitRoot: string,
+        originNetwork: number,
+        originTokenAddress: string,
+        destinationNetwork: number,
+        destinationAddress: string,
+        amount: TYPE_AMOUNT,
+        metadata: string,
+        option: ITransactionOption) {
+        return this.method(
+          "claimMessage",
+          smtProof,
+          index,
+          mainnetExitRoot,
+          rollupExitRoot,
+          originNetwork,
+          originTokenAddress,
+          destinationNetwork,
+          destinationAddress,
+          amount,
+          metadata
+        ).then(method => {
+            return this.processWrite(
+              method,
+              option
+            );
+        });
+    }
+
+    /**
      * get the address of token which is created by the bridge contract on the non origin chain
      *
      * @param {number} originNetwork Network at which the token was initially deployed
