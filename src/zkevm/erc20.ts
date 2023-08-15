@@ -4,7 +4,7 @@ import { Converter, Web3SideChainClient, promiseAny } from "../utils";
 import { ZkEvmToken } from "./zkevm_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
-import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client, ERROR_TYPE } from '..';
+import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client } from "..";
 import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
 
 export class ERC20 extends ZkEvmToken {
