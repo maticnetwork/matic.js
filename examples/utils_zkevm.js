@@ -10,9 +10,10 @@ use(Web3ClientPlugin)
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
 
-const getZkEvmClient = (network = 'testnet', version = 'blueberry') => {
+const getZkEvmClient = (optional = {}, network = 'testnet', version = 'blueberry') => {
   const zkEvmClient = new ZkEvmClient()
   return zkEvmClient.init({
+    ...optional,
     log: true,
     network: network,
     version: version,

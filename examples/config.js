@@ -35,6 +35,7 @@ module.exports = {
   },
   zkEvm: {
     parent: {
+      bridgeAdapter: "0x5eB6485573C2Ea289554A044e1D34b41958c0842",
       ether: '0x0000000000000000000000000000000000000000',
       // erc20: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', // WETH
       // erc20: '0x5C221E77624690fff6dd741493D735a17716c26B' // DAI
@@ -43,6 +44,7 @@ module.exports = {
       erc20: '0x4701Aa9471d7bfAc765D87dcb1Ea6BB23AD32733' // Polygon
     },
     child: {
+      bridgeAdapter: "0x6b0393fD45B1a95EfB1bcd93536DaB44417119C3",
       ether: '0x0000000000000000000000000000000000000000',
       // erc20: '0x270969e59d170fB576cBB5E254493e9bfB13684f', // WETH
       // erc20: '0x08bd5b6d0237FaAED3C5E04fB131de2f843aC756', // DAI

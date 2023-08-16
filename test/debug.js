@@ -165,11 +165,16 @@ const executeZkEvm = async () => {
   const goerliEther = zkEvm.parent.ether;
 
   const client = new ZkEvmClient();
-
-  await client.init({
+// console.log(new HDWalletProvider(privateKey, rpc.zkEvm.parent))
+  const c = await client.init({
     log: true,
-    network: 'mainnet',
-    version: 'cherry',
+    parentBridge: "0xf6beeebb578e214ca9e23b0e9683454ff88ed2a7",
+    childBridge: "0xf6beeebb578e214ca9e23b0e9683454ff88ed2a7",
+    parentBridgeAdapter: "0x5eB6485573C2Ea289554A044e1D34b41958c0842",
+    childBridgeAdapter: "0x6b0393fD45B1a95EfB1bcd93536DaB44417119C3",
+    zkEVMWrapper: "0xDb5328c50B166545d1e830BB509944d4B98CBb23",
+    network: 'testnet',
+    version: 'blueberry',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.zkEvm.parent),
       defaultConfig: {
@@ -183,24 +188,39 @@ const executeZkEvm = async () => {
       }
     }
   });
-  console.log("init called");
 
-  const blueberryERC20Token = client.erc20(blueberryERC20);
-  const goerliERC20Token = client.erc20(goerliERC20, true);
+  /**
+   * Custom ERC20 calls
+   */
 
-  const blueberryEtherToken = client.erc20(blueberryEther);
-  const goerliEtherToken = client.erc20(goerliEther, true);
+  const erc20t = client.erc20(goerliERC20, false);
+  // const tx = await erc20t.depositCustomERC20("1000000000000000000", "0x385134a9c83E02ea204007d46550174C43b61332", true );
+  // const txHash = await tx.getTransactionHash();
+  // console.log("Transaction Hash", txHash);
 
-  const tx = await goerliERC20Token.depositWithGas(
-    "9887",
-    "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
-    "1000000000000000",
-    {
-    // maxPriorityFeePerGas: 2000000000,
-    returnTransaction: true
-  });
-  console.log(tx)
-  return
+  const ctx = await erc20t.customERC20DepositClaim("0x696941f6147702d9850ff9798f56543cb33ebc608d3d6c5987288b7c2fe3d868");
+  const ctxHash = await ctx.getTransactionHash();
+  console.log("claimed txHash", ctxHash);
+  //
+  // const tx = await erc20t.bridgeToken("0x385134a9c83E02ea204007d46550174C43b61332", "10", false);
+  // const txHash = await tx.getTransactionHash();
+  // console.log("adapter tx", txHash);
+  // const blueberryERC20Token = client.erc20(blueberryERC20);
+  // const goerliERC20Token = client.erc20(goerliERC20, true);
+  //
+  // const blueberryEtherToken = client.erc20(blueberryEther);
+  // const goerliEtherToken = client.erc20(goerliEther, true);
+  //
+  // const tx = await goerliERC20Token.depositWithGas(
+  //   "9887",
+  //   "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
+  //   "1000000000000000",
+  //   {
+  //   // maxPriorityFeePerGas: 2000000000,
+  //   returnTransaction: true
+  // });
+  // console.log(tx)
+  // return
 
   // // transfer Ether
   // var tx = await blueberryEtherToken.transfer("1", from, {returnTransaction: true});
