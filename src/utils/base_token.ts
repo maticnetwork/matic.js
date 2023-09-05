@@ -188,7 +188,7 @@ export class BaseToken<T_CLIENT_CONFIG> {
         client.logger.log("txConfig", txConfig, "onRoot", isParent, "isWrite", isWrite);
         const estimateGas = async (config: ITransactionRequestConfig) => {
             const result = method ? await method.estimateGas(config) : await client.estimateGas(config);
-            return new utils.BN(Number(result) * 1.15).toString();
+            return new utils.BN(Math.trunc(Number(result) * 1.15)).toString();
         };
         // txConfig.chainId = Converter.toHex(txConfig.chainId) as any;
         if (isWrite) {
