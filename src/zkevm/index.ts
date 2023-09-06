@@ -20,7 +20,7 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
         const client = this.client;
 
         return client.init(config).then(_ => {
-            const mainZkEvmContracts = client.mainZkEvmContracts; 
+            const mainZkEvmContracts = client.mainZkEvmContracts;
             const zkEvmContracts = client.zkEvmContracts;
             client.config = config = Object.assign(
                 {
@@ -48,18 +48,6 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
                 config.zkEVMWrapper
             );
 
-            this.rootBridgeAdapter = new ZkEVMBridgeAdapter(
-              this.client,
-              config.parentBridgeAdapter,
-              true
-            );
-
-            this.childBridgeAdapter = new ZkEVMBridgeAdapter(
-              this.client,
-              config.parentBridgeAdapter,
-              false
-            );
-
             this.bridgeUtil = new BridgeUtil(
                 this.client
             );
@@ -81,14 +69,16 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
      *
      * @param {string} tokenAddress
      * @param {boolean} isParent
-     * 
+     *
+     * @param bridgeAdapterAddress Needed if a custom erc20 token is being bridged
      * @returns
      * @memberof ERC20
      */
-    erc20(tokenAddress: string, isParent?: boolean) {
+    erc20(tokenAddress: string, isParent?: boolean, bridgeAdapterAddress?: string) {
         return new ERC20(
             tokenAddress,
             isParent,
+            bridgeAdapterAddress,
             this.client,
             this.getContracts_.bind(this)
         );
@@ -98,8 +88,6 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
         return {
             parentBridge: this.rootChainBridge,
             childBridge: this.childChainBridge,
-            rootBridgeAdapter: this.rootBridgeAdapter,
-            childBridgeAdapter: this.childBridgeAdapter,
             bridgeUtil: this.bridgeUtil,
             zkEVMWrapper: this.zkEVMWrapper
         } as IZkEvmContracts;

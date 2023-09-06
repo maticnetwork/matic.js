@@ -4,23 +4,33 @@ import { Converter, Web3SideChainClient, promiseAny } from "../utils";
 import { ZkEvmToken } from "./zkevm_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
-import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client } from "..";
+import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client, ERROR_TYPE } from '..';
 import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
+import { ZkEVMBridgeAdapter } from './zkevm_custom_bridge';
 
 export class ERC20 extends ZkEvmToken {
-
+    private bridgeAdapter: ZkEVMBridgeAdapter;
     constructor(
         tokenAddress: string,
         isParent: boolean,
+        bridgeAdapterAddress,
         client: Web3SideChainClient<IZkEvmClientConfig>,
         getContracts: () => IZkEvmContracts
     ) {
         super({
             isParent,
             address: tokenAddress,
+            bridgeAdapterAddress,
             name: 'ERC20',
             bridgeType: 'zkevm'
         }, client, getContracts);
+        if(bridgeAdapterAddress) {
+            this.bridgeAdapter =  new ZkEVMBridgeAdapter(
+              this.client,
+              bridgeAdapterAddress,
+              isParent
+            );
+        }
     }
 
     /**
@@ -296,9 +306,10 @@ export class ERC20 extends ZkEvmToken {
     depositCustomERC20(amount: TYPE_AMOUNT, userAddress: string, forceUpdateGlobalExitRoot = true) {
         // should be allowed to be used only in root chain
         this.checkForRoot("depositCustomERC20");
+        this.checkAdapterPresent("depositCustomERC20");
         // should not be allowed to use for native asset
         this.checkForNonNative("depositCustomERC20");
-        return this.rootBridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
+        return this.bridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
     }
 
     /**
@@ -410,9 +421,10 @@ export class ERC20 extends ZkEvmToken {
     withdrawCustomERC20(amount: TYPE_AMOUNT, userAddress: string, forceUpdateGlobalExitRoot = true) {
         // should be allowed to be used only in root chain
         this.checkForChild("withdrawCustomERC20");
+        this.checkAdapterPresent("depositCustomERC20");
         // should not be allowed to use for native asset
         this.checkForNonNative("withdrawCustomERC20");
-        return this.childBridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
+        return this.bridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
     }
 
     /**
