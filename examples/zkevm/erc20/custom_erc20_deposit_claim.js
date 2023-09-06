@@ -2,12 +2,9 @@ const { getZkEvmClient, zkEvm, from } = require('../../utils_zkevm');
 const depositCustomERC20Hash = "0x696941f6147702d9850ff9798f56543cb33ebc608d3d6c5987288b7c2fe3d868"; // this tx hash is already claimed
 
 const execute = async () => {
-  const client = await getZkEvmClient({
-    parentBridgeAdapter: zkEvm.parent.bridgeAdapter,
-    childBridgeAdapter:  zkEvm.child.bridgeAdapter,
-  });
+  const client = await getZkEvmClient();
   const erc20TokenAddress = "0x20e8337597474636F95B68594EcB8DADeC4d3604";
-  const erc20Token = client.erc20(erc20TokenAddress);
+  const erc20Token = client.erc20(erc20TokenAddress, false, zkEvm.child.bridgeAdapter);
 
   const result = await erc20Token.customERC20WithdrawExit(depositCustomERC20Hash);
   const txHash = await result.getTransactionHash();

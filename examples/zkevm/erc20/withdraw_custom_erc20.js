@@ -1,12 +1,9 @@
 const { getZkEvmClient, zkEvm, from } = require('../../utils_zkevm');
 
 const execute = async () => {
-  const client = await getZkEvmClient({
-    parentBridgeAdapter: zkEvm.parent.bridgeAdapter,
-    childBridgeAdapter:  zkEvm.child.bridgeAdapter,
-  });
+  const client = await getZkEvmClient();
   const erc20TokenAddress = "0x20e8337597474636F95B68594EcB8DADeC4d3604";
-  const erc20Token = client.erc20(erc20TokenAddress, false);
+  const erc20Token = client.erc20(erc20TokenAddress, false, zkEvm.child.bridgeAdapter);
   /**
    * Make sure the sufficient spending approval is done
    */
