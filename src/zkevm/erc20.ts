@@ -4,23 +4,33 @@ import { Converter, Web3SideChainClient, promiseAny } from "../utils";
 import { ZkEvmToken } from "./zkevm_token";
 import { TYPE_AMOUNT } from "../types";
 import { BaseContractMethod } from "../abstracts";
-import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client } from "..";
+import { MAX_AMOUNT, ADDRESS_ZERO, DAI_PERMIT_TYPEHASH, EIP_2612_PERMIT_TYPEHASH, UNISWAP_DOMAIN_TYPEHASH, EIP_2612_DOMAIN_TYPEHASH, Permit, BaseContract, BaseWeb3Client, ERROR_TYPE } from '..';
 import { IAllowanceTransactionOption, IApproveTransactionOption, IBridgeTransactionOption, IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
+import { ZkEVMBridgeAdapter } from './zkevm_custom_bridge';
 
 export class ERC20 extends ZkEvmToken {
-
+    private bridgeAdapter: ZkEVMBridgeAdapter;
     constructor(
         tokenAddress: string,
         isParent: boolean,
+        bridgeAdapterAddress,
         client: Web3SideChainClient<IZkEvmClientConfig>,
         getContracts: () => IZkEvmContracts
     ) {
         super({
             isParent,
             address: tokenAddress,
+            bridgeAdapterAddress,
             name: 'ERC20',
             bridgeType: 'zkevm'
         }, client, getContracts);
+        if(bridgeAdapterAddress) {
+            this.bridgeAdapter =  new ZkEVMBridgeAdapter(
+              this.client,
+              bridgeAdapterAddress,
+              isParent
+            );
+        }
     }
 
     /**
@@ -286,6 +296,54 @@ export class ERC20 extends ZkEvmToken {
     }
 
     /**
+     * Bridge asset to child chain using Custom ERC20 bridge Adapter
+     * @param amount
+     * @param userAddress
+     * @param forceUpdateGlobalExitRoot
+     * @returns
+     * @memberof ERC20
+     */
+    depositCustomERC20(amount: TYPE_AMOUNT, userAddress: string, forceUpdateGlobalExitRoot = true) {
+        // should be allowed to be used only in root chain
+        this.checkForRoot("depositCustomERC20");
+        this.checkAdapterPresent("depositCustomERC20");
+        // should not be allowed to use for native asset
+        this.checkForNonNative("depositCustomERC20");
+        return this.bridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
+    }
+
+    /**
+     * Claim asset on child chain bridged using custom bridge adapter on root chain
+     * @param transactionHash
+     * @param option
+     * @returns
+     * @memberof ERC20
+     */
+    customERC20DepositClaim(transactionHash: string, option?: ITransactionOption) {
+        this.checkForChild("customERC20DepositClaim");
+        return this.parentBridge.networkID().then(networkId => {
+            return this.bridgeUtil.buildPayloadForClaim(
+              transactionHash, true, networkId
+            );
+        }).then(payload => {
+            return this.childBridge.claimMessage(
+              payload.smtProof,
+              payload.index,
+              payload.mainnetExitRoot,
+              payload.rollupExitRoot,
+              payload.originNetwork,
+              payload.originTokenAddress,
+              payload.destinationNetwork,
+              payload.destinationAddress,
+              payload.amount,
+              payload.metadata,
+              option
+            );
+        });
+    }
+
+
+    /**
      * Complete deposit after GlobalExitRootManager is synced from Parent to root
      *
      * @param {string} transactionHash
@@ -348,6 +406,53 @@ export class ERC20 extends ZkEvmToken {
                 forceUpdateGlobalExitRoot,
                 permitData,
                 option
+            );
+        });
+    }
+
+    /**
+     * Bridge asset to root chain using Custom ERC20 bridge Adapter
+     * @param amount
+     * @param userAddress
+     * @param forceUpdateGlobalExitRoot
+     * @returns
+     * @memberof ERC20
+     */
+    withdrawCustomERC20(amount: TYPE_AMOUNT, userAddress: string, forceUpdateGlobalExitRoot = true) {
+        // should be allowed to be used only in root chain
+        this.checkForChild("withdrawCustomERC20");
+        this.checkAdapterPresent("depositCustomERC20");
+        // should not be allowed to use for native asset
+        this.checkForNonNative("withdrawCustomERC20");
+        return this.bridgeAdapter.bridgeToken(userAddress, amount, forceUpdateGlobalExitRoot);
+    }
+
+    /**
+     * Claim asset on root chain bridged using custom bridge adapter on child chain
+     * @param burnTransactionHash
+     * @param option
+     * @returns
+     * @memberof ERC20
+     */
+    customERC20WithdrawExit(burnTransactionHash: string, option?: ITransactionOption) {
+        this.checkForRoot("customERC20WithdrawExit");
+        return this.childBridge.networkID().then(networkId => {
+            return this.bridgeUtil.buildPayloadForClaim(
+              burnTransactionHash, false, networkId
+            );
+        }).then(payload => {
+            return this.parentBridge.claimMessage(
+              payload.smtProof,
+              payload.index,
+              payload.mainnetExitRoot,
+              payload.rollupExitRoot,
+              payload.originNetwork,
+              payload.originTokenAddress,
+              payload.destinationNetwork,
+              payload.destinationAddress,
+              payload.amount,
+              payload.metadata,
+              option
             );
         });
     }
@@ -729,5 +834,4 @@ export class ERC20 extends ZkEvmToken {
 
         return this.getPermitData_(amount, spenderAddress);
     }
-
 }

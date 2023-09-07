@@ -1,16 +1,16 @@
-// const dotenv = require('dotenv');
-// const path = require('path');
-// dotenv.config({
-//     path: path.join(__dirname, '.env')
-// });
+const dotenv = require('dotenv')
+const path = require('path');
+dotenv.config({
+    path: path.join(__dirname, '.env')
+});
 module.exports = {
     rpc: {
         pos: {
-            parent: process.env.GOERLI_ROOT_RPC,
+            parent: process.env.GOERLI_ROOT_RPC || "https://rpc.ankr.com/eth_goerli",
             child: process.env.MATIC_RPC || 'https://rpc-mumbai.matic.today',
         },
         zkEvm: {
-            parent: process.env.GOERLI_ROOT_RPC,
+            parent: process.env.GOERLI_ROOT_RPC || "https://rpc.ankr.com/eth_goerli",
             child: process.env.ZKEVM_RPC || 'https://rpc.public.zkevm-test.net',
         },
     },

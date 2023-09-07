@@ -10,8 +10,9 @@ export class ZkEvmBridgeClient {
     rootChainBridge: ZkEvmBridge;
     childChainBridge: ZkEvmBridge;
 
+
     /**
-     * check whether a txHash is synced with child chain 
+     * check whether a txHash is synced with child chain
      *
      * @param {string} txHash
      * @returns

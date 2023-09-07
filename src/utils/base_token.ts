@@ -270,6 +270,12 @@ export class BaseToken<T_CLIENT_CONFIG> {
         }
     }
 
+    protected checkAdapterPresent(methodName) {
+        if (!this.contractParam.bridgeAdapterAddress) {
+            this.client.logger.error(ERROR_TYPE.BridgeAdapterNotFound, methodName).throw();
+        }
+    }
+
     protected transferERC1155(param: POSERC1155TransferParam, option: ITransactionOption) {
         return this.getContract().then(contract => {
             const method = contract.method(

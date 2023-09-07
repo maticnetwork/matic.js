@@ -7,7 +7,6 @@ import { config as urlConfig } from "../config";
 import { service, NetworkService } from "../services";
 import { ZkEVMWrapper } from "./zkevm_wrapper";
 
-
 export * from "./zkevm_bridge";
 export * from "./bridge_util";
 export * from "./zkevm_wrapper";
@@ -20,7 +19,7 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
         const client = this.client;
 
         return client.init(config).then(_ => {
-            const mainZkEvmContracts = client.mainZkEvmContracts; 
+            const mainZkEvmContracts = client.mainZkEvmContracts;
             const zkEvmContracts = client.zkEvmContracts;
             client.config = config = Object.assign(
                 {
@@ -69,14 +68,16 @@ export class ZkEvmClient extends ZkEvmBridgeClient {
      *
      * @param {string} tokenAddress
      * @param {boolean} isParent
-     * 
+     *
+     * @param bridgeAdapterAddress Needed if a custom erc20 token is being bridged
      * @returns
      * @memberof ERC20
      */
-    erc20(tokenAddress: string, isParent?: boolean) {
+    erc20(tokenAddress: string, isParent?: boolean, bridgeAdapterAddress?: string) {
         return new ERC20(
             tokenAddress,
             isParent,
+            bridgeAdapterAddress,
             this.client,
             this.getContracts_.bind(this)
         );

@@ -9,4 +9,5 @@ export enum ERROR_TYPE {
     NullSpenderAddress = "null_spender_address",
     AllowedOnNonNativeTokens = "allowed_on_non_native_token",
     AllowedOnMainnet = "allowed_on_mainnet",
+    BridgeAdapterNotFound = "bridge_adapter_address_not_passed"
 }
