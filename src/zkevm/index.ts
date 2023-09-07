@@ -6,7 +6,6 @@ import { IZkEvmClientConfig, IZkEvmContracts } from "../interfaces";
 import { config as urlConfig } from "../config";
 import { service, NetworkService } from "../services";
 import { ZkEVMWrapper } from "./zkevm_wrapper";
-import {ZkEVMBridgeAdapter} from './zkevm_custom_bridge';
 
 export * from "./zkevm_bridge";
 export * from "./bridge_util";
