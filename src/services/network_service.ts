@@ -32,6 +32,13 @@ export class NetworkService {
         });
     }
 
+    getExitProof(network: string, burnTxHash, eventSignature) {
+        const url = this.createUrlForPos(network, `/exit-payload/${burnTxHash}?eventSignature=${eventSignature}`);
+        return this.httpRequest.get<any>(url).then(result => {
+            return result.result;
+        });
+    }
+
     getProof(network: string, start, end, blockNumber) {
         const url = this.createUrlForPos(network, `/fast-merkle-proof?start=${start}&end=${end}&number=${blockNumber}`);
         return this.httpRequest.get<any>(url).then(result => {
