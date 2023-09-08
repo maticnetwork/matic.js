@@ -237,7 +237,7 @@ export class ExitUtil {
         return this.getChainBlockInfo(
             burnTxHash
         ).then(blockInfo => {
-            if (!this.isCheckPointed_(blockInfo)) {
+            if (!isFast && !this.isCheckPointed_(blockInfo)) {
                 throw new Error(
                     'Burn transaction has not been checkpointed as yet'
                 );
@@ -336,7 +336,7 @@ export class ExitUtil {
       return this.getChainBlockInfo(
           burnTxHash
       ).then(blockInfo => {
-          if (!this.isCheckPointed_(blockInfo)) {
+          if (!isFast && !this.isCheckPointed_(blockInfo)) {
               throw new Error(
                   'Burn transaction has not been checkpointed as yet'
               );
