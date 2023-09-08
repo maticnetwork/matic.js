@@ -250,7 +250,7 @@ export class ExitUtil {
             blockProof;
 
         if (isFast) {
-            return this.getExitProofFromAPI(burnTxHash, logEventSig)
+            return this.getExitProofFromAPI(burnTxHash, logEventSig);
         }
 
         return this.getChainBlockInfo(
