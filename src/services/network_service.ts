@@ -32,7 +32,7 @@ export class NetworkService {
         });
     }
 
-    getExitProof(network: string, burnTxHash, eventSignature) {
+    getExitProof(network: string, burnTxHash: string, eventSignature:string) {
         const url = this.createUrlForPos(network, `/exit-payload/${burnTxHash}?eventSignature=${eventSignature}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.result;

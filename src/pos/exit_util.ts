@@ -218,6 +218,21 @@ export class ExitUtil {
         });
     }
 
+    private getExitProofFromAPI(burnHash: string, eventSignature: string) {
+
+        return service.network.getExitProof(
+            this.config.network, burnHash, eventSignature
+        ).then(exitProof => {
+            if (!exitProof) {
+                throw Error('Network API Error');
+            }
+            this.maticClient_.logger.log("exit proof from API 1");
+            return exitProof;
+        }).catch(_ => {
+            return this.buildPayloadForExit(burnHash, eventSignature, false);
+        });
+    }
+
     buildPayloadForExit(burnTxHash: string, logEventSig: string, isFast: boolean, index = 0) {
 
         if (isFast && !service.network) {
@@ -234,10 +249,14 @@ export class ExitUtil {
             block: IBlockWithTransaction,
             blockProof;
 
+        if (isFast) {
+            return this.getExitProofFromAPI(burnTxHash, logEventSig)
+        }
+
         return this.getChainBlockInfo(
             burnTxHash
         ).then(blockInfo => {
-            if (!isFast && !this.isCheckPointed_(blockInfo)) {
+            if (!this.isCheckPointed_(blockInfo)) {
                 throw new Error(
                     'Burn transaction has not been checkpointed as yet'
                 );
@@ -254,17 +273,11 @@ export class ExitUtil {
         }).then(result => {
             [receipt, block] = result;
             // step  3 - get information about block saved in parent chain 
-            return (
-                isFast ? this.getRootBlockInfoFromAPI(txBlockNumber) :
-                    this.getRootBlockInfo(txBlockNumber)
-            );
+            return this.getRootBlockInfo(txBlockNumber);
         }).then(rootBlockInfoResult => {
             rootBlockInfo = rootBlockInfoResult;
             // step 4 - build block proof
-            return (
-                isFast ? this.getBlockProofFromAPI(txBlockNumber, rootBlockInfo) :
-                    this.getBlockProof(txBlockNumber, rootBlockInfo)
-            );
+            return this.getBlockProof(txBlockNumber, rootBlockInfo);
         }).then(blockProofResult => {
             blockProof = blockProofResult;
             // step 5- create receipt proof
