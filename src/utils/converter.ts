@@ -19,4 +19,11 @@ export class Converter {
             throw new Error(`Invalid value ${amount}, value is not a number.`);
         }
     }
+
+    static toBN(amount: BaseBigNumber | string | number): BaseBigNumber {
+        if (!utils.BN.isBN(amount)) {
+            amount = new utils.BN(amount);
+        }
+        return amount as BaseBigNumber;
+    }
 }
