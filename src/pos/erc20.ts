@@ -151,6 +151,34 @@ export class ERC20 extends POSToken {
         });
     }
 
+    private depositEtherWithGas_(amount: TYPE_AMOUNT, userAddress: string, swapEthAmount: TYPE_AMOUNT, swapCallData: string, option: ITransactionOption = {}) {
+        this.checkForRoot("depositEtherWithGas");
+
+        return this.getChainId().then((chainId: number) => {
+            if (chainId !== 1) {
+                this.client.logger.error(ERROR_TYPE.AllowedOnMainnet).throw();
+            }
+            const amountInABI = this.client.parent.encodeParameters(
+                [Converter.toHex(amount)],
+                ['uint256'],
+            );
+
+            option.value = Converter.toHex(
+                Converter.toBN(amount).add(
+                    Converter.toBN(swapEthAmount)
+                )
+            );
+
+            return this.gasSwapper.depositWithGas(
+                "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+                amountInABI,
+                userAddress,
+                swapCallData,
+                option
+            );
+        });
+    }
+
     /**
      * initiate withdraw by burning provided amount
      *

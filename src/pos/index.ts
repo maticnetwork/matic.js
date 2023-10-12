@@ -91,6 +91,19 @@ export class POSClient extends BridgeClient<IPOSClientConfig> {
         )['depositEther_'](amount, userAddress, option);
     }
 
+    depositEtherWithGas(
+        amount: TYPE_AMOUNT,
+        userAddress: string,
+        swapEthAmount: TYPE_AMOUNT,
+        swapCallData: string,
+        option: ITransactionOption
+    ) {
+        return new ERC20(
+            '', true, this.client,
+            this.getContracts_.bind(this),
+        )['depositEtherWithGas_'](amount, userAddress, swapEthAmount, swapCallData, option);
+    }
+
     private getContracts_() {
         return {
             exitUtil: this.exitUtil,

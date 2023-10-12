@@ -19,4 +19,17 @@ export class Converter {
             throw new Error(`Invalid value ${amount}, value is not a number.`);
         }
     }
+
+    static toBN(amount: BaseBigNumber | string | number): BaseBigNumber {
+        const dataType = typeof amount;
+        if (dataType === 'string') {
+            if ((amount as string).slice(0, 2) === '0x') {
+                amount = parseInt(amount as string, 16);
+            }
+        }
+        if (!utils.BN.isBN(amount)) {
+            amount = new utils.BN(amount);
+        }
+        return amount as BaseBigNumber;
+    }
 }
