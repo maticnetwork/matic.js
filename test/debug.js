@@ -49,6 +49,14 @@ const execute = async () => {
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
 
+  // const tx = await client.depositEtherWithGas(
+  //   1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
+  //   1000000000000000, "0xd9627aa4000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000000000000000000000000000286556c0f059561200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0000000000000000000000007d1afa7b718fb893db30a3abc0cfc608aacfebb0869584cd000000000000000000000000dea904157bd08dae959a04dc7e5924b6e3cfe450000000000000000000000000000000007551d94e15a6d9373f715de5b9f4080b", {
+  //     returnTransaction: true
+  //   }
+  // );
+  // console.log(tx)
+
   // setProofApi("https://proof-generator.polygon.technology");
 
   // const tx = await goerliERC20Token.depositWithGas(
@@ -312,7 +320,7 @@ const executeZkEvm = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-executeZkEvm().then(_ => {
+execute().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);
