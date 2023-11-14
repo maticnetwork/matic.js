@@ -1,5 +1,6 @@
 import { service } from "../services";
 import { resolve, promiseResolve } from ".";
+import { AbiItem } from '../types';
 
 type T_ABI_CACHE = {
     [networkName: string]: {
@@ -62,7 +63,7 @@ export class ABIManager {
         });
     }
 
-    setABI(contractName: string, bridgeType: string, abi: any) {
+    setABI(contractName: string, bridgeType: string, abi: AbiItem[]) {
         const abiStore = cache[this.networkName][this.version].abi;
         if (!abiStore[bridgeType]) {
             abiStore[bridgeType] = {};
