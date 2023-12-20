@@ -8,16 +8,16 @@ export class NetworkService {
         this.httpRequest = new HttpRequest(baseUrl);
     }
 
-    private createUrlForPos(network: string, url: string) {
-        return `${network === 'mainnet' ? 'matic' : 'mumbai'}${url}`;
+    private createUrlForPos(version: string, url: string) {
+        return `${version === 'v1' ? 'matic' : version}${url}`;
     }
 
-    private createUrlForZkEvm(network: string, url: string) {
-        return `${network}/${url}`;
+    private createUrlForZkEvm(version: string, url: string) {
+        return `${version}/${url}`;
     }
 
-    getBlockIncluded(network: string, blockNumber: number) {
-        const url = this.createUrlForPos(network, `/block-included/${blockNumber}`);
+    getBlockIncluded(version: string, blockNumber: number) {
+        const url = this.createUrlForPos(version, `/block-included/${blockNumber}`);
         return this.httpRequest.get<{
             start: string;
             end: string;
@@ -32,29 +32,29 @@ export class NetworkService {
         });
     }
 
-    getExitProof(network: string, burnTxHash: string, eventSignature:string) {
-        const url = this.createUrlForPos(network, `/exit-payload/${burnTxHash}?eventSignature=${eventSignature}`);
+    getExitProof(version: string, burnTxHash: string, eventSignature: string) {
+        const url = this.createUrlForPos(version, `/exit-payload/${burnTxHash}?eventSignature=${eventSignature}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.result;
         });
     }
 
-    getProof(network: string, start, end, blockNumber) {
-        const url = this.createUrlForPos(network, `/fast-merkle-proof?start=${start}&end=${end}&number=${blockNumber}`);
+    getProof(version: string, start, end, blockNumber) {
+        const url = this.createUrlForPos(version, `/fast-merkle-proof?start=${start}&end=${end}&number=${blockNumber}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.proof;
         });
     }
 
-    getMerkleProofForZkEvm(network: string, networkID: number, depositCount: number) {
-        const url = this.createUrlForZkEvm(network, `merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`);
+    getMerkleProofForZkEvm(version: string, networkID: number, depositCount: number) {
+        const url = this.createUrlForZkEvm(version, `merkle-proof?net_id=${networkID}&deposit_cnt=${depositCount}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.proof;
         });
     }
 
-    getBridgeTransactionDetails(network: string, networkID: number, depositCount: number) {
-        const url = this.createUrlForZkEvm(network, `bridge?net_id=${networkID}&deposit_cnt=${depositCount}`);
+    getBridgeTransactionDetails(version: string, networkID: number, depositCount: number) {
+        const url = this.createUrlForZkEvm(version, `bridge?net_id=${networkID}&deposit_cnt=${depositCount}`);
         return this.httpRequest.get<any>(url).then(result => {
             return result.deposit;
         });

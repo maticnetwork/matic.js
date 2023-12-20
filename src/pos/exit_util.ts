@@ -177,7 +177,7 @@ export class ExitUtil {
     private getRootBlockInfoFromAPI(txBlockNumber: number) {
         this.maticClient_.logger.log("block info from API 1");
         return service.network.getBlockIncluded(
-            this.config.network,
+            this.config.version,
             txBlockNumber
         ).then(headerBlock => {
             this.maticClient_.logger.log("block info from API 2", headerBlock);
@@ -203,7 +203,7 @@ export class ExitUtil {
     private getBlockProofFromAPI(txBlockNumber: number, rootBlockInfo: { start, end }) {
 
         return service.network.getProof(
-            this.config.network,
+            this.config.version,
             rootBlockInfo.start,
             rootBlockInfo.end,
             txBlockNumber
@@ -221,7 +221,7 @@ export class ExitUtil {
     private getExitProofFromAPI(burnHash: string, eventSignature: string) {
 
         return service.network.getExitProof(
-            this.config.network, burnHash, eventSignature
+            this.config.version, burnHash, eventSignature
         ).then(exitProof => {
             if (!exitProof) {
                 throw Error('Network API Error');
