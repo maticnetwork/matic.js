@@ -59,7 +59,7 @@
     "copy-webpack-plugin": "^6.1.1",
     "cross-env": "^7.0.3",
     "husky": "2.4.1",
-    "lint-staged": "8.2.1",
+    "lint-staged": "15.2.0",
     "rimraf": "^3.0.2",
     "smart-banner-webpack-plugin": "^3.0.1",
     "ts-loader": "^8.0.0",
