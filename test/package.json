@@ -33,7 +33,7 @@
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^4.0.2",
-    "mocha": "^8.2.1",
+    "mocha": "^10.2.0",
     "puppeteer": "^11.0.0",
     "ts-jest": "^27.0.7",
     "webpack-cli": "^4.2.0"
