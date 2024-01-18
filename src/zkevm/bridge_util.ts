@@ -80,7 +80,7 @@ export class BridgeUtil {
 
     private getProof_(networkId: number, depositCount: number) {
         return service.zkEvmNetwork.getMerkleProofForZkEvm(
-            this.client_.config.network,
+            this.client_.config.version,
             networkId,
             depositCount,
         ).then(proof => {

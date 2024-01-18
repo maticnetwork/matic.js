@@ -10,7 +10,6 @@ export class ZkEvmBridgeClient {
     rootChainBridge: ZkEvmBridge;
     childChainBridge: ZkEvmBridge;
 
-
     /**
      * check whether a txHash is synced with child chain
      *
@@ -23,7 +22,7 @@ export class ZkEvmBridgeClient {
             txHash, true
         )]).then(result => {
             return service.zkEvmNetwork.getBridgeTransactionDetails(
-                this.client.config.network,
+                this.client.config.version,
                 result[0],
                 result[1].depositCount
             );
@@ -44,7 +43,7 @@ export class ZkEvmBridgeClient {
             txHash, false
         )]).then(result => {
             return service.zkEvmNetwork.getBridgeTransactionDetails(
-                this.client.config.network,
+                this.client.config.version,
                 result[0],
                 result[1].depositCount
             );

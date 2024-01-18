@@ -7,9 +7,12 @@ import { utils } from "..";
 const chainIdToConfigPath = {
     1: 'Main',
     5: 'Main',
+    11155111: 'Main',
     137: 'Matic',
     80001: 'Matic',
+    80002: 'Matic',
     1442: 'zkEVM',
+    2442: 'zkEVM',
     1101: 'zkEVM'
 };
 
