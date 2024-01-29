@@ -15,6 +15,7 @@ interface IBridgeEventInfo {
 
 interface IMerkleProof {
     merkle_proof: string[];
+    rollup_merkle_proof?: string[];
     exit_root_num: string;
     l2_exit_root_num: string;
     main_exit_root: string;
@@ -23,6 +24,7 @@ interface IMerkleProof {
 
 interface IClaimPayload {
     smtProof: string[];
+    smtProofRollup?: string[];
     index: number;
     mainnetExitRoot: string;
     rollupExitRoot: string;
@@ -107,6 +109,7 @@ export class BridgeUtil {
             return this.getProof_(networkId, depositCount).then(proof => {
                 const payload = {} as IClaimPayload;
                 payload.smtProof = proof.merkle_proof;
+                payload.smtProofRollup = proof.rollup_merkle_proof;
                 payload.index = depositCount;
                 payload.mainnetExitRoot = proof.main_exit_root;
                 payload.rollupExitRoot = proof.rollup_exit_root;

@@ -24,11 +24,11 @@ export class ERC20 extends ZkEvmToken {
             name: 'ERC20',
             bridgeType: 'zkevm'
         }, client, getContracts);
-        if(bridgeAdapterAddress) {
-            this.bridgeAdapter =  new ZkEVMBridgeAdapter(
-              this.client,
-              bridgeAdapterAddress,
-              isParent
+        if (bridgeAdapterAddress) {
+            this.bridgeAdapter = new ZkEVMBridgeAdapter(
+                this.client,
+                bridgeAdapterAddress,
+                isParent
             );
         }
     }
@@ -204,12 +204,12 @@ export class ERC20 extends ZkEvmToken {
         );
 
         option.value = Converter.toHex(ethGasAmount);
-        if (option.v && option.r && option.s){
+        if (option.v && option.r && option.s) {
             return this.zkEVMWrapper.depositPermitWithGas(
                 this.contractParam.address,
                 amountInABI,
                 userAddress,
-                Math.floor((Date.now() + 3600000)/1000).toString(),
+                Math.floor((Date.now() + 3600000) / 1000).toString(),
                 option.v,
                 option.r,
                 option.s,
@@ -250,7 +250,7 @@ export class ERC20 extends ZkEvmToken {
                     this.contractParam.address,
                     amountInABI,
                     userAddress,
-                    Math.floor((Date.now() + 3600000)/1000).toString(),
+                    Math.floor((Date.now() + 3600000) / 1000).toString(),
                     signatureParams.v,
                     signatureParams.r,
                     signatureParams.s,
@@ -323,22 +323,39 @@ export class ERC20 extends ZkEvmToken {
         this.checkForChild("customERC20DepositClaim");
         return this.parentBridge.networkID().then(networkId => {
             return this.bridgeUtil.buildPayloadForClaim(
-              transactionHash, true, networkId
+                transactionHash, true, networkId
             );
         }).then(payload => {
-            return this.childBridge.claimMessage(
-              payload.smtProof,
-              payload.index,
-              payload.mainnetExitRoot,
-              payload.rollupExitRoot,
-              payload.originNetwork,
-              payload.originTokenAddress,
-              payload.destinationNetwork,
-              payload.destinationAddress,
-              payload.amount,
-              payload.metadata,
-              option
-            );
+            if (payload.smtProofRollup) {
+                return this.childBridge.claimMessageNew(
+                    payload.smtProof,
+                    payload.smtProofRollup,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            } else {
+                return this.childBridge.claimMessage(
+                    payload.smtProof,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            }
         });
     }
 
@@ -358,19 +375,36 @@ export class ERC20 extends ZkEvmToken {
                 transactionHash, true, networkId
             );
         }).then(payload => {
-            return this.childBridge.claimAsset(
-                payload.smtProof,
-                payload.index,
-                payload.mainnetExitRoot,
-                payload.rollupExitRoot,
-                payload.originNetwork,
-                payload.originTokenAddress,
-                payload.destinationNetwork,
-                payload.destinationAddress,
-                payload.amount,
-                payload.metadata,
-                option
-            );
+            if (payload.smtProofRollup) {
+                return this.childBridge.claimAssetNew(
+                    payload.smtProof,
+                    payload.smtProofRollup,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            } else {
+                return this.childBridge.claimAsset(
+                    payload.smtProof,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            }
         });
     }
 
@@ -438,22 +472,40 @@ export class ERC20 extends ZkEvmToken {
         this.checkForRoot("customERC20WithdrawExit");
         return this.childBridge.networkID().then(networkId => {
             return this.bridgeUtil.buildPayloadForClaim(
-              burnTransactionHash, false, networkId
+                burnTransactionHash, false, networkId
             );
         }).then(payload => {
-            return this.parentBridge.claimMessage(
-              payload.smtProof,
-              payload.index,
-              payload.mainnetExitRoot,
-              payload.rollupExitRoot,
-              payload.originNetwork,
-              payload.originTokenAddress,
-              payload.destinationNetwork,
-              payload.destinationAddress,
-              payload.amount,
-              payload.metadata,
-              option
-            );
+            if (payload.smtProofRollup) {
+                return this.parentBridge.claimMessageNew(
+                    payload.smtProof,
+                    payload.smtProofRollup,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            } else {
+                return this.parentBridge.claimMessage(
+                    payload.smtProof,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            }
+
         });
     }
 
@@ -506,19 +558,36 @@ export class ERC20 extends ZkEvmToken {
                 burnTransactionHash, false, networkId
             );
         }).then(payload => {
-            return this.parentBridge.claimAsset(
-                payload.smtProof,
-                payload.index,
-                payload.mainnetExitRoot,
-                payload.rollupExitRoot,
-                payload.originNetwork,
-                payload.originTokenAddress,
-                payload.destinationNetwork,
-                payload.destinationAddress,
-                payload.amount,
-                payload.metadata,
-                option
-            );
+            if (payload.smtProofRollup) {
+                return this.parentBridge.claimAssetNew(
+                    payload.smtProof,
+                    payload.smtProofRollup,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            } else {
+                return this.parentBridge.claimAsset(
+                    payload.smtProof,
+                    payload.index,
+                    payload.mainnetExitRoot,
+                    payload.rollupExitRoot,
+                    payload.originNetwork,
+                    payload.originTokenAddress,
+                    payload.destinationNetwork,
+                    payload.destinationAddress,
+                    payload.amount,
+                    payload.metadata,
+                    option
+                );
+            }
         });
     }
 
@@ -631,7 +700,7 @@ export class ERC20 extends ZkEvmToken {
                     holder: account,
                     spender: spenderAddress,
                     nonce,
-                    expiry: Math.floor((Date.now() + 3600000)/1000),
+                    expiry: Math.floor((Date.now() + 3600000) / 1000),
                     allowed: true,
                 };
             case Permit.EIP_2612:
@@ -657,7 +726,7 @@ export class ERC20 extends ZkEvmToken {
                     spender: spenderAddress,
                     value: amount,
                     nonce: nonce,
-                    deadline: Math.floor((Date.now() + 3600000)/1000),
+                    deadline: Math.floor((Date.now() + 3600000) / 1000),
                 };
         }
         return typedData;
@@ -718,7 +787,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     nonce,
-                    Math.floor((Date.now() + 3600000)/1000),
+                    Math.floor((Date.now() + 3600000) / 1000),
                     true,
                     v,
                     r,
@@ -733,7 +802,7 @@ export class ERC20 extends ZkEvmToken {
                     account,
                     spenderAddress,
                     amount,
-                    Math.floor((Date.now() + 3600000)/1000),
+                    Math.floor((Date.now() + 3600000) / 1000),
                     v,
                     r,
                     s,
