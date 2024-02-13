@@ -297,7 +297,7 @@ export class ExitUtil {
               );
 
               if(index >= logIndices.length) {
-                throw new Error('Index is grater than the number of tokens in this transaction');
+                throw new Error('Index is greater than the number of tokens in this transaction');
               }
 
               return this.encodePayload_(
