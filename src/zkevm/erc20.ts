@@ -330,7 +330,7 @@ export class ERC20 extends ZkEvmToken {
                 return this.childBridge.claimMessageNew(
                     payload.smtProof,
                     payload.smtProofRollup,
-                    payload.index,
+                    (BigInt(payload.index) + BigInt(2 ** 64)).toString(),
                     payload.mainnetExitRoot,
                     payload.rollupExitRoot,
                     payload.originNetwork,
@@ -379,7 +379,7 @@ export class ERC20 extends ZkEvmToken {
                 return this.childBridge.claimAssetNew(
                     payload.smtProof,
                     payload.smtProofRollup,
-                    payload.index,
+                    (BigInt(payload.index) + BigInt(2 ** 64)).toString(),
                     payload.mainnetExitRoot,
                     payload.rollupExitRoot,
                     payload.originNetwork,
@@ -479,7 +479,7 @@ export class ERC20 extends ZkEvmToken {
                 return this.parentBridge.claimMessageNew(
                     payload.smtProof,
                     payload.smtProofRollup,
-                    payload.index,
+                    payload.index.toString(),
                     payload.mainnetExitRoot,
                     payload.rollupExitRoot,
                     payload.originNetwork,
@@ -562,7 +562,7 @@ export class ERC20 extends ZkEvmToken {
                 return this.parentBridge.claimAssetNew(
                     payload.smtProof,
                     payload.smtProofRollup,
-                    payload.index,
+                    payload.index.toString(),
                     payload.mainnetExitRoot,
                     payload.rollupExitRoot,
                     payload.originNetwork,
