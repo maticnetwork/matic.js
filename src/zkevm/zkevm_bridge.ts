@@ -60,7 +60,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      * Claim function to be called on the destination network
      *
      * @param {string[]} smtProof Merkle Proof
-     * @param {number} index Deposit Index
+     * @param {string[]} smtProofRollup Roll up Merkle Proof
+     * @param {string} globalIndex Global Index
      * @param {string} mainnetExitRoot Mainnet Exit Root
      * @param {string} rollupExitRoot RollUP Exit Root
      * @param {number} originNetwork Network at which token was initially deployed
@@ -75,59 +76,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      */
     claimAsset(
         smtProof: string[],
-        index: number,
-        mainnetExitRoot: string,
-        rollupExitRoot: string,
-        originNetwork: number,
-        originTokenAddress: string,
-        destinationNetwork: number,
-        destinationAddress: string,
-        amount: TYPE_AMOUNT,
-        metadata: string,
-        option: ITransactionOption
-    ) {
-        return this.method(
-            "claimAsset",
-            smtProof,
-            index,
-            mainnetExitRoot,
-            rollupExitRoot,
-            originNetwork,
-            originTokenAddress,
-            destinationNetwork,
-            destinationAddress,
-            amount,
-            metadata
-        ).then(method => {
-            return this.processWrite(
-                method,
-                option
-            );
-        });
-    }
-
-    /**
-     * Claim function to be called on the destination network
-     *
-     * @param {string[]} smtProof Merkle Proof
-     * @param {string[]} smtProofRollup Roll up Merkle Proof
-     * @param {number} index Deposit Index
-     * @param {string} mainnetExitRoot Mainnet Exit Root
-     * @param {string} rollupExitRoot RollUP Exit Root
-     * @param {number} originNetwork Network at which token was initially deployed
-     * @param {string} originTokenAddress Address of token at network where token was initially deployed
-     * @param {string} destinationAddress Address to which tokens will be bridged
-     * @param {TYPE_AMOUNT} amount amount of tokens
-     * @param {string} [metadata] Metadata of token
-     * @param {ITransactionOption} [option]
-     * 
-     * @returns
-     * @memberof ZkEvmBridge
-     */
-    claimAssetNew(
-        smtProof: string[],
         smtProofRollup: string[],
-        index: string,
+        globalIndex: string,
         mainnetExitRoot: string,
         rollupExitRoot: string,
         originNetwork: number,
@@ -142,7 +92,7 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
             "claimAsset",
             smtProof,
             smtProofRollup,
-            index,
+            globalIndex,
             mainnetExitRoot,
             rollupExitRoot,
             originNetwork,
@@ -188,14 +138,14 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
         });
     }
 
-
     /**
-     * Claim Message function to be called on the destination network
+     * Claim Message new function to be called on the destination network
      * If the receiving address is an EOA, the call will result as a success
      * Which means that the amount of ether will be transferred correctly, but the message
-     * will not trigger any execution
+     * will not trigger any execution. this will work after Etrog changes
      * @param {string[]} smtProof Merkle Proof
-     * @param {number} index Deposit Index
+     * @param {string[]} smtProofRollup Roll up Merkle Proof
+     * @param {string} globalIndex Global Index
      * @param {string} mainnetExitRoot Mainnet Exit Root
      * @param {string} rollupExitRoot RollUP Exit Root
      * @param {number} originNetwork Network at which token was initially deployed
@@ -210,60 +160,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      */
     claimMessage(
         smtProof: string[],
-        index: number,
-        mainnetExitRoot: string,
-        rollupExitRoot: string,
-        originNetwork: number,
-        originTokenAddress: string,
-        destinationNetwork: number,
-        destinationAddress: string,
-        amount: TYPE_AMOUNT,
-        metadata: string,
-        option: ITransactionOption) {
-        return this.method(
-            "claimMessage",
-            smtProof,
-            index,
-            mainnetExitRoot,
-            rollupExitRoot,
-            originNetwork,
-            originTokenAddress,
-            destinationNetwork,
-            destinationAddress,
-            amount,
-            metadata
-        ).then(method => {
-            return this.processWrite(
-                method,
-                option
-            );
-        });
-    }
-
-    /**
-     * Claim Message new function to be called on the destination network
-     * If the receiving address is an EOA, the call will result as a success
-     * Which means that the amount of ether will be transferred correctly, but the message
-     * will not trigger any execution. this will work after Etrog changes
-     * @param {string[]} smtProof Merkle Proof
-     * @param {string[]} smtProofRollup Roll up Merkle Proof
-     * @param {number} index Deposit Index
-     * @param {string} mainnetExitRoot Mainnet Exit Root
-     * @param {string} rollupExitRoot RollUP Exit Root
-     * @param {number} originNetwork Network at which token was initially deployed
-     * @param {string} originTokenAddress Address of token at network where token was initially deployed
-     * @param {string} destinationAddress Address to which tokens will be bridged
-     * @param {TYPE_AMOUNT} amount amount of tokens
-     * @param {string} [metadata] Metadata of token
-     * @param {ITransactionOption} [option]
-     *
-     * @returns
-     * @memberof ZkEvmBridge
-     */
-    claimMessageNew(
-        smtProof: string[],
         smtProofRollup: string[],
-        index: string,
+        globalIndex: string,
         mainnetExitRoot: string,
         rollupExitRoot: string,
         originNetwork: number,
@@ -277,7 +175,7 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
             "claimMessage",
             smtProof,
             smtProofRollup,
-            index,
+            globalIndex,
             mainnetExitRoot,
             rollupExitRoot,
             originNetwork,

@@ -1,6 +1,6 @@
 import { Web3SideChainClient } from "../utils";
 import { service } from "../services";
-import { IBaseClientConfig } from "..";
+import { IBaseClientConfig, _GLOBAL_INDEX_MAINNET_FLAG } from "..";
 import { TYPE_AMOUNT } from '../types';
 
 interface IBridgeEventInfo {
@@ -24,8 +24,8 @@ interface IMerkleProof {
 
 interface IClaimPayload {
     smtProof: string[];
-    smtProofRollup?: string[];
-    index: number;
+    smtProofRollup: string[];
+    globalIndex: string;
     mainnetExitRoot: string;
     rollupExitRoot: string;
     originNetwork: number;
@@ -96,6 +96,14 @@ export class BridgeUtil {
         return this.getBridgeLogData_(transactionHash, isParent);
     }
 
+    computeGlobalIndex(indexLocal: number, indexRollup: number, sourceNetworkId: number) {
+        if (sourceNetworkId === 0) {
+            return BigInt(indexLocal) + _GLOBAL_INDEX_MAINNET_FLAG;
+        } else {
+            return BigInt(indexLocal) + BigInt(indexRollup) * BigInt(2 ** 32);
+        }
+    }
+
     buildPayloadForClaim(transactionHash: string, isParent: boolean, networkId: number) {
         return this.getBridgeLogData_(transactionHash, isParent).then(data => {
             const {
@@ -110,7 +118,7 @@ export class BridgeUtil {
                 const payload = {} as IClaimPayload;
                 payload.smtProof = proof.merkle_proof;
                 payload.smtProofRollup = proof.rollup_merkle_proof;
-                payload.index = depositCount;
+                payload.globalIndex = this.computeGlobalIndex(depositCount, destinationNetwork, networkId).toString();
                 payload.mainnetExitRoot = proof.main_exit_root;
                 payload.rollupExitRoot = proof.rollup_exit_root;
                 payload.originNetwork = originNetwork;
