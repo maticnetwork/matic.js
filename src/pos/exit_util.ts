@@ -120,7 +120,7 @@ export class ExitUtil {
     }
 
     private isCheckPointed_(data: IChainBlockInfo) {
-        // lastchild block is greater equal to transacton block number; 
+        // lastchild block is greater equal to transaction block number; 
         return new utils.BN(data.lastChildBlock).gte(
             new utils.BN(data.txBlockNumber)
         );
@@ -137,7 +137,7 @@ export class ExitUtil {
     }
 
     /**
-     * returns info about block number existance on parent chain
+     * returns info about block number existence on parent chain
      * 1. root block number, 
      * 2. start block number, 
      * 3. end block number 
@@ -297,7 +297,7 @@ export class ExitUtil {
               );
 
               if(index >= logIndices.length) {
-                throw new Error('Index is grater than the number of tokens in this transaction');
+                throw new Error('Index is greater than the number of tokens in this transaction');
               }
 
               return this.encodePayload_(

@@ -63,7 +63,7 @@ export class ZkEvmBridgeClient {
         return this.bridgeUtil.getBridgeLogData(
             txHash, true
         ).then(result => {
-            return this.childChainBridge.isClaimed(result.depositCount);
+            return this.childChainBridge.isClaimed(result.depositCount, 0);
         });
     }
 
@@ -78,7 +78,7 @@ export class ZkEvmBridgeClient {
         return this.bridgeUtil.getBridgeLogData(
             txHash, false
         ).then(result => {
-            return this.rootChainBridge.isClaimed(result.depositCount);
+            return this.rootChainBridge.isClaimed(result.depositCount, 1);
         });
     }
 

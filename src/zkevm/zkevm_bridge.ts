@@ -60,7 +60,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      * Claim function to be called on the destination network
      *
      * @param {string[]} smtProof Merkle Proof
-     * @param {number} index Deposit Index
+     * @param {string[]} smtProofRollup Roll up Merkle Proof
+     * @param {string} globalIndex Global Index
      * @param {string} mainnetExitRoot Mainnet Exit Root
      * @param {string} rollupExitRoot RollUP Exit Root
      * @param {number} originNetwork Network at which token was initially deployed
@@ -75,7 +76,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      */
     claimAsset(
         smtProof: string[],
-        index: number,
+        smtProofRollup: string[],
+        globalIndex: string,
         mainnetExitRoot: string,
         rollupExitRoot: string,
         originNetwork: number,
@@ -89,7 +91,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
         return this.method(
             "claimAsset",
             smtProof,
-            index,
+            smtProofRollup,
+            globalIndex,
             mainnetExitRoot,
             rollupExitRoot,
             originNetwork,
@@ -118,31 +121,31 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      * @memberof ZkEvmBridge
      */
     bridgeMessage(
-      destinationNetwork: number,
-      destinationAddress: string,
-      forceUpdateGlobalExitRoot: boolean,
-      permitData = '0x',
-      option?: ITransactionOption
+        destinationNetwork: number,
+        destinationAddress: string,
+        forceUpdateGlobalExitRoot: boolean,
+        permitData = '0x',
+        option?: ITransactionOption
     ) {
         return this.method(
-          "bridgeMessage",
-          destinationNetwork,
-          destinationAddress,
-          forceUpdateGlobalExitRoot,
-          permitData
+            "bridgeMessage",
+            destinationNetwork,
+            destinationAddress,
+            forceUpdateGlobalExitRoot,
+            permitData
         ).then(method => {
             return this.processWrite(method, option);
         });
     }
 
-
     /**
-     * Claim Message function to be called on the destination network
+     * Claim Message new function to be called on the destination network
      * If the receiving address is an EOA, the call will result as a success
      * Which means that the amount of ether will be transferred correctly, but the message
-     * will not trigger any execution
+     * will not trigger any execution. this will work after Etrog changes
      * @param {string[]} smtProof Merkle Proof
-     * @param {number} index Deposit Index
+     * @param {string[]} smtProofRollup Roll up Merkle Proof
+     * @param {string} globalIndex Global Index
      * @param {string} mainnetExitRoot Mainnet Exit Root
      * @param {string} rollupExitRoot RollUP Exit Root
      * @param {number} originNetwork Network at which token was initially deployed
@@ -157,7 +160,8 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      */
     claimMessage(
         smtProof: string[],
-        index: number,
+        smtProofRollup: string[],
+        globalIndex: string,
         mainnetExitRoot: string,
         rollupExitRoot: string,
         originNetwork: number,
@@ -168,21 +172,22 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
         metadata: string,
         option: ITransactionOption) {
         return this.method(
-          "claimMessage",
-          smtProof,
-          index,
-          mainnetExitRoot,
-          rollupExitRoot,
-          originNetwork,
-          originTokenAddress,
-          destinationNetwork,
-          destinationAddress,
-          amount,
-          metadata
+            "claimMessage",
+            smtProof,
+            smtProofRollup,
+            globalIndex,
+            mainnetExitRoot,
+            rollupExitRoot,
+            originNetwork,
+            originTokenAddress,
+            destinationNetwork,
+            destinationAddress,
+            amount,
+            metadata
         ).then(method => {
             return this.processWrite(
-              method,
-              option
+                method,
+                option
             );
         });
     }
@@ -215,9 +220,10 @@ export class ZkEvmBridge extends BaseToken<IZkEvmClientConfig> {
      */
     isClaimed(
         index: number,
+        sourceBridgeNetwork: number
     ) {
         return this.method(
-            "isClaimed", index
+            "isClaimed", index, sourceBridgeNetwork
         ).then(method => {
             return this.processRead<string>(method);
         });
