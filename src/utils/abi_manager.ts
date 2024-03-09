@@ -42,8 +42,15 @@ export class ABIManager {
     }
 
     getABI(contractName: string, bridgeType = 'plasma'): Promise<any> {
-        const targetBridgeABICache = cache[this.networkName][this.version].
-            abi[bridgeType];
+        let targetBridgeABICache;
+
+        if (
+            cache[this.networkName] && cache[this.networkName][this.version] &&
+            cache[this.networkName][this.version].abi
+        ) {
+            targetBridgeABICache = cache[this.networkName][this.version].abi[bridgeType];
+        }
+
 
         if (targetBridgeABICache) {
             const abiForContract = targetBridgeABICache[contractName];
