@@ -97,7 +97,7 @@ export class BridgeUtil {
     }
 
     computeGlobalIndex(indexLocal: number, indexRollup: number, sourceNetworkId: number) {
-        if (sourceNetworkId === 0) {
+        if (BigInt(sourceNetworkId) === BigInt(0)) {
             return BigInt(indexLocal) + _GLOBAL_INDEX_MAINNET_FLAG;
         } else {
             return BigInt(indexLocal) + BigInt(indexRollup) * BigInt(2 ** 32);
