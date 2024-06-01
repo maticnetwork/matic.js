@@ -1,6 +1,7 @@
 import { BaseContract } from "../abstracts";
 import { ITransactionRequestConfig, ITransactionReceipt, ITransactionData, IBlock, IBlockWithTransaction, IJsonRpcRequestPayload, IJsonRpcResponse, ITransactionWriteResult } from "../interfaces";
 import { Logger } from "../utils";
+import { AbiItem } from '../types';
 
 export abstract class BaseWeb3Client {
     abstract name: string;
@@ -9,7 +10,7 @@ export abstract class BaseWeb3Client {
 
     }
 
-    abstract getContract(address: string, abi: any): BaseContract;
+    abstract getContract(address: string, abi: AbiItem[]): BaseContract;
 
     abstract read(config: ITransactionRequestConfig): Promise<string>;
 
