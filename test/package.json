@@ -21,7 +21,7 @@
     "ts-jest": "^27.0.7"
   },
   "dependencies": {
-    "@maticnetwork/maticjs": "file:../maticnetwork-maticjs-3.6.0.tgz",
+    "@maticnetwork/maticjs": "3.8.1",
     "@maticnetwork/maticjs-ethers": "^1.0.3",
     "@maticnetwork/maticjs-web3": "^1.0.4",
     "@truffle/hdwallet-provider": "^1.5.1-alpha.1"
