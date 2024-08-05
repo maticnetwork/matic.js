@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.spec.js",
   "scripts": {
-    "test:jest": "cross-env NODE_ENV=test jest --runInBand",
     "link:lib": "npm link @maticnetwork/maticjs",
     "debug": "dotenv node debug.js",
     "link:lib:debug": "npm run link:lib && npm run debug"

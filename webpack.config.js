@@ -61,6 +61,11 @@ const serverConfig = {
     // globalObject: 'this',
     libraryTarget: 'commonjs2',
   },
+  plugins: [
+    new webpack.DefinePlugin({
+        'process.env.BUILD_ENV': JSON.stringify("node")
+    }),
+],
 }
 
 const standaloneConfig = {

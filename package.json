@@ -1,6 +1,6 @@
 {
   "name": "@maticnetwork/maticjs",
-  "version": "3.8.3-beta.2",
+  "version": "3.9.0",
   "description": "Javascript developer library for interacting with Matic Network",
   "main": "dist/npm.export.js",
   "types": "dist/ts/index.d.ts",
@@ -14,7 +14,6 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc",
     "build:link": "webpack && npm link",
     "build:dev": "webpack",
     "build:prod": "webpack --env build",
@@ -22,10 +21,7 @@
     "prepublishOnly": "npm run deploy",
     "lint": "tslint src/**/*.ts",
     "lint:fix": "tslint src/**/*.ts --fix",
-    "build:test": "npm run build:link && npm run test",
-    "test": "cd test && npm run install:lib:test",
-    "debug": "webpack && cd test && npm run link:lib:debug",
-    "testrpc": "ganache-cli --mnemonic 'clock radar mass judge dismiss just intact mind resemble fringe diary casino' --gasLimit 13000000"
+    "debug": "webpack && cd test && npm run link:lib:debug"
   },
   "repository": {
     "type": "git",

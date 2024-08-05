@@ -14,7 +14,7 @@ if (config.proofApi) {
 const privateKey = config.user1.privateKey
 const userAddress = config.user1.address
 
-const getPOSClient = (network = 'testnet', version = 'mumbai') => {
+const getPOSClient = (network = 'testnet', version = 'amoy') => {
   const posClient = new POSClient()
   return posClient.init({
     log: true,

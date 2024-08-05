@@ -10,19 +10,11 @@ const from = user1.address;
 const to = user2.address;
 
 const execute = async () => {
-  // return console.log(
-  //   Converter.toHex('matic-bor-receipt-'),
-  //   Buffer.from('matic-bor-receipt-', 'utf-8'),
-  //   toBuffer(Converter.toHex('matic-bor-receipt-'))
-  // )
-
-
   const privateKey = user1.privateKey;
   const mumbaiERC20 = pos.child.erc20;
   const goerliERC20 = pos.parent.erc20;
 
   const client = new POSClient();
-
 
   await client.init({
     log: true,
@@ -49,7 +41,7 @@ const execute = async () => {
   const mumbaiERC721Token = client.erc721(pos.child.erc721);
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
-
+  console.log(client.client.parent)
   let tx = await client.depositEther(1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07", {
     returnTransaction: true
   })
@@ -326,7 +318,7 @@ const executeZkEvm = async () => {
   // console.log("receipt", await tx.getReceipt());
 }
 
-executeZkEvm().then(_ => {
+execute().then(_ => {
   process.exit(0)
 }).catch(err => {
   console.error(err);
