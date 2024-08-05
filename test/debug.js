@@ -41,8 +41,7 @@ const execute = async () => {
   const mumbaiERC721Token = client.erc721(pos.child.erc721);
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
-  console.log(client.client.parent)
-  let tx = await client.depositEther(1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07", {
+  const tx = await client.depositEther(1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07", {
     returnTransaction: true
   })
   console.log(tx)
