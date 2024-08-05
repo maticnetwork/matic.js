@@ -89,12 +89,6 @@
       "allow-leading-underscore",
       "allow-trailing-underscore"
     ],
-    "no-shadowed-variable": true,
-    "naming-convention": [true,
-      // this config will apply to properties AND methods, if you only need it for properties, use "property" instead of "member"
-      {"type": "member", "format": "camelCase"}, // use camelCase for all members, will be inherited by protected and private
-      {"type": "member", "modifiers": "protected", "trailingUnderscore": "require"}, // protected members will be REQUIRED to have a leading underscore. you can use "allow" as alternative
-      {"type": "member", "modifiers": "private", "suffix": "__"} // to simply allow and not enforce double leading underscores, use "prefix": ["__", ""]
-    ]
+    "no-shadowed-variable": false
   }
 }

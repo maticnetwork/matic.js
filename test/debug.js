@@ -1,32 +1,25 @@
-const { setProofApi, POSClient, ZkEvmClient, use, Converter } = require("@maticnetwork/maticjs");
+const { user1, rpc, pos, zkEvm, user2 } = require("./config");
+
+const { setProofApi, POSClient, ZkEvmClient, use } = require("@maticnetwork/maticjs");
 const { Web3ClientPlugin } = require("@maticnetwork/maticjs-web3");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const { toBuffer } = require("ethereumjs-util");
-const { user1, rpc, pos, zkEvm, user2 } = require("./config");
 use(Web3ClientPlugin);
 const from = user1.address;
 const to = user2.address;
 
 const execute = async () => {
-  // return console.log(
-  //   Converter.toHex('matic-bor-receipt-'),
-  //   Buffer.from('matic-bor-receipt-', 'utf-8'),
-  //   toBuffer(Converter.toHex('matic-bor-receipt-'))
-  // )
-
-
   const privateKey = user1.privateKey;
   const mumbaiERC20 = pos.child.erc20;
   const goerliERC20 = pos.parent.erc20;
 
   const client = new POSClient();
 
-
   await client.init({
     log: true,
     network: 'testnet',
-    version: 'mumbai',
+    version: 'amoy',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.pos.parent),
       defaultConfig: {
@@ -48,7 +41,10 @@ const execute = async () => {
   const mumbaiERC721Token = client.erc721(pos.child.erc721);
   const goerliERC1155Token = client.erc1155(pos.parent.erc1155, true);
   const mumbaiERC1155Token = client.erc1155(pos.child.erc1155);
-
+  const tx = await client.depositEther(1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07", {
+    returnTransaction: true
+  })
+  console.log(tx)
   // const tx = await client.depositEtherWithGas(
   //   1, "0xD7Fbe63Db5201f71482Fa47ecC4Be5e5B125eF07",
   //   1000000000000000, "0xd9627aa4000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000000000000000000000000000286556c0f059561200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0000000000000000000000007d1afa7b718fb893db30a3abc0cfc608aacfebb0869584cd000000000000000000000000dea904157bd08dae959a04dc7e5924b6e3cfe450000000000000000000000000000000007551d94e15a6d9373f715de5b9f4080b", {
@@ -113,6 +109,7 @@ const execute = async () => {
   // var tx = await goerliERC20Token.getAllowance(from, {
   //   // returnTransaction: true
   // });
+  // console.log(tx)
 
   // return console.log('tx', tx);
 
@@ -176,11 +173,11 @@ const executeZkEvm = async () => {
 // console.log(new HDWalletProvider(privateKey, rpc.zkEvm.parent))
   const c = await client.init({
     log: true,
-    parentBridge: "0xf6beeebb578e214ca9e23b0e9683454ff88ed2a7",
-    childBridge: "0xf6beeebb578e214ca9e23b0e9683454ff88ed2a7",
+    parentBridge: "0x528e26b25a34a4A5d0dbDa1d57D318153d2ED582",
+    childBridge: "0x528e26b25a34a4A5d0dbDa1d57D318153d2ED582",
     zkEVMWrapper: "0xDb5328c50B166545d1e830BB509944d4B98CBb23",
     network: 'testnet',
-    version: 'blueberry',
+    version: 'cardona',
     parent: {
       provider: new HDWalletProvider(privateKey, rpc.zkEvm.parent),
       defaultConfig: {
@@ -201,10 +198,10 @@ const executeZkEvm = async () => {
    * childBridgeAdapter: "0x6b0393fD45B1a95EfB1bcd93536DaB44417119C3",
    */
 
-  const erc20t = client.erc20(goerliERC20, true, "0x5eB6485573C2Ea289554A044e1D34b41958c0842");
-  const tx = await erc20t.depositCustomERC20("1000000000000000000", "0x385134a9c83E02ea204007d46550174C43b61332", true );
-  const txHash = await tx.getTransactionHash();
-  console.log("Transaction Hash", txHash);
+  // const erc20t = client.erc20(goerliERC20, true, "0x5eB6485573C2Ea289554A044e1D34b41958c0842");
+  // const tx = await erc20t.depositCustomERC20("1000000000000000000", "0x385134a9c83E02ea204007d46550174C43b61332", true );
+  // const txHash = await tx.getTransactionHash();
+  // console.log("Transaction Hash", txHash);
 
   // const ctx = await erc20t.customERC20DepositClaim("0x294cee4839a3d6da3e4ff92f79ee7d1ec603fb1fc1f7d4efa277339268d579cb");
   // const ctxHash = await ctx.getTransactionHash();
@@ -217,7 +214,7 @@ const executeZkEvm = async () => {
   // const goerliERC20Token = client.erc20(goerliERC20, true);
   //
   // const blueberryEtherToken = client.erc20(blueberryEther);
-  // const goerliEtherToken = client.erc20(goerliEther, true);
+  const goerliEtherToken = client.erc20(goerliEther, true);
   //
   // const tx = await goerliERC20Token.depositWithGas(
   //   "9887",
@@ -231,8 +228,8 @@ const executeZkEvm = async () => {
   // return
 
   // // transfer Ether
-  // var tx = await blueberryEtherToken.transfer("1", from, {returnTransaction: true});
-  // return console.log("hash",  tx);
+  var tx = await goerliEtherToken.transfer("1", from, {returnTransaction: true});
+  return console.log("hash",  tx);
 
   // setProofApi("https://bridge-api.public.zkevm-test.net/");
 

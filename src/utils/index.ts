@@ -1,5 +1,6 @@
-import { BaseWeb3Client, Converter, TYPE_AMOUNT } from "..";
+import { BaseWeb3Client } from "../abstracts";
 import { EmptyBigNumber } from "../implementation";
+import { Converter } from "./converter";
 
 export * from "./use";
 export * from "./event_bus";
