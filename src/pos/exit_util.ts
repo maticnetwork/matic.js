@@ -1,7 +1,7 @@
 import { RootChain } from "./root_chain";
 import { Converter, ProofUtil, Web3SideChainClient } from "../utils";
 import { BufferUtil } from "../utils/buffer-utils";
-import rlp from "rlp"
+import rlp from "rlp";
 import { IBlockWithTransaction, ITransactionReceipt } from "../interfaces";
 import { service } from "../services";
 import { BaseBigNumber, BaseWeb3Client } from "../abstracts";
