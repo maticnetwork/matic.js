@@ -5,7 +5,7 @@
   "main": "index.spec.js",
   "scripts": {
     "link:lib": "npm link @maticnetwork/maticjs",
-    "debug": "dotenv node debug.js",
+    "debug": "node debug.js",
     "link:lib:debug": "npm run link:lib && npm run debug"
   },
   "author": "",

@@ -19,7 +19,9 @@ export * from "./bridge_client";
 export * from "./abi_manager";
 export * from "./not_implemented";
 export * from "./zkevm_bridge_client";
-
+export * from "./buffer-utils";
+export * from "./keccak";
+export * from "./types";
 
 export const utils = {
     converter: Converter,

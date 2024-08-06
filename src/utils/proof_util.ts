@@ -1,12 +1,15 @@
 import { BaseWeb3Client } from "../abstracts";
 import { MerkleTree } from "./merkle_tree";
-import { bufferToHex, keccak256, rlp, setLengthLeft, toBuffer } from "ethereumjs-util";
+import { setLengthLeft } from "@ethereumjs/util";
+import { Keccak } from "./keccak";
+import { BufferUtil } from "./buffer-utils";
+import rlp from "rlp";
 import { ITransactionReceipt, IBlock, IBlockWithTransaction } from "../interfaces";
 import { mapPromise } from "./map_promise";
-import { BaseTrie as TRIE } from 'merkle-patricia-tree';
+import { Trie as TRIE } from '@ethereumjs/trie';
 import { BlockHeader } from '@ethereumjs/block';
 import { Converter, promiseResolve, utils } from "..";
-import Common, { Chain, Hardfork } from '@ethereumjs/common';
+import { Common, Chain, Hardfork } from '@ethereumjs/common';
 
 // Implementation adapted from Tom French's `matic-proofs` library used under MIT License
 // https://github.com/TomAFrench/matic-proofs
@@ -73,7 +76,7 @@ export class ProofUtil {
                     const leafRoots = this.recursiveZeroHash(subTreeHeight, web3);
 
                     // Build a merkle tree of correct size for the subtree using these merkle roots
-                    const leaves = Array.from({ length: 2 ** heightDifference }, () => toBuffer(leafRoots));
+                    const leaves = Array.from({ length: 2 ** heightDifference }, () => BufferUtil.toBuffer(leafRoots));
                     leaves[0] = remainingNodesHash;
                     const subTreeMerkleRoot = new MerkleTree(leaves).getRoot();
                     reversedProof.push(subTreeMerkleRoot);
@@ -89,10 +92,10 @@ export class ProofUtil {
         return ProofUtil.getFastMerkleProof(
             maticWeb3, blockNumber, startBlock, endBlock
         ).then(proof => {
-            return bufferToHex(
+            return BufferUtil.bufferToHex(
                 Buffer.concat(
                     proof.map(p => {
-                        return toBuffer(p);
+                        return BufferUtil.toBuffer(p);
                     })
                 )
             );
@@ -101,7 +104,7 @@ export class ProofUtil {
 
     static queryRootHash(client: BaseWeb3Client, startBlock: number, endBlock: number) {
         return client.getRootHash(startBlock, endBlock).then(rootHash => {
-            return toBuffer(`0x${rootHash}`);
+            return BufferUtil.toBuffer(`0x${rootHash}`);
         }).catch(_ => {
             return null;
         });
@@ -110,13 +113,13 @@ export class ProofUtil {
     static recursiveZeroHash(n: number, client: BaseWeb3Client) {
         if (n === 0) return '0x0000000000000000000000000000000000000000000000000000000000000000';
         const subHash = this.recursiveZeroHash(n - 1, client);
-        return keccak256(
-            toBuffer(client.encodeParameters([subHash, subHash], ['bytes32', 'bytes32'],))
+        return Keccak.keccak256(
+            BufferUtil.toBuffer(client.encodeParameters([subHash, subHash], ['bytes32', 'bytes32'],))
         );
     }
 
     static getReceiptProof(receipt: ITransactionReceipt, block: IBlockWithTransaction, web3: BaseWeb3Client, requestConcurrency = Infinity, receiptsVal?: ITransactionReceipt[]) {
-        const stateSyncTxHash = bufferToHex(ProofUtil.getStateSyncTxHash(block));
+        const stateSyncTxHash = BufferUtil.bufferToHex(ProofUtil.getStateSyncTxHash(block));
         const receiptsTrie = new TRIE();
         let receiptPromise: Promise<ITransactionReceipt[]>;
         if (!receiptsVal) {
@@ -160,11 +163,11 @@ export class ProofUtil {
             }
             // result.node.value
             const prf = {
-                blockHash: toBuffer(receipt.blockHash),
+                blockHash: BufferUtil.toBuffer(receipt.blockHash),
                 parentNodes: result.stack.map(s => s.raw()),
                 root: ProofUtil.getRawHeader(block).receiptTrie,
                 path: rlp.encode(receipt.transactionIndex),
-                value: ProofUtil.isTypedReceipt(receipt) ? result.node.value : rlp.decode(result.node.value)
+                value: ProofUtil.isTypedReceipt(receipt) ? result.node.value : rlp.decode(result.node.value.toString())
             };
             return prf;
         });
@@ -183,35 +186,35 @@ export class ProofUtil {
     // This is derived from block's hash and number
     // state-sync tx hash = keccak256("matic-bor-receipt-" + block.number + block.hash)
     static getStateSyncTxHash(block): Buffer {
-        return keccak256(
+        return Keccak.keccak256(
             Buffer.concat([
                 // prefix for bor receipt
                 Buffer.from('matic-bor-receipt-', 'utf-8'),
-                setLengthLeft(toBuffer(block.number), 8), // 8 bytes of block number (BigEndian)
-                toBuffer(block.hash), // block hash
+                setLengthLeft(BufferUtil.toBuffer(block.number), 8), // 8 bytes of block number (BigEndian)
+                BufferUtil.toBuffer(block.hash), // block hash
             ])
         );
     }
 
     static getReceiptBytes(receipt: ITransactionReceipt) {
         let encodedData = rlp.encode([
-            toBuffer(
+            BufferUtil.toBuffer(
                 receipt.status !== undefined && receipt.status != null ? (receipt.status ? '0x1' : '0x') : receipt.root
             ),
-            toBuffer(receipt.cumulativeGasUsed),
-            toBuffer(receipt.logsBloom),
+            BufferUtil.toBuffer(receipt.cumulativeGasUsed),
+            BufferUtil.toBuffer(receipt.logsBloom),
             // encoded log array
             receipt.logs.map(l => {
                 // [address, [topics array], data]
                 return [
-                    toBuffer(l.address), // convert address to buffer
-                    l.topics.map(toBuffer), // convert topics to buffer
-                    toBuffer(l.data), // convert data to buffer
+                    BufferUtil.toBuffer(l.address), // convert address to buffer
+                    l.topics.map(BufferUtil.toBuffer), // convert topics to buffer
+                    BufferUtil.toBuffer(l.data), // convert data to buffer
                 ];
             }),
         ]);
         if (ProofUtil.isTypedReceipt(receipt)) {
-            encodedData = Buffer.concat([toBuffer(receipt.type), encodedData]);
+            encodedData = Buffer.concat([BufferUtil.toBuffer(receipt.type), encodedData]);
         }
         return encodedData;
     }
@@ -222,7 +225,8 @@ export class ProofUtil {
             chain: Chain.Mainnet, hardfork: Hardfork.London
         });
         const rawHeader = BlockHeader.fromHeaderData(_block, {
-            common: common
+            common: common,
+            skipConsensusFormatValidation: true
         });
         return rawHeader;
     }
