@@ -37,19 +37,29 @@ const clientConfig = {
   },
   externals: {
     web3: 'web3',
-    'ethereumjs-util': 'ethereumjs-util',
+    '@ethereumjs/util': '@ethereumjs/util',
     'query-string': 'query-string',
+    'bn.js': 'bn.js',
+    '@ethereumjs/block': '@ethereumjs/block',
+    '@ethereumjs/common': '@ethereumjs/common',
+    '@ethereumjs/trie': '@ethereumjs/trie',
+    'node-fetch': 'node-fetch',
+    'rlp': 'rlp',
+    'ethereum-cryptography': 'ethereum-cryptography',
+    'buffer': 'buffer',
+    'assert': 'assert',
+    "stream": "stream"
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.json', '.js', '.ts', 'tsx'],
+    extensions: ['.json', '.js', '.ts', '.tsx']
   },
   plugins: [
     new copyPlugin({
       patterns: [{ from: path.resolve('build_helper', 'npm.export.js'), to: '' }],
     }),
     new webpack.BannerPlugin(banner)
-],
+  ],
 }
 
 const serverConfig = {
@@ -63,9 +73,9 @@ const serverConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
-        'process.env.BUILD_ENV': JSON.stringify("node")
+      'process.env.BUILD_ENV': JSON.stringify("node")
     }),
-],
+  ],
 }
 
 const standaloneConfig = {

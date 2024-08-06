@@ -1,6 +1,6 @@
-const utils = require('ethereumjs-util');
-// const SafeBuffer = require('safe-buffer').Buffer;
-const sha3 = utils.keccak256;
+import { zeros } from '@ethereumjs/util';
+import { Keccak } from './keccak';
+const sha3 = Keccak.keccak256;
 
 import { Buffer as SafeBuffer } from "safe-buffer";
 
@@ -22,7 +22,7 @@ export class MerkleTree {
             Array.from(
                 // tslint:disable-next-line
                 Array(Math.pow(2, depth) - leaves.length),
-                () => utils.zeros(32)
+                () => zeros(32)
             )
         );
         this.layers = [this.leaves];
@@ -41,7 +41,7 @@ export class MerkleTree {
             const right = nodes[i + 1];
 
             const data = SafeBuffer.concat([left, right]);
-            treeLevel.push(sha3(data));
+            treeLevel.push(sha3(data as unknown as Buffer));
         }
 
         // is odd number of nodes
@@ -98,9 +98,9 @@ export class MerkleTree {
         for (let i = 0; i < proof.length; i++) {
             const node = proof[i];
             if (index % 2 === 0) {
-                hash = sha3(SafeBuffer.concat([hash, node]));
+                hash = sha3(SafeBuffer.concat([hash, node]) as unknown as Buffer);
             } else {
-                hash = sha3(SafeBuffer.concat([node, hash]));
+                hash = sha3(SafeBuffer.concat([node, hash]) as unknown as Buffer);
             }
 
             index = Math.floor(index / 2);
@@ -109,4 +109,3 @@ export class MerkleTree {
         return SafeBuffer.compare(hash, root) === 0;
     }
 }
-
