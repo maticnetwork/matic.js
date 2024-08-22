@@ -27,9 +27,9 @@ export abstract class BaseWeb3Client {
     abstract getBlockWithTransaction(blockHashOrBlockNumber): Promise<IBlockWithTransaction>;
     abstract hexToNumber(value: any): number;
     abstract hexToNumberString(value: any): string;
-    abstract getBalance(address: string): string;
-    abstract getAccounts(): string[];
-    abstract signTypedData(signer: string, typedData: object): string;
+    abstract getBalance(address: string): Promise<string>;
+    abstract getAccounts(): Promise<string[]>;
+    abstract signTypedData(signer: string, typedData: object): Promise<string>;
 
     getRootHash?(startBlock: number, endBlock: number) {
         return this.sendRPCRequest({

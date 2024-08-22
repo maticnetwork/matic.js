@@ -7,7 +7,6 @@ export abstract class BaseBigNumber {
 
     abstract toString(): string;
     abstract toNumber(): number;
-    abstract toBuffer(): Buffer;
     abstract add(value: BaseBigNumber): BaseBigNumber;
     abstract sub(value: BaseBigNumber): BaseBigNumber;
     abstract mul(value: BaseBigNumber): BaseBigNumber;
