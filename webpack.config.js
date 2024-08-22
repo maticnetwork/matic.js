@@ -5,7 +5,7 @@ const env = require('yargs').argv.env // use --env with webpack 2
 const banner = require('./license.js');
 const copyPlugin = require('copy-webpack-plugin')
 
-const libraryName = 'Matic'
+const libraryName = 'matic'
 
 let mode = 'development'
 
@@ -82,7 +82,7 @@ const standaloneConfig = {
   ...clientConfig,
   output: {
     ...clientConfig.output,
-    library: 'Matic',
+    library: libraryName,
     filename: `${libraryName}.js`,
   },
   externals: {},

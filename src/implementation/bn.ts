@@ -15,10 +15,6 @@ export class EmptyBigNumber extends BaseBigNumber {
         return throwNotImplemented<number>();
     }
 
-    toBuffer(base?) {
-        return throwNotImplemented<Buffer>();
-    }
-
     add(value: BaseBigNumber) {
         return throwNotImplemented<BaseBigNumber>();
     }
