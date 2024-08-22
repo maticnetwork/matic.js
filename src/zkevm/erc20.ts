@@ -1,4 +1,4 @@
-import { isHexString } from 'ethereumjs-util';
+import { isHexString } from '@ethereumjs/util';
 import { ITransactionOption } from "../interfaces";
 import { Converter, Web3SideChainClient, promiseAny } from "../utils";
 import { ZkEvmToken } from "./zkevm_token";

@@ -1,5 +1,6 @@
-import { BaseWeb3Client, Converter, TYPE_AMOUNT } from "..";
+import { BaseWeb3Client } from "../abstracts";
 import { EmptyBigNumber } from "../implementation";
+import { Converter } from "./converter";
 
 export * from "./use";
 export * from "./event_bus";
@@ -18,7 +19,9 @@ export * from "./bridge_client";
 export * from "./abi_manager";
 export * from "./not_implemented";
 export * from "./zkevm_bridge_client";
-
+export * from "./buffer-utils";
+export * from "./keccak";
+export * from "./types";
 
 export const utils = {
     converter: Converter,

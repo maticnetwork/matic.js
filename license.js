@@ -1,4 +1,4 @@
-const package = require('../package.json');
+const package = require('./package.json');
 var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth() + 1; //January is 0!
@@ -13,4 +13,4 @@ var today = dd + '/' + mm + '/' + yyyy;
 
 exports.banner = `@license :${package.name} - V${package.version} - ${today}
 https://github.com/maticnetwork/matic.js
-Copyright (c) ${yyyy} @polygon; Licensed ${package.license}`;
+Copyright (c) ${yyyy} @Polygon Labs; Licensed ${package.license}`;
