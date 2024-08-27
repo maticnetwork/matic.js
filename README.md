@@ -16,7 +16,7 @@ This library will help developers to move assets from Ethereum chain to Matic ch
 
 ## Support
 
-Our [Discord](https://discord.gg/0xPolygonDevs) is the best way to reach us ✨.
+Our [Discord](https://discord.com/invite/0xpolygonrnd) is the best way to reach us ✨.
 
 ## Contributors
 
