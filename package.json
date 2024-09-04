@@ -43,6 +43,7 @@
     "@ethereumjs/block": "^5.2.0",
     "@ethereumjs/trie": "^6.2.0",
     "@ethereumjs/util": "^9.0.3",
+    "@maticnetwork/meta": "github:0xPolygon/static#23c4c84123b7073558b88c5a6bc3390da2cfc64d",
     "assert": "^2.1.0",
     "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
