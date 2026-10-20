@@ -38,12 +38,15 @@ export class HttpRequest {
   }
 
   get<T>(url = '', query = {}): Promise<T> {
-    const fullUrl =
-      this.baseUrl +
-      url +
-      Object.keys(query)
-        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
-        .join('&');
+    // Join the query map onto the path: without the `?`/`&` separator the
+    // encoded parameters were concatenated straight onto the path, producing a
+    // URL like `<base>/index.jsonpage=1` instead of `<base>/index.json?page=1`.
+    const queryString = Object.keys(query)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+      .join('&');
+    const separator = queryString === '' ? '' : url.includes('?') ? '&' : '?';
+
+    const fullUrl = this.baseUrl + url + separator + queryString;
 
     // Retry transient connection failures (a stale keep-alive socket surfaces
     // as a node-fetch "Premature close" / ECONNRESET while reading the body).
