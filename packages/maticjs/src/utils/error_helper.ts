@@ -46,11 +46,26 @@ export class ErrorHelper implements IError {
       case ERROR_TYPE.NullSpenderAddress:
         errMsg = `Please provide spender address.`;
         break;
+      case ERROR_TYPE.TransactionOptionNotObject:
+        errMsg = `Transaction option must be an object.`;
+        break;
+      case ERROR_TYPE.AllowedOnNonNativeTokens:
+        errMsg = `The action ${info} is allowed only on non native tokens.`;
+        break;
+      case ERROR_TYPE.BridgeAdapterNotFound:
+        errMsg = `Bridge adapter address is not set, pass it to erc20() to use ${info}.`;
+        break;
+      case ERROR_TYPE.Unknown:
+        errMsg = `Something went wrong.`;
+        break;
       default:
         if (!this.type) {
           this.type = ERROR_TYPE.Unknown;
         }
-        errMsg = this.message;
+        // `this.message` is assigned from this method's return value, so it is
+        // still undefined here. Unknown types get a readable message instead of
+        // `{ message: undefined }`.
+        errMsg = `Something went wrong.`;
         break;
     }
     return errMsg;
